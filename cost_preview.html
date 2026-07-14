@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ต้นทุนบูธ - Preview</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Sarabun',sans-serif;background:#f8f9fa;color:#1e293b;font-size:14px}
+  .kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:20px}
+  .kpi{background:#fff;border-radius:14px;padding:18px 20px;border:1px solid #e2e8f0;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+  .kpi-label{font-size:11px;color:#64748b;font-weight:600;margin-bottom:6px}
+  .kpi-value{font-size:22px;font-weight:800}
+  .kpi-sub{font-size:11px;color:#94a3b8;margin-top:4px}
+  .card{background:#fff;border-radius:14px;padding:20px;border:1px solid #e2e8f0;box-shadow:0 1px 3px rgba(0,0,0,.06);margin-bottom:16px}
+  .sel{border:1px solid #e2e8f0;border-radius:8px;padding:6px 12px;font-size:13px;font-family:inherit;cursor:pointer;background:#fff;color:#1e293b;font-weight:600}
+  table{width:100%;border-collapse:collapse;font-size:12px}
+  th{background:#1e293b;color:#fff;padding:8px 10px;text-align:center;font-size:11px;font-weight:700;white-space:nowrap}
+  td{padding:7px 10px;border-bottom:1px solid #f1f5f9;white-space:nowrap}
+  tr:hover td{background:#f8fafc}
+  .pos{color:#16a34a;font-weight:700}
+  .neg{color:#dc2626;font-weight:700}
+  .section-title{font-size:15px;font-weight:800;color:#1e293b;margin-bottom:14px}
+</style>
+</head>
+<body>
+<div style="padding:20px">
+  <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;flex-wrap:wrap">
+    <div style="font-size:20px;font-weight:800;color:#1e293b">💰 ต้นทุนและกำไร-ขาดทุน บูธ</div>
+    <div style="margin-left:auto;display:flex;gap:8px">
+      <select class="sel" id="costYr" onchange="renderCost()"></select>
+      <select class="sel" id="costMo" onchange="renderCost()"></select>
+    </div>
+  </div>
+  
+  <div class="kpi-grid" id="costKPI"></div>
+  
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
+    <div class="card">
+      <div class="section-title">📊 กำไร-ขาดทุนแต่ละบูธ</div>
+      <canvas id="profitChart" height="220"></canvas>
+    </div>
+    <div class="card">
+      <div class="section-title">🥧 สัดส่วนค่าใช้จ่ายรวม</div>
+      <canvas id="costChart" height="220"></canvas>
+    </div>
+  </div>
+  
+  <div class="card" style="margin-bottom:16px">
+    <div class="section-title">📈 แนวโน้มกำไรรายเดือน</div>
+    <canvas id="trendChart" height="100"></canvas>
+  </div>
+  
+  <div class="card" id="costTable">
+    <div class="section-title">📋 รายละเอียดต้นทุนแต่ละบูธ</div>
+  </div>
+</div>
+
+<script>
+var COST_DATA = {"2567": {"8": {"ลำพยา 3 (ใหม่)": {"sale": 112080.0, "disc": 3625.0, "net_sale": 108455.0, "cogs": 56040.0, "gross": 52415.0, "wage": 11253.0, "com": 338.2, "com_sp": 0.0, "staff": 1909.090909090909, "rent": 14884.0, "prop_tax": 1041.88, "water": 0.0, "elec": 5508.36, "transfer": 435.0, "net_fee": 642.0, "phone": 206.96, "common": 0.0, "ice": 0.0, "outside": 0.0, "sign": 0.0, "delivery": 0.0, "other": 0.0, "net_profit": 17238.38909090909}, "ร้านใหม่ (ปตท.คุณาวรรณ)": {"sale": 136325.0, "disc": 33520.0, "net_sale": 102805.0, "cogs": 68162.5, "gross": 34642.5, "wage": 11253.0, "com": 112.2, "com_sp": 0.0, "staff": 1909.090909090909, "rent": 6155.0, "prop_tax": 0.0, "water": 0.0, "elec": 5652.36, "transfer": 0.0, "net_fee": 0.0, "phone": 206.96, "common": 0.0, "ice": 0.0, "outside": 0.0, "sign": 0.0, "delivery": 0.0, "other": 0.0, "net_profit": 9353.889090909091}, "หน้ามอ (ม.เกษตร)": {"sale": 109410.0, "disc": 22183.0, "net_sale": 87227.0, "cogs": 54705.0, "gross": 32522.0, "wage": 11253.0, "com": 0.0, "com_sp": 0.0, "staff": 1909.090909090909, "rent": 0.0, "prop_tax": 0.0, "water": 195.0, "elec": 12035.77, "transfer": 0.0, "net_fee": 961.93, "phone": 207.96, "common": 15.0, "ice": 560.0, "outside": 1700.0, "sign": 0.0, "delivery": 0.0, "other": 260.0, "net_profit": 3424.2490909090916}, "ลำพยา 3 (เก่า)": {"sale": 111834.0, "disc": 6134.0, "net_sale": 105700.0, "cogs": 55917.0, "gross": 49783.0, "wage": 11253.0, "com": 228.0, "com_sp": 0.0, "staff": 1909.090909090909, "rent": 14884.0, "prop_tax": 1041.88, "water": 0.0, "elec": 2742.0, "transfer": 0.0, "net_fee": 0.0, "phone": 208.96, "common": 0.0, "ice": 0.0, "outside": 0.0, "sign": 0.0, "delivery": 0.0, "other": 0.0, "net_profit": 18557.94909090909}, "ไทวัสดุ": {"sale": 71706.0, "disc": 9531.0, "net_sale": 62175.0, "cogs": 35853.0, "gross": 26322.0, "wage": 11253.0, "com": 0.0, "com_sp": 0.0, "staff": 1909.090909090909, "rent": 6420.0, "prop_tax": 256.8, "water": 0.0, "elec": 1339.34, "transfer": 180.0, "net_fee": 0.0, "phone": 209.96, "common": 0.0, "ice": 0.0, "outside": 0.0, "sign": 0.0, "delivery": 0.0, "other": 180.0, "net_profit": 4830.609090909092}, "แก้วมณีกาญ": {"sale": 128800.0, "disc": 21675.0, "net_sale": 107125.0, "cogs": 64400.0, "gross": 42725.0, "wage": 11253.0, "com": 285.0, "com_sp": 0.0, "staff": 1909.090909090909, "rent": 16000.0, "prop_tax": 0.0, "water": 0.0, "elec": 341.33, "transfer": 0.0, "net_fee": 642.0, "phone": 210.96, "common": 0.0, "ice": 0.0, "outside": 0.0, "sign": 0.0, "delivery": 0.0, "other": 466.0, "net_profit": 11617.619090909093}, "ลำพยา 2 (ใหม่)": {"sale": 113915.0, "disc": 4185.0, "net_sale": 109730.0, "cogs": 56957.5, "gross": 52772.5, "wage": 11253.0, "com": 389.2, "com_sp": 0.0, "staff": 1909.090909090909, "rent": 14884.0, "prop_tax": 1041.88, "water": 0.0, "elec": 5893.56, "transfer": 465.0, "net_fee": 642.0, "phone": 211.96, "common": 0.0, "ice": 0.0, "outside": 0.0, "sign": 0.0, "delivery": 0.0, "other": 0.0, "net_profit": 17124.68909090909}, "ธรรมศาลา": {"sale": 91515.0, "disc": 4950.0, "net_sale": 86565.0, "cogs": 45757.5, "gross": 40807.5, "wage": 11253.0, "com": 0.0, "com_sp": 0.0, "staff": 1909.090909090909, "rent": 16500.0, "prop_tax": 0.0, "water": 0.0, "elec": 4154.59, "transfer": 390.0, "net_fee": 642.0, "phone": 212.96, "common": 0.0, "ice": 0.0, "outside": 0.0, "sign": 0.0, "delivery": 0.0, "other": 415.0, "net_profit": 5330.859090909092}, "ตลาดดิโอโซน": {"sale": 103635.0, "disc": 18280.0, "net_sale": 85355.0, "cogs": 51817.5, "gross": 33537.5, "wage": 11253.0, "com": 0.0, "com_sp": 0.0, "staff": 1909.090909090909, "rent": 12000.0, "prop_tax": 0.0, "water": 0.0, "elec": 5784.42, "transfer": 15.0, "net_fee": 642.0, "phone": 212.72, "common": 0.0, "ice": 0.0, "outside": 0.0, "sign": 0.0, "delivery": 0.0, "other": 0.0, "net_profit": 1721.269090909092}, "ปตท.ราชบุรี": {"sale": 126749.0, "disc": 19489.0, "net_sale": 107260.0, "cogs": 63374.5, "gross": 43885.5, "wage": 11253.0, "com": 290.4, "com_sp": 0.0, "staff": 1909.090909090909, "rent": 10500.0, "prop_tax": 0.0, "water": 0.0, "elec": 0.0, "transfer": 375.0, "net_fee": 0.0, "phone": 0.0, "common": 0.0, "ice": 0.0, "outside": 0.0, "sign": 0.0, "delivery": 0.0, "other": 25.0, "net_profit": 19533.00909090909}, "วัดใหม่สุปดิษฐาราม": {"sale": 20340.0, "disc": 865.0, "net_sale": 19475.0, "cogs": 10170.0, "gross": 9305.0, "wage": 9801.0, "com": 0.0, "com_sp": 0.0, "staff": 1909.090909090909, "rent": 1500.0, "prop_tax": 0.0, "water": 0.0, "elec": 170.0, "transfer": 30.0, "net_fee": 0.0, "phone": 0.0, "common": 0.0, "ice": 0.0, "outside": 0.0, "sign": 0.0, "delivery": 0.0, "other": 100.0, "net_profit": -4205.090909090909}}, "9": {"ลำพยา 3 (ใหม่)": {"sale": 101905.0, "disc": 2880.0, "net_sale": 99025.0, "cogs": 50952.5, "gross": 48072.5, "wage": 11253.0, "com": 0.0, "com_sp": 0.0, "staff": 1909.090909090909, "rent": 29768.0, "prop_tax": 1041.88, "water": 0.0, "elec": 6118.26, "transfer": 450.0, "net_fee": 642.0, "phone": 206.96, "common": 0.0, "ice": 0.0, "outside": 0.0, "sign": 0.0, "delivery": 0.0, "other": 0.0, "net_profit": -3316.690909090912}, "ร้านใหม่ (ปตท.คุณาวรรณ)": {"sale": 108105.0, "disc": 24056.0, "net_sale": 84049.0, "cogs": 54052.5, "gross": 29996.5, "wage": 11253.0, "com": 0.0, "com_sp": 0.0, "staff": 1909.090909090909, "rent": 5820.0, "prop_tax": 0.0, "water": 0.0, "elec": 3754.84, "transfer": 15.0, "net_fee": 0.0, "phone": 206.96, "common": 0.0, "ice": 70.0, "outside": 0.0, "sign": 0.0, "delivery": 0.0, "other": 603.0, "net_profit": 6364.609090909092}, "หน้ามอ (ม.เกษตร)": {"sale": 102763.0, "disc": 19770.0, "net_sale": 82993.0, "cogs": 51381.5, "gross": 31611.5, "wage": 11253.0, "com": 0.0, "com_sp": 0.0, "staff": 1909.090909090909, "rent": 0.0, "prop_tax": 0.0, "water": 0.0, "elec": 13329.95, "transfer": 0.0, "net_fee": 961.93, "phone": 207.96, "common": 0.0, "ice": 140.0, "outside": 160.0, "sign": 0.0, "delivery": 0.0, "other": 0.0, "net_profit": 3649.5690909090913}, "ลำพยา 3 (เก่า)": {"sale": 104330.0, "disc": 4405.0, "net_sale": 99925.0, "cogs": 52165.0, "gross": 47760.0, "wage": 11253.0, "com": 0.0, "com_sp": 0.0, "staff": 1909.090909090909, "rent": 9000.0, "prop_tax": 1081.88, "water": 0.0, "elec": 2706.0, "transfer": 0.0, "net_fee": 0.0, "phone": 208.96, "common": 0.0, "ice": 0.0, "outside": 0.0, "sign": 0.0, "delivery": 0.0, "other": 39.0, "net_profit": 21562.069090909088}, "ไทวัสดุ": {"sale": 63310.0, "disc": 8465.0, "net_sale": 54845.0, "cogs": 31655.0, "gross": 23190.0, "wage": 11253.0, "com": 0.0, "com_sp": 0.0, "staff": 1909.090909090909, "rent": 6741.0, "prop_tax": 259.37, "water": 0.0, "elec": 1339.34, "transfer": 90.0, "net_fee": 0.0, "phone": 209.96, "common": 0.0, "ice": 0.0, "outside": 0.0, "sign": 0.0, "delivery": 0.0, "other": 0.0, "net_profit": 1388.2390909090918}, "แก้วมณีกาญ": {"sale": 86235.0, "disc": 10900.0, "net_sale": 75335.0, "cogs": 43117.5, "gross": 32217.5, "wage": 11253.0, "com": 0.0, "com_sp": 0.0, "staff": 1909.090909090909, "rent": 16000.0, "prop_tax": 23.1, "water": 0.0, "elec": 330.0, "transfer": 0.0, "net_fee": 642.0, "phone": 210.96, "common": 0.0, "ice": 0.0, "outside": 0.0, "sign": 0.0, "delivery": 0.0, "other": 60.0, "net_profit": 1789.349090909092}, "ลำพยา 2 (ใหม่)": {"sale": 95140.0, "disc": 3220.0, "net_sale": 91920.0, "cogs": 47570.0, "gross": 44350.0, "wage": 11253.0, "com": 0.0, "com_sp": 0.0, "staff": 1909.090909090909, "rent": 29768.0, "prop_tax": 1041.88, "water": 0.0, "elec": 6259.5, "transfer": 450.0, "net_fee": 642.0, "phone": 211.96, "common": 0.0, "ice": 0.0, "outside": 0.0, "sign": 0.0, "delivery": 0.0, "other": 0.0, "net_profit": -7185.430909090908}, "ธรรมศาลา": {"sale": 81155.0, "disc": 4868.0, "net_sale": 76287.0, "cogs": 40577.5, "gross": 35709.5, "wage": 11253.0, "com": 0.0, "com_sp": 0.0, "staff": 1909.090909090909, "rent": 16500.0, "prop_tax": 467.29, "water": 0.0, "elec": 3520.0, "transfer": 435.0, "net_fee": 642.0, "phone": 212.96, "common": 0.0, "ice": 0.0, "outside": 0.0, "sign": 0.0, "delivery": 0.0, "other": 1062.0, "net_profit": -291.84090909090816}, "ตลาดดิโอโซน": {"sale": 76765.0, "disc": 6475.0, "net_sale": 70290.0, "cogs": 38382.5, "gross": 31907.5, "wage": 11253.0, "com": 0.0, "com_sp": 0.0, "staff": 1909.090909090909, "rent": 12000.0, "prop_tax": 397.95, "water": 75.0, "elec": 5610.0, "transfer": 0.0, "net_fee": 642.0, "phone": 212.72, "common": 0.0, "ice": 200.0, "outside": 0.0, "sign": 0.0, "delivery": 0.0, "other": 680.0, "net_profit": -1072.2609090909082}, "ปตท.ราชบุรี": {"sale": 100325.0, "disc": 6975.0, "net_sale": 93350.0, "cogs": 50162.5, "gross": 43187.5, "wage": 11253.0, "com": 0.0, "com_sp": 0.0, "staff": 1909.090909090909, "rent": 21000.0, "prop_tax": 0.0, "water": 0.0, "elec": 0.0, "transfer": 360.0, "net_fee": 0.0, "phone": 0.0, "common": 0.0, "ice": 0.0, "outside": 0.0, "sign": 0.0, "delivery": 0.0, "other": 55.0, "net_profit": 8610.409090909092}, "วัดใหม่สุปดิษฐาราม": {"sale": 19170.0, "disc": 1545.0, "net_sale": 17625.0, "cogs": 9585.0, "gross": 8040.0, "wage": 9801.0, "com": 0.0, "com_sp": 0.0, "staff": 1909.090909090909, "rent": 1500.0, "prop_tax": 0.0, "water": 0.0, "elec": 250.0, "transfer": 15.0, "net_fee": 0.0, "phone": 0.0, "common": 0.0, "ice": 0.0, "outside": 0.0, "sign": 0.0, "delivery": 0.0, "other": 0.0, "net_profit": -5435.090909090909}}, "10": {"ลำพยา 3 (ใหม่)": {"sale": 100535.0, "disc": 2870.0, "net_sale": 97665.0, "cogs": 50267.5, "gross": 47397.5, "wage": 11253.0, "com": 0.0, "com_sp": 100.0, "staff": 1909.090909090909, "rent": 29768.0, "prop_tax": 1041.88, "water": 0.0, "elec": 5636.76, "transfer": 435.0, "net_fee": 642.0, "phone": 206.96, "common": 0.0, "ice": 0.0, "outside": 0.0, "sign": 0.0, "delivery": 0.0, "other": 0.0, "net_profit": -3595.190909090912}, "ร้านใหม่ (ปตท.คุณาวรรณ)": {"sale": 110025.0, "disc": 27800.0, "net_sale": 82225.0, "cogs": 55012.5, "gross": 27212.5, "wage": 11253.0, "com": 0.0, "com_sp": 0.0, "staff": 1909.090909090909, "rent": 5820.0, "prop_tax": 0.0, "water": 0.0, "elec": 4022.98, "transfer": 0.0, "net_fee": 0.0, "phone": 206.96, "common": 0.0, "ice": 0.0, "outside": 0.0, "sign": 0.0, "delivery": 0.0, "other": 589.0, "net_profit": 3411.4690909090923}, "หน้ามอ (ม.เกษตร)": {"sale": 109983.0, "disc": 21414.0, "net_sale": 88569.0, "cogs": 54991.5, "gross": 33577.5, "wage": 11253.0, "com": 0.0, "com_sp": 0.0, "staff": 1909.090909090909, "rent": 0.0, "prop_tax": 0.0, "water": 0.0, "elec": 14263.23, "transfer": 0.0, "net_fee": 961.93, "phone": 207.96, "common": 0.0, "ice": 250.0, "outside": 800.0, "sign": 0.0, "delivery": 0.0, "other": 71.0, "net_profit": 3861.2890909090925}, "ลำพยา 3 (เก่า)": {"sale": 129375.0, "disc": 6720.0, "net_sale": 122655.0, "cogs": 64687.5, "gross": 57967.5, "wage": 11253.0, "com": 906.2, "com_sp": 300.0, "staff": 1909.090909090909, "rent": 9000.0, "prop_tax": 0.0, "water": 0.0, "elec": 2908.0, "transfer": 30.0, "net_fee": 0.0, "phone": 208.96, "common": 0.0, "ice": 0.0, "outside": 0.0, "sign": 0.0, "delivery": 0.0, "other": 0.0, "net_profit": 31452.249090909092}, "ไทวัสดุ": {"sale": 55229.0, "disc": 4814.0, "net_sale": 50415.0, "cogs": 27614.5, "gross": 22800.5, "wage": 11253.0, "com": 0.0, "com_sp": 0.0, "staff": 1909.090909090909, "rent": 6741.0, "prop_tax": 259.37, "water": 0.0, "elec": 1324.0, "transfer": 0.0, "net_fee": 0.0, "phone": 209.96, "common": 0.0, "ice": 0.0, "outside": 0.0, "sign": 0.0, "delivery": 0.0, "other": 0.0, "net_profit": 1104.079090909092}, "แก้วมณีกาญ": {"sale": 120150.0, "disc": 10766.0, "net_sale": 109384.0, "cogs": 60075.0, "gross": 49309.0, "wage": 11253.0, "com": 375.36, "com_sp": 100.0, "staff": 1909.090909090909, "rent": 16000.0, "prop_tax": 244.09, "water": 0.0, "elec": 3487.0, "transfer": 0.0, "net_fee": 642.0, "phone": 210.96, "common": 0.0, "ice": 0.0, "outside": 0.0, "sign": 0.0, "delivery": 0.0, "other": 79.0, "net_profit": 15008.499090909088}, "ลำพยา 2 (ใหม่)": {"sale": 98345.0, "disc": 1795.0, "net_sale": 96550.0, "cogs": 49172.5, "gross": 47377.5, "wage": 11253.0, "com": 0.0, "com_sp": 0.0, "staff": 1909.090909090909, "rent": 29768.0, "prop_tax": 1041.88, "water": 0.0, "elec": 6149.62, "transfer": 450.0, "net_fee": 642.0, "phone": 211.96, "common": 0.0, "ice": 0.0, "outside": 0.0, "sign": 0.0, "delivery": 0.0, "other": 0.0, "net_profit": -4048.050909090912}, "ธรรมศาลา": {"sale": 87980.0, "disc": 6135.0, "net_sale": 81845.0, "cogs": 43990.0, "gross": 37855.0, "wage": 11253.0, "com": 0.0, "com_sp": 0.0, "staff": 1909.090909090909, "rent": 16500.0, "prop_tax": 0.0, "water": 0.0, "elec": 4266.4, "transfer": 375.0, "net_fee": 642.0, "phone": 212.96, "common": 0.0, "ice": 0.0, "outside": 0.0, "sign": 0.0, "delivery": 0.0, "other": 135.0, "net_profit": 2561.5490909090922}, "ตลาดดิโอโซน": {"sale": 68720.0, "disc": 6460.0, "net_sale": 62260.0, "cogs": 34360.0, "gross": 27900.0, "wage": 11253.0, "com": 0.0, "com_sp": 0.0, "staff": 1909.090909090909, "rent": 12000.0, "prop_tax": 397.95, "water": 15.0, "elec": 5817.57, "transfer": 0.0, "net_fee": 642.0, "phone": 212.72, "common": 0.0, "ice": 0.0, "outside": 0.0, "sign": 0.0, "delivery": 0.0, "other": 74.0, "net_profit": -4421.330909090908}, "ปตท.ราชบุรี": {"sale": 110195.0, "disc": 5820.0, "net_sale": 104375.0, "cogs": 55097.5, "gross": 49277.5, "wage": 11253.0, "com": 175.0, "com_sp": 0.0, "staff": 1909.090909090909, "rent": 21000.0, "prop_tax": 735.0, "water": 0.0, "elec": 4892.04, "transfer": 405.0, "net_fee": 0.0, "phone": 0.0, "common": 0.0, "ice": 0.0, "outside": 0.0, "sign": 0.0, "delivery": 0.0, "other": 25.0, "net_profit": 8883.369090909087}, "วัดใหม่สุปดิษฐาราม": {"sale": 11690.0, "disc": 785.0, "net_sale": 10905.0, "cogs": 5845.0, "gross": 5060.0, "wage": 9801.0, "com": 0.0, "com_sp": 0.0, "staff": 1909.090909090909, "rent": 1500.0, "prop_tax": 0.0, "water": 0.0, "elec": 110.0, "transfer": 0.0, "net_fee": 0.0, "phone": 0.0, "common": 0.0, "ice": 0.0, "outside": 0.0, "sign": 0.0, "delivery": 0.0, "other": 0.0, "net_profit": -8260.090909090908}, "ลาดหลุมแก้ว": {"sale": 0.0, "disc": 0.0, "net_sale": 0.0, "cogs": 0.0, "gross": 0.0, "wage": 0.0, "com": 0.0, "com_sp": 0.0, "staff": 0.0, "rent": 6855.54, "prop_tax": 0.0, "water": 0.0, "elec": 0.0, "transfer": 0.0, "net_fee": 0.0, "phone": 0.0, "common": 0.0, "ice": 0.0, "outside": 0.0, "sign": 0.0, "delivery": 0.0, "other": 0.0, "net_profit": -6855.54}, "ชัยพฤกษ์": {"sale": 0.0, "disc": 0.0, "net_sale": 0.0, "cogs": 0.0, "gross": 0.0, "wage": 0.0, "com": 0.0, "com_sp": 0.0, "staff": 0.0, "rent": 12000.0, "prop_tax": 420.0, "water": 0.0, "elec": 0.0, "transfer": 0.0, "net_fee": 0.0, "phone": 0.0, "common": 0.0, "ice": 0.0, "outside": 0.0, "sign": 0.0, "delivery": 0.0, "other": 0.0, "net_profit": -12420.0}}, "11": {"ลำพยา 3 (ใหม่)": {"sale": 100535.0, "disc": 2870.0, "net_sale": 97665.0, "cogs": 50267.5, "gross": 47397.5, "wage": 14156.55167, "com": 0.0, "com_sp": 100.0, "staff": 2500.0, "rent": 29768.0, "prop_tax": 1041.88, "water": 0.0, "elec": 5649.6, "transfer": 435.0, "net_fee": 642.0, "phone": 206.96, "common": 0.0, "ice": 0.0, "outside": 0.0, "sign": 0.0, "delivery": 0.0, "other": 0.0, "net_profit": -7102.491670000001}, "ร้านใหม่ (ปตท.คุณาวรรณ)": {"sale": 109287.0, "disc": 26502.0, "net_sale": 82785.0, "cogs": 54643.5, "gross": 28141.5, "wage": 14156.55167, "com": 0.0, "com_sp": 0.0, "staff": 2500.0, "rent": 5820.0, "prop_tax": 0.0, "water": 0.0, "elec": 4275.62, "transfer": 0.0, "net_fee": 0.0, "phone": 206.96, "common": 0.0, "ice": 0.0, "outside": 0.0, "sign": 0.0, "delivery": 0.0, "other": 12.0, "net_profit": 1170.3683299999993}, "หน้ามอ (ม.เกษตร)": {"sale": 109613.0, "disc": 24126.0, "net_sale": 85487.0, "cogs": 54806.5, "gross": 30680.5, "wage": 14156.55167, "com": 0.0, "com_sp": 0.0, "staff": 2500.0, "rent": 0.0, "prop_tax": 0.0, "water": 0.0, "elec": 13871.35, "transfer": 0.0, "net_fee": 961.93, "phone": 207.96, "common": 0.0, "ice": 100.0, "outside": 940.0, "sign": 0.0, "delivery": 0.0, "other": 108.0, "net_profit": -2165.291670000001}, "ลำพยา 3 (เก่า)": {"sale": 119608.0, "disc": 5203.0, "net_sale": 114405.0, "cogs": 59804.0, "gross": 54601.0, "wage": 14156.55167, "com": 906.2, "com_sp": 300.0, "staff": 2500.0, "rent": 9000.0, "prop_tax": 0.0, "water": 0.0, "elec": 2603.0, "transfer": 0.0, "net_fee": 0.0, "phone": 208.96, "common": 0.0, "ice": 0.0, "outside": 0.0, "sign": 0.0, "delivery": 0.0, "other": 0.0, "net_profit": 24926.288330000003}, "ไทวัสดุ": {"sale": 53349.0, "disc": 7039.0, "net_sale": 46310.0, "cogs": 26674.5, "gross": 19635.5, "wage": 14156.55167, "com": 0.0, "com_sp": 0.0, "staff": 2500.0, "rent": 6741.0, "prop_tax": 259.37, "water": 0.0, "elec": 1324.7, "transfer": 0.0, "net_fee": 0.0, "phone": 209.96, "common": 0.0, "ice": 0.0, "outside": 0.0, "sign": 0.0, "delivery": 0.0, "other": 0.0, "net_profit": -5556.0816700000005}, "แก้วมณีกาญ": {"sale": 138190.0, "disc": 18010.0, "net_sale": 120180.0, "cogs": 69095.0, "gross": 51085.0, "wage": 14156.55167, "com": 375.36, "com_sp": 100.0, "staff": 2500.0, "rent": 16000.0, "prop_tax": 250.64, "water": 0.0, "elec": 3580.5, "transfer": 0.0, "net_fee": 642.0, "phone": 210.96, "common": 0.0, "ice": 0.0, "outside": 600.0, "sign": 0.0, "delivery": 0.0, "other": 0.0, "net_profit": 12668.98833}, "ลำพยา 2 (ใหม่)": {"sale": 106551.0, "disc": 4706.0, "net_sale": 101845.0, "cogs": 53275.5, "gross": 48569.5, "wage": 14156.55167, "com": 0.0, "com_sp": 0.0, "staff": 2500.0, "rent": 29768.0, "prop_tax": 1041.88, "water": 0.0, "elec": 5996.28, "transfer": 435.0, "net_fee": 642.0, "phone": 211.96, "common": 0.0, "ice": 0.0, "outside": 0.0, "sign": 0.0, "delivery": 0.0, "other": 0.0, "net_profit": -6182.171670000001}, "ธรรมศาลา": {"sale": 74220.0, "disc": 5980.0, "net_sale": 68240.0, "cogs": 37110.0, "gross": 31130.0, "wage": 14156.55167, "com": 0.0, "com_sp": 0.0, "staff": 2500.0, "rent": 16500.0, "prop_tax": 300.67, "water": 0.0, "elec": 3828.0, "transfer": 360.0, "net_fee": 642.0, "phone": 212.96, "common": 467.29, "ice": 0.0, "outside": 0.0, "sign": 0.0, "delivery": 0.0, "other": 0.0, "net_profit": -7837.471670000001}, "ตลาดดิโอโซน": {"sale": 77236.0, "disc": 8576.0, "net_sale": 68660.0, "cogs": 38618.0, "gross": 30042.0, "wage": 14156.55167, "com": 0.0, "com_sp": 0.0, "staff": 2500.0, "rent": 12000.0, "prop_tax": 355.95, "water": 15.0, "elec": 5070.0, "transfer": 15.0, "net_fee": 642.0, "phone": 212.72, "common": 0.0, "ice": 0.0, "outside": 0.0, "sign": 0.0, "delivery": 0.0, "other": 0.0, "net_profit": -4925.22167}, "ปตท.ราชบุรี": {"sale": 89410.0, "disc": 8396.0, "net_sale": 81014.0, "cogs": 44705.0, "gross": 36309.0, "wage": 14156.55167, "com": 175.0, "com_sp": 0.0, "staff": 2500.0, "rent": 21000.0, "prop_tax": 735.0, "water": 0.0, "elec": 5129.58, "transfer": 390.0, "net_fee": 0.0, "phone": 0.0, "common": 0.0, "ice": 0.0, "outside": 0.0, "sign": 0.0, "delivery": 0.0, "other": 25.0, "net_profit": -7802.131670000001}, "วัดใหม่สุปดิษฐาราม": {"sale": 8085.0, "disc": 2120.0, "net_sale": 5965.0, "cogs": 4042.5, "gross": 1922.5, "wage": 14156.55167, "com": 0.0, "com_sp": 0.0, "staff": 2500.0, "rent": 1500.0, "prop_tax": 0.0, "water": 0.0, "elec": 0.0, "transfer": 0.0, "net_fee": 0.0, "phone": 0.0, "common": 0.0, "ice": 0.0, "outside": 0.0, "sign": 0.0, "delivery": 0.0, "other": 0.0, "net_profit": -16234.05167}, "ชัยพฤกษ์": {"sale": 6880.0, "disc": 648.0, "net_sale": 6232.0, "cogs": 3440.0, "gross": 2792.0, "wage": 14156.55167, "com": 0.0, "com_sp": 0.0, "staff": 2500.0, "rent": 12000.0, "prop_tax": 4230.0, "water": 0.0, "elec": 0.0, "transfer": 0.0, "net_fee": 0.0, "phone": 0.0, "common": 0.0, "ice": 0.0, "outside": 0.0, "sign": 0.0, "delivery": 0.0, "other": 0.0, "net_profit": -30094.55167}}, "12": {"ลำพยา 3 (ใหม่)": {"sale": 138626.0, "disc": 8795.0, "net_sale": 129831.0, "cogs": 69313.0, "gross": 60518.0, "wage": 16495.07, "com": 1193.24, "com_sp": 300.0, "staff": 3454.5454545454545, "rent": 29768.0, "prop_tax": 1041.88, "water": 0.0, "elec": 4750.0, "transfer": 435.0, "net_fee": 642.0, "phone": 206.96, "common": 0.0, "ice": 0.0, "outside": 0.0, "sign": 0.0, "delivery": 0.0, "other": 0.0, "net_profit": 2231.3045454545463}, "ร้านใหม่ (ปตท.คุณาวรรณ)": {"sale": 342104.0, "disc": 149699.0, "net_sale": 192405.0, "cogs": 171052.0, "gross": 21353.0, "wage": 13692.11, "com": 3696.2, "com_sp": 600.0, "staff": 3454.5454545454545, "rent": 5820.0, "prop_tax": 0.0, "water": 41.0, "elec": 3538.29, "transfer": 0.0, "net_fee": 0.0, "phone": 206.96, "common": 0.0, "ice": 0.0, "outside": 0.0, "sign": 0.0, "delivery": 0.0, "other": 440.0, "net_profit": -10136.105454545454}, "หน้ามอ (ม.เกษตร)": {"sale": 212158.0, "disc": 48282.0, "net_sale": 163876.0, "cogs": 106079.0, "gross": 57797.0, "wage": 14833.27, "com": 2555.04, "com_sp": 600.0, "staff": 3454.5454545454545, "rent": 0.0, "prop_tax": 0.0, "water": 0.0, "elec": 12932.93, "transfer": 0.0, "net_fee": 961.93, "phone": 207.96, "common": 0.0, "ice": 50.0, "outside": 1020.0, "sign": 0.0, "delivery": 0.0, "other": 198.0, "net_profit": 20983.32454545454}, "ลำพยา 3 (เก่า)": {"sale": 164478.0, "disc": 8768.0, "net_sale": 155710.0, "cogs": 82239.0, "gross": 73471.0, "wage": 15359.910000000002, "com": 2228.4, "com_sp": 400.0, "staff": 3454.5454545454545, "rent": 11000.0, "prop_tax": 0.0, "water": 0.0, "elec": 2592.0, "transfer": 0.0, "net_fee": 0.0, "phone": 208.96, "common": 0.0, "ice": 0.0, "outside": 0.0, "sign": 0.0, "delivery": 0.0, "other": 0.0, "net_profit": 38227.18454545454}, "ไทวัสดุ": {"sale": 73803.0, "disc": 8349.0, "net_sale": 65454.0, "cogs": 36901.5, "gross": 28552.5, "wage": 17988.31, "com": 0.0, "com_sp": 0.0, "staff": 3454.5454545454545, "rent": 6741.0, "prop_tax": 0.0, "water": 0.0, "elec": 1073.0, "transfer": 0.0, "net_fee": 0.0, "phone": 209.96, "common": 25.37, "ice": 0.0, "outside": 0.0, "sign": 0.0, "delivery": 0.0, "other": 0.0, "net_profit": -939.6854545454554}, "แก้วมณีกาญ": {"sale": 214177.0, "disc": 35304.0, "net_sale": 178873.0, "cogs": 107088.5, "gross": 71784.5, "wage": 14233.390000000001, "com": 3154.92, "com_sp": 600.0, "staff": 3454.5454545454545, "rent": 16000.0, "prop_tax": 0.0, "water": 0.0, "elec": 3718.0, "transfer": 0.0, "net_fee": 642.0, "phone": 210.96, "common": 0.0, "ice": 0.0, "outside": 0.0, "sign": 0.0, "delivery": 0.0, "other": 0.0, "net_profit": 29770.684545454547}, "ลำพยา 2 (ใหม่)": {"sale": 172310.0, "disc": 18070.0, "net_sale": 154240.0, "cogs": 86155.0, "gross": 68085.0, "wage": 15318.710000000001, "com": 2169.6, "com_sp": 500.0, "staff": 3454.5454545454545, "rent": 29768.0, "prop_tax": 1041.88, "water": 0.0, "elec": 6432.84, "transfer": 465.0, "net_fee": 642.0, "phone": 211.96, "common": 0.0, "ice": 0.0, "outside": 0.0, "sign": 0.0, "delivery": 0.0, "other": 0.0, "net_profit": 8080.464545454547}, "ธรรมศาลา": {"sale": 105563.0, "disc": 13883.0, "net_sale": 91680.0, "cogs": 52781.5, "gross": 38898.5, "wage": 17988.31, "com": 0.0, "com_sp": 0.0, "staff": 3454.5454545454545, "rent": 16500.0, "prop_tax": 0.0, "water": 0.0, "elec": 3800.5, "transfer": 435.0, "net_fee": 642.0, "phone": 0.0, "common": 467.29, "ice": 0.0, "outside": 0.0, "sign": 0.0, "delivery": 0.0, "other": 69.0, "net_profit": -4458.145454545457}, "ตลาดดิโอโซน": {"sale": 142250.0, "disc": 15030.0, "net_sale": 127220.0, "cogs": 71125.0, "gross": 56095.0, "wage": 16599.510000000002, "com": 1088.8, "com_sp": 300.0, "staff": 3454.5454545454545, "rent": 12000.0, "prop_tax": 0.0, "water": 30.0, "elec": 5088.0, "transfer": 120.0, "net_fee": 642.0, "phone": 212.72, "common": 0.0, "ice": 0.0, "outside": 0.0, "sign": 0.0, "delivery": 0.0, "other": 112.0, "net_profit": 16447.424545454538}, "ปตท.ราชบุรี": {"sale": 103774.0, "disc": 13558.0, "net_sale": 90216.0, "cogs": 51887.0, "gross": 38329.0, "wage": 17988.31, "com": 0.0, "com_sp": 0.0, "staff": 3454.5454545454545, "rent": 21000.0, "prop_tax": 735.0, "water": 0.0, "elec": 4327.08, "transfer": 375.0, "net_fee": 0.0, "phone": 0.0, "common": 0.0, "ice": 0.0, "outside": 0.0, "sign": 0.0, "delivery": 0.0, "other": 25.0, "net_profit": -9575.935454545457}, "ปิ่นเกล้า -ศาลายา": {"sale": 20730.0, "disc": 6526.0, "net_sale": 14204.0, "cogs": 10365.0, "gross": 3839.0, "wage": 17988.31, "com": 0.0, "com_sp": 0.0, "staff": 3454.5454545454545, "rent": 22000.0, "prop_tax": 0.0, "water": 0.0, "elec": 0.0, "transfer": 0.0, "net_fee": 642.0, "phone": 0.0, "common": 0.0, "ice": 0.0, "outside": 0.0, "sign": 0.0, "delivery": 0.0, "other": 0.0, "net_profit": -40245.85545454545}, "ชัยพฤกษ์ - นนทบุรี": {"sale": 46694.0, "disc": 6620.0, "net_sale": 40074.0, "cogs": 23347.0, "gross": 16727.0, "wage": 17988.31, "com": 0.0, "com_sp": 0.0, "staff": 3454.5454545454545, "rent": 12000.0, "prop_tax": 420.0, "water": 0.0, "elec": 1518.0, "transfer": 15.0, "net_fee": 642.0, "phone": 0.0, "common": 0.0, "ice": 0.0, "outside": 0.0, "sign": 0.0, "delivery": 0.0, "other": 0.0, "net_profit": -19310.855454545454}}}, "2569": {"1": {"คุณาวรรณ": {"sale": 200162.0, "disc": 39089.0, "net_sale": 161073.0, "cogs": 100081.0, "gross": 60992.0, "wage": 12275.156666666668, "com": 2165.0, "com_sp": 600.0, "staff": 2413.8891666666664, "rent": 5820.0, "prop_tax": 0.0, "water": 32.0, "elec": 4179.77, "transfer": 15.0, "net_fee": 0.0, "phone": 206.96, "common": 0.0, "ice": 0.0, "outside": 0.0, "sign": 0.0, "delivery": 230.76923076923077, "other": 0.0, "net_profit": 57603.768269230764}, "หน้ามอ (ม.เกษตร)": {"sale": 175148.0, "disc": 20788.0, "net_sale": 154360.0, "cogs": 87574.0, "gross": 66786.0, "wage": 12275.156666666668, "com": 2174.4, "com_sp": 500.0, "staff": 2413.8891666666664, "rent": 0.0, "prop_tax": 0.0, "water": 40.0, "elec": 10591.28, "transfer": 0.0, "net_fee": 0.0, "phone": 206.96, "common": 0.0, "ice": 100.0, "outside": 625.0, "sign": 0.0, "delivery": 230.76923076923077, "other": 336.0, "net_profit": 61842.858269230775}, "ลำพยา 3 (เก่า)": {"sale": 196750.0, "disc": 8765.0, "net_sale": 187985.0, "cogs": 98375.0, "gross": 89610.0, "wage": 12275.156666666668, "com": 3519.4, "com_sp": 600.0, "staff": 2413.8891666666664, "rent": 8100.0, "prop_tax": 351.0, "water": 0.0, "elec": 2915.0, "transfer": 0.0, "net_fee": 0.0, "phone": 206.96, "common": 0.0, "ice": 0.0, "outside": 0.0, "sign": 0.0, "delivery": 230.76923076923077, "other": 0.0, "net_profit": 83548.13826923077}}, "2": {"คุณาวรรณ": {"sale": 61210.0, "disc": 15365.0, "net_sale": 45845.0, "cogs": 30605.0, "gross": 15240.0, "wage": 5113.49, "com": 0.0, "com_sp": 0.0, "staff": 1247.2225, "rent": 5820.0, "prop_tax": 0.0, "water": 48.0, "elec": 4392.52, "transfer": 0.0, "net_fee": 0.0, "phone": 206.96, "common": 0.0, "ice": 0.0, "outside": 0.0, "sign": 0.0, "delivery": 230.76923076923077, "other": 482.0, "net_profit": 7926.018269230768}, "หน้ามอ (ม.เกษตร)": {"sale": 83036.0, "disc": 10853.0, "net_sale": 72183.0, "cogs": 41518.0, "gross": 30665.0, "wage": 5113.49, "com": 0.0, "com_sp": 0.0, "staff": 1247.2225, "rent": 0.0, "prop_tax": 0.0, "water": 40.0, "elec": 10310.83, "transfer": 0.0, "net_fee": 0.0, "phone": 206.96, "common": 0.0, "ice": 100.0, "outside": 1110.0, "sign": 0.0, "delivery": 230.76923076923077, "other": 48.0, "net_profit": 22484.708269230763}, "ลำพยา 3 (เก่า)": {"sale": 119540.0, "disc": 10195.0, "net_sale": 109345.0, "cogs": 59770.0, "gross": 49575.0, "wage": 5113.49, "com": 373.8, "com_sp": 0.0, "staff": 1247.2225, "rent": 8100.0, "prop_tax": 351.0, "water": 0.0, "elec": 2334.0, "transfer": 0.0, "net_fee": 0.0, "phone": 206.96, "common": 0.0, "ice": 0.0, "outside": 0.0, "sign": 0.0, "delivery": 230.76923076923077, "other": 0.0, "net_profit": 41844.73826923076}}, "3": {"คุณาวรรณ": {"sale": 61455.0, "disc": 14214.0, "net_sale": 47241.0, "cogs": 30727.5, "gross": 16513.5, "wage": 5113.49, "com": 0.0, "com_sp": 0.0, "staff": 1247.2225, "rent": 5820.0, "prop_tax": 0.0, "water": 41.0, "elec": 4136.26, "transfer": 0.0, "net_fee": 0.0, "phone": 206.96, "common": 0.0, "ice": 0.0, "outside": 0.0, "sign": 0.0, "delivery": 230.76923076923077, "other": 176.0, "net_profit": 9768.778269230768}, "หน้ามอ (ม.เกษตร)": {"sale": 95114.0, "disc": 12978.0, "net_sale": 82136.0, "cogs": 47557.0, "gross": 34579.0, "wage": 5113.49, "com": 0.0, "com_sp": 100.0, "staff": 1247.2225, "rent": 0.0, "prop_tax": 0.0, "water": 55.0, "elec": 12394.82, "transfer": 0.0, "net_fee": 0.0, "phone": 206.96, "common": 0.0, "ice": 50.0, "outside": 150.0, "sign": 0.0, "delivery": 230.76923076923077, "other": 153.0, "net_profit": 25104.718269230765}, "ลำพยา 3 (เก่า)": {"sale": 121235.0, "disc": 7615.0, "net_sale": 113620.0, "cogs": 60617.5, "gross": 53002.5, "wage": 5113.49, "com": 554.8, "com_sp": 100.0, "staff": 1247.2225, "rent": 8100.0, "prop_tax": 351.0, "water": 0.0, "elec": 2280.0, "transfer": 0.0, "net_fee": 0.0, "phone": 206.96, "common": 0.0, "ice": 0.0, "outside": 0.0, "sign": 0.0, "delivery": 230.76923076923077, "other": 0.0, "net_profit": 45045.23826923076}}, "4": {"คุณาวรรณ": {"sale": 69832.0, "disc": 17927.0, "net_sale": 51905.0, "cogs": 34916.0, "gross": 16989.0, "wage": 5113.49, "com": 0.0, "com_sp": 100.0, "staff": 1247.2225, "rent": 5820.0, "prop_tax": 0.0, "water": 38.0, "elec": 3348.12, "transfer": 0.0, "net_fee": 0.0, "phone": 206.96, "common": 0.0, "ice": 0.0, "outside": 0.0, "sign": 0.0, "delivery": 230.76923076923077, "other": 330.0, "net_profit": 10781.41826923077}, "หน้ามอ (ม.เกษตร)": {"sale": 64625.0, "disc": 10260.0, "net_sale": 54365.0, "cogs": 32312.5, "gross": 22052.5, "wage": 5113.49, "com": 0.0, "com_sp": 0.0, "staff": 1247.2225, "rent": 0.0, "prop_tax": 0.0, "water": 55.0, "elec": 12477.01, "transfer": 0.0, "net_fee": 0.0, "phone": 206.96, "common": 0.0, "ice": 0.0, "outside": 660.0, "sign": 0.0, "delivery": 230.76923076923077, "other": 308.0, "net_profit": 11981.028269230768}, "ลำพยา 3 (เก่า)": {"sale": 114628.0, "disc": 8758.0, "net_sale": 105870.0, "cogs": 57314.0, "gross": 48556.0, "wage": 5113.49, "com": 234.8, "com_sp": 0.0, "staff": 1247.2225, "rent": 8100.0, "prop_tax": 351.0, "water": 0.0, "elec": 3156.0, "transfer": 0.0, "net_fee": 0.0, "phone": 206.96, "common": 0.0, "ice": 0.0, "outside": 0.0, "sign": 0.0, "delivery": 230.76923076923077, "other": 0.0, "net_profit": 40142.73826923076}}, "5": {"คุณาวรรณ": {"sale": 78995.0, "disc": 24539.0, "net_sale": 54456.0, "cogs": 39497.5, "gross": 14958.5, "wage": 5113.49, "com": 0.0, "com_sp": 0.0, "staff": 1247.2225, "rent": 5820.0, "prop_tax": 0.0, "water": 38.0, "elec": 3659.41, "transfer": 0.0, "net_fee": 0.0, "phone": 206.96, "common": 0.0, "ice": 0.0, "outside": 0.0, "sign": 0.0, "delivery": 230.76923076923077, "other": 185.0, "net_profit": 8684.628269230769}, "หน้ามอ (ม.เกษตร)": {"sale": 83278.0, "disc": 11864.0, "net_sale": 71414.0, "cogs": 41639.0, "gross": 29775.0, "wage": 5113.49, "com": 0.0, "com_sp": 100.0, "staff": 1247.2225, "rent": 0.0, "prop_tax": 0.0, "water": 70.0, "elec": 12571.58, "transfer": 0.0, "net_fee": 0.0, "phone": 206.96, "common": 0.0, "ice": 0.0, "outside": 360.0, "sign": 0.0, "delivery": 230.77, "other": 308.0, "net_profit": 19793.957499999993}, "ลำพยา 3 (เก่า)": {"sale": 110865.0, "disc": 7920.0, "net_sale": 102945.0, "cogs": 55432.5, "gross": 47512.5, "wage": 5113.49, "com": 117.8, "com_sp": 0.0, "staff": 1247.2225, "rent": 8100.0, "prop_tax": 351.0, "water": 0.0, "elec": 2760.0, "transfer": 0.0, "net_fee": 0.0, "phone": 206.96, "common": 0.0, "ice": 0.0, "outside": 0.0, "sign": 0.0, "delivery": 230.76923076923077, "other": 0.0, "net_profit": 39612.23826923076}}, "6": {"คุณาวรรณ": {"sale": 66189.0, "disc": 17919.0, "net_sale": 48270.0, "cogs": 33094.5, "gross": 15175.5, "wage": 5113.49, "com": 0.0, "com_sp": 0.0, "staff": 1247.2225, "rent": 5820.0, "prop_tax": 0.0, "water": 48.0, "elec": 3708.0, "transfer": 0.0, "net_fee": 0.0, "phone": 206.96, "common": 0.0, "ice": 0.0, "outside": 0.0, "sign": 0.0, "delivery": 230.76923076923077, "other": 125.0, "net_profit": 8903.038269230768}, "หน้ามอ (ม.เกษตร)": {"sale": 134409.0, "disc": 9666.0, "net_sale": 124743.0, "cogs": 67204.5, "gross": 57538.5, "wage": 5113.49, "com": 989.72, "com_sp": 200.0, "staff": 1247.2225, "rent": 0.0, "prop_tax": 0.0, "water": 55.0, "elec": 12370.0, "transfer": 0.0, "net_fee": 0.0, "phone": 206.96, "common": 0.0, "ice": 50.0, "outside": 250.0, "sign": 0.0, "delivery": 230.77, "other": 0.0, "net_profit": 47052.3175}, "ลำพยา 3 (เก่า)": {"sale": 63900.0, "disc": 5230.0, "net_sale": 58670.0, "cogs": 31950.0, "gross": 26720.0, "wage": 5113.49, "com": 0.0, "com_sp": 0.0, "staff": 1247.2225, "rent": 8100.0, "prop_tax": 351.0, "water": 0.0, "elec": 2388.0, "transfer": 0.0, "net_fee": 0.0, "phone": 206.96, "common": 0.0, "ice": 0.0, "outside": 0.0, "sign": 0.0, "delivery": 230.76923076923077, "other": 20.0, "net_profit": 19289.53826923077}}}};
+
+var MONTH_TH = ['','ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+var chartProfit, chartCost, chartTrend;
+
+function fmt(n,dec){
+  dec = dec||0;
+  if(!n) return '-';
+  return Math.round(n).toLocaleString('th-TH');
+}
+function fmtB(n){ if(!n&&n!==0) return '-'; var v=Math.round(n).toLocaleString('th-TH'); return (n<0?'-':'')+'฿'+Math.abs(Math.round(n)).toLocaleString('th-TH'); }
+function pct(n,d){ return d?((n/d)*100).toFixed(1)+'%':'0%'; }
+
+// Init selectors
+function initSelectors(){
+  var yrEl=document.getElementById('costYr');
+  var moEl=document.getElementById('costMo');
+  var years=Object.keys(COST_DATA).map(Number).sort(function(a,b){return b-a;});
+  yrEl.innerHTML=years.map(function(y){return '<option value="'+y+'">'+y+'</option>';}).join('');
+  var yr=years[0];
+  var months=Object.keys(COST_DATA[yr]).map(Number).sort(function(a,b){return b-a;});
+  moEl.innerHTML=months.map(function(m){return '<option value="'+m+'">'+MONTH_TH[m]+'</option>';}).join('');
+  yrEl.onchange=function(){
+    var y=parseInt(this.value);
+    var ms=Object.keys(COST_DATA[y]).map(Number).sort(function(a,b){return b-a;});
+    moEl.innerHTML=ms.map(function(m){return '<option value="'+m+'">'+MONTH_TH[m]+'</option>';}).join('');
+    renderCost();
+  };
+}
+
+function renderCost(){
+  var yr=parseInt(document.getElementById('costYr').value);
+  var mo=parseInt(document.getElementById('costMo').value);
+  var d=COST_DATA[yr]&&COST_DATA[yr][mo];
+  if(!d){document.getElementById('costTable').innerHTML='<div style="color:#94a3b8;padding:24px;text-align:center">ไม่มีข้อมูล</div>';return;}
+  
+  var booths=Object.keys(d);
+  var totSale=0,totGross=0,totNet=0,totCogs=0,totDisc=0;
+  booths.forEach(function(b){
+    totSale+=d[b].sale||0; totGross+=d[b].gross||0; totNet+=d[b].net_profit||0;
+    totCogs+=d[b].cogs||0; totDisc+=d[b].disc||0;
+  });
+  
+  // KPI cards
+  var netColor=totNet>=0?'#16a34a':'#dc2626';
+  var grossPct=totSale?((totGross/totSale)*100).toFixed(1):0;
+  var netPct=totSale?((totNet/totSale)*100).toFixed(1):0;
+  document.getElementById('costKPI').innerHTML=
+    '<div class="kpi" style="border-top:4px solid #f97316">'
+      +'<div class="kpi-label">ยอดขายรวม</div>'
+      +'<div class="kpi-value" style="color:#f97316">฿'+fmt(totSale)+'</div>'
+      +'<div class="kpi-sub">ส่วนลด ฿'+fmt(totDisc)+'</div></div>'
+    +'<div class="kpi" style="border-top:4px solid #3b82f6">'
+      +'<div class="kpi-label">กำไรขั้นต้น (หลังหักต้นทุนขนม)</div>'
+      +'<div class="kpi-value" style="color:#3b82f6">฿'+fmt(totGross)+'</div>'
+      +'<div class="kpi-sub">'+grossPct+'% ของยอดขาย</div></div>'
+    +'<div class="kpi" style="border-top:4px solid '+netColor+'">'
+      +'<div class="kpi-label">กำไรสุทธิ (หลังหักค่าใช้จ่ายทั้งหมด)</div>'
+      +'<div class="kpi-value" style="color:'+netColor+'">฿'+fmt(totNet)+'</div>'
+      +'<div class="kpi-sub">'+netPct+'% ของยอดขาย</div></div>'
+    +'<div class="kpi" style="border-top:4px solid #8b5cf6">'
+      +'<div class="kpi-label">ต้นทุนขนม</div>'
+      +'<div class="kpi-value" style="color:#8b5cf6">฿'+fmt(totCogs)+'</div>'
+      +'<div class="kpi-sub">'+pct(totCogs,totSale)+' ของยอดขาย</div></div>';
+  
+  // Bar chart: profit per booth
+  var profits=booths.map(function(b){return Math.round(d[b].net_profit||0);});
+  var colors=profits.map(function(v){return v>=0?'rgba(22,163,74,0.8)':'rgba(220,38,38,0.8)';});
+  if(chartProfit) chartProfit.destroy();
+  chartProfit=new Chart(document.getElementById('profitChart'),{
+    type:'bar',
+    data:{labels:booths,datasets:[{label:'กำไรสุทธิ (฿)',data:profits,backgroundColor:colors,borderRadius:6}]},
+    options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{ticks:{callback:function(v){return v.toLocaleString();}}}}}
+  });
+  
+  // Doughnut chart: cost breakdown
+  var costKeys=[
+    ['wage','ค่าแรง'],['com','ค่าคอม'],['staff','พนักงานรายเดือน'],
+    ['rent','ค่าเช่า'],['elec','ค่าไฟ'],['other_sum','อื่นๆ']
+  ];
+  var costVals={};
+  booths.forEach(function(b){
+    var bd=d[b];
+    costVals.wage=(costVals.wage||0)+(bd.wage||0);
+    costVals.com=(costVals.com||0)+(bd.com||0)+(bd.com_sp||0);
+    costVals.staff=(costVals.staff||0)+(bd.staff||0);
+    costVals.rent=(costVals.rent||0)+(bd.rent||0);
+    costVals.elec=(costVals.elec||0)+(bd.elec||0);
+    costVals.other_sum=(costVals.other_sum||0)+(bd.prop_tax||0)+(bd.water||0)+(bd.transfer||0)+(bd.net_fee||0)+(bd.phone||0)+(bd.common||0)+(bd.ice||0)+(bd.outside||0)+(bd.sign||0)+(bd.delivery||0)+(bd.other||0);
+  });
+  var dLabels=[], dData=[], dColors=['#f97316','#3b82f6','#8b5cf6','#ec4899','#14b8a6','#94a3b8'];
+  costKeys.forEach(function(pair){var v=costVals[pair[0]]||0; if(v>0){dLabels.push(pair[1]);dData.push(Math.round(v));}});
+  if(chartCost) chartCost.destroy();
+  chartCost=new Chart(document.getElementById('costChart'),{
+    type:'doughnut',
+    data:{labels:dLabels,datasets:[{data:dData,backgroundColor:dColors.slice(0,dData.length),borderWidth:2}]},
+    options:{responsive:true,plugins:{legend:{position:'right',labels:{font:{size:11}}}}}
+  });
+  
+  // P&L table
+  var cols=['บูธ','ยอดขาย','ส่วนลด','คงเหลือ','ต้นทุนขนม','กำไรขั้นต้น','ค่าแรง','ค่าคอม','พนักงาน','ค่าเช่า','ค่าไฟ','ค่าใช้จ่ายอื่น','กำไรสุทธิ'];
+  var thead='<tr>'+cols.map(function(c){return '<th>'+c+'</th>';}).join('')+'</tr>';
+  var tbody=booths.map(function(b){
+    var bd=d[b];
+    var otherSum=(bd.prop_tax||0)+(bd.water||0)+(bd.transfer||0)+(bd.net_fee||0)+(bd.phone||0)+(bd.common||0)+(bd.ice||0)+(bd.outside||0)+(bd.sign||0)+(bd.delivery||0)+(bd.other||0);
+    var np=bd.net_profit||0;
+    var npClass=np>=0?'pos':'neg';
+    return '<tr>'
+      +'<td style="font-weight:700;color:#1e293b">'+b+'</td>'
+      +'<td style="text-align:right">฿'+fmt(bd.sale)+'</td>'
+      +'<td style="text-align:right;color:#dc2626">-฿'+fmt(bd.disc)+'</td>'
+      +'<td style="text-align:right">฿'+fmt(bd.net_sale)+'</td>'
+      +'<td style="text-align:right;color:#7c3aed">฿'+fmt(bd.cogs)+'</td>'
+      +'<td style="text-align:right;color:#2563eb;font-weight:700">฿'+fmt(bd.gross)+'</td>'
+      +'<td style="text-align:right">฿'+fmt(bd.wage)+'</td>'
+      +'<td style="text-align:right">฿'+fmt((bd.com||0)+(bd.com_sp||0))+'</td>'
+      +'<td style="text-align:right">฿'+fmt(bd.staff)+'</td>'
+      +'<td style="text-align:right">฿'+fmt(bd.rent)+'</td>'
+      +'<td style="text-align:right">฿'+fmt(bd.elec)+'</td>'
+      +'<td style="text-align:right">฿'+fmt(otherSum)+'</td>'
+      +'<td style="text-align:right" class="'+npClass+'">฿'+fmt(np)+'</td>'
+      +'</tr>';
+  }).join('');
+  // Total row
+  var totOther=0;
+  var totWage=0,totCom=0,totStaff=0,totRent=0,totElec=0;
+  booths.forEach(function(b){var bd=d[b];totWage+=bd.wage||0;totCom+=(bd.com||0)+(bd.com_sp||0);totStaff+=bd.staff||0;totRent+=bd.rent||0;totElec+=bd.elec||0;totOther+=(bd.prop_tax||0)+(bd.water||0)+(bd.transfer||0)+(bd.net_fee||0)+(bd.phone||0)+(bd.common||0)+(bd.ice||0)+(bd.outside||0)+(bd.sign||0)+(bd.delivery||0)+(bd.other||0);});
+  tbody+='<tr style="background:#1e293b;color:#fff;font-weight:800">'
+    +'<td>รวมทั้งหมด</td>'
+    +'<td style="text-align:right">฿'+fmt(totSale)+'</td>'
+    +'<td style="text-align:right;color:#fca5a5">-฿'+fmt(totDisc)+'</td>'
+    +'<td style="text-align:right">฿'+fmt(totSale-totDisc)+'</td>'
+    +'<td style="text-align:right;color:#c4b5fd">฿'+fmt(totCogs)+'</td>'
+    +'<td style="text-align:right;color:#93c5fd;font-weight:800">฿'+fmt(totGross)+'</td>'
+    +'<td style="text-align:right">฿'+fmt(totWage)+'</td>'
+    +'<td style="text-align:right">฿'+fmt(totCom)+'</td>'
+    +'<td style="text-align:right">฿'+fmt(totStaff)+'</td>'
+    +'<td style="text-align:right">฿'+fmt(totRent)+'</td>'
+    +'<td style="text-align:right">฿'+fmt(totElec)+'</td>'
+    +'<td style="text-align:right">฿'+fmt(totOther)+'</td>'
+    +'<td style="text-align:right;color:'+(totNet>=0?'#86efac':'#fca5a5')+'">฿'+fmt(totNet)+'</td>'
+    +'</tr>';
+  
+  document.getElementById('costTable').innerHTML=
+    '<div class="section-title">📋 รายละเอียดต้นทุนแต่ละบูธ</div>'
+    +'<div style="overflow-x:auto"><table><thead>'+thead+'</thead><tbody>'+tbody+'</tbody></table></div>';
+  
+  // Trend chart
+  renderTrend(yr);
+}
+
+function renderTrend(selYr){
+  var tLabels=[], tProfit=[], tSale=[];
+  var years=Object.keys(COST_DATA).map(Number).sort();
+  years.forEach(function(y){
+    var months=Object.keys(COST_DATA[y]).map(Number).sort();
+    months.forEach(function(m){
+      var d=COST_DATA[y][m], booths=Object.keys(d);
+      var tot=booths.reduce(function(s,b){return s+(d[b].net_profit||0);},0);
+      var sale=booths.reduce(function(s,b){return s+(d[b].sale||0);},0);
+      tLabels.push(MONTH_TH[m]+' '+y);
+      tProfit.push(Math.round(tot));
+      tSale.push(Math.round(sale));
+    });
+  });
+  if(chartTrend) chartTrend.destroy();
+  chartTrend=new Chart(document.getElementById('trendChart'),{
+    type:'bar',
+    data:{labels:tLabels,datasets:[
+      {type:'line',label:'กำไรสุทธิ',data:tProfit,borderColor:'#f97316',backgroundColor:'rgba(249,115,22,.1)',tension:.3,yAxisID:'y'},
+      {label:'ยอดขาย',data:tSale,backgroundColor:'rgba(59,130,246,.3)',yAxisID:'y2',borderRadius:4}
+    ]},
+    options:{responsive:true,plugins:{legend:{position:'top'}},scales:{
+      y:{ticks:{callback:function(v){return v.toLocaleString();}}},
+      y2:{position:'right',ticks:{callback:function(v){return v.toLocaleString();}},grid:{drawOnChartArea:false}}
+    }}
+  });
+}
+
+initSelectors();
+renderCost();
+</script>
+</body>
+</html>

@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Skills</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Inter", sans-serif;
+      background-color: #FFFFFF;
+      color: #0F172A;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 48px 24px;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+
+    header h1 {
+      font-size: 2rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      color: #0F172A;
+    }
+
+    header p {
+      margin-top: 8px;
+      font-size: 1rem;
+      color: #64748B;
+    }
+
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      width: 100%;
+      max-width: 860px;
+    }
+
+    @media (max-width: 640px) {
+      .skills-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .card {
+      background: #F8FAFC;
+      border: 1px solid #E2E8F0;
+      border-radius: 12px;
+      padding: 28px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      transition: box-shadow 0.2s ease;
+    }
+
+    .card:hover {
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .card-icon {
+      font-size: 1.6rem;
+      line-height: 1;
+    }
+
+    .card-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #0F172A;
+    }
+
+    .card-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .card-description {
+      font-size: 0.85rem;
+      color: #64748B;
+      line-height: 1.5;
+    }
+
+    .badge {
+      font-size: 0.7rem;
+      font-weight: 500;
+      color: #3B82F6;
+      background: rgba(59, 130, 246, 0.08);
+      border: 1px solid rgba(59, 130, 246, 0.2);
+      border-radius: 999px;
+      padding: 3px 10px;
+      white-space: nowrap;
+    }
+
+    .progress-track {
+      height: 5px;
+      background: #E2E8F0;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: #3B82F6;
+      border-radius: 999px;
+      width: 0%;
+      transition: width 0.9s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Skills</h1>
+    <p>Technologies I work with</p>
+  </header>
+
+  <main>
+    <section class="skills-grid" aria-label="Skills">
+
+      <article class="card" data-progress="95">
+        <div class="card-header">
+          <span class="card-icon" aria-hidden="true">🌐</span>
+          <span class="card-title">HTML</span>
+        </div>
+        <div class="card-meta">
+          <p class="card-description">Building semantic, accessible web structure</p>
+          <span class="badge">Expert</span>
+        </div>
+        <div class="progress-track" role="progressbar" aria-label="HTML proficiency" aria-valuenow="95" aria-valuemin="0" aria-valuemax="100">
+          <div class="progress-fill"></div>
+        </div>
+      </article>
+
+      <article class="card" data-progress="82">
+        <div class="card-header">
+          <span class="card-icon" aria-hidden="true">🎨</span>
+          <span class="card-title">CSS</span>
+        </div>
+        <div class="card-meta">
+          <p class="card-description">Styling layouts, animations, and responsive design</p>
+          <span class="badge">Advanced</span>
+        </div>
+        <div class="progress-track" role="progressbar" aria-label="CSS proficiency" aria-valuenow="82" aria-valuemin="0" aria-valuemax="100">
+          <div class="progress-fill"></div>
+        </div>
+      </article>
+
+      <article class="card" data-progress="78">
+        <div class="card-header">
+          <span class="card-icon" aria-hidden="true">⚡</span>
+          <span class="card-title">JavaScript</span>
+        </div>
+        <div class="card-meta">
+          <p class="card-description">Building interactive and dynamic web experiences</p>
+          <span class="badge">Advanced</span>
+        </div>
+        <div class="progress-track" role="progressbar" aria-label="JavaScript proficiency" aria-valuenow="78" aria-valuemin="0" aria-valuemax="100">
+          <div class="progress-fill"></div>
+        </div>
+      </article>
+
+    </section>
+  </main>
+
+  <script>
+    const cards = document.querySelectorAll('.card[data-progress]');
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const card = entry.target;
+          const fill = card.querySelector('.progress-fill');
+          const target = card.dataset.progress;
+          fill.style.width = target + '%';
+          observer.unobserve(card);
+        }
+      });
+    }, { threshold: 0.3 });
+
+    cards.forEach(card => observer.observe(card));
+  </script>
+
+</body>
+</html>
