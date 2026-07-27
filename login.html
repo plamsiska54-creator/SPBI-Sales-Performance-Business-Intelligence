@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>เข้าสู่ระบบ · Sales Dashboard 2026</title>
+<link rel="stylesheet" href="css/login.css">
+</head>
+<body>
+
+<div class="login-wrap">
+  <div class="login-card">
+
+    <!-- Brand header -->
+    <div class="login-brand">
+      <div class="brand-th">วรรณวนัช</div>
+      <div class="brand-en">Wanwanach</div>
+      <div class="brand-sub">Sales Performance &amp; Business Intelligence</div>
+    </div>
+
+    <!-- Login form -->
+    <form id="loginForm" class="login-form" autocomplete="on" novalidate>
+      <div class="form-title">เข้าสู่ระบบ</div>
+
+      <label class="field-label" for="loginEmail">อีเมล</label>
+      <input type="email" id="loginEmail" class="field-input"
+             placeholder="name@wanwanach.com" autocomplete="username" required>
+
+      <label class="field-label" for="loginPassword">รหัสผ่าน</label>
+      <input type="password" id="loginPassword" class="field-input"
+             placeholder="รหัสผ่าน" autocomplete="current-password" required>
+
+      <div id="loginError" class="login-error" role="alert"></div>
+
+      <button type="submit" id="loginBtn" class="login-btn">เข้าสู่ระบบ</button>
+    </form>
+
+    <!-- Demo accounts -->
+    <div class="demo-box">
+      <div class="demo-title">บัญชีทดลอง (กดเพื่อกรอกอัตโนมัติ)</div>
+      <div class="demo-grid">
+        <button type="button" class="demo-btn" data-email="admin@wanwanach.com">
+          <span class="demo-role admin">ผู้ดูแลระบบ</span>
+          <span class="demo-email">admin@wanwanach.com</span>
+        </button>
+        <button type="button" class="demo-btn" data-email="manager@wanwanach.com">
+          <span class="demo-role manager">ผู้จัดการ</span>
+          <span class="demo-email">manager@wanwanach.com</span>
+        </button>
+        <button type="button" class="demo-btn" data-email="sales@wanwanach.com">
+          <span class="demo-role sales">ฝ่ายขาย</span>
+          <span class="demo-email">sales@wanwanach.com</span>
+        </button>
+        <button type="button" class="demo-btn" data-email="viewer@wanwanach.com">
+          <span class="demo-role viewer">ผู้ดูข้อมูล</span>
+          <span class="demo-email">viewer@wanwanach.com</span>
+        </button>
+      </div>
+      <div class="demo-hint">รหัสผ่านทดลองทุกบัญชี: <code>demo1234</code></div>
+    </div>
+
+    <div class="login-note">
+      เวอร์ชันสำหรับรีวิวในเครื่อง · ระบบจริงจะยืนยันตัวตนผ่าน Supabase Auth
+    </div>
+  </div>
+</div>
+
+<script src="js/auth.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  // ถ้ามี session อยู่แล้ว ให้ข้ามหน้า login ไป dashboard ทันที
+  if (Auth.getSession()) {
+    window.location.replace('sales_dashboard.html');
+    return;
+  }
+
+  var form = document.getElementById('loginForm');
+  var emailEl = document.getElementById('loginEmail');
+  var passEl = document.getElementById('loginPassword');
+  var errEl = document.getElementById('loginError');
+  var btnEl = document.getElementById('loginBtn');
+
+  function showError(msg) {
+    errEl.textContent = msg;
+    errEl.classList.add('show');
+  }
+  function clearError() {
+    errEl.textContent = '';
+    errEl.classList.remove('show');
+  }
+
+  // กดบัญชีทดลอง → auto-fill อีเมล + รหัส demo
+  Array.prototype.forEach.call(document.querySelectorAll('.demo-btn'), function (b) {
+    b.addEventListener('click', function () {
+      emailEl.value = b.getAttribute('data-email');
+      passEl.value = 'demo1234';
+      clearError();
+      passEl.focus();
+    });
+  });
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    clearError();
+    btnEl.disabled = true;
+    btnEl.textContent = 'กำลังตรวจสอบ...';
+
+    Auth.authenticate(emailEl.value, passEl.value).then(function (res) {
+      if (!res.ok) {
+        showError(res.error || 'เข้าสู่ระบบไม่สำเร็จ');
+        btnEl.disabled = false;
+        btnEl.textContent = 'เข้าสู่ระบบ';
+        return;
+      }
+      Auth.saveSession(res.user);
+      window.location.replace('sales_dashboard.html');
+    }).catch(function (err) {
+      showError('เกิดข้อผิดพลาด กรุณาลองใหม่');
+      btnEl.disabled = false;
+      btnEl.textContent = 'เข้าสู่ระบบ';
+      console.error('login error', err);
+    });
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html><head><title>Video Frame Extractor</title>
+<style>body{margin:0;background:#000;display:flex;flex-direction:column;align-items:center}
+video{max-width:100%;max-height:80vh}
+canvas{display:none}
+#info{color:#fff;padding:10px;font-family:monospace}</style>
+</head><body>
+<div id="info">Loading video...</div>
+<video id="v" controls muted>
+<source src="/check_error_sale_dashboard.mp4" type="video/mp4">
+</video>
+<canvas id="c"></canvas>
+<script>
+var v=document.getElementById('v');
+var c=document.getElementById('c');
+var info=document.getElementById('info');
+v.addEventListener('loadedmetadata',function(){
+  info.textContent='Duration: '+v.duration.toFixed(1)+'s, Size: '+v.videoWidth+'x'+v.videoHeight;
+  c.width=v.videoWidth; c.height=v.videoHeight;
+});
+v.addEventListener('error',function(e){
+  info.textContent='Error loading video: '+e.message;
+});
+// Function to capture frame at specific time
+window.captureFrame=function(time){
+  return new Promise(function(resolve){
+    v.currentTime=time;
+    v.onseeked=function(){
+      var ctx=c.getContext('2d');
+      ctx.drawImage(v,0,0,c.width,c.height);
+      resolve(c.toDataURL('image/png').length);
+    };
+  });
+};
+window.getFrameDataUrl=function(){
+  var ctx=c.getContext('2d');
+  ctx.drawImage(v,0,0,c.width,c.height);
+  return c.toDataURL('image/jpeg',0.85);
+};
+</script>
+</body></html>

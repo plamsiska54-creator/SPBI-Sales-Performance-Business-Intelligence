@@ -30,11 +30,13 @@
   .hbadge.ok{background:rgba(34,197,94,.25);border-color:rgba(34,197,94,.4)}
 
   /* FILTER BAR */
-  .filter-bar{background:var(--surface);border-bottom:1px solid var(--border);padding:12px 32px;display:flex;align-items:center;gap:12px;box-shadow:0 1px 4px rgba(0,0,0,.06);}
+  .filter-bar{background:var(--surface);border-bottom:1px solid var(--border);padding:10px 20px;display:flex;align-items:center;gap:8px;box-shadow:0 2px 6px rgba(0,0,0,.08);margin-top:12px;margin-bottom:16px;}
   .filter-label{font-size:12px;font-weight:600;color:var(--text2);white-space:nowrap}
   .filter-months{display:flex;gap:6px;flex-wrap:wrap}
   .fmtab{padding:6px 14px;border-radius:20px;cursor:pointer;font-size:12px;font-weight:600;color:var(--text2);background:var(--bg);border:1.5px solid var(--border);transition:all .18s;user-select:none}
 .hidden{display:none!important}
+  /* RBAC: ซ่อน element ที่ผู้ใช้ไม่มีสิทธิ์ (คุมโดย js/auth.js applyRBAC) */
+  .rbac-hidden{display:none!important}
   .pin-dot{width:14px;height:14px;border-radius:50%;border:2px solid #cbd5e1;background:transparent;transition:all .15s}
   .pin-dot.filled{background:linear-gradient(135deg,#ea580c,#d97706);border-color:#ea580c}
   .pin-dot.shake{animation:pinShake .3s ease}
@@ -200,7 +202,7 @@
   }
 
   /* PERIOD TYPE SELECTOR */
-  .period-type-btn{padding:5px 14px;border-radius:20px;cursor:pointer;font-size:12px;font-weight:700;
+  .period-type-btn{padding:4px 12px;border-radius:20px;cursor:pointer;font-size:11px;font-weight:700;
     color:var(--text2);background:var(--bg);border:1.5px solid var(--border);transition:all .18s;user-select:none}
   .period-type-btn:hover:not(.active){border-color:var(--accent);color:var(--accent);background:#fff7ed}
   .period-type-btn.active{background:var(--accent);color:#fff;border-color:var(--accent);box-shadow:0 2px 8px rgba(234,88,12,.3)}
@@ -300,9 +302,613 @@
 .qmenu-item{padding:9px 16px;font-size:13px;font-weight:500;color:#374151;cursor:pointer;transition:background .15s}
 .qmenu-item:hover{background:#f0f9ff;color:#0891b2}
 .qmenu-item.active{background:#e0f2fe;color:#0891b2;font-weight:700}
-.sub-tabs{display:flex;gap:4px;flex-wrap:wrap;padding:8px 0 12px;border-bottom:2px solid var(--border);margin-bottom:16px;overflow:visible}
+.sub-tabs{display:flex;gap:4px;flex-wrap:wrap;padding:6px 0 8px;border-bottom:2px solid var(--border);margin-bottom:12px;overflow:visible;
+  position:static;z-index:auto;background:var(--bg,#fff)}
+.sub-tabs.sm-sub-tabs{background:#fff7ed}
 .ol-sub{display:block}
 .sub-tab{padding:7px 16px;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;color:#64748b;background:#f1f5f9;transition:all .2s}
 .sub-tab:hover{background:#e2e8f0;color:#374151}
 .sub-tab.active{background:linear-gradient(135deg,#ea580c,#f97316);color:#fff;box-shadow:0 2px 8px rgba(234,88,12,.3)}
 .sub-section{display:none}.sub-section.active{display:block}
+
+/* ===== Quality Filter Bar ===== */
+.qa-filter-bar{display:flex;align-items:center;gap:10px;padding:10px 16px;margin-bottom:16px;background:#fff7ed;border:1.5px solid #fdba74;border-radius:10px;flex-wrap:wrap}
+.qa-filter-label{font-size:12px;font-weight:600;color:#9a3412;margin-left:6px}
+.qa-filter-select{padding:5px 12px;border-radius:8px;border:1.5px solid #fdba74;font-size:13px;font-weight:600;color:#9a3412;background:#fff;cursor:pointer;outline:none;transition:border-color .2s}
+.qa-filter-select:focus{border-color:#ea580c;box-shadow:0 0 0 2px rgba(234,88,12,.15)}
+.qa-filter-status{font-size:12px;color:#78350f;font-weight:500;margin-left:auto;white-space:nowrap}
+@media(max-width:600px){.qa-filter-bar{gap:6px;padding:8px 10px}.qa-filter-status{margin-left:0;width:100%;text-align:center}}
+
+/* ===== CJ Compensate toggle ===== */
+.cj-comp-toggle{padding:7px 18px;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;border:1.5px solid #cbd5e1;background:#f8fafc;color:#64748b;transition:all .2s}
+.cj-comp-toggle:hover{background:#e2e8f0;color:#374151}
+.cj-comp-toggle.active{background:linear-gradient(135deg,#1e40af,#3b82f6);color:#fff;border-color:transparent;box-shadow:0 2px 8px rgba(59,130,246,.3)}
+/* ===== TEAM (ทีมงานฝ่ายขาย) ===== */
+.team-controls{margin-bottom:16px}
+.team-controls-row{margin-bottom:12px}
+.team-search{width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;background:var(--bg);color:var(--text);outline:none}
+.team-search:focus{border-color:var(--accent)}
+.team-dept-filter{display:flex;gap:8px;flex-wrap:wrap}
+.team-chip{padding:7px 14px;border-radius:20px;font-size:12.5px;font-weight:600;cursor:pointer;color:#64748b;background:#f1f5f9;border:1.5px solid transparent;transition:all .2s}
+.team-chip:hover{background:#e2e8f0;color:#374151}
+.team-chip.active{background:linear-gradient(135deg,#ea580c,#f97316);color:#fff;box-shadow:0 2px 8px rgba(234,88,12,.3)}
+.team-groups{display:flex;flex-direction:column;gap:22px}
+.team-group-head{display:flex;align-items:center;justify-content:space-between;padding:8px 14px;background:var(--surface2);border-radius:10px;margin-bottom:14px}
+.team-group-title{font-size:15px;font-weight:800;color:var(--text)}
+.team-group-count{font-size:12px;font-weight:700;color:var(--text2);background:var(--bg);padding:3px 10px;border-radius:12px}
+.team-empty{text-align:center;padding:40px;color:var(--text2);font-size:14px}
+.staff-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:14px}
+.staff-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px 18px;box-shadow:0 1px 6px rgba(0,0,0,.05);transition:all .2s}
+.staff-card:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(234,88,12,.12)}
+.staff-card-head{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.staff-avatar{position:relative;width:52px;height:52px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;overflow:hidden;box-shadow:0 2px 6px rgba(0,0,0,.15)}
+.staff-avatar-txt{color:#fff;font-size:20px;font-weight:800;line-height:1}
+.staff-avatar-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.staff-avatar-sm{width:40px;height:40px}
+.staff-avatar-sm .staff-avatar-txt{font-size:16px}
+/* ปุ่มจัดการรูปพนักงาน (ข้อ 5) — เห็นเฉพาะ manager+ */
+.staff-photo-ctl{display:flex;gap:8px;margin-top:10px;padding-top:10px;border-top:1px dashed var(--border)}
+.staff-photo-btn{flex:1;font-size:11px;font-weight:700;padding:5px 8px;border-radius:7px;border:1.5px solid var(--border);background:#fff;color:#475569;cursor:pointer;transition:all .15s}
+.staff-photo-btn:hover{border-color:#ea580c;color:#ea580c;background:#fff7ed}
+.staff-photo-btn.del:hover{border-color:#dc2626;color:#dc2626;background:#fef2f2}
+/* thumbnail รูปคอมเพลน (ข้อ 7) */
+.cmp-thumb{width:40px;height:40px;object-fit:cover;border-radius:6px;border:1px solid var(--border);cursor:pointer;margin:2px;transition:transform .12s}
+.cmp-thumb:hover{transform:scale(1.08);box-shadow:0 4px 12px rgba(0,0,0,.18)}
+.cmp-img-cell{white-space:nowrap}
+.cmp-img-loading{font-size:11px;color:#94a3b8}
+.staff-head-txt{min-width:0}
+.staff-nick{font-size:16px;font-weight:800;color:var(--text)}
+.staff-name{font-size:12px;color:var(--text2);margin-top:1px}
+.staff-title{font-size:13px;font-weight:700;color:var(--accent);margin-bottom:6px}
+.staff-level{margin-bottom:10px}
+.staff-badge{display:inline-block;font-size:11px;font-weight:700;color:var(--text2);background:var(--yellow-bg);padding:2px 10px;border-radius:10px}
+.staff-body{display:flex;flex-direction:column;gap:5px;border-top:1px dashed var(--border);padding-top:10px}
+.staff-row{display:flex;align-items:flex-start;gap:7px;font-size:12px;color:var(--text);line-height:1.5;word-break:break-word}
+.staff-ic{flex-shrink:0}
+.staff-pii{display:flex;flex-direction:column;gap:5px}
+/* ---- org chart ---- */
+.org-chart{overflow-x:auto;padding:10px 4px 4px}
+.org-tree{display:flex;flex-direction:column;align-items:center;min-width:max-content}
+.org-row{display:flex;justify-content:center;gap:18px;flex-wrap:wrap}
+.org-connector-v{width:2px;height:26px;background:var(--border)}
+.org-node{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px 14px;text-align:center;min-width:150px;box-shadow:0 1px 5px rgba(0,0,0,.06);display:flex;flex-direction:column;align-items:center;gap:6px}
+.org-node-nick{font-size:13.5px;font-weight:800;color:var(--text)}
+.org-node-title{font-size:11px;color:var(--text2);line-height:1.35}
+.org-lv1{border-top-width:4px!important;min-width:180px}
+.org-depts{display:flex;gap:16px;align-items:flex-start;justify-content:center;flex-wrap:wrap;position:relative;padding-top:26px}
+.org-depts::before{content:'';position:absolute;top:0;left:50%;width:2px;height:26px;background:var(--border);transform:translateX(-50%)}
+.org-dept-col{display:flex;flex-direction:column;gap:10px;min-width:170px;max-width:200px}
+.org-dept-head{color:#fff;font-size:12.5px;font-weight:800;text-align:center;padding:8px 10px;border-radius:10px;line-height:1.3}
+.org-dept-body{display:flex;flex-direction:column;gap:10px}
+
+/* ---- เมนูดาวน์โหลด (export) ---- */
+.dl-item{display:block;width:100%;text-align:left;background:transparent;border:none;
+  padding:9px 12px;font-size:13px;font-weight:600;color:var(--text);cursor:pointer;
+  border-radius:7px;font-family:inherit;white-space:nowrap}
+.dl-item:hover{background:var(--surface2)}
+.dl-item:active{background:var(--yellow-bg)}
+
+/* ---- ORDERING (ธุรการขาย) ---- */
+.ord-note{background:#eff6ff;border:1px solid #bfdbfe;color:#1e3a8a;border-radius:10px;
+  padding:10px 14px;font-size:12.5px;line-height:1.6;margin-bottom:14px}
+.ord-note-warn{background:#fef2f2;border-color:#fecaca;color:#991b1b}
+.ord-subnote{font-size:11.5px;color:var(--text2);margin-bottom:8px;font-style:italic}
+.ord-filter-row{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:12px}
+.ord-sel-label{font-size:12.5px;font-weight:700;color:var(--text2);display:flex;align-items:center;gap:6px}
+.ord-select{padding:7px 12px;border-radius:9px;border:1px solid var(--border);font-size:13px;
+  font-weight:600;background:#fff;color:var(--text);cursor:pointer;font-family:inherit}
+.ord-scroll{max-height:520px;overflow-y:auto}
+.ord-status-ok{display:inline-block;background:#dcfce7;color:#166534;font-weight:700;
+  padding:2px 9px;border-radius:20px;font-size:11.5px}
+.ord-status-no{display:inline-block;background:#f1f5f9;color:#64748b;font-weight:700;
+  padding:2px 9px;border-radius:20px;font-size:11.5px}
+.ord-status-warn{display:inline-block;background:#fef3c7;color:#92400e;font-weight:700;
+  padding:2px 9px;border-radius:20px;font-size:11.5px}
+
+/* KPI สีม่วง (การโทรลูกค้า) */
+.kpi-card.purple::before{background:linear-gradient(90deg,#7c3aed,#a78bfa)}
+.kpi-card.purple::after{background:#7c3aed}
+
+/* Sub-tab การโทรลูกค้า */
+.ord-calls-head{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:12px}
+.ord-call-add-btn{background:#7c3aed;color:#fff;border:none;padding:8px 16px;border-radius:9px;
+  font-size:13px;font-weight:700;cursor:pointer;font-family:inherit}
+.ord-call-add-btn:hover{background:#6d28d9}
+.ord-clear-btn{background:#f1f5f9;color:#475569;border:1px solid var(--border);padding:7px 14px;
+  border-radius:9px;font-size:12.5px;font-weight:700;cursor:pointer;font-family:inherit}
+.ord-clear-btn:hover{background:#e2e8f0}
+.ord-target-badge{display:inline-block;background:#ede9fe;color:#6d28d9;font-weight:700;
+  padding:2px 10px;border-radius:20px;font-size:11.5px;margin-left:8px;vertical-align:middle}
+
+/* Autocomplete ค้นหาลูกค้าในฟอร์มการโทร */
+.call-cust-results{position:absolute;top:100%;left:0;right:0;z-index:30;background:#fff;
+  border:1.5px solid #cbd5e1;border-radius:8px;margin-top:4px;max-height:260px;overflow-y:auto;
+  box-shadow:0 12px 30px rgba(0,0,0,.18)}
+.call-cust-item{padding:8px 12px;font-size:12.5px;color:#1e293b;cursor:pointer;border-bottom:1px solid #f1f5f9;line-height:1.4}
+.call-cust-item:last-child{border-bottom:none}
+.call-cust-item:hover{background:#f5f3ff}
+.call-cust-item b{color:#7c3aed}
+.call-cust-empty{color:#94a3b8;cursor:default;font-style:italic}
+.call-cust-empty:hover{background:#fff}
+.call-cust-branch{color:#64748b}
+.call-cust-route{display:block;font-size:11px;color:#94a3b8;margin-top:2px}
+.call-cust-selected{font-size:12px;color:#166534;background:#dcfce7;border-radius:7px;padding:6px 10px;line-height:1.4}
+
+/* การ์ดพนักงานธุรการ */
+.ord-staff-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
+.ord-staff-card{border:1px solid var(--border);border-radius:14px;padding:15px;background:var(--surface);
+  display:flex;flex-direction:column;gap:8px}
+.ord-staff-head{display:flex;align-items:center;gap:11px}
+.ord-staff-avatar{width:44px;height:44px;border-radius:50%;background:#7c3aed;color:#fff;
+  display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px;flex-shrink:0}
+.ord-staff-nick{font-size:15px;font-weight:800;color:var(--text)}
+.ord-staff-name{font-size:11.5px;color:var(--text2)}
+.ord-staff-title{font-size:12.5px;font-weight:700;color:#7c3aed}
+.ord-badge{display:inline-block;background:#f3e8ff;color:#6b21a8;font-weight:700;
+  padding:2px 10px;border-radius:20px;font-size:11px}
+.ord-staff-row{display:flex;align-items:flex-start;gap:7px;font-size:12px;color:var(--text)}
+.ord-ic{flex-shrink:0}
+
+/* กล่องรอบรับออเดอร์ */
+.ord-cutoff-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px}
+.ord-cutoff-box{border:1px solid var(--border);border-left:4px solid #7c3aed;border-radius:10px;
+  padding:12px 14px;background:var(--surface)}
+.ord-cutoff-day{font-size:14px;font-weight:800;color:#7c3aed;margin-bottom:5px}
+.ord-cutoff-detail{font-size:12px;color:var(--text);line-height:1.6}
+/* Performance รายคน (ranking + detail) */
+.ord-perf-rank-head{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:8px}
+.ord-perf-name-btn{background:none;border:none;padding:0;color:#7c3aed;font-weight:700;cursor:pointer;font-size:inherit;text-align:left;text-decoration:underline;text-underline-offset:2px}
+.ord-perf-name-btn:hover{color:#5b21b6}
+.ord-perf-rank-badge{display:inline-flex;align-items:center;justify-content:center;min-width:26px;height:26px;border-radius:50%;font-weight:800;font-size:12px;color:#fff;background:#94a3b8}
+.ord-perf-rank-badge.r1{background:#f59e0b}.ord-perf-rank-badge.r2{background:#64748b}.ord-perf-rank-badge.r3{background:#b45309}
+tr.ord-perf-active td{background:#f5f3ff}
+.ord-mini-btn{background:none;border:1px solid var(--border);border-radius:6px;padding:3px 8px;cursor:pointer;font-size:13px;transition:.15s}
+.ord-mini-btn:hover{background:#f1f5f9}
+.ord-staff-avatar{font-size:36px;text-align:center;margin-bottom:4px}
+.ord-staff-name{font-size:14px;font-weight:800;color:var(--text);text-align:center}
+.ord-staff-role{font-size:11px;color:var(--text2);text-align:center;margin-bottom:6px}
+.ord-staff-zone,.ord-staff-phone{font-size:12px;color:var(--text2);margin-top:4px}
+
+/* ============================================================
+   แผงแอดมิน (Master Data) — ข้อ 4
+   ============================================================ */
+.admin-banner{background:#fff7ed;border:1px solid #fed7aa;border-left:4px solid #ea580c;border-radius:8px;
+  padding:10px 14px;font-size:12px;color:#9a3412;margin-bottom:14px;line-height:1.6}
+.admin-warn{background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:8px 12px;font-size:12px;
+  color:#b91c1c;margin-bottom:10px;line-height:1.5}
+.admin-card-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:10px}
+.admin-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.admin-sel-label{font-size:12px;color:var(--text2);display:inline-flex;align-items:center;gap:6px}
+.admin-note{font-size:11px;color:var(--text2);font-style:italic;margin-bottom:8px}
+.admin-btn{border:1px solid var(--border);background:var(--surface);color:var(--text);border-radius:8px;
+  padding:6px 12px;font-size:12px;font-weight:600;cursor:pointer;transition:.15s}
+.admin-btn:hover{background:#f1f5f9}
+.admin-btn.sm{padding:3px 8px;font-size:11px}
+.admin-btn.add{background:#16a34a;border-color:#16a34a;color:#fff}
+.admin-btn.add:hover{background:#15803d}
+.admin-btn.del{color:#dc2626;border-color:#fca5a5}
+.admin-btn.del:hover{background:#fef2f2}
+.admin-btn.reset{color:#b45309;border-color:#fcd34d;background:#fffbeb}
+.admin-btn.reset:hover{background:#fef3c7}
+.admin-table{width:100%;border-collapse:collapse;font-size:12px}
+.admin-table th,.admin-table td{border:1px solid var(--border);padding:6px 8px;text-align:left;vertical-align:middle}
+.admin-table thead th{background:#f8fafc;font-weight:700;color:var(--text2);position:sticky;top:0;white-space:nowrap}
+.admin-table tbody tr:hover{background:#f8fafc}
+.admin-row-act{white-space:nowrap;display:flex;gap:5px}
+.admin-tag{display:inline-block;font-size:10px;font-weight:700;padding:1px 6px;border-radius:6px;vertical-align:middle}
+.admin-tag.edit{background:#dbeafe;color:#1d4ed8}
+.admin-tag.add{background:#dcfce7;color:#15803d}
+.admin-sales-tbl th,.admin-sales-tbl td{padding:4px 6px;font-size:11px;text-align:right}
+.admin-sales-tbl td:first-child,.admin-sales-tbl th:first-child{text-align:left}
+.admin-meta{margin-top:8px;font-size:11px;color:var(--text2);font-style:italic}
+/* modal */
+.admin-modal-overlay{position:fixed;inset:0;background:rgba(15,23,42,.5);z-index:100000;
+  display:flex;align-items:center;justify-content:center;padding:16px}
+.admin-modal{background:var(--surface);border-radius:12px;width:min(520px,96vw);max-height:90vh;
+  display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.admin-modal-head{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;
+  border-bottom:1px solid var(--border);font-weight:800;font-size:15px;color:var(--text)}
+.admin-modal-x{background:none;border:none;font-size:18px;cursor:pointer;color:var(--text2);line-height:1}
+.admin-modal-body{padding:16px 18px;overflow:auto;display:flex;flex-direction:column;gap:10px}
+.admin-modal-foot{display:flex;justify-content:flex-end;gap:8px;padding:12px 18px;border-top:1px solid var(--border)}
+.admin-fld{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--text2);font-weight:600}
+.admin-fld input,.admin-fld select{border:1.5px solid var(--border);border-radius:8px;padding:7px 10px;
+  font-size:13px;background:var(--bg);color:var(--text);outline:none}
+.admin-fld input:focus,.admin-fld select:focus{border-color:#ea580c}
+.admin-sales-form{display:flex;flex-direction:column;gap:8px}
+.admin-sales-mrow{display:grid;grid-template-columns:70px 1fr 1fr;gap:8px;align-items:center}
+.admin-sales-mlbl{font-weight:700;font-size:12px;color:var(--text)}
+.admin-sales-mrow label{display:flex;flex-direction:column;gap:2px;font-size:10px;color:var(--text2)}
+.admin-sales-mrow input{border:1.5px solid var(--border);border-radius:6px;padding:5px 8px;font-size:12px;
+  background:var(--bg);color:var(--text);outline:none}
+
+/* =====================================================================
+   SHELL LAYOUT (Sidebar + TopBar) — Refactor Phase 1-2
+   เปลือก/navigation ใหม่: ไม่แตะสไตล์เนื้อหาแท็บ (.card/.kpi/ตาราง ฯลฯ)
+   ===================================================================== */
+:root{
+  /* --- design tokens (เฉพาะ shell) --- */
+  --sh-primary:#ea580c; --sh-primary-dark:#c2410c;
+  --sh-success:#16a34a; --sh-warning:#d97706; --sh-danger:#dc2626;
+  --sh-sidebar-bg:#3a1d0d; --sh-sidebar-bg2:#4a2711;
+  --sh-sidebar-fg:#fde8d3; --sh-sidebar-muted:#c79b7a;
+  --sh-sidebar-active:#f97316; --sh-sidebar-hover:rgba(249,115,22,.16);
+  --sh-topbar-bg:#fffcf7; --sh-topbar-border:#efd9b8;
+  --space-1:4px; --space-2:8px; --space-3:12px; --space-4:16px; --space-6:24px; --space-8:32px;
+  --radius-s:8px; --radius-m:12px; --radius-l:16px;
+  --shadow-s:0 1px 3px rgba(0,0,0,.10);
+  --shadow-m:0 4px 14px rgba(0,0,0,.12);
+  --shadow-l:0 10px 32px rgba(0,0,0,.20);
+  --sidebar-w:260px; --sidebar-w-collapsed:64px; --topbar-h:auto;
+  --font-th:'Noto Sans Thai','Segoe UI',Tahoma,sans-serif;
+}
+
+.app-shell{display:flex;align-items:flex-start;min-height:100vh;width:100%}
+
+/* ---------- SIDEBAR ---------- */
+#sidebar{
+  width:var(--sidebar-w);flex:0 0 var(--sidebar-w);
+  position:sticky;top:0;height:100vh;overflow-y:auto;overflow-x:hidden;
+  background:linear-gradient(180deg,var(--sh-sidebar-bg) 0%,var(--sh-sidebar-bg2) 100%);
+  color:var(--sh-sidebar-fg);font-family:var(--font-th);
+  display:flex;flex-direction:column;z-index:1000;
+  box-shadow:2px 0 14px rgba(0,0,0,.18);transition:flex-basis .2s,width .2s;
+  scrollbar-width:thin;scrollbar-color:var(--sh-sidebar-active) transparent;
+}
+#sidebar::-webkit-scrollbar{width:7px}
+#sidebar::-webkit-scrollbar-thumb{background:rgba(249,115,22,.4);border-radius:8px}
+.sidebar-head{display:flex;align-items:center;justify-content:space-between;
+  padding:16px 16px 14px;border-bottom:1px solid rgba(255,255,255,.08);position:sticky;top:0;
+  background:linear-gradient(180deg,var(--sh-sidebar-bg) 0%,var(--sh-sidebar-bg) 100%);z-index:2}
+.sb-brand-th{font-size:22px;font-weight:900;color:#fff8e7;letter-spacing:1px;line-height:1}
+.sb-brand-en{font-size:11px;color:var(--sh-sidebar-muted);letter-spacing:3px;margin-top:3px}
+.sb-collapse{background:rgba(255,255,255,.10);border:none;color:var(--sh-sidebar-fg);
+  width:30px;height:30px;border-radius:8px;cursor:pointer;font-size:16px;line-height:1;flex-shrink:0;transition:background .15s}
+.sb-collapse:hover{background:var(--sh-sidebar-hover)}
+.sidebar-nav{flex:1;padding:10px 10px 18px;display:flex;flex-direction:column;gap:2px}
+
+/* nav item (ทั้ง item เดี่ยว และหัวข้อกลุ่ม) */
+.nav-link,.nav-group-head{
+  display:flex;align-items:center;gap:11px;width:100%;text-align:left;
+  padding:10px 12px;border-radius:var(--radius-s);cursor:pointer;
+  color:var(--sh-sidebar-fg);font-size:13.5px;font-weight:600;font-family:var(--font-th);
+  background:none;border:none;transition:background .15s,color .15s;line-height:1.25;position:relative}
+.nav-link:hover,.nav-group-head:hover{background:var(--sh-sidebar-hover)}
+.nav-ico{font-size:17px;width:22px;text-align:center;flex-shrink:0}
+.nav-txt{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nav-caret{font-size:10px;color:var(--sh-sidebar-muted);transition:transform .18s;flex-shrink:0}
+.nav-group.open>.nav-group-head .nav-caret{transform:rotate(90deg)}
+.nav-link.active{background:var(--sh-sidebar-active);color:#fff;box-shadow:var(--shadow-s)}
+.nav-link.active .nav-ico{color:#fff}
+
+/* children */
+.nav-group-children{display:none;flex-direction:column;gap:1px;margin:2px 0 4px 0;padding-left:8px}
+.nav-group.open>.nav-group-children{display:flex}
+.nav-group-children .nav-link{padding:5px 10px 5px 14px;font-size:11px;font-weight:400;color:var(--sh-sidebar-muted)}
+.nav-group-children .nav-link .nav-ico{font-size:11px;width:16px;filter:saturate(.5);opacity:.65}
+.nav-group-children .nav-link:hover{color:#fdba74}
+.nav-group-children .nav-link:hover .nav-ico{opacity:.9;filter:saturate(.8)}
+.nav-group-children .nav-link.active{color:#fb923c;background:rgba(249,115,22,.18);font-weight:600}
+.nav-group-children .nav-link.active .nav-ico{opacity:1;filter:none}
+.nav-group-children .nav-link::before{content:'';position:absolute;left:4px;top:50%;transform:translateY(-50%);
+  width:4px;height:4px;border-radius:50%;background:var(--sh-sidebar-muted);opacity:.3}
+.nav-group-children .nav-link.active::before{background:#fff;opacity:.7}
+
+/* bell indicator บน nav item */
+.nav-bell{margin-left:auto;font-size:12px;line-height:1;filter:drop-shadow(0 0 2px rgba(255,255,255,.6));flex-shrink:0}
+
+.sidebar-foot{padding:12px 16px 18px;border-top:1px solid rgba(255,255,255,.08);
+  display:flex;flex-direction:column;gap:6px;font-size:11px;color:var(--sh-sidebar-muted)}
+.sidebar-foot .hbadge.ok{align-self:flex-start;background:rgba(34,197,94,.22);border-color:rgba(34,197,94,.4);color:#dcfce7}
+
+/* ---------- SIDEBAR COLLAPSED (desktop) ---------- */
+.app-shell.sidebar-collapsed #sidebar{width:var(--sidebar-w-collapsed);flex-basis:var(--sidebar-w-collapsed)}
+.app-shell.sidebar-collapsed .sb-brand-th,
+.app-shell.sidebar-collapsed .sb-brand-en,
+.app-shell.sidebar-collapsed .nav-txt,
+.app-shell.sidebar-collapsed .nav-caret,
+.app-shell.sidebar-collapsed .sidebar-foot{display:none}
+.app-shell.sidebar-collapsed .sidebar-head{justify-content:center;padding:16px 8px}
+.app-shell.sidebar-collapsed .nav-link,
+.app-shell.sidebar-collapsed .nav-group-head{justify-content:center;padding:11px 8px}
+.app-shell.sidebar-collapsed .nav-group-children{display:none!important}
+.app-shell.sidebar-collapsed .nav-bell{position:absolute;top:5px;right:6px;margin:0}
+.app-shell.sidebar-collapsed .sb-collapse{transform:rotate(180deg)}
+
+/* ---------- APP BODY + TOPBAR ---------- */
+.app-body{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;min-height:100vh;scroll-padding-top:200px}
+#topbar{position:sticky;top:0;z-index:900;background:var(--sh-topbar-bg);
+  border-bottom:1px solid var(--sh-topbar-border);box-shadow:0 2px 10px rgba(0,0,0,.06);
+  font-family:var(--font-th)}
+#amzPeriodBar{position:sticky;top:89px;z-index:800;background:var(--surface);box-shadow:0 2px 6px rgba(0,0,0,.08);padding:10px 12px;border-bottom:1px solid var(--border)}
+#tab-amazon .mt-bi-sidebar{top:100px;max-height:calc(100vh - 110px)}
+.tb-row{display:flex;align-items:center;gap:12px;padding:10px 24px}
+.tb-row-main{justify-content:space-between}
+.tb-left{display:flex;align-items:center;gap:12px;min-width:0}
+.tb-hamburger{display:none;background:var(--bg);border:1px solid var(--border);border-radius:8px;
+  width:36px;height:36px;font-size:18px;cursor:pointer;color:var(--sh-primary);flex-shrink:0}
+.tb-titles{min-width:0}
+.tb-breadcrumb{font-size:11px;color:var(--muted);font-weight:600;letter-spacing:.3px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tb-title{font-size:19px;font-weight:800;color:var(--text);line-height:1.15;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tb-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+
+/* topbar bell */
+.tb-bell{position:relative;display:inline-flex;align-items:center;justify-content:center;
+  width:38px;height:38px;border-radius:10px;background:var(--bg);border:1px solid var(--border);
+  cursor:pointer;font-size:18px;flex-shrink:0}
+.tb-bell:hover{background:var(--surface2)}
+.tb-bell .tb-bell-count{position:absolute;top:-4px;right:-4px;min-width:17px;height:17px;padding:0 4px;
+  background:var(--sh-danger);color:#fff;border-radius:9px;font-size:10px;font-weight:800;
+  display:none;align-items:center;justify-content:center;line-height:1;box-shadow:0 0 0 2px var(--sh-topbar-bg)}
+.tb-bell.has-alert .tb-bell-count{display:flex}
+.tb-bell-menu{display:none;position:absolute;top:calc(100% + 8px);right:0;z-index:1200;min-width:230px;
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-m);
+  box-shadow:var(--shadow-l);padding:6px;text-align:left}
+.tb-bell-menu.open{display:block}
+.tb-bell-menu .bell-item{display:flex;align-items:center;gap:8px;padding:9px 10px;border-radius:8px;
+  cursor:pointer;font-size:12.5px;color:var(--text);font-weight:600}
+.tb-bell-menu .bell-item:hover{background:var(--surface2)}
+.tb-bell-menu .bell-empty{padding:14px 12px;font-size:12px;color:var(--muted);text-align:center}
+.tb-bell-menu .bell-head{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;
+  letter-spacing:.5px;padding:6px 10px 8px}
+
+/* topbar: role badge/export/logout ใช้สไตล์ hbadge เดิม แต่ปรับสีให้อ่านบนพื้นสว่าง */
+#topbar .hbadge{background:var(--sh-primary);color:#fff;border-color:var(--sh-primary)}
+#topbar .hbadge.ok{background:rgba(34,197,94,.18);color:#166534;border-color:rgba(34,197,94,.4)}
+#topbar #userBadge{background:var(--surface2);color:var(--text);border:1px solid var(--border)}
+#topbar #userBadge #userBadgeRole{background:var(--sh-primary);color:#fff}
+#topbar .rbac-export .hbadge{background:var(--sh-primary)!important;color:#fff!important;border-color:var(--sh-primary)!important}
+
+/* filter bar อยู่ในแถวที่สองของ topbar — คงสไตล์ filter-bar เดิม ปรับ padding เล็กน้อย */
+.tb-row-filter{padding:0}
+.tb-row-filter #globalFilterBar{width:100%;border-bottom:1px solid var(--sh-topbar-border);border-top:1px dashed var(--border)}
+
+/* content area: reuse .main เดิม */
+#contentArea.main{padding:24px 28px;max-width:none;width:100%}
+
+/* mobile drawer backdrop */
+#sidebarBackdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:999}
+.app-shell.sidebar-open #sidebarBackdrop{display:block}
+
+/* ---------- RESPONSIVE (เบื้องต้น) ---------- */
+@media (max-width:900px){
+  #sidebar{position:fixed;left:0;top:0;height:100vh;transform:translateX(-100%);
+    transition:transform .22s ease;flex-basis:var(--sidebar-w);width:var(--sidebar-w)}
+  .app-shell.sidebar-open #sidebar{transform:translateX(0)}
+  .app-shell.sidebar-collapsed #sidebar{width:var(--sidebar-w);flex-basis:var(--sidebar-w)} /* บนมือถือใช้ drawer ไม่ใช่ collapse */
+  .app-shell.sidebar-collapsed .nav-txt,
+  .app-shell.sidebar-collapsed .nav-caret,
+  .app-shell.sidebar-collapsed .sb-brand-th,
+  .app-shell.sidebar-collapsed .sb-brand-en,
+  .app-shell.sidebar-collapsed .sidebar-foot{display:revert}
+  .app-body{width:100%}
+  .tb-hamburger{display:inline-flex;align-items:center;justify-content:center}
+  #contentArea.main{padding:16px 14px}
+  .tb-row{padding:8px 14px}
+}
+@media print{
+  #sidebar,#topbar,#sidebarBackdrop{display:none!important}
+  .app-body{width:100%}
+}
+
+/* ---------- HIDE INLINE SUB-TABS (moved to sidebar accordion) ---------- */
+.section > .sub-tabs{display:none}
+#smSubTabs.sub-tabs{display:none}
+#smSubTabs.sub-tabs.has-subs{display:flex!important}
+
+/* ===== Amazon Customers (New/Lost) ===== */
+.amz-cust-header{background:linear-gradient(135deg,#eff6ff,#f0f9ff);border:1px solid #93c5fd;border-radius:16px;padding:18px 22px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px}
+.amz-cust-header .ac-icon{font-size:30px}
+.amz-cust-header .ac-title{font-size:17px;font-weight:800;color:#1d4ed8;letter-spacing:-.3px}
+.amz-cust-header .ac-subtitle{font-size:11px;color:#64748b;margin-top:3px}
+.amz-cust-kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px}
+.amz-cust-kpi .ack-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px 18px;position:relative;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.06);transition:box-shadow .2s,transform .2s}
+.amz-cust-kpi .ack-card:hover{box-shadow:0 6px 18px rgba(0,0,0,.1);transform:translateY(-2px)}
+.amz-cust-kpi .ack-card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;border-radius:14px 14px 0 0}
+.amz-cust-kpi .ack-card.ac-blue::before{background:linear-gradient(90deg,#2563eb,#3b82f6)}
+.amz-cust-kpi .ack-card.ac-green::before{background:linear-gradient(90deg,#16a34a,#22c55e)}
+.amz-cust-kpi .ack-card.ac-red::before{background:linear-gradient(90deg,#dc2626,#ef4444)}
+.amz-cust-kpi .ack-card.ac-net-pos::before{background:linear-gradient(90deg,#16a34a,#22c55e)}
+.amz-cust-kpi .ack-card.ac-net-neg::before{background:linear-gradient(90deg,#dc2626,#ef4444)}
+.amz-cust-kpi .ack-icon{font-size:22px;margin-bottom:4px}
+.amz-cust-kpi .ack-val{font-size:26px;font-weight:800;color:var(--text);line-height:1.1}
+.amz-cust-kpi .ack-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-top:4px;font-weight:600}
+.amz-cust-pills{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
+.amz-cust-pill{padding:6px 14px;border-radius:20px;cursor:pointer;font-size:12px;font-weight:600;color:var(--text2);background:var(--bg);border:1.5px solid var(--border);transition:all .18s;user-select:none}
+.amz-cust-pill:hover:not(.active){border-color:#2563eb;color:#2563eb;background:#eff6ff}
+.amz-cust-pill.active{background:#2563eb;color:#fff;border-color:#2563eb;box-shadow:0 2px 8px rgba(37,99,235,.3)}
+.amz-cust-tab-btns{display:flex;gap:6px;margin-bottom:12px}
+.amz-cust-tab-btn{padding:8px 18px;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;border:1.5px solid var(--border);background:var(--surface);color:var(--text2);transition:all .18s}
+.amz-cust-tab-btn:hover:not(.active){border-color:#2563eb;color:#2563eb}
+.amz-cust-tab-btn.active.ac-new{background:#16a34a;color:#fff;border-color:#16a34a}
+.amz-cust-tab-btn.active.ac-lost{background:#dc2626;color:#fff;border-color:#dc2626}
+.amz-cust-toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
+.amz-cust-search{padding:8px 14px;border-radius:10px;border:1px solid var(--border);font-size:13px;width:260px;max-width:100%;background:var(--surface);color:var(--text);transition:border-color .2s}
+.amz-cust-search:focus{outline:none;border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,.12)}
+.amz-cust-table{width:100%;border-collapse:collapse;font-size:13px}
+.amz-cust-table thead{background:#f8fafc}
+.amz-cust-table th{padding:10px 10px;text-align:left;font-size:12px;color:#64748b;font-weight:700;cursor:pointer;user-select:none;white-space:nowrap;border-bottom:2px solid var(--border)}
+.amz-cust-table th:hover{color:#2563eb}
+.amz-cust-table th.sort-asc::after{content:' ▲';font-size:10px}
+.amz-cust-table th.sort-desc::after{content:' ▼';font-size:10px}
+.amz-cust-table td{padding:8px 10px;border-bottom:1px solid #f1f5f9;vertical-align:middle}
+.amz-cust-table tr:hover{background:#f8fafc}
+.amz-cust-table .td-right{text-align:right;font-variant-numeric:tabular-nums}
+.amz-cust-badge-new{display:inline-block;padding:2px 10px;border-radius:12px;font-size:11px;font-weight:700;background:#dcfce7;color:#16a34a}
+.amz-cust-badge-lost{display:inline-block;padding:2px 10px;border-radius:12px;font-size:11px;font-weight:700;background:#fee2e2;color:#dc2626}
+.amz-cust-pagination{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-top:12px;font-size:13px;color:var(--text2)}
+.amz-cust-pagination button{padding:6px 12px;border-radius:8px;border:1px solid var(--border);background:var(--surface);cursor:pointer;font-size:12px;font-weight:600;color:var(--text2);transition:all .15s}
+.amz-cust-pagination button:hover:not(:disabled){border-color:#2563eb;color:#2563eb}
+.amz-cust-pagination button:disabled{opacity:.4;cursor:not-allowed}
+.amz-cust-pagination .pg-current{background:#2563eb;color:#fff;border-color:#2563eb;min-width:32px;text-align:center}
+@media(max-width:768px){
+  .amz-cust-kpi{grid-template-columns:repeat(2,1fr)}
+  .amz-cust-search{width:100%}
+  .amz-cust-toolbar{flex-direction:column;align-items:stretch}
+  .amz-cust-header{flex-direction:column;text-align:center}
+}
+
+/* ---- QUALITY (คุณภาพสินค้า) ---- */
+.qa-status-done{display:inline-block;background:#dcfce7;color:#166534;font-weight:700;
+  padding:2px 10px;border-radius:20px;font-size:11.5px}
+.qa-status-inprogress{display:inline-block;background:#fef3c7;color:#92400e;font-weight:700;
+  padding:2px 10px;border-radius:20px;font-size:11.5px}
+.qa-status-pending{display:inline-block;background:#fee2e2;color:#991b1b;font-weight:700;
+  padding:2px 10px;border-radius:20px;font-size:11.5px}
+#tab-quality .grid.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+#tab-quality .grid.g4{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px}
+#tab-quality .grid.g2{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+@media(max-width:768px){
+  #tab-quality .grid.g2,#tab-quality .grid.g3{grid-template-columns:1fr}
+  #tab-quality .grid.g4{grid-template-columns:repeat(2,1fr)}
+}
+
+/* ============================================================
+   QUALITY FORM (qf-*) — Complaint Intake Form + Admin DB
+   ============================================================ */
+.qf-container{max-width:900px;margin:0 auto}
+.qf-header{text-align:center;margin-bottom:20px}
+.qf-header h2{font-size:20px;font-weight:800;color:#1e293b;margin:0 0 4px}
+.qf-header p{font-size:12px;color:#64748b;margin:0}
+
+/* Sections */
+.qf-section{background:var(--surface);border:1px solid var(--border);border-radius:12px;margin-bottom:12px;overflow:hidden}
+.qf-section-header{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;cursor:pointer;background:linear-gradient(135deg,#fff7ed,#ffedd5);border-bottom:1px solid #fed7aa;font-weight:700;font-size:14px;color:#9a3412;user-select:none;transition:background .2s}
+.qf-section-header:hover{background:linear-gradient(135deg,#ffedd5,#fed7aa)}
+.qf-chevron{font-size:12px;color:#9a3412}
+.qf-section-body{padding:16px}
+
+/* Fields */
+.qf-row{display:flex;gap:12px;margin-bottom:12px;flex-wrap:wrap}
+.qf-field{display:flex;flex-direction:column;gap:4px;flex:1;min-width:0}
+.qf-field.qf-half{flex:1 1 calc(50% - 6px);min-width:200px}
+.qf-field.qf-third{flex:1 1 calc(33.33% - 8px);min-width:160px}
+.qf-field.qf-full{flex:1 1 100%}
+.qf-label{font-size:12px;font-weight:600;color:#374151}
+.qf-input{padding:8px 12px;border:1px solid #d1d5db;border-radius:8px;font-size:13px;outline:none;transition:border-color .2s;background:#fff;width:100%;box-sizing:border-box}
+.qf-input:focus{border-color:#f97316;box-shadow:0 0 0 3px rgba(249,115,22,.15)}
+.qf-textarea{resize:vertical;min-height:60px;font-family:inherit}
+.qf-hint{font-size:11px;color:#94a3b8;margin-top:4px}
+
+/* Attach grid */
+.qf-attach-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px}
+.qf-attach-item{text-align:center}
+.qf-attach-label{font-size:12px;font-weight:600;color:#374151;display:block;margin-bottom:6px}
+.qf-attach-btn{padding:8px 16px;border:2px dashed #d1d5db;border-radius:8px;background:#f9fafb;color:#6b7280;cursor:pointer;font-size:12px;transition:all .2s;width:100%}
+.qf-attach-btn:hover{border-color:#f97316;color:#ea580c;background:#fff7ed}
+.qf-file-name{font-size:11px;color:#16a34a;margin-top:4px;word-break:break-all;min-height:16px}
+
+/* Basket rows */
+.qf-basket-row{display:flex;gap:8px;align-items:center;margin-bottom:8px}
+.qf-basket-row .qf-basket-name{flex:2}
+.qf-basket-row .qf-basket-price{flex:1;max-width:150px}
+.qf-btn-remove{width:28px;height:28px;border:none;background:#fee2e2;color:#dc2626;border-radius:6px;cursor:pointer;font-size:14px;font-weight:700;transition:background .2s;flex-shrink:0}
+.qf-btn-remove:hover{background:#fca5a5}
+.qf-basket-footer{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:8px}
+.qf-btn-add-row{padding:6px 14px;border:1px dashed #f97316;background:#fff7ed;color:#ea580c;border-radius:8px;cursor:pointer;font-size:12px;font-weight:600;transition:all .2s}
+.qf-btn-add-row:hover{background:#ffedd5}
+.qf-basket-total{font-size:14px;font-weight:700;color:#1e293b}
+
+/* Cost grid */
+.qf-cost-grid{display:flex;flex-direction:column;gap:10px}
+.qf-cost-row{display:flex;align-items:center;gap:12px}
+.qf-cost-row label{flex:0 0 200px;font-size:12px;font-weight:600;color:#374151}
+.qf-cost-row .qf-input{max-width:200px}
+.qf-cost-total{display:flex;align-items:center;gap:12px;padding:12px 0;border-top:2px solid #ea580c;margin-top:4px}
+.qf-cost-total label{flex:0 0 200px;font-size:14px;font-weight:800;color:#1e293b}
+.qf-cost-total span{font-size:18px;font-weight:800;color:#ea580c}
+
+/* Submit */
+.qf-submit-area{display:flex;gap:12px;justify-content:center;margin-top:20px;padding-top:16px;border-top:2px solid var(--border)}
+.qf-btn-submit{padding:12px 40px;background:linear-gradient(135deg,#ea580c,#f97316);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;transition:all .2s;box-shadow:0 4px 12px rgba(234,88,12,.3)}
+.qf-btn-submit:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(234,88,12,.4)}
+.qf-btn-clear{padding:12px 30px;background:#f1f5f9;color:#64748b;border:1px solid #d1d5db;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s}
+.qf-btn-clear:hover{background:#e2e8f0}
+.qf-btn-draft{padding:12px 30px;background:linear-gradient(135deg,#2563eb,#3b82f6);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s}
+.qf-btn-draft:hover{opacity:.9;transform:translateY(-1px)}
+
+/* Draft list */
+.qf-draft-list{background:#eff6ff;border:1px solid #bfdbfe;border-radius:12px;padding:12px 16px;margin-bottom:18px}
+.qf-draft-title{font-size:13px;font-weight:700;color:#1e40af;margin-bottom:8px}
+.qf-draft-item{display:flex;gap:10px;align-items:center;padding:8px 12px;background:#fff;border:1px solid #dbeafe;border-radius:8px;margin-bottom:6px;cursor:pointer;transition:all .2s;font-size:12px}
+.qf-draft-item:hover{background:#dbeafe;border-color:#93c5fd}
+.qf-draft-id{font-weight:700;color:#ea580c;min-width:130px}
+.qf-draft-name{flex:1;min-width:80px}
+.qf-draft-cause{color:#64748b;min-width:100px}
+.qf-draft-status{font-size:11px;font-weight:600;padding:2px 8px;border-radius:4px;background:#fef3c7;color:#b45309;min-width:80px;text-align:center}
+.qf-draft-date{color:#94a3b8;min-width:85px;text-align:right}
+
+/* Editing banner */
+.qf-editing-banner{background:#fef3c7;border:1px solid #fcd34d;border-radius:10px;padding:10px 16px;margin-top:12px;font-size:13px;color:#92400e;display:flex;align-items:center;gap:12px}
+.qf-btn-cancel-edit{padding:4px 14px;background:#fff;border:1px solid #d1d5db;border-radius:6px;font-size:12px;cursor:pointer}
+.qf-btn-cancel-edit:hover{background:#fee2e2;border-color:#fca5a5}
+
+/* Download button */
+.qf-btn-download{padding:8px 18px;background:linear-gradient(135deg,#16a34a,#22c55e);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;white-space:nowrap}
+.qf-btn-download:hover{opacity:.9;transform:translateY(-1px)}
+
+/* ============================================================
+   ADMIN COMPLAINTS
+   ============================================================ */
+.qf-admin-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+.qf-admin-filter{display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap;align-items:center}
+.qf-admin-table th,.qf-admin-table td{padding:8px 12px;font-size:12px}
+.qf-admin-table th{white-space:nowrap}
+
+/* Detail modal */
+.qf-detail-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);z-index:10000;display:flex;align-items:center;justify-content:center;padding:20px}
+.qf-detail-modal{background:#fff;border-radius:16px;max-width:700px;width:100%;max-height:85vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.2)}
+.qf-detail-header{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:2px solid #f97316;background:linear-gradient(135deg,#fff7ed,#ffedd5);border-radius:16px 16px 0 0}
+.qf-detail-header h3{margin:0;font-size:16px;color:#9a3412;display:flex;align-items:center;gap:8px}
+.qf-detail-body{padding:20px}
+.qf-detail-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.qf-detail-item{display:flex;flex-direction:column;gap:2px}
+.qf-detail-label{font-size:11px;color:#94a3b8;font-weight:600}
+.qf-detail-value{font-size:13px;color:#1e293b}
+
+@media(max-width:768px){
+  .qf-row{flex-direction:column}
+  .qf-field.qf-half,.qf-field.qf-third{flex:1 1 100%;min-width:0}
+  .qf-cost-row{flex-direction:column;align-items:stretch}
+  .qf-cost-row label{flex:none}
+  .qf-cost-row .qf-input{max-width:100%}
+  .qf-admin-cards{grid-template-columns:repeat(2,1fr)}
+  .qf-detail-grid{grid-template-columns:1fr}
+  .qf-attach-grid{grid-template-columns:1fr 1fr}
+}
+
+/* ============================================================
+   SALES-MARKETING EXPENSES
+   ============================================================ */
+/* ============================================================
+   MT BI LAYOUT
+   ============================================================ */
+.mt-bi-layout{display:flex;gap:0;min-height:600px}
+.mt-bi-sidebar{width:230px;flex-shrink:0;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:4px 0 12px;overflow-y:auto;max-height:calc(100vh - 120px);position:sticky;top:10px;margin-right:16px}
+.mt-bi-content{flex:1;min-width:0}
+.mtbi-nav-item{display:flex;align-items:center;gap:8px;padding:9px 16px;cursor:pointer;font-size:13px;font-weight:600;color:var(--text2);transition:all .15s;border-left:3px solid transparent}
+.mtbi-nav-item:hover{background:#fff7ed;color:var(--accent)}
+.mtbi-nav-item.active{background:#fff7ed;color:var(--accent);border-left-color:var(--accent);font-weight:700}
+.mtbi-nav-icon{font-size:15px;width:22px;text-align:center;flex-shrink:0}
+.mtbi-nav-cat-header{display:flex;align-items:center;gap:8px;padding:9px 16px;cursor:pointer;font-size:13px;font-weight:700;color:var(--text);transition:all .15s;user-select:none}
+.mtbi-nav-cat-header:hover{background:#fef7ed}
+.mtbi-nav-arrow{margin-left:auto;font-size:10px;color:var(--muted)}
+.mtbi-nav-sub{padding-left:16px}
+.mtbi-nav-sub-item{padding:6px 16px 6px 18px;cursor:pointer;font-size:12px;color:var(--text2);transition:all .15s;border-left:2px solid transparent;border-radius:0 6px 6px 0}
+.mtbi-nav-sub-item:hover{background:#fff7ed;color:var(--accent)}
+.mtbi-nav-sub-item.active{background:#fff7ed;color:var(--accent);border-left-color:var(--accent);font-weight:700}
+.mtbi-nav-cat.has-active>.mtbi-nav-cat-header{color:var(--accent)}
+.mtbi-placeholder-chart{background:linear-gradient(180deg,#f8fafc,#f1f5f9);border-radius:12px;display:flex;align-items:center;justify-content:center;color:#94a3b8;font-size:13px;border:2px dashed #e2e8f0}
+.mtbi-feature-tag{display:inline-block;padding:5px 14px;border-radius:8px;font-size:12px;background:#f1f5f9;color:#475569;font-weight:600}
+.mtbi-ai-item{padding:8px 14px;border-radius:8px;background:linear-gradient(135deg,#faf5ff,#f3e8ff);border:1px solid #e9d5ff;color:#6b21a8;font-size:13px}
+@media(max-width:640px){
+  .mt-bi-layout{flex-direction:column}
+  .mt-bi-sidebar{width:100%;max-height:none;position:static;margin-right:0;margin-bottom:12px;border-radius:14px}
+}
+
+.sm-filter-bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:16px;padding:12px;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0}
+.sm-filter-bar label{font-weight:600;font-size:13px;color:#475569}
+.sm-sub-tabs{margin-top:-4px;padding:4px 8px;gap:4px}
+.sm-sub-tabs .sub-tab{font-size:12px;padding:6px 14px}

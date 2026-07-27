@@ -8,91 +8,88 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700;800;900&display=swap">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <link rel="stylesheet" href="css/dashboard.css">
+<!-- Auth + RBAC (โหลดก่อน app.js). Guard เช็ค session ทันทีก่อน render -->
+<script src="js/auth.js"></script>
+<script>
+  // Session guard: ถ้ายังไม่ login เด้งไป login.html ก่อนโหลดเนื้อหา/app.js
+  window.__spbiSession = (typeof requireAuth === 'function') ? requireAuth() : null;
+</script>
 </head>
 <body>
 
-<div id="sticky-top" style="position:sticky;top:0;z-index:1000;box-shadow:0 3px 12px rgba(0,0,0,.12)">
-<div class="header" style="background:linear-gradient(135deg,#ea580c 0%,#f97316 50%,#d97706 100%);padding:14px 32px;display:flex;align-items:center;justify-content:space-between">
-  <div>
-    <div style="font-size:28px;font-weight:900;color:#fff8e7;letter-spacing:1px;line-height:1.1">วรรณวนัช</div>
-    <div style="font-size:13px;color:rgba(255,248,231,.75);letter-spacing:3px;margin-top:2px">Wanwanach</div>
-    <div style="font-size:11px;color:rgba(255,255,255,.65);margin-top:4px">📊 Sales Dashboard 2026 · ข้อมูล ม.ค.–ก.ค.</div>
-  </div>
-  <div class="header-right">
-    <span class="hbadge ok">✅ YTD Jan–Jun ข้อมูลครบ</span>
-    <div class="sub" style="color:rgba(255,255,255,.7);text-align:right">อัปเดต: 8 ก.ค. 2026</div>
-  </div>
-</div>
+<!-- ===== APP SHELL: Sidebar (ซ้าย) + TopBar + Content (Refactor Phase 1-2) ===== -->
+<div class="app-shell" id="appShell">
 
-<div class="filter-bar" style="gap:6px;flex-wrap:wrap">
-  <div class="filter-label">📅 ช่วงเวลา:</div>
-  <div style="display:flex;gap:4px;flex-wrap:wrap" id="quickPeriodBtns">
-    <div class="period-type-btn active" data-preset="all"        onclick="setQuickPeriod('all',this)">ทั้งหมด</div>
-    <div class="period-type-btn"        data-preset="today"      onclick="setQuickPeriod('today',this)">วันนี้</div>
-    <div class="period-type-btn"        data-preset="yesterday"  onclick="setQuickPeriod('yesterday',this)">เมื่อวาน</div>
-    <div class="period-type-btn"        data-preset="thisweek"   onclick="setQuickPeriod('thisweek',this)">สัปดาห์นี้</div>
-    <div class="period-type-btn"        data-preset="lastweek"   onclick="setQuickPeriod('lastweek',this)">สัปดาห์ที่แล้ว</div>
-    <div class="period-type-btn"        data-preset="thismonth"  onclick="setQuickPeriod('thismonth',this)">เดือนนี้</div>
-    <div class="period-type-btn"        data-preset="lastmonth"  onclick="setQuickPeriod('lastmonth',this)">เดือนที่แล้ว</div>
-    <div class="period-type-btn"        data-preset="3months"    onclick="setQuickPeriod('3months',this)">3 เดือน</div>
-    <div id="quarterDropdown" style="position:relative;display:inline-block">
-      <div id="quarterDropBtn" class="period-type-btn" data-preset="qany" onclick="toggleQuarterMenu(this)" style="padding-right:22px;cursor:pointer"><span id="quarterLabel">📆 รายไตรมาส</span><span style="position:absolute;right:7px;top:50%;transform:translateY(-50%);font-size:10px;pointer-events:none">▾</span></div>
-      <div id="quarterMenu" style="display:none;position:absolute;top:calc(100% + 4px);left:0;background:#fff;border:1px solid #e2e8f0;border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,.1);min-width:170px;z-index:200;padding:4px 0">
-        <div class="qmenu-item" onclick="pickQuarter('q1',this)">Q1 ม.ค.–มี.ค.</div>
-        <div class="qmenu-item" onclick="pickQuarter('q2',this)">Q2 เม.ย.–มิ.ย.</div>
-        <div class="qmenu-item" onclick="pickQuarter('q3',this)">Q3 ก.ค.–ก.ย.</div>
-        <div class="qmenu-item" onclick="pickQuarter('q4',this)">Q4 ต.ค.–ธ.ค.</div>
+  <!-- ===== SIDEBAR ===== เมนู render จาก MENU config ใน js/shell.js (config-driven + RBAC) -->
+  <aside id="sidebar">
+    <div class="sidebar-head">
+      <div class="sb-brand">
+        <div class="sb-brand-th">วรรณวนัช</div>
+        <div class="sb-brand-en">Wanwanach</div>
+      </div>
+      <button type="button" id="sidebarCollapseBtn" class="sb-collapse" title="ย่อ/ขยายเมนู" data-i18n-title="topbar.collapse" onclick="toggleSidebar()">«</button>
+    </div>
+    <nav id="sidebarNav" class="sidebar-nav"></nav>
+    <div class="sidebar-foot">
+      <span class="hbadge ok" data-i18n="sidebar.status">✅ YTD Jan–Jun ข้อมูลครบ</span>
+      <span data-i18n="sidebar.info">📊 Sales Dashboard 2026 · ข้อมูล ม.ค.–ก.ค.</span>
+      <span data-i18n="sidebar.update">อัปเดต: 8 ก.ค. 2026</span>
+    </div>
+  </aside>
+  <div id="sidebarBackdrop" onclick="closeSidebarDrawer()"></div>
+
+  <!-- ===== APP BODY (TopBar + Content) ===== -->
+  <div class="app-body">
+
+  <!-- ===== TOPBAR ===== breadcrumb/title + (bell + export + role badge + logout) + filter bar (แถวสอง) -->
+  <header id="topbar">
+    <div class="tb-row tb-row-main">
+      <div class="tb-left">
+        <button type="button" id="sidebarToggleBtn" class="tb-hamburger" title="เมนู" data-i18n-title="topbar.menu" onclick="toggleSidebar()">☰</button>
+        <div class="tb-titles">
+          <div class="tb-breadcrumb" id="tbBreadcrumb">Dashboard</div>
+          <div class="tb-title" id="tbPageTitle">ภาพรวมยอดขาย</div>
+        </div>
+      </div>
+      <div class="tb-right">
+        <!-- กระดิ่งแจ้งเตือน: สรุปแท็บที่มี alert (คุมโดย updateTabBells + shell.js mirror) -->
+        <div id="topbarBell" class="tb-bell" title="การแจ้งเตือน" onclick="toggleBellMenu(event)">
+          🔔<span class="tb-bell-count" id="tbBellCount">0</span>
+          <div class="tb-bell-menu" id="tbBellMenu" onclick="event.stopPropagation()"></div>
+        </div>
+        <!-- export (ดาวน์โหลด Excel/PDF/รูปภาพ) — ต้องมีสิทธิ์ระดับ sales ขึ้นไป (ย้ายมาจาก header เดิม คง id/onclick) -->
+        <div class="rbac-export" style="position:relative;display:inline-block">
+          <button type="button" id="downloadMenuBtn" class="hbadge" onclick="toggleDownloadMenu(event)"
+            style="cursor:pointer" data-i18n="topbar.download">⬇️ ดาวน์โหลด ▾</button>
+          <div id="downloadMenu" style="display:none;position:absolute;top:calc(100% + 6px);right:0;z-index:1100;
+            background:#fffcf7;border:1px solid #efd9b8;border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.22);
+            min-width:170px;overflow:hidden;padding:4px">
+            <button type="button" onclick="exportPickExcel()" class="dl-item" data-i18n="dl.excel">📊 Excel (.xlsx)</button>
+            <button type="button" onclick="exportPickPDF()" class="dl-item" data-i18n="dl.pdf">📄 PDF (.pdf)</button>
+            <button type="button" onclick="exportPickImage()" class="dl-item" data-i18n="dl.image">🖼️ รูปภาพ (.png)</button>
+          </div>
+        </div>
+        <!-- role badge: ชื่อผู้ใช้ + role ภาษาไทย (ย้ายมาจาก header เดิม คง id) -->
+        <span id="userBadge" class="hbadge" style="display:inline-flex;align-items:center;gap:6px">
+          <span id="userBadgeName">-</span>
+          <span id="userBadgeRole" style="padding:1px 8px;border-radius:20px;font-size:11px"></span>
+        </span>
+        <!-- logout (ย้ายมาจาก header เดิม คง onclick) -->
+        <button type="button" class="hbadge" onclick="logout()"
+          style="cursor:pointer;background:var(--sh-danger);border-color:var(--sh-danger)" data-i18n="topbar.logout">ออกจากระบบ</button>
       </div>
     </div>
-    <div id="annualDropdown" style="position:relative;display:inline-block">
-      <div id="annualDropBtn" class="period-type-btn" data-preset="annualany" onclick="toggleAnnualMenu(this)" style="padding-right:22px"><span id="annualLabel">📅 ปี 2569</span><span style="position:absolute;right:7px;top:50%;transform:translateY(-50%);font-size:10px;pointer-events:none">▾</span></div>
-      <div id="annualMenu" style="display:none;position:absolute;top:calc(100% + 4px);left:0;background:#fff;border:1px solid #e2e8f0;border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,.1);min-width:150px;z-index:200;padding:4px 0">
-        <div class="qmenu-item" data-y="2567" onclick="pickAnnual(2567,this)">📅 ปี 2567 (2024)</div>
-        <div class="qmenu-item" data-y="2568" onclick="pickAnnual(2568,this)">📅 ปี 2568 (2025)</div>
-        <div class="qmenu-item active" data-y="2569" onclick="pickAnnual(2569,this)">📅 ปี 2569 (2026)</div>
-      </div>
-    </div>
-  </div>
-  <div style="width:1px;height:24px;background:var(--border);flex-shrink:0"></div>
-  <div class="filter-months" id="globalMonthTabs" style="display:none">
-    <div class="fmtab active" data-m="Jan" onclick="globalSelectMonth('Jan',this)">ม.ค.</div>
-    <div class="fmtab" data-m="Feb" onclick="globalSelectMonth('Feb',this)">ก.พ.</div>
-    <div class="fmtab" data-m="Mar" onclick="globalSelectMonth('Mar',this)">มี.ค.</div>
-    <div class="fmtab" data-m="Apr" onclick="globalSelectMonth('Apr',this)">เม.ย.</div>
-    <div class="fmtab" data-m="May" onclick="globalSelectMonth('May',this)">พ.ค.</div>
-    <div class="fmtab" data-m="Jun" onclick="globalSelectMonth('Jun',this)">มิ.ย.</div>
-  </div>
-  <div id="globalDatePicker" style="display:none;align-items:center;gap:6px;flex-wrap:wrap">
-    <span style="font-size:11px;font-weight:600;color:var(--text2)">เริ่มต้น:</span>
-    <input type="date" id="datePickerStart" value="2026-01-01" min="2026-01-01" max="2026-06-30"
-      onchange="onDateRangeChange()"
-      style="border:1.5px solid var(--border);border-radius:8px;padding:5px 10px;font-size:12px;background:var(--bg);color:var(--text);outline:none;cursor:pointer">
-    <span style="font-size:11px;font-weight:600;color:var(--text2)">สิ้นสุด:</span>
-    <input type="date" id="datePickerEnd" value="2026-06-09" min="2026-01-01" max="2026-06-30"
-      onchange="onDateRangeChange()"
-      style="border:1.5px solid var(--border);border-radius:8px;padding:5px 10px;font-size:12px;background:var(--bg);color:var(--text);outline:none;cursor:pointer">
-    <span id="dateRangeLabel" style="font-size:11px;color:var(--text2);font-style:italic;margin-left:4px"></span>
-  </div>
-  <div id="filterYearLabel" style="font-size:12px;color:var(--text2);font-weight:600">ปี 2026 (YTD ม.ค.–มิ.ย.)</div>
-</div>
+    <!-- filter bar moved to inside #tab-overview after sub-tabs -->
 
-<div class="tabs" id="mainTabs">
-  <div class="tab active" onclick="showTab(this,'overview')">📊 ภาพรวมยอดขาย</div>
-  <div class="tab" onclick="showTab(this,'products')">📋 รายการสินค้า</div>
-  <div class="tab" onclick="showTab(this,'mt')">🏪 ModernTrade</div>
-  <div class="tab" onclick="showTab(this,'booth')">🎪 Booth</div>
-  <div class="tab" onclick="showTab(this,'online')">💻 Online</div>
-  <div class="tab" onclick="showTab(this,'amazon')">📦 Amazon &amp; Souvenir</div>
-  <div class="tab" onclick="showTab(this,'snackissue');renderSnackIssue()">⚠️ ปัญหาขนม</div>
-  <div class="tab" onclick="showTab(this,'workflow')">🔄 WorkFlow</div>
-  <div class="tab" onclick="showTab(this,'update')">📁 อัพเดทข้อมูล</div>
-</div>
+  </header><!-- /topbar -->
 
-  <!-- Export button in tab bar -->
-</div>
-
-<!-- BRAND SWIRL STRIP (vinyl banner style) -->
+<!-- BRAND SWIRL STRIP (vinyl banner style) — คั่นบาง ๆ ใต้ topbar -->
 <div style="height:18px;background:#FF8C00;overflow:hidden;position:relative">
   <svg width="100%" height="18" viewBox="0 0 1200 18" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
     <!-- repeating swirl/scroll pattern -->
@@ -131,33 +128,82 @@
     </g>
   </svg>
 </div>
-</div><!-- /sticky-top -->
 
-<div class="main">
+<!-- แถบแท็บแนวนอนเดิม: ซ่อนไว้ (display:none) แต่คงไว้ทั้งก้อนเพื่อ reuse showTab() + updateTabBells() — ห้ามลบ id/onclick -->
+<div class="tabs" id="mainTabs" style="display:none">
+  <div class="tab active" onclick="showTab(this,'overview')">📊 ภาพรวมยอดขาย</div>
+  <div class="tab" onclick="showTab(this,'products')">📋 รายการสินค้า</div>
+  <div class="tab" onclick="showTab(this,'team')">👥 ทีมงานฝ่ายขาย</div>
+  <div class="tab" onclick="showTab(this,'ordering')">🧾 ธุรการขาย</div>
+  <div class="tab" onclick="showTab(this,'mt')">🏪 ห้างค้าปลีก</div>
+  <div class="tab" onclick="showTab(this,'booth')">🎪 บูธ</div>
+  <div class="tab" onclick="showTab(this,'online')">💻 ออนไลน์</div>
+  <div class="tab" onclick="showTab(this,'amazon')">📦 อเมซอน &amp; ของฝาก</div>
+  <div class="tab" onclick="showTab(this,'snackissue');renderSnackIssue()">⚠️ ปัญหาขนม</div>
+  <div class="tab" onclick="showTab(this,'workflow')">🔄 ขั้นตอนการทำงาน</div>
+  <!-- แท็บแผงแอดมิน (ข้อ 4) — เห็นเฉพาะ admin (data-min) จัดการข้อมูลหลักของระบบ -->
+  <div class="tab" data-min="admin" onclick="showTab(this,'admin')">⚙️ แผงแอดมิน</div>
+  <!-- แท็บ "อัพเดทข้อมูล" หลักถูกลบออก: section 'update' ไม่มีอยู่จริง (จอว่าง)
+       การอัปเดตข้อมูลย้ายไปเป็น sub-tab รายเมนู (ov-update / bth-update / ol-dataupdate)
+       ที่ครอบด้วย .rbac-import เพื่อคุมสิทธิ์แยกแต่ละเมนู -->
+</div><!-- /mainTabs (ซ่อน) -->
+
+<main class="main" id="contentArea">
 
 <!-- ===== OVERVIEW ===== -->
 
 <div id="tab-overview" class="section active">
   <div class="sub-tabs">
-    <div class="sub-tab active" onclick="showSubTab(this,'ov-main')">📊 Budget vs Actual</div>
-    <div class="sub-tab" onclick="showSubTab(this,'ov-channel');renderChannel()">📦 ช่องทางการขาย</div>
-    <div class="sub-tab" onclick="showSubTab(this,'ov-trend');initTrend()">📈 Monthly Trend</div>
-    <div class="sub-tab" onclick="showSubTab(this,'ov-daily');showDailySub(_dailySub||'channel')">📅 รายวัน</div>
-    <div class="sub-tab" onclick="showSubTab(this,'ov-customer');renderCustomer()">🏪 ลูกค้า</div>
-    <div class="sub-tab" onclick="showSubTab(this,'ov-sales');renderSales()">👤 พนักงานขาย</div>
-    <div class="sub-tab" onclick="showSubTab(this,'ov-update')">🔄 อัพเดทข้อมูล</div>
+    <div class="sub-tab active" onclick="showSubTab(this,'ov-main')" data-i18n="ov.main">📊 งบประมาณ vs จริง</div>
+    <div class="sub-tab" onclick="showSubTab(this,'ov-channel');renderChannel()" data-i18n="ov.channel">📦 ช่องทางการขาย</div>
+    <div class="sub-tab" onclick="showSubTab(this,'ov-trend');initTrend()" data-i18n="ov.trend">📈 แนวโน้มรายเดือน</div>
+    <div class="sub-tab" onclick="showSubTab(this,'ov-daily');showDailySub(_dailySub||'channel')" data-i18n="ov.daily">📅 รายวัน</div>
+    <div class="sub-tab" onclick="showSubTab(this,'ov-customer');renderCustomer()" data-i18n="ov.customer">🏪 ลูกค้า</div>
+    <div class="sub-tab" onclick="showSubTab(this,'ov-sales');renderSales()" data-i18n="ov.sales">👤 พนักงานขาย</div>
+    <div class="sub-tab rbac-import" onclick="showSubTab(this,'ov-update')" data-i18n="ov.update">🔄 อัพเดทข้อมูล</div>
   </div>
+
+<div class="filter-bar" id="globalFilterBar" style="gap:6px;flex-wrap:wrap;margin-bottom:16px">
+  <div class="filter-label">📅 ช่วงเวลา:</div>
+  <div style="display:flex;gap:4px;flex-wrap:wrap" id="quickPeriodBtns">
+    <div class="period-type-btn active" data-preset="all"        onclick="setQuickPeriod('all',this)">ทั้งหมด</div>
+    <div class="period-type-btn"        data-preset="thismonth"  onclick="setQuickPeriod('thismonth',this)">เดือนนี้</div>
+    <div class="period-type-btn"        data-preset="lastmonth"  onclick="setQuickPeriod('lastmonth',this)">เดือนที่แล้ว</div>
+    <div class="period-type-btn"        data-preset="3months"    onclick="setQuickPeriod('3months',this)">3 เดือน</div>
+    <div id="quarterDropdown" style="position:relative;display:inline-block">
+      <div id="quarterDropBtn" class="period-type-btn" data-preset="qany" onclick="toggleQuarterMenu(this)" style="padding-right:22px;cursor:pointer"><span id="quarterLabel">📆 รายไตรมาส</span><span style="position:absolute;right:7px;top:50%;transform:translateY(-50%);font-size:10px;pointer-events:none">▾</span></div>
+      <div id="quarterMenu" style="display:none;position:absolute;top:calc(100% + 4px);left:0;background:#fff;border:1px solid #e2e8f0;border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,.1);min-width:170px;z-index:200;padding:4px 0">
+        <div class="qmenu-item" onclick="pickQuarter('q1',this)">Q1 ม.ค.–มี.ค.</div>
+        <div class="qmenu-item" onclick="pickQuarter('q2',this)">Q2 เม.ย.–มิ.ย.</div>
+        <div class="qmenu-item" onclick="pickQuarter('q3',this)">Q3 ก.ค.–ก.ย.</div>
+        <div class="qmenu-item" onclick="pickQuarter('q4',this)">Q4 ต.ค.–ธ.ค.</div>
+      </div>
+    </div>
+    <div id="annualDropdown" style="position:relative;display:inline-block">
+      <div id="annualDropBtn" class="period-type-btn" data-preset="annualany" onclick="toggleAnnualMenu(this)" style="padding-right:22px"><span id="annualLabel">📅 ปี 2569</span><span style="position:absolute;right:7px;top:50%;transform:translateY(-50%);font-size:10px;pointer-events:none">▾</span></div>
+      <div id="annualMenu" style="display:none;position:absolute;top:calc(100% + 4px);left:0;background:#fff;border:1px solid #e2e8f0;border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,.1);min-width:150px;z-index:200;padding:4px 0">
+        <div class="qmenu-item" data-y="2567" onclick="pickAnnual(2567,this)">📅 ปี 2567 (2024)</div>
+        <div class="qmenu-item" data-y="2568" onclick="pickAnnual(2568,this)">📅 ปี 2568 (2025)</div>
+        <div class="qmenu-item active" data-y="2569" onclick="pickAnnual(2569,this)">📅 ปี 2569 (2026)</div>
+      </div>
+    </div>
+  </div>
+  <div class="period-type-btn" onclick="resetFilters()" style="background:none;border:1.5px dashed var(--border);color:var(--text2);font-weight:600" title="ล้างตัวเลือกทั้งหมด">✕ ล้าง</div>
+  <div style="width:1px;height:24px;background:var(--border);flex-shrink:0"></div>
+  <div id="filterYearLabel" style="font-size:12px;color:var(--text2);font-weight:600">ปี 2026 (YTD ม.ค.–มิ.ย.)</div>
+</div><!-- /globalFilterBar -->
+
   <div id="ov-main" class="sub-section active">
   <div id="monthBannerOverview" class="month-banner" style="display:none"><div class="dot"></div><span id="monthBannerTextOverview"></span></div>
   <div class="kpi-grid" id="overviewKPI"></div>
   <div id="ovBelowTarget" style="margin-top:12px;margin-bottom:20px"></div>
   <div class="row cols2">
     <div class="card">
-      <div class="card-title" id="overviewBarTitle">Budget vs Actual รายเดือน (ล้านบาท)</div>
+      <div class="card-title" id="overviewBarTitle">งบประมาณ vs จริง รายเดือน (ล้านบาท)</div>
       <div class="chart-wrap h280"><canvas id="overviewBar"></canvas></div>
     </div>
     <div class="card">
-      <div class="card-title">% Achievement</div>
+      <div class="card-title">% ผลสำเร็จ</div>
       <div class="chart-wrap h280"><canvas id="overviewAch"></canvas></div>
       <div id="overviewAchPct" style="text-align:center;font-size:1.8rem;font-weight:700;margin-top:8px;"></div>
     </div>
@@ -214,42 +260,59 @@
   </div>
   <div id="ov-channel" class="sub-section">
   <div id="monthBannerChannel" class="month-banner" style="display:none"><div class="dot"></div><span id="monthBannerTextChannel"></span></div>
+  <div id="chFilterBar" style="display:flex;gap:8px;margin:0 0 12px;flex-wrap:wrap;align-items:center">
+    <span style="font-size:12px;font-weight:700;color:var(--text2)">🔍 เลือกช่องทาง:</span>
+    <div class="period-type-btn active" onclick="filterChannel('all',this)" style="font-size:12px;padding:5px 14px">ทั้งหมด</div>
+    <div class="period-type-btn" onclick="filterChannel('Modern Trade',this)" style="font-size:12px;padding:5px 14px">Modern Trade</div>
+    <div class="period-type-btn" onclick="filterChannel('Amazon &amp; Souvenir',this)" style="font-size:12px;padding:5px 14px">Amazon &amp; Souvenir</div>
+    <div class="period-type-btn" onclick="filterChannel('Booth',this)" style="font-size:12px;padding:5px 14px">Booth</div>
+    <div class="period-type-btn" onclick="filterChannel('Online',this)" style="font-size:12px;padding:5px 14px">Online</div>
+  </div>
   <div class="kpi-grid" id="chKPI"></div>
   <div class="row cols2">
     <div class="card">
-      <div class="card-title">Budget vs Actual รายช่องทาง</div>
+      <div class="card-title">งบประมาณ vs จริง รายช่องทาง</div>
       <div class="chart-wrap h280"><canvas id="chBar"></canvas></div>
     </div>
     <div class="card">
-      <div class="card-title">สัดส่วน Actual ตามช่องทาง</div>
+      <div class="card-title">สัดส่วนยอดจริงตามช่องทาง</div>
       <div class="chart-wrap h280"><canvas id="chPie"></canvas></div>
     </div>
   </div>
   <div class="card mt">
     <div class="card-title">รายละเอียดรายช่องทาง</div>
     <div class="table-wrap"><table><thead><tr>
-      <th>Channel</th><th style="text-align:right">Target</th><th style="text-align:right">Actual</th>
+      <th>ช่องทาง</th><th style="text-align:right">เป้าหมาย</th><th style="text-align:right">ยอดจริง</th>
       <th style="text-align:right">Difference</th><th style="text-align:right">% Diff</th>
       <th style="text-align:right">% Contribution</th><th>Progress</th>
     </tr></thead><tbody id="chTable"></tbody></table></div>
   </div>
   <div class="card mt">
-    <div class="card-title">Trend ยอดจริงรายช่องทาง รายเดือน (ล้านบาท)</div>
+    <div class="card-title">แนวโน้มยอดจริงรายช่องทาง รายเดือน (ล้านบาท)</div>
     <div class="chart-wrap h280"><canvas id="chTrend"></canvas></div>
   </div>
   </div>
   <div id="ov-trend" class="sub-section">
-  <div class="card mb">
-    <div class="card-title">Target vs Actual ทั้งปี (ม.ค.–ธ.ค.)</div>
+  <div class="kpi-grid" id="trendChKPI"></div>
+  <div class="card mt">
+    <div class="card-title">📈 แนวโน้มรายเดือน — แยกตามช่องทาง</div>
+    <div class="chart-wrap h380"><canvas id="trendChChart"></canvas></div>
+  </div>
+  <div class="card mt">
+    <div class="card-title">📋 ตารางเปรียบเทียบรายเดือน</div>
+    <div class="table-wrap"><table id="trendChTable" style="width:100%;border-collapse:collapse;font-size:13px"></table></div>
+  </div>
+  <div class="card mt">
+    <div class="card-title">เป้าหมาย vs ยอดจริง ทั้งปี (ม.ค.–ธ.ค.)</div>
     <div class="chart-wrap h360"><canvas id="trendMain"></canvas></div>
   </div>
   <div class="row cols2">
     <div class="card">
-      <div class="card-title">Cumulative Actual vs Target</div>
+      <div class="card-title">ยอดสะสมจริง vs เป้าหมาย</div>
       <div class="chart-wrap h240"><canvas id="trendCum"></canvas></div>
     </div>
     <div class="card">
-      <div class="card-title">Gap (Target – Actual) รายเดือน</div>
+      <div class="card-title">ส่วนต่าง (เป้าหมาย – ยอดจริง) รายเดือน</div>
       <div class="chart-wrap h240"><canvas id="trendGap"></canvas></div>
     </div>
   </div>
@@ -264,19 +327,13 @@
   </div>
   <div id="ov-daily" class="sub-section">
 
-  <!-- ===== DAILY SUB-NAV ===== -->
-  <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:18px;border-bottom:2px solid var(--border);padding-bottom:12px">
-    <div class="daily-sub-btn active" id="dsb-channel" onclick="showDailySub('channel')" style="padding:7px 18px;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;background:linear-gradient(135deg,#f97316,#fb923c);color:#fff;box-shadow:0 2px 8px rgba(249,115,22,.3)">📊 ช่องทางต่างๆ</div>
-    <div class="daily-sub-btn" id="dsb-trend" onclick="showDailySub('trend')" style="padding:7px 18px;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;background:#f1f5f9;color:#64748b">📈 Monthly Trend</div>
-    <div class="daily-sub-btn" id="dsb-online" onclick="showDailySub('online')" style="padding:7px 18px;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;background:#f1f5f9;color:#64748b">💻 Online</div>
-    <div class="daily-sub-btn" id="dsb-booth" onclick="showDailySub('booth')" style="padding:7px 18px;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;background:#f1f5f9;color:#64748b">🎪 Booth</div>
-    <div class="daily-sub-btn" id="dsb-amazon" onclick="showDailySub('amazon')" style="padding:7px 18px;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;background:#f1f5f9;color:#64748b">📦 Amazon</div>
-  </div>
-
-  <!-- ===== SUB 1: ช่องทางต่างๆ (existing daily chart) ===== -->
+  <!-- ===== DAILY DROPDOWNS ===== -->
   <div id="daily-channel">
-    <div id="dailyChTabs" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px"></div>
-    <div id="dailyMonthTabs" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px"></div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:16px">
+      <select id="dailyYearDrop" onchange="dailyYearChange(this.value)" style="padding:8px 14px;border-radius:10px;border:2px solid #e2e8f0;font-size:13px;font-weight:600;color:#334155;background:#f8fafc;cursor:pointer;outline:none"></select>
+      <select id="dailyChDrop" onchange="dailyChChange(this.value)" style="padding:8px 14px;border-radius:10px;border:2px solid #e2e8f0;font-size:13px;font-weight:600;color:#334155;background:#f8fafc;cursor:pointer;outline:none"></select>
+      <select id="dailyMonthDrop" onchange="dailyMonthChange(this.value)" style="padding:8px 14px;border-radius:10px;border:2px solid #e2e8f0;font-size:13px;font-weight:600;color:#334155;background:#f8fafc;cursor:pointer;outline:none"></select>
+    </div>
     <div class="kpi-grid" id="dailyKPI"></div>
     <div class="card">
       <div class="card-title" id="dailyChartTitle">📅 ยอดขายรายวัน</div>
@@ -312,19 +369,6 @@
     </div>
   </div>
 
-  <!-- ===== SUB 2: Monthly Trend ===== -->
-  <div id="daily-trend" style="display:none">
-    <div id="trendRetailerBtns" style="padding:0 4px 12px;display:flex;flex-wrap:wrap;gap:4px"></div>
-    <div class="kpi-grid" id="trendChKPI"></div>
-    <div class="card mt">
-      <div class="card-title">📈 Monthly Trend — แยกตามช่องทาง</div>
-      <div class="chart-wrap h380"><canvas id="trendChChart"></canvas></div>
-    </div>
-    <div class="card mt">
-      <div class="card-title">📋 ตารางเปรียบเทียบรายเดือน</div>
-      <div class="table-wrap"><table id="trendChTable" style="width:100%;border-collapse:collapse;font-size:13px"></table></div>
-    </div>
-  </div>
 
   <!-- ===== SUB 3: Online ===== -->
   <div id="daily-online" style="display:none">
@@ -368,10 +412,14 @@
   </div><!-- /ov-daily -->
 
   <div id="ov-customer" class="sub-section">
+  <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:16px">
+    <select id="custYearDrop" onchange="custYearChange(this.value)" style="padding:8px 14px;border-radius:10px;border:2px solid #e2e8f0;font-size:13px;font-weight:600;color:#334155;background:#f8fafc;cursor:pointer;outline:none"></select>
+    <select id="custMonthDrop" onchange="custMonthChange(this.value)" style="padding:8px 14px;border-radius:10px;border:2px solid #e2e8f0;font-size:13px;font-weight:600;color:#334155;background:#f8fafc;cursor:pointer;outline:none"></select>
+  </div>
   <div id="monthBannerCustomer" class="month-banner" style="display:none"><div class="dot"></div><span id="monthBannerTextCustomer"></span></div>
   <div class="row cols2">
     <div class="card">
-      <div class="card-title">Top Customers — Actual</div>
+      <div class="card-title">ลูกค้ารายใหญ่ — ยอดจริง</div>
       <div class="chart-wrap h280"><canvas id="custBar"></canvas></div>
     </div>
     <div class="card">
@@ -409,22 +457,26 @@
   </div>
   </div>
   <div id="ov-sales" class="sub-section">
+  <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:16px">
+    <select id="salesYearDrop" onchange="salesYearChange(this.value)" style="padding:8px 14px;border-radius:10px;border:2px solid #e2e8f0;font-size:13px;font-weight:600;color:#334155;background:#f8fafc;cursor:pointer;outline:none"></select>
+    <select id="salesMonthDrop" onchange="salesMonthChange(this.value)" style="padding:8px 14px;border-radius:10px;border:2px solid #e2e8f0;font-size:13px;font-weight:600;color:#334155;background:#f8fafc;cursor:pointer;outline:none"></select>
+  </div>
   <div id="monthBannerSales" class="month-banner" style="display:none"><div class="dot"></div><span id="monthBannerTextSales"></span></div>
 
   <!-- PERSON SELECTOR -->
   <div class="person-selector" style="margin:0 0 4px">
-    <div class="person-selector-title">🔍 เลือกพนักงานเพื่อดู Performance รายคน</div>
+    <div class="person-selector-title">🔍 เลือกพนักงานเพื่อดูผลงานรายคน</div>
     <div class="person-cards" id="personCards"></div>
   </div>
   <div class="divider"></div>
   <div class="kpi-grid" id="salesKPI"></div>
   <div class="row cols2">
     <div class="card">
-      <div class="card-title">Actual รายพนักงาน</div>
+      <div class="card-title">ยอดจริงรายพนักงาน</div>
       <div class="chart-wrap h280"><canvas id="salesActBar"></canvas></div>
     </div>
     <div class="card">
-      <div class="card-title">% Achievement รายพนักงาน</div>
+      <div class="card-title">% ผลสำเร็จ รายพนักงาน</div>
       <div class="chart-wrap h280"><canvas id="salesAchBar"></canvas></div>
     </div>
   </div>
@@ -465,11 +517,11 @@
 
     <div class="row cols2">
       <div class="card">
-        <div class="card-title" id="pdPieTitle">สัดส่วน Actual ตามลูกค้า</div>
+        <div class="card-title" id="pdPieTitle">สัดส่วนยอดจริงตามลูกค้า</div>
         <div class="chart-wrap h260"><canvas id="pdPie"></canvas></div>
       </div>
       <div class="card">
-        <div class="card-title" id="pdBarTitle">Budget vs Actual ตามลูกค้า</div>
+        <div class="card-title" id="pdBarTitle">งบประมาณ vs จริง ตามลูกค้า</div>
         <div class="chart-wrap h260"><canvas id="pdBar"></canvas></div>
       </div>
     </div>
@@ -488,12 +540,12 @@
     </div>
 
     <div class="card mt">
-      <div class="card-title">Summary Monthly by Customer (ม.ค.–มิ.ย.) — Budget vs Actual (ล้านบาท)</div>
+      <div class="card-title">สรุปรายเดือนตามลูกค้า (ม.ค.–มิ.ย.) — งบประมาณ vs จริง (ล้านบาท)</div>
       <div class="chart-wrap h320"><canvas id="pdTrend"></canvas></div>
     </div>
 
     <div class="mt">
-      <div class="section-title" style="margin-bottom:12px">📅 รายละเอียดรายเดือน (Budget vs Actual ตามลูกค้า)</div>
+      <div class="section-title" style="margin-bottom:12px">📅 รายละเอียดรายเดือน (งบประมาณ vs จริง ตามลูกค้า)</div>
       <div class="mini-grid" id="pdMiniGrid"></div>
     </div>
 
@@ -519,48 +571,48 @@
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
           <span style="font-size:22px">📊</span>
           <div>
-            <div style="font-weight:800;font-size:14px;color:#1e293b">ยอดขาย Target &amp; Actual</div>
-            <div style="font-size:11px;color:#64748b">เป้า/ยอดจริงแต่ละช่องทางรายเดือน</div>
+            <div style="font-weight:800;font-size:14px;color:#1e293b">ยอดขาย</div>
+            <div style="font-size:11px;color:#64748b">ยอดขายจริงรายเดือน แยกตามช่องทาง/ลูกค้า/รายวัน</div>
           </div>
         </div>
-        <div style="font-size:11px;color:#94a3b8;margin-bottom:10px">📋 Excel — sheet ช่องทาง (MT / Amazon / Booth / Online) คอลัมน์: เดือน, Target, Actual</div>
+        <div style="font-size:11px;color:#94a3b8;margin-bottom:10px">📋 ไฟล์ <strong style="color:#f97316">รวม New.xlsx</strong> — ข้อมูลยอดขาย Actual ทุกช่องทาง</div>
         <label style="display:inline-flex;align-items:center;gap:6px;padding:7px 16px;background:#f97316;color:#fff;border-radius:8px;cursor:pointer;font-size:12px;font-weight:700">
-          <span>📁 เลือกไฟล์</span>
-          <input type="file" accept=".xlsx,.xls" style="display:none" onchange="handleDataUpload(this,'budget-actual')">
+          <span>📁 เลือกไฟล์ รวม New</span>
+          <input type="file" accept=".xlsx,.xls" style="display:none" onchange="handleDataUpload(this,'ruam-new')">
         </label>
-        <span id="upload-status-budget-actual" style="font-size:11px;color:#64748b;margin-left:8px"></span>
+        <span id="upload-status-ruam-new" style="font-size:11px;color:#64748b;margin-left:8px"></span>
       </div>
 
       <div style="background:#fff;border-radius:14px;border:1px solid #e2e8f0;padding:18px;border-left:4px solid #4f46e5">
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
-          <span style="font-size:22px">🏪</span>
+          <span style="font-size:22px">🎯</span>
           <div>
-            <div style="font-weight:800;font-size:14px;color:#1e293b">ยอดขายรายลูกค้า</div>
-            <div style="font-size:11px;color:#64748b">Target/Actual แยกลูกค้าแต่ละช่องทาง</div>
+            <div style="font-weight:800;font-size:14px;color:#1e293b">เป้าหมาย</div>
+            <div style="font-size:11px;color:#64748b">เป้ายอดขายรายเดือน แยกตามช่องทาง/ลูกค้า</div>
           </div>
         </div>
-        <div style="font-size:11px;color:#94a3b8;margin-bottom:10px">📋 Excel — คอลัมน์: เดือน, ลูกค้า, Target, Actual</div>
+        <div style="font-size:11px;color:#94a3b8;margin-bottom:10px">📋 ไฟล์ <strong style="color:#4f46e5">Target.xlsx</strong> — ข้อมูลเป้าหมาย Target ทุกช่องทาง</div>
         <label style="display:inline-flex;align-items:center;gap:6px;padding:7px 16px;background:#4f46e5;color:#fff;border-radius:8px;cursor:pointer;font-size:12px;font-weight:700">
-          <span>📁 เลือกไฟล์</span>
-          <input type="file" accept=".xlsx,.xls" style="display:none" onchange="handleDataUpload(this,'channel-monthly')">
+          <span>📁 เลือกไฟล์ Target</span>
+          <input type="file" accept=".xlsx,.xls" style="display:none" onchange="handleDataUpload(this,'target')">
         </label>
-        <span id="upload-status-channel-monthly" style="font-size:11px;color:#64748b;margin-left:8px"></span>
+        <span id="upload-status-target" style="font-size:11px;color:#64748b;margin-left:8px"></span>
       </div>
 
       <div style="background:#fff;border-radius:14px;border:1px solid #e2e8f0;padding:18px;border-left:4px solid #0891b2">
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
           <span style="font-size:22px">👤</span>
           <div>
-            <div style="font-weight:800;font-size:14px;color:#1e293b">ยอดขายรายพนักงาน</div>
-            <div style="font-size:11px;color:#64748b">ยอดขายจริงแยกพนักงานรายเดือน</div>
+            <div style="font-weight:800;font-size:14px;color:#1e293b">ยอดขาย พนักงานรายคน</div>
+            <div style="font-size:11px;color:#64748b">ยอดขายจริง/เป้าหมาย แยกพนักงานรายเดือน</div>
           </div>
         </div>
-        <div style="font-size:11px;color:#94a3b8;margin-bottom:10px">📋 Excel — คอลัมน์: พนักงาน, Zone, ม.ค.–ธ.ค.</div>
+        <div style="font-size:11px;color:#94a3b8;margin-bottom:10px">📋 ไฟล์ <strong style="color:#0891b2">Performance Sales.xlsx</strong> — ผลงานพนักงานขายรายคน</div>
         <label style="display:inline-flex;align-items:center;gap:6px;padding:7px 16px;background:#0891b2;color:#fff;border-radius:8px;cursor:pointer;font-size:12px;font-weight:700">
-          <span>📁 เลือกไฟล์</span>
-          <input type="file" accept=".xlsx,.xls" style="display:none" onchange="handleDataUpload(this,'sales-staff')">
+          <span>📁 เลือกไฟล์ Performance Sales</span>
+          <input type="file" accept=".xlsx,.xls" style="display:none" onchange="handleDataUpload(this,'performance-sales')">
         </label>
-        <span id="upload-status-sales-staff" style="font-size:11px;color:#64748b;margin-left:8px"></span>
+        <span id="upload-status-performance-sales" style="font-size:11px;color:#64748b;margin-left:8px"></span>
       </div>
 
     </div>
@@ -618,6 +670,11 @@
         <option value="discontinued">❌ ยกเลิก</option>
       </select>
       <span id="prodCardCount" style="font-size:12px;color:var(--muted);margin-left:auto"></span>
+      <button class="rbac-export" onclick="openAddProdModal()" title="เพิ่มสินค้าใหม่ในช่องทางนี้"
+        style="margin-left:8px;padding:6px 14px;border-radius:8px;border:1.5px solid #4f46e5;background:#eef2ff;color:#4f46e5;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px;white-space:nowrap"
+        onmouseover="this.style.background='#e0e7ff'" onmouseout="this.style.background='#eef2ff'">
+        ➕ เพิ่มสินค้า
+      </button>
       <button onclick="saveImagesToFile(false)" title="บันทึกรูปสินค้าลงไฟล์ HTML (ถาวร)"
         style="margin-left:8px;padding:6px 14px;border-radius:8px;border:1.5px solid #16a34a;background:#f0fdf4;color:#16a34a;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px;white-space:nowrap"
         onmouseover="this.style.background='#dcfce7'" onmouseout="this.style.background='#f0fdf4'">
@@ -629,6 +686,77 @@
   <!-- Dynamic content area -->
   <div id="prodContent"></div>
 
+</div>
+
+<!-- ===== ADD PRODUCT MODAL (Form 3.2) ===== -->
+<div id="addProdModal" style="display:none;position:fixed;inset:0;background:rgba(15,23,42,.55);z-index:20050;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(3px)" onclick="if(event.target===this)closeAddProdModal()">
+  <div style="background:#fff;border-radius:16px;max-width:560px;width:100%;max-height:92vh;overflow-y:auto;box-shadow:0 24px 70px rgba(0,0,0,.35)">
+    <div style="padding:18px 22px;border-bottom:1px solid #e2e8f0;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:#fff;border-radius:16px 16px 0 0">
+      <div data-prod-title style="font-size:16px;font-weight:800;color:#1e293b">➕ เพิ่มสินค้าใหม่</div>
+      <button onclick="closeAddProdModal()" style="background:none;border:none;font-size:22px;cursor:pointer;color:#94a3b8;line-height:1">✕</button>
+    </div>
+    <div style="padding:20px 22px;display:grid;grid-template-columns:1fr 1fr;gap:14px 16px">
+      <!-- ข้อมูลสินค้า -->
+      <div style="grid-column:1/3;font-size:13px;font-weight:800;color:#1e293b;border-bottom:2px solid #e2e8f0;padding-bottom:6px;margin-bottom:2px">📦 ข้อมูลสินค้า</div>
+      <label style="display:flex;flex-direction:column;gap:5px;font-size:12px;font-weight:700;color:#475569;grid-column:1/3">ช่องทางจำหน่าย <span style="color:#dc2626">*</span>
+        <select id="npCh" style="border:1.5px solid #cbd5e1;border-radius:8px;padding:8px 10px;font-size:13px;background:#fff;color:#1e293b;font-weight:600"></select></label>
+      <label style="display:flex;flex-direction:column;gap:5px;font-size:12px;font-weight:700;color:#475569">รหัสสินค้า <span style="color:#dc2626">*</span>
+        <input id="npCode" type="text" style="border:1.5px solid #cbd5e1;border-radius:8px;padding:8px 10px;font-size:13px;color:#1e293b"></label>
+      <label style="display:flex;flex-direction:column;gap:5px;font-size:12px;font-weight:700;color:#475569">บาร์โค้ดสินค้า
+        <input id="npBarcode" type="text" style="border:1.5px solid #cbd5e1;border-radius:8px;padding:8px 10px;font-size:13px;color:#1e293b"></label>
+      <label style="display:flex;flex-direction:column;gap:5px;font-size:12px;font-weight:700;color:#475569;grid-column:1/3">ชื่อสินค้า <span style="color:#dc2626">*</span>
+        <input id="npName" type="text" style="border:1.5px solid #cbd5e1;border-radius:8px;padding:8px 10px;font-size:13px;color:#1e293b"></label>
+      <label style="display:flex;flex-direction:column;gap:5px;font-size:12px;font-weight:700;color:#475569">เลข อ.ย.
+        <input id="npFda" type="text" placeholder="เช่น 10-1-00000-0-0000" style="border:1.5px solid #cbd5e1;border-radius:8px;padding:8px 10px;font-size:13px;color:#1e293b"></label>
+      <label style="display:flex;flex-direction:column;gap:5px;font-size:12px;font-weight:700;color:#475569">เลขทะเบียนฮาลาล
+        <input id="npHalal" type="text" placeholder="เช่น H-0000-00000" style="border:1.5px solid #cbd5e1;border-radius:8px;padding:8px 10px;font-size:13px;color:#1e293b"></label>
+      <label style="display:flex;flex-direction:column;gap:5px;font-size:12px;font-weight:700;color:#475569">ประเภทสินค้า
+        <select id="npType" style="border:1.5px solid #cbd5e1;border-radius:8px;padding:8px 10px;font-size:13px;background:#fff;color:#1e293b">
+          <option value="Ambient">Ambient (ไม่แช่เย็น)</option>
+          <option value="Chill">Chill (แช่เย็น)</option>
+        </select></label>
+      <label style="display:flex;flex-direction:column;gap:5px;font-size:12px;font-weight:700;color:#475569">น้ำหนักสินค้า
+        <input id="npWeight" type="text" placeholder="เช่น 50 ก." style="border:1.5px solid #cbd5e1;border-radius:8px;padding:8px 10px;font-size:13px;color:#1e293b"></label>
+      <label style="display:flex;flex-direction:column;gap:5px;font-size:12px;font-weight:700;color:#475569">อายุสินค้า
+        <input id="npShelf" type="text" placeholder="เช่น 6 เดือน" style="border:1.5px solid #cbd5e1;border-radius:8px;padding:8px 10px;font-size:13px;color:#1e293b"></label>
+      <label style="display:flex;flex-direction:column;gap:5px;font-size:12px;font-weight:700;color:#475569">สถานะสินค้า
+        <select id="npStatus" style="border:1.5px solid #cbd5e1;border-radius:8px;padding:8px 10px;font-size:13px;background:#fff;color:#1e293b">
+          <option value="active">✅ ขายปัจจุบัน</option>
+          <option value="discontinued">❌ ยกเลิกขาย</option>
+        </select></label>
+      <label style="display:flex;flex-direction:column;gap:5px;font-size:12px;font-weight:700;color:#475569">GP (%)
+        <input id="npGp" type="number" step="0.1" min="0" max="100" placeholder="0-100" style="border:1.5px solid #cbd5e1;border-radius:8px;padding:8px 10px;font-size:13px;color:#1e293b"></label>
+      <!-- ราคา -->
+      <div style="grid-column:1/3;font-size:13px;font-weight:800;color:#1e293b;border-bottom:2px solid #e2e8f0;padding-bottom:6px;margin-top:4px;margin-bottom:2px">💰 ราคา</div>
+      <label style="display:flex;flex-direction:column;gap:5px;font-size:12px;font-weight:700;color:#475569">ราคาส่ง Ex.VAT
+        <input id="npPriceExVat" type="number" step="0.01" min="0" style="border:1.5px solid #cbd5e1;border-radius:8px;padding:8px 10px;font-size:13px;color:#1e293b"></label>
+      <label style="display:flex;flex-direction:column;gap:5px;font-size:12px;font-weight:700;color:#475569">ราคาปลีก Ex.VAT
+        <input id="npPriceRetailEx" type="number" step="0.01" min="0" style="border:1.5px solid #cbd5e1;border-radius:8px;padding:8px 10px;font-size:13px;color:#1e293b"></label>
+      <label style="display:flex;flex-direction:column;gap:5px;font-size:12px;font-weight:700;color:#475569">ราคาส่ง In.VAT
+        <input id="npPriceIn" type="number" step="0.01" min="0" style="border:1.5px solid #cbd5e1;border-radius:8px;padding:8px 10px;font-size:13px;color:#1e293b"></label>
+      <label style="display:flex;flex-direction:column;gap:5px;font-size:12px;font-weight:700;color:#475569">ราคาปลีก In.VAT
+        <input id="npPriceRetail" type="number" step="0.01" min="0" style="border:1.5px solid #cbd5e1;border-radius:8px;padding:8px 10px;font-size:13px;color:#1e293b"></label>
+      <label style="display:flex;flex-direction:column;gap:5px;font-size:12px;font-weight:700;color:#475569;grid-column:1/3">ราคาขายหน้าร้าน
+        <input id="npPriceShop" type="number" step="0.01" min="0" style="border:1.5px solid #cbd5e1;border-radius:8px;padding:8px 10px;font-size:13px;color:#1e293b"></label>
+      <!-- รูปสินค้า -->
+      <div style="grid-column:1/3;font-size:13px;font-weight:800;color:#1e293b;border-bottom:2px solid #e2e8f0;padding-bottom:6px;margin-top:4px;margin-bottom:2px">📷 รูปสินค้า</div>
+      <div id="npImgSection" style="grid-column:1/3;text-align:center">
+        <div id="npImgPreview" style="width:160px;height:160px;margin:0 auto 10px;border-radius:12px;border:2px dashed #cbd5e1;display:flex;align-items:center;justify-content:center;overflow:hidden;background:#f8fafc">
+          <span style="font-size:40px;color:#cbd5e1">📷</span>
+        </div>
+        <input type="file" id="npImgFile" accept="image/*" style="display:none" onchange="handleNpImgChange(this)">
+        <button type="button" onclick="document.getElementById('npImgFile').click()" style="padding:8px 16px;border-radius:8px;border:1.5px solid #3b82f6;background:#eff6ff;color:#3b82f6;font-size:12px;font-weight:700;cursor:pointer">📷 เลือกรูปสินค้า</button>
+        <button type="button" id="npImgRemoveBtn" onclick="removeNpImg()" style="display:none;padding:8px 16px;border-radius:8px;border:1.5px solid #ef4444;background:#fef2f2;color:#ef4444;font-size:12px;font-weight:700;cursor:pointer;margin-left:6px">🗑️ ลบรูป</button>
+      </div>
+      <!-- หมายเหตุ -->
+      <label style="display:flex;flex-direction:column;gap:5px;font-size:12px;font-weight:700;color:#475569;grid-column:1/3">📝 หมายเหตุ
+        <textarea id="npNote" rows="3" placeholder="รายละเอียดเพิ่มเติม..." style="border:1.5px solid #cbd5e1;border-radius:8px;padding:8px 10px;font-size:13px;color:#1e293b;resize:vertical;font-family:inherit"></textarea></label>
+    </div>
+    <div style="padding:14px 22px;border-top:1px solid #e2e8f0;display:flex;justify-content:flex-end;gap:10px">
+      <button onclick="closeAddProdModal()" style="padding:8px 18px;border-radius:8px;border:1.5px solid #cbd5e1;background:#fff;color:#475569;font-size:13px;font-weight:700;cursor:pointer">ยกเลิก</button>
+      <button data-prod-save onclick="saveNewProduct()" style="padding:8px 18px;border-radius:8px;border:none;background:#4f46e5;color:#fff;font-size:13px;font-weight:700;cursor:pointer">💾 บันทึก</button>
+    </div>
+  </div>
 </div>
 
 <!-- ===== PRODUCT MODAL ===== -->
@@ -709,24 +837,71 @@
 
 <!-- ===== MODERN TRADE ===== -->
 <div id="tab-mt" class="section">
+  <div class="sub-tabs" id="mtChannelTabs">
+    <div class="sub-tab" onclick="mtClickChannel(this,'All')" data-i18n="mt.all">📊 ทุกช่องทาง</div>
+    <div class="sub-tab active" onclick="mtClickChannel(this,'CJ')">🏪 CJ</div>
+    <div class="sub-tab" onclick="mtClickChannel(this,'BigC')">🛒 Big C</div>
+    <div class="sub-tab" onclick="mtClickChannel(this,'Top')">🏷 Top</div>
+    <div class="sub-tab" onclick="mtClickChannel(this,'Makro')">📦 Makro</div>
+    <div class="sub-tab" onclick="mtClickChannel(this,'MM')">🏬 MM</div>
+    <div class="sub-tab" onclick="mtClickChannel(this,'Aeon')">🛍 Aeon</div>
+    <div class="sub-tab" onclick="mtClickChannel(this,'TheMall')">🏢 The Mall</div>
+  </div>
+  <div id="mtPeriodFilter" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:10px 12px;margin-bottom:4px;background:var(--surface);border-radius:10px;border:1px solid var(--border);box-shadow:0 2px 6px rgba(0,0,0,.08)">
+    <span style="font-size:12px;font-weight:700;color:var(--text2)">📅 ช่วงเวลา:</span>
+    <button class="fmtab active" onclick="mtSetPeriod('all',this)">ทั้งหมด</button>
+    <button class="fmtab" onclick="mtSetPeriod('month',this)">เดือนนี้</button>
+    <button class="fmtab" onclick="mtSetPeriod('lastmonth',this)">เดือนที่แล้ว</button>
+    <div id="mtQuarterDropdown" style="position:relative;display:inline-block">
+      <div id="mtQuarterDropBtn" class="period-type-btn" onclick="mtToggleQMenu()" style="padding-right:22px;cursor:pointer"><span id="mtQuarterLabel">📆 รายไตรมาส</span><span style="position:absolute;right:7px;top:50%;transform:translateY(-50%);font-size:10px;pointer-events:none">▾</span></div>
+      <div id="mtQuarterMenu" style="display:none;position:absolute;top:calc(100% + 4px);left:0;background:#fff;border:1px solid #e2e8f0;border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,.1);min-width:170px;z-index:200;padding:4px 0">
+        <div class="qmenu-item" onclick="mtPickQuarter('2026-Q1',this)">Q1/2026 ม.ค.–มี.ค.</div>
+        <div class="qmenu-item" onclick="mtPickQuarter('2026-Q2',this)">Q2/2026 เม.ย.–มิ.ย.</div>
+        <div class="qmenu-item" onclick="mtPickQuarter('2026-Q3',this)">Q3/2026 ก.ค.–ก.ย.</div>
+        <div class="qmenu-item" onclick="mtPickQuarter('2026-Q4',this)">Q4/2026 ต.ค.–ธ.ค.</div>
+        <div style="border-top:1px solid #e2e8f0;margin:4px 0"></div>
+        <div class="qmenu-item" onclick="mtPickQuarter('2025-Q1',this)">Q1/2025 ม.ค.–มี.ค.</div>
+        <div class="qmenu-item" onclick="mtPickQuarter('2025-Q2',this)">Q2/2025 เม.ย.–มิ.ย.</div>
+        <div class="qmenu-item" onclick="mtPickQuarter('2025-Q3',this)">Q3/2025 ก.ค.–ก.ย.</div>
+        <div class="qmenu-item" onclick="mtPickQuarter('2025-Q4',this)">Q4/2025 ต.ค.–ธ.ค.</div>
+        <div style="border-top:1px solid #e2e8f0;margin:4px 0"></div>
+        <div class="qmenu-item" onclick="mtPickQuarter('2024-Q1',this)">Q1/2024 ม.ค.–มี.ค.</div>
+        <div class="qmenu-item" onclick="mtPickQuarter('2024-Q2',this)">Q2/2024 เม.ย.–มิ.ย.</div>
+        <div class="qmenu-item" onclick="mtPickQuarter('2024-Q3',this)">Q3/2024 ก.ค.–ก.ย.</div>
+        <div class="qmenu-item" onclick="mtPickQuarter('2024-Q4',this)">Q4/2024 ต.ค.–ธ.ค.</div>
+      </div>
+    </div>
+    <div id="mtYearDropdown" style="position:relative;display:inline-block">
+      <div id="mtYearDropBtn" class="period-type-btn" onclick="mtToggleYMenu()" style="padding-right:22px;cursor:pointer"><span id="mtYearLabel">📅 รายปี</span><span style="position:absolute;right:7px;top:50%;transform:translateY(-50%);font-size:10px;pointer-events:none">▾</span></div>
+      <div id="mtYearMenu" style="display:none;position:absolute;top:calc(100% + 4px);left:0;background:#fff;border:1px solid #e2e8f0;border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,.1);min-width:180px;z-index:200;padding:4px 0">
+        <div class="qmenu-item" onclick="mtPickYear(2026,this)">📅 ปี 2569 (2026)</div>
+        <div class="qmenu-item" onclick="mtPickYear(2025,this)">📅 ปี 2568 (2025)</div>
+        <div class="qmenu-item" onclick="mtPickYear(2024,this)">📅 ปี 2567 (2024)</div>
+      </div>
+    </div>
+    <span id="mtPeriodLabel" style="font-size:11px;color:var(--muted);margin-left:4px">กำลังแสดง: ทั้งหมด</span>
+    <select id="mtQuarterSelect" style="display:none">
+      <option value=""></option>
+      <option value="2026-Q1">Q1/2026</option><option value="2026-Q2">Q2/2026</option><option value="2026-Q3">Q3/2026</option><option value="2026-Q4">Q4/2026</option>
+      <option value="2025-Q1">Q1/2025</option><option value="2025-Q2">Q2/2025</option><option value="2025-Q3">Q3/2025</option><option value="2025-Q4">Q4/2025</option>
+      <option value="2024-Q1">Q1/2024</option><option value="2024-Q2">Q2/2024</option><option value="2024-Q3">Q3/2024</option><option value="2024-Q4">Q4/2024</option>
+    </select>
+    <select id="mtYearSelect" style="display:none">
+      <option value=""></option>
+      <option value="2026">2026</option><option value="2025">2025</option><option value="2024">2024</option>
+    </select>
+  </div>
+  <div class="mt-bi-layout">
+  <div class="mt-bi-sidebar" id="mtBiSidebar"></div>
+  <div class="mt-bi-content" id="mtBiContent">
+  <div id="mt-bi-dashboard">
+  <div id="mt-sales" class="sub-section active">
   <!-- KPI -->
   <div class="kpi-grid" id="mtKPI"></div>
 
-  <!-- Channel tabs -->
-  <div class="card mb" style="padding:12px 18px">
+  <!-- Type filter -->
+  <div class="card mb" style="padding:12px 18px" id="mtTypeFilterBar">
     <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;row-gap:8px">
-      <span style="font-size:12px;font-weight:700;color:var(--text2)">ช่องทาง:</span>
-      <div style="display:flex;gap:5px;flex-wrap:wrap" id="mtChFilter">
-        <button class="fmtab active" data-ch="All"     onclick="mtSetCh('All',this)">ทั้งหมด</button>
-        <button class="fmtab" data-ch="CJ"             onclick="mtSetCh('CJ',this)">🏪 CJ</button>
-        <button class="fmtab" data-ch="BigC"           onclick="mtSetCh('BigC',this)">🛒 Big C</button>
-        <button class="fmtab" data-ch="MM"             onclick="mtSetCh('MM',this)">🏬 MM Mega</button>
-        <button class="fmtab" data-ch="Aeon"           onclick="mtSetCh('Aeon',this)">🛍 Aeon</button>
-        <button class="fmtab" data-ch="Top"            onclick="mtSetCh('Top',this)">🏷 Top</button>
-        <button class="fmtab" data-ch="TheMall"        onclick="mtSetCh('TheMall',this)">🏢 The Mall</button>
-        <button class="fmtab" data-ch="Makro"          onclick="mtSetCh('Makro',this)">📦 Makro</button>
-      </div>
-      <div style="width:1px;height:20px;background:var(--border);margin:0 4px"></div>
       <span style="font-size:12px;font-weight:700;color:var(--text2)">ประเภท:</span>
       <div style="display:flex;gap:5px" id="mtTypeFilter2">
         <button class="fmtab active" data-t="All"     onclick="mtSetType('All',this)">ทั้งหมด</button>
@@ -819,13 +994,14 @@
     <div class="table-wrap">
       <table>
         <thead>
-          <tr>
+          <tr id="mtMthHead">
             <th>ชื่อสินค้า</th>
             <th style="text-align:right">ม.ค.</th>
             <th style="text-align:right">ก.พ.</th>
             <th style="text-align:right">มี.ค.</th>
             <th style="text-align:right">เม.ย.</th>
             <th style="text-align:right">พ.ค.</th>
+            <th style="text-align:right">มิ.ย.</th>
             <th style="text-align:right">ยอดรวม</th>
           </tr>
         </thead>
@@ -833,21 +1009,94 @@
       </table>
     </div>
   </div>
-</div>
+  </div><!-- /mt-sales -->
+
+  <div id="mt-compensate" style="display:none">
+    <!-- Header -->
+    <div class="card" style="background:linear-gradient(135deg,#1e40af,#3b82f6);color:#fff;padding:24px 28px;margin-bottom:18px;border-radius:14px">
+      <div style="font-size:20px;font-weight:800">💰 ค่าโปรโมชั่น CJ (Compensate)</div>
+      <div style="font-size:13px;opacity:.85;margin-top:4px">สรุปค่าชดเชยโปรโมชั่น CJ ม.ค.-มิ.ย. 2569 | Supplier 101484 บริษัท วรรณวนัช เบเกอรี่ จำกัด</div>
+    </div>
+
+    <!-- KPI Cards -->
+    <div class="kpi-grid" id="cjCompKPI" style="grid-template-columns:repeat(4,1fr);margin-bottom:18px"></div>
+
+    <!-- Toggle THB / EA -->
+    <div style="display:flex;gap:4px;margin-bottom:16px">
+      <button class="cj-comp-toggle active" id="cjToggleTHB" onclick="cjCompSetMode('thb')">💵 THB (บาท)</button>
+      <button class="cj-comp-toggle" id="cjToggleEA" onclick="cjCompSetMode('ea')">📦 Pieces (ชิ้น)</button>
+    </div>
+
+    <!-- Chart -->
+    <div class="card" style="margin-bottom:16px">
+      <div class="card-title">📊 ค่าโปรโมชั่นรายเดือน</div>
+      <div class="chart-wrap" style="height:300px"><canvas id="cjCompChart"></canvas></div>
+    </div>
+
+    <!-- Promotion Details -->
+    <div class="card" style="margin-bottom:16px">
+      <div class="card-title">📋 รายละเอียดโปรโมชั่น</div>
+      <div class="table-wrap">
+        <table id="cjPromoDetailTable">
+          <thead>
+            <tr>
+              <th>No.</th>
+              <th>ชื่อโปรโมชั่น</th>
+              <th>วันที่ใช้</th>
+              <th style="text-align:right">ส่วนลดหน้า CJ</th>
+              <th style="text-align:right">CJ จ่าย</th>
+              <th style="text-align:right">เราสนับสนุน</th>
+            </tr>
+          </thead>
+          <tbody id="cjPromoDetailBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Monthly Summary Table -->
+    <div class="card">
+      <div class="card-title" id="cjTableTitle">📅 สรุปรายเดือน (THB)</div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>เดือน</th>
+              <th style="text-align:right">Line OA</th>
+              <th style="text-align:right">ขนมปังแผ่น</th>
+              <th style="text-align:right">สาขาใหม่</th>
+              <th style="text-align:right">ศ ส อา</th>
+              <th style="text-align:right">อังคารลดจุก</th>
+              <th style="text-align:right;font-weight:800">ผลรวม</th>
+              <th style="text-align:right">ยอดขาย EA</th>
+              <th style="text-align:right">ยอดขาย THB</th>
+              <th style="text-align:right">%ToSale</th>
+            </tr>
+          </thead>
+          <tbody id="cjMonthlySummary"></tbody>
+        </table>
+      </div>
+    </div>
+  </div><!-- /mt-compensate -->
+  </div><!-- /mt-bi-dashboard -->
+  <div id="mtBiDynamic" style="display:none"></div>
+  </div><!-- /mt-bi-content -->
+  </div><!-- /mt-bi-layout -->
+</div><!-- /tab-mt -->
 
 <!-- ===== BOOTH ===== -->
 <div id="tab-booth" class="section">
   <!-- Booth sub-tabs -->
   <div class="sub-tabs" id="boothSubTabs">
-    <div class="sub-tab active" onclick="showBoothSub(this,'bth-info')">📋 ข้อมูลบูธ</div>
-    <div class="sub-tab" onclick="showBoothSub(this,'bth-sales')">📊 ยอดขายรวม</div>
-    <div class="sub-tab" onclick="showBoothSub(this,'bth-stock')">📦 สต็อกบูธ</div>
-    <div class="sub-tab" onclick="showBoothSub(this,'bth-cost')">💰 ต้นทุนค่าใช้จ่าย</div>
-    <div class="sub-tab" onclick="showBoothSub(this,'bth-product')">🛍️ สินค้า</div>
-    <div class="sub-tab" onclick="showBoothSub(this,'bth-return')">↩️ ของคืน - ของเสีย</div>
-    <div class="sub-tab" onclick="showBoothSub(this,'bth-promo')">🎁 โปรโมชั่น</div>
-    <div class="sub-tab" onclick="showBoothSub(this,'bth-perf')">📈 Performance รายสาขา</div>
-    <div class="sub-tab" onclick="showBoothSub(this,'bth-update')">🔄 อัพเดทข้อมูล</div>
+    <div class="sub-tab active" onclick="showBoothSub(this,'bth-info')" data-i18n="bth.info">📋 ข้อมูลบูธ</div>
+    <div class="sub-tab" onclick="showBoothSub(this,'bth-sales')" data-i18n="bth.sales">📊 ยอดขายรวม</div>
+    <div class="sub-tab" onclick="showBoothSub(this,'bth-stock')" data-i18n="bth.stock">📦 สต็อกบูธ</div>
+    <div class="sub-tab" onclick="showBoothSub(this,'bth-cost')" data-i18n="bth.cost">💰 ต้นทุนค่าใช้จ่าย</div>
+    <div class="sub-tab" onclick="showBoothSub(this,'bth-product')" data-i18n="bth.product">🛍️ สินค้า</div>
+    <div class="sub-tab" onclick="showBoothSub(this,'bth-return')" data-i18n="bth.return">↩️ ของคืน - ของเสีย</div>
+    <div class="sub-tab" onclick="showBoothSub(this,'bth-promo')" data-i18n="bth.promo">🎁 โปรโมชั่น</div>
+    <div class="sub-tab" onclick="showBoothSub(this,'bth-perf')" data-i18n="bth.perf">📈 ผลงานรายสาขา</div>
+    <div class="sub-tab" onclick="showBoothSub(this,'bth-ai');renderBoothAI()" data-i18n="bth.ai">🤖 AI วิเคราะห์</div>
+    <div class="sub-tab rbac-import" onclick="showBoothSub(this,'bth-update')" data-i18n="bth.update">🔄 อัพเดทข้อมูล</div>
   </div>
 
   <!-- 1. ข้อมูลบูธ -->
@@ -1010,6 +1259,7 @@
     </div>
   </div>
 
+
   <!-- 7. โปรโมชั่น -->
   <div id="bth-promo" class="bth-sub" style="display:none">
     <div id="promo-content"></div>
@@ -1018,6 +1268,12 @@
   <!-- 8. Performance รายสาขา -->
   <div id="bth-perf" class="bth-sub" style="display:none">
     <div id="perf-wrap" style="padding:4px 0"></div>
+  </div>
+
+  <!-- AI วิเคราะห์ Booth -->
+  <div id="bth-ai" class="bth-sub" style="display:none">
+    <div class="kpi-grid" id="bthAiKPI"></div>
+    <div id="bthAiContent" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:16px;margin-top:16px"></div>
   </div>
 
   <!-- อัพเดทข้อมูล Booth -->
@@ -1140,18 +1396,19 @@
 <div id="tab-online" class="section">
   <!-- Online sub-tabs -->
   <div class="sub-tabs">
-    <div class="sub-tab active" onclick="showOnlineSub(this,'ol-sales');renderOnline()">📊 ยอดขาย</div>
-    <div class="sub-tab" onclick="showOnlineSub(this,'ol-ads');_adsSelMonths=ADS_MONTHS.slice();_adsSelPlats=ADS_PLATFORMS.slice();renderAds()">📢 ข้อมูล ADS &amp; Campaign</div>
-    <div class="sub-tab" onclick="showOnlineSub(this,'ol-influencer');renderInfluencer()">👥 ข้อมูลอินฟลูเอนเซอร์</div>
-    <div class="sub-tab" onclick="showOnlineSub(this,'ol-shipping');renderShipping()">📦 ข้อมูลค่าขนส่ง</div>
-    <div class="sub-tab" onclick="showOnlineSub(this,'ol-cod');renderCOD()">💰 ข้อมูล COD</div>
-      <div class="sub-tab" onclick="showOnlineSub(this,'ol-return');renderReturn()">📦 สินค้าตีกลับ</div>
-    <div class="sub-tab" onclick="showOnlineSub(this,'ol-claim');renderClaim()">📋 ข้อมูลออเดอร์ส่งเคลม</div>
-    <div class="sub-tab" onclick="showOnlineSub(this,'ol-cancel');renderCancel()">❌ ข้อมูลออเดอร์ยกเลิก</div>
-    <div class="sub-tab" onclick="showOnlineSub(this,'ol-supply');renderSupply()">🧾 ข้อมูลเบิกวัสดุสิ้นเปลือง</div>
-    <div class="sub-tab" onclick="showOnlineSub(this,'ol-cost');setCostMode(_costMode);updateCostFilter()">💰 ต้นทุนขายสินค้า</div>
-    <div class="sub-tab" onclick="showOnlineSub(this,'ol-prodrank');renderProdRank()">📋 รายการขายสินค้า</div>
-    <div class="sub-tab" onclick="showOnlineSub(this,'ol-dataupdate')">🔄 อัพเดทข้อมูล</div>
+    <div class="sub-tab active" onclick="showOnlineSub(this,'ol-sales');renderOnline()" data-i18n="ol.sales">📊 ยอดขาย</div>
+    <div class="sub-tab" onclick="showOnlineSub(this,'ol-ads');_adsSelMonths=ADS_MONTHS.slice();_adsSelPlats=ADS_PLATFORMS.slice();renderAds()" data-i18n="ol.ads">📢 ข้อมูล ADS &amp; Campaign</div>
+    <div class="sub-tab" onclick="showOnlineSub(this,'ol-influencer');renderInfluencer()" data-i18n="ol.influencer">👥 ข้อมูลอินฟลูเอนเซอร์</div>
+    <div class="sub-tab" onclick="showOnlineSub(this,'ol-shipping');renderShipping()" data-i18n="ol.shipping">📦 ข้อมูลค่าขนส่ง</div>
+    <div class="sub-tab" onclick="showOnlineSub(this,'ol-cod');renderCOD()" data-i18n="ol.cod">💰 ข้อมูล COD</div>
+      <div class="sub-tab" onclick="showOnlineSub(this,'ol-return');renderReturn()" data-i18n="ol.return">📦 สินค้าตีกลับ</div>
+    <div class="sub-tab" onclick="showOnlineSub(this,'ol-claim');renderClaim()" data-i18n="ol.claim">📋 ข้อมูลออเดอร์ส่งเคลม</div>
+    <div class="sub-tab" onclick="showOnlineSub(this,'ol-cancel');renderCancel()" data-i18n="ol.cancel">❌ ข้อมูลออเดอร์ยกเลิก</div>
+    <div class="sub-tab" onclick="showOnlineSub(this,'ol-supply');renderSupply()" data-i18n="ol.supply">🧾 ข้อมูลเบิกวัสดุสิ้นเปลือง</div>
+    <div class="sub-tab" onclick="showOnlineSub(this,'ol-cost');setCostMode(_costMode);updateCostFilter()" data-i18n="ol.cost">💰 ต้นทุนขายสินค้า</div>
+    <div class="sub-tab" onclick="showOnlineSub(this,'ol-prodrank');renderProdRank()" data-i18n="ol.prodrank">📋 รายการขายสินค้า</div>
+    <div class="sub-tab" onclick="showOnlineSub(this,'ol-ai');renderOnlineAI()" data-i18n="ol.ai">🤖 AI วิเคราะห์</div>
+    <div class="sub-tab rbac-import" onclick="showOnlineSub(this,'ol-dataupdate')" data-i18n="ol.dataupdate">🔄 อัพเดทข้อมูล</div>
   </div>
 
   <!-- ยอดขาย -->
@@ -1920,6 +2177,11 @@
   <div id="prPager" style="display:flex;gap:6px;margin-top:10px;flex-wrap:wrap;align-items:center"></div>
 </div><!-- end ol-prodrank -->
 
+<div id="ol-ai" class="ol-sub" style="display:none">
+  <div class="kpi-grid" id="olAiKPI"></div>
+  <div id="olAiContent" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:16px;margin-top:16px"></div>
+</div><!-- end ol-ai -->
+
 <div id="ol-dataupdate" class="ol-sub" style="display:none">
   <div style="background:#f0fdf4;border-radius:12px;padding:14px 18px;border:1px solid #bbf7d0;margin-bottom:18px;display:flex;align-items:center;gap:12px">
     <span style="font-size:24px">🔄</span>
@@ -2100,25 +2362,218 @@
 </div><!-- end tab-online -->
 
 <!-- ===== AMAZON & SOUVENIR ===== -->
-<div id="tab-amazon" class="section">
-  <div class="sub-tabs">
-    <div class="sub-tab active" onclick="showSubTab(this,'amz-sales')">📊 ยอดขาย</div>
-    <div class="sub-tab" onclick="showSubTab(this,'amz-map');renderMapTierKPI()">🗺️ Map Wanwanach</div>
+<div id="tab-amazon" class="section portal-scope">
+  <div class="sub-tabs" id="amzChannelTabs">
+    <div class="sub-tab active" onclick="amzClickChannel(this,'All')">📊 ทุกช่องทาง</div>
+    <div class="sub-tab" onclick="amzClickChannel(this,'Amazon')">📦 Amazon</div>
+    <div class="sub-tab" onclick="amzClickChannel(this,'Souvenir')">🎁 ร้านของฝาก</div>
+    <div class="sub-tab" onclick="amzClickChannel(this,'BlackCanyon')">☕ Black Canyon</div>
+    <div class="sub-tab" onclick="amzClickVisit(this,'SalesVisit')" style="border-left:2px solid #e2e8f0;margin-left:4px;padding-left:12px">📍 Sales Visit</div>
+    <div class="sub-tab" onclick="amzClickTeam(this,'TeamSales')" style="display:none">ทีมขาย</div>
+    <div class="sub-tab" onclick="amzClickComplaint(this,'Complaint')" style="display:none">Complaint</div>
   </div>
-  <div id="amz-sales" class="sub-section active">
+  <div class="mt-bi-layout">
+  <div class="mt-bi-sidebar" id="amzBiSidebar"></div>
+  <div class="mt-bi-content" id="amzBiContent">
+  <!-- ===== แดชบอร์ด (Dashboard) ===== -->
+  <div id="amz-dashboard" class="sub-section active">
+    <div class="filter-bar" id="amzPeriodBar" style="gap:6px;flex-wrap:wrap;margin-bottom:12px;display:flex;align-items:center">
+      <span style="font-size:12px;font-weight:700;color:var(--text2)">📅 ช่วงเวลา:</span>
+      <div style="display:flex;gap:4px;flex-wrap:wrap" id="amzPeriodBtns">
+        <div class="period-type-btn active" onclick="amzSetPeriod('all',this)">ทั้งหมด</div>
+        <div class="period-type-btn" onclick="amzSetPeriod('thismonth',this)">เดือนนี้</div>
+        <div class="period-type-btn" onclick="amzSetPeriod('lastmonth',this)">เดือนที่แล้ว</div>
+        <div id="amzQtrDropdown" style="position:relative;display:inline-block">
+          <div class="period-type-btn" onclick="amzToggleQtrMenu(this)" style="padding-right:22px;cursor:pointer"><span id="amzQtrLabel">📆 รายไตรมาส</span><span style="position:absolute;right:7px;top:50%;transform:translateY(-50%);font-size:10px;pointer-events:none">▾</span></div>
+          <div id="amzQtrMenu" style="display:none;position:absolute;top:calc(100% + 4px);left:0;background:#fff;border:1px solid #e2e8f0;border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,.1);min-width:170px;z-index:200;padding:4px 0">
+            <div class="qmenu-item" onclick="amzPickQtr('q1',this)">Q1 ม.ค.–มี.ค.</div>
+            <div class="qmenu-item" onclick="amzPickQtr('q2',this)">Q2 เม.ย.–มิ.ย.</div>
+            <div class="qmenu-item" onclick="amzPickQtr('q3',this)">Q3 ก.ค.–ก.ย.</div>
+            <div class="qmenu-item" onclick="amzPickQtr('q4',this)">Q4 ต.ค.–ธ.ค.</div>
+          </div>
+        </div>
+        <div id="amzYearDropdown" style="position:relative;display:inline-block">
+          <div class="period-type-btn" onclick="amzToggleYearMenu(this)" style="padding-right:22px;cursor:pointer"><span id="amzYearLabel">📅 รายปี</span><span style="position:absolute;right:7px;top:50%;transform:translateY(-50%);font-size:10px;pointer-events:none">▾</span></div>
+          <div id="amzYearMenu" style="display:none;position:absolute;top:calc(100% + 4px);left:0;background:#fff;border:1px solid #e2e8f0;border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,.1);min-width:150px;z-index:200;padding:4px 0">
+            <div class="qmenu-item" onclick="amzPickYear('all',this)">📅 ทั้งหมด (3 ปี)</div>
+            <div class="qmenu-item" onclick="amzPickYear('2024',this)">📅 ปี 2567 (2024)</div>
+            <div class="qmenu-item" onclick="amzPickYear('2025',this)">📅 ปี 2568 (2025)</div>
+            <div class="qmenu-item active" onclick="amzPickYear('2026',this)">📅 ปี 2569 (2026)</div>
+          </div>
+        </div>
+      </div>
+      <span id="amzPeriodInfo" style="font-size:11px;color:#64748b;margin-left:auto"></span>
+    </div>
     <div class="kpi-grid" id="amazonKPI"></div>
-    <div class="card mt"><div class="card-title">📊 Amazon &amp; Souvenir Sales รายเดือน (ล้านบาท)</div><div class="chart-wrap h300"><canvas id="amazonBar"></canvas></div></div>
-    <div class="card mt"><div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:13px">
-      <thead><tr style="background:#f8fafc;font-size:12px;color:#64748b">
-        <th style="padding:8px 10px;text-align:left">เดือน</th>
-        <th style="padding:8px 10px;text-align:right">Target</th>
-        <th style="padding:8px 10px;text-align:right">Actual</th>
-        <th style="padding:8px 10px;text-align:right">Difference</th>
-        <th style="padding:8px 10px;text-align:right">% Achieve</th>
-        <th style="padding:8px 10px">Progress</th>
-      </tr></thead>
-      <tbody id="amazonTable"></tbody>
-    </table></div></div>
+    <div class="row cols2">
+      <div class="card">
+        <div class="card-title">📈 Revenue รายเดือน (ล้านบาท)</div>
+        <div class="chart-wrap h260"><canvas id="amazonBar"></canvas></div>
+      </div>
+      <div class="card">
+        <div class="card-title">🏆 Revenue แยกช่องทาง (บาท)</div>
+        <div class="chart-wrap h260"><canvas id="amzChBar"></canvas></div>
+      </div>
+    </div>
+    <div class="row cols2" style="margin-bottom:16px">
+      <div class="card">
+        <div class="card-title">📊 ยอดขายแยกช่องทาง รายเดือน</div>
+        <div class="chart-wrap h260"><canvas id="amzChannelLineChart"></canvas></div>
+      </div>
+      <div class="card">
+        <div class="card-title">📊 สัดส่วนยอดขายแยกช่องทาง</div>
+        <div class="chart-wrap h260"><canvas id="amzChannelPie"></canvas></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">📋 ยอดขายแยกช่องทาง (YTD)</div>
+      <div style="overflow-x:auto" id="amzChannelTable"></div>
+    </div>
+    <div class="card" style="margin-top:16px">
+      <div class="card-title">🏆 TOP 10 สินค้าขายดี</div>
+      <div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:12px" id="amzTop10ChTabs"></div>
+      <div class="row cols2" style="margin-bottom:12px">
+        <div class="chart-wrap h260"><canvas id="amzTop10Bar"></canvas></div>
+        <div style="overflow-x:auto" id="amzTop10Table"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== ยอดขาย (Sales) ===== -->
+  <div id="amz-sales" class="sub-section">
+    <div class="filter-bar" id="amzSalesPeriodBar" style="gap:6px;flex-wrap:wrap;margin-bottom:12px;display:flex;align-items:center">
+      <span style="font-size:12px;font-weight:700;color:var(--text2)">📅 ช่วงเวลา:</span>
+      <div style="display:flex;gap:4px;flex-wrap:wrap" id="amzSalesPeriodBtns">
+        <div class="period-type-btn active" onclick="amzSalesSetPeriod('all',this)">ทั้งหมด</div>
+        <div class="period-type-btn" onclick="amzSalesSetPeriod('thismonth',this)">เดือนนี้</div>
+        <div class="period-type-btn" onclick="amzSalesSetPeriod('lastmonth',this)">เดือนที่แล้ว</div>
+        <div id="amzSalesQtrDD" style="position:relative;display:inline-block">
+          <div class="period-type-btn" onclick="amzSalesToggleQtr(this)" style="padding-right:22px;cursor:pointer"><span id="amzSalesQtrLabel">📆 รายไตรมาส</span><span style="position:absolute;right:7px;top:50%;transform:translateY(-50%);font-size:10px;pointer-events:none">▾</span></div>
+          <div id="amzSalesQtrMenu" style="display:none;position:absolute;top:calc(100% + 4px);left:0;background:#fff;border:1px solid #e2e8f0;border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,.1);min-width:170px;z-index:200;padding:4px 0">
+            <div class="qmenu-item" onclick="amzSalesPickQtr('q1',this)">Q1 ม.ค.–มี.ค.</div>
+            <div class="qmenu-item" onclick="amzSalesPickQtr('q2',this)">Q2 เม.ย.–มิ.ย.</div>
+            <div class="qmenu-item" onclick="amzSalesPickQtr('q3',this)">Q3 ก.ค.–ก.ย.</div>
+            <div class="qmenu-item" onclick="amzSalesPickQtr('q4',this)">Q4 ต.ค.–ธ.ค.</div>
+          </div>
+        </div>
+        <div id="amzSalesYearDD" style="position:relative;display:inline-block">
+          <div class="period-type-btn" onclick="amzSalesToggleYear(this)" style="padding-right:22px;cursor:pointer"><span id="amzSalesYearLabel">📅 รายปี</span><span style="position:absolute;right:7px;top:50%;transform:translateY(-50%);font-size:10px;pointer-events:none">▾</span></div>
+          <div id="amzSalesYearMenu" style="display:none;position:absolute;top:calc(100% + 4px);left:0;background:#fff;border:1px solid #e2e8f0;border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,.1);min-width:150px;z-index:200;padding:4px 0">
+            <div class="qmenu-item" onclick="amzSalesPickYear('all',this)">📅 ทั้งหมด (3 ปี)</div>
+            <div class="qmenu-item" onclick="amzSalesPickYear('2024',this)">📅 ปี 2567 (2024)</div>
+            <div class="qmenu-item" onclick="amzSalesPickYear('2025',this)">📅 ปี 2568 (2025)</div>
+            <div class="qmenu-item active" onclick="amzSalesPickYear('2026',this)">📅 ปี 2569 (2026)</div>
+          </div>
+        </div>
+      </div>
+      <span id="amzSalesPeriodInfo" style="font-size:11px;color:#64748b;margin-left:auto"></span>
+    </div>
+    <div class="kpi-grid" id="amzSalesKPI"></div>
+    <div class="row cols2">
+      <div class="card">
+        <div class="card-title">📈 Revenue รายเดือน</div>
+        <div class="chart-wrap h260"><canvas id="amzSalesMthBar"></canvas></div>
+      </div>
+      <div class="card">
+        <div class="card-title">🏆 Top ลูกค้า (Revenue)</div>
+        <div class="chart-wrap h260"><canvas id="amzSalesTopBar"></canvas></div>
+      </div>
+    </div>
+    <div class="card" style="margin-top:16px">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap">
+        <div class="card-title" style="margin:0" id="amzSalesTableTitle">📅 ยอดขายรายเดือน</div>
+        <div style="margin-left:auto">
+          <input id="amzSalesSearch" type="text" placeholder="🔍 ค้นหาลูกค้า..."
+            oninput="renderAmzSalesTable()"
+            style="border:1.5px solid var(--border);border-radius:8px;padding:6px 12px;font-size:12px;width:200px;background:var(--bg);outline:none;color:var(--text)"
+            onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'">
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table style="width:100%;border-collapse:collapse;font-size:13px">
+          <thead><tr style="background:#fff7ed;font-size:12px;color:#9a3412">
+            <th style="padding:8px 10px;text-align:left">เดือน</th>
+            <th style="padding:8px 10px;text-align:right">ยอดขาย (฿)</th>
+            <th style="padding:8px 10px;text-align:right">จำนวน (ชิ้น)</th>
+            <th style="padding:8px 10px;text-align:right">จำนวนบิล</th>
+            <th style="padding:8px 10px">กราฟ</th>
+          </tr></thead>
+          <tbody id="amzSalesTable"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== ยอดขายเทียบเป้าหมาย (Sales vs Target) ===== -->
+  <div id="amz-target" class="sub-section">
+    <div class="filter-bar" id="amzTargetPeriodBar" style="gap:6px;flex-wrap:wrap;margin-bottom:12px;display:flex;align-items:center">
+      <span style="font-size:12px;font-weight:700;color:var(--text2)">📅 ช่วงเวลา:</span>
+      <div style="display:flex;gap:4px;flex-wrap:wrap" id="amzTargetPeriodBtns">
+        <div class="period-type-btn active" onclick="amzTargetSetPeriod('all',this)">ทั้งหมด</div>
+        <div class="period-type-btn" onclick="amzTargetSetPeriod('thismonth',this)">เดือนนี้</div>
+        <div class="period-type-btn" onclick="amzTargetSetPeriod('lastmonth',this)">เดือนที่แล้ว</div>
+        <div id="amzTargetQtrDD" style="position:relative;display:inline-block">
+          <div class="period-type-btn" onclick="amzTargetToggleQtr(this)" style="padding-right:22px;cursor:pointer"><span id="amzTargetQtrLabel">📆 รายไตรมาส</span><span style="position:absolute;right:7px;top:50%;transform:translateY(-50%);font-size:10px;pointer-events:none">▾</span></div>
+          <div id="amzTargetQtrMenu" style="display:none;position:absolute;top:calc(100% + 4px);left:0;background:#fff;border:1px solid #e2e8f0;border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,.1);min-width:170px;z-index:200;padding:4px 0">
+            <div class="qmenu-item" onclick="amzTargetPickQtr('q1',this)">Q1 ม.ค.–มี.ค.</div>
+            <div class="qmenu-item" onclick="amzTargetPickQtr('q2',this)">Q2 เม.ย.–มิ.ย.</div>
+            <div class="qmenu-item" onclick="amzTargetPickQtr('q3',this)">Q3 ก.ค.–ก.ย.</div>
+            <div class="qmenu-item" onclick="amzTargetPickQtr('q4',this)">Q4 ต.ค.–ธ.ค.</div>
+          </div>
+        </div>
+        <div id="amzTargetYearDD" style="position:relative;display:inline-block">
+          <div class="period-type-btn" onclick="amzTargetToggleYear(this)" style="padding-right:22px;cursor:pointer"><span id="amzTargetYearLabel">📅 รายปี</span><span style="position:absolute;right:7px;top:50%;transform:translateY(-50%);font-size:10px;pointer-events:none">▾</span></div>
+          <div id="amzTargetYearMenu" style="display:none;position:absolute;top:calc(100% + 4px);left:0;background:#fff;border:1px solid #e2e8f0;border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,.1);min-width:150px;z-index:200;padding:4px 0">
+            <div class="qmenu-item" onclick="amzTargetPickYear('all',this)">📅 ทั้งหมด (3 ปี)</div>
+            <div class="qmenu-item" onclick="amzTargetPickYear('2024',this)">📅 ปี 2567 (2024)</div>
+            <div class="qmenu-item" onclick="amzTargetPickYear('2025',this)">📅 ปี 2568 (2025)</div>
+            <div class="qmenu-item active" onclick="amzTargetPickYear('2026',this)">📅 ปี 2569 (2026)</div>
+          </div>
+        </div>
+      </div>
+      <span id="amzTargetPeriodInfo" style="font-size:11px;color:#64748b;margin-left:auto"></span>
+    </div>
+    <div class="kpi-grid" id="amzTargetKPI"></div>
+    <div class="row cols2">
+      <div class="card">
+        <div class="card-title">📊 Target vs Actual รายเดือน</div>
+        <div class="chart-wrap h260"><canvas id="amzTargetVsActualBar"></canvas></div>
+      </div>
+      <div class="card">
+        <div class="card-title">📈 Achievement % Trend</div>
+        <div class="chart-wrap h260"><canvas id="amzAchieveLine"></canvas></div>
+      </div>
+    </div>
+    <div class="row cols2" style="margin-bottom:16px">
+      <div class="card">
+        <div class="card-title">🏆 Achievement แยกช่องทาง</div>
+        <div class="chart-wrap h260"><canvas id="amzTargetChBar"></canvas></div>
+      </div>
+      <div class="card">
+        <div class="card-title">📊 สัดส่วน Target แยกช่องทาง</div>
+        <div class="chart-wrap h260"><canvas id="amzTargetPie"></canvas></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">📋 Target Breakdown รายเดือน</div>
+      <div class="table-wrap">
+        <table style="width:100%;border-collapse:collapse;font-size:13px">
+          <thead><tr style="background:#fff7ed;font-size:12px;color:#9a3412">
+            <th style="padding:8px 10px;text-align:left">เดือน</th>
+            <th style="padding:8px 10px;text-align:right">Target</th>
+            <th style="padding:8px 10px;text-align:right">Actual</th>
+            <th style="padding:8px 10px;text-align:right">Gap</th>
+            <th style="padding:8px 10px;text-align:right">% Achieve</th>
+            <th style="padding:8px 10px">Progress</th>
+          </tr></thead>
+          <tbody id="amzTargetTable"></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="card" style="margin-top:16px">
+      <div class="card-title">📋 Target Breakdown แยกช่องทาง</div>
+      <div style="overflow-x:auto" id="amzTargetChTable"></div>
+    </div>
   </div>
   <div id="amz-map" class="sub-section">
     <div class="card mt" style="padding:0;overflow:hidden">
@@ -2155,6 +2610,216 @@
       </div>
     </div>
   </div>
+
+  <!-- Sub-tab: ลูกค้าใหม่/หาย -->
+  <div id="amz-customers" class="sub-section">
+
+    <!-- Header -->
+    <div class="amz-cust-header">
+      <div style="display:flex;align-items:center;gap:12px">
+        <span class="ac-icon">👥</span>
+        <div>
+          <div class="ac-title">ลูกค้าใหม่ &amp; ลูกค้าที่หายไป</div>
+          <div class="ac-subtitle" id="amzCustSubtitle">วิเคราะห์การเปลี่ยนแปลงฐานลูกค้า Amazon &amp; ร้านขายของฝาก</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <select id="amzCustChannelSel" onchange="amzCustFilterChannel(this.value)" style="padding:8px 14px;border-radius:10px;border:1px solid #e2e8f0;font-size:13px;font-weight:700;background:#fff;cursor:pointer;color:#1e293b">
+          <option value="all">ทั้งหมด</option>
+          <option value="amazon">Amazon</option>
+          <option value="souvenir">ร้านขายของฝาก</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- KPI Cards -->
+    <div class="amz-cust-kpi" id="amzCustKPI"></div>
+
+    <!-- Chart -->
+    <div class="card mt" style="margin-bottom:16px">
+      <div class="card-title">📊 ลูกค้าใหม่ vs ลูกค้าหาย รายเดือน</div>
+      <div class="chart-wrap h300"><canvas id="amzCustChart"></canvas></div>
+    </div>
+
+    <!-- Month pills -->
+    <div class="amz-cust-pills" id="amzCustPills"></div>
+
+    <!-- Table tabs + toolbar -->
+    <div class="card mt" style="padding:16px 18px">
+      <div class="amz-cust-tab-btns">
+        <div class="amz-cust-tab-btn active ac-new" onclick="amzCustSwitchTable('new')">🆕 ลูกค้าใหม่</div>
+        <div class="amz-cust-tab-btn ac-lost" onclick="amzCustSwitchTable('lost')">📉 ลูกค้าที่หายไป</div>
+      </div>
+      <div class="amz-cust-toolbar">
+        <input type="text" class="amz-cust-search" id="amzCustSearch" placeholder="🔍 ค้นหาชื่อ / รหัส / จังหวัด..." oninput="amzCustSearch(this.value)">
+        <select id="amzCustProvSel" onchange="amzCustFilterProvince(this.value)" style="padding:8px 14px;border-radius:10px;border:1px solid #e2e8f0;font-size:13px;font-weight:600;background:#fff;cursor:pointer;color:#1e293b">
+          <option value="">จังหวัดทั้งหมด</option>
+        </select>
+        <span id="amzCustCount" style="margin-left:auto;font-size:12px;color:#64748b"></span>
+      </div>
+      <div style="overflow-x:auto">
+        <table class="amz-cust-table" id="amzCustTable">
+          <thead><tr>
+            <th style="width:40px">#</th>
+            <th onclick="amzCustSort('c')">รหัส</th>
+            <th onclick="amzCustSort('n')">ชื่อลูกค้า</th>
+            <th onclick="amzCustSort('p')">จังหวัด</th>
+            <th onclick="amzCustSort('d')">อำเภอ</th>
+            <th onclick="amzCustSort('t')" class="td-right">ยอดรวม</th>
+            <th onclick="amzCustSort('f')">เดือนที่เข้า/หาย</th>
+          </tr></thead>
+          <tbody id="amzCustTbody"></tbody>
+        </table>
+      </div>
+      <div class="amz-cust-pagination" id="amzCustPagination"></div>
+    </div>
+
+  </div>
+
+  <div id="amz-visit-tracker" class="sub-section"></div>
+
+  <!-- (amz-target moved above) -->
+
+  <!-- สินค้า -->
+  <div id="amz-products" class="sub-section">
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px">
+      <div class="card" style="padding:16px"><div style="font-size:24px;margin-bottom:6px">🧁</div><div style="font-weight:800;font-size:14px;color:#1e293b">เอแคลร์นมสด (8 ชิ้น)</div><div style="font-size:12px;color:#64748b;margin-top:4px">SKU: WWN-ECL-08 | ราคา: ฿89<br><span style="background:#dcfce7;color:#15803d;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">จำหน่ายอยู่</span></div></div>
+      <div class="card" style="padding:16px"><div style="font-size:24px;margin-bottom:6px">🥐</div><div style="font-weight:800;font-size:14px;color:#1e293b">ครีมฮอร์น วนิลา</div><div style="font-size:12px;color:#64748b;margin-top:4px">SKU: WWN-CRH-01 | ราคา: ฿35<br><span style="background:#dcfce7;color:#15803d;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">จำหน่ายอยู่</span></div></div>
+      <div class="card" style="padding:16px"><div style="font-size:24px;margin-bottom:6px">🍞</div><div style="font-weight:800;font-size:14px;color:#1e293b">ขนมปังเนยนิ่ม</div><div style="font-size:12px;color:#64748b;margin-top:4px">SKU: WWN-BTR-01 | ราคา: ฿29<br><span style="background:#dcfce7;color:#15803d;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">จำหน่ายอยู่</span></div></div>
+      <div class="card" style="padding:16px"><div style="font-size:24px;margin-bottom:6px">🥪</div><div style="font-weight:800;font-size:14px;color:#1e293b">แซนด์วิชปูอัด ไร้ขอบ</div><div style="font-size:12px;color:#64748b;margin-top:4px">SKU: WWN-SWC-02 | ราคา: ฿35<br><span style="background:#dcfce7;color:#15803d;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">จำหน่ายอยู่</span></div></div>
+      <div class="card" style="padding:16px"><div style="font-size:24px;margin-bottom:6px">🎂</div><div style="font-weight:800;font-size:14px;color:#1e293b">ชิฟฟ่อนเค้ก รวมรส (4 ชิ้น)</div><div style="font-size:12px;color:#64748b;margin-top:4px">SKU: WWN-CHF-04 | ราคา: ฿79<br><span style="background:#dcfce7;color:#15803d;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">จำหน่ายอยู่</span></div></div>
+      <div class="card" style="padding:16px"><div style="font-size:24px;margin-bottom:6px">🍰</div><div style="font-weight:800;font-size:14px;color:#1e293b">คัพเค้กมะพร้าว (4 ชิ้น)</div><div style="font-size:12px;color:#64748b;margin-top:4px">SKU: WWN-CPC-04 | ราคา: ฿69<br><span style="background:#dcfce7;color:#15803d;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">จำหน่ายอยู่</span></div></div>
+      <div class="card" style="padding:16px"><div style="font-size:24px;margin-bottom:6px">🥐</div><div style="font-weight:800;font-size:14px;color:#1e293b">เอแคลร์ชาไทย</div><div style="font-size:12px;color:#64748b;margin-top:4px">SKU: WWN-ECT-01 | ราคา: ฿89<br><span style="background:#ffedd5;color:#c2410c;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">สินค้าใหม่</span></div></div>
+      <div class="card" style="padding:16px"><div style="font-size:24px;margin-bottom:6px">🥪</div><div style="font-weight:800;font-size:14px;color:#1e293b">แซนด์วิชแฮมชีส ไร้ขอบ</div><div style="font-size:12px;color:#64748b;margin-top:4px">SKU: WWN-SWH-01 | ราคา: ฿35<br><span style="background:#dcfce7;color:#15803d;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">จำหน่ายอยู่</span></div></div>
+      <div class="card" style="padding:16px"><div style="font-size:24px;margin-bottom:6px">🍞</div><div style="font-weight:800;font-size:14px;color:#1e293b">ขนมปังสังขยา 6 ชิ้น</div><div style="font-size:12px;color:#64748b;margin-top:4px">SKU: WWN-SKY-06 | ราคา: ฿45<br><span style="background:#dcfce7;color:#15803d;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">จำหน่ายอยู่</span></div></div>
+    </div>
+  </div>
+
+  <!-- สาขา -->
+  <div id="amz-branches" class="sub-section">
+    <div class="kpi-grid" id="amzBranchKPI"></div>
+    <div id="amzBranchFilter" style="display:flex;gap:10px;margin:12px 0;flex-wrap:wrap;align-items:center">
+      <label style="font-size:13px;font-weight:600;color:var(--text)">🔍 กรอง:</label>
+      <select id="amzFilterRegion" onchange="amzFilterChanged('region')" style="border:1.5px solid var(--border);border-radius:8px;padding:6px 12px;font-size:12px;background:var(--bg);color:var(--text);outline:none;min-width:160px">
+        <option value="">ทุกภาค</option>
+      </select>
+      <select id="amzFilterProv" onchange="amzFilterChanged('prov')" style="border:1.5px solid var(--border);border-radius:8px;padding:6px 12px;font-size:12px;background:var(--bg);color:var(--text);outline:none;min-width:160px">
+        <option value="">ทุกจังหวัด</option>
+      </select>
+      <select id="amzFilterDistrict" onchange="amzFilterChanged('district')" style="border:1.5px solid var(--border);border-radius:8px;padding:6px 12px;font-size:12px;background:var(--bg);color:var(--text);outline:none;min-width:160px">
+        <option value="">ทุกเขต/อำเภอ</option>
+      </select>
+      <button onclick="amzResetFilter()" style="border:1.5px solid var(--border);border-radius:8px;padding:6px 14px;font-size:12px;background:var(--bg);color:var(--accent);cursor:pointer;font-weight:600">↺ รีเซ็ต</button>
+      <span id="amzFilterCount" style="font-size:12px;color:#64748b;margin-left:auto"></span>
+    </div>
+    <div class="row cols2">
+      <div class="card">
+        <div class="card-title" id="amzBranchMapTitle">แผนที่สาขา Cafe Amazon</div>
+        <div id="amzBranchMap" style="height:400px;border-radius:10px;overflow:hidden;background:#e2e8f0"></div>
+      </div>
+      <div class="card">
+        <div class="card-title">จำนวนสาขาแยกจังหวัด</div>
+        <div class="chart-wrap h260"><canvas id="amzBranchProvChart"></canvas></div>
+      </div>
+    </div>
+    <div class="row cols2" style="margin-top:16px">
+      <div class="card">
+        <div class="card-title">สาขาแยกภูมิภาค</div>
+        <div class="chart-wrap h260"><canvas id="amzBranchRegionChart"></canvas></div>
+      </div>
+      <div class="card">
+        <div class="card-title">สัดส่วนสาขาแยกจังหวัด</div>
+        <div class="chart-wrap h260"><canvas id="amzBranchProvPie"></canvas></div>
+      </div>
+    </div>
+    <div class="card" style="margin-top:16px">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap">
+        <div class="card-title" style="margin:0" id="amzBranchTableTitle">รายชื่อสาขา</div>
+        <div style="margin-left:auto">
+          <input id="amzBranchSearch" type="text" placeholder="ค้นหาสาขา..."
+            oninput="renderAmzBranchTable()"
+            style="border:1.5px solid var(--border);border-radius:8px;padding:6px 12px;font-size:12px;width:200px;background:var(--bg);outline:none;color:var(--text)"
+            onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'">
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table style="width:100%;border-collapse:collapse;font-size:13px">
+          <thead><tr style="background:#fff7ed;font-size:12px;color:#9a3412">
+            <th style="padding:8px 10px;text-align:left">No.</th>
+            <th style="padding:8px 10px;text-align:left">ชื่อสาขา</th>
+            <th style="padding:8px 10px;text-align:left">จังหวัด</th>
+            <th style="padding:8px 10px;text-align:left">ภูมิภาค</th>
+            <th style="padding:8px 10px;text-align:left">โทรศัพท์</th>
+            <th style="padding:8px 10px;text-align:left">ที่อยู่</th>
+            <th style="padding:8px 10px;text-align:center">แผนที่</th>
+          </tr></thead>
+          <tbody id="amzBranchTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- โปรโมชั่น -->
+  <div id="amz-promo" class="sub-section">
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px">
+      <div class="card" style="padding:16px;border-left:4px solid #16a34a"><div style="font-weight:800;font-size:14px;color:#1e293b">🟢 โปรฯ ก.ค. 2569</div><div style="font-size:12px;color:#64748b;margin-top:6px;line-height:1.6">ซื้อ 10 แถม 1 — เอแคลร์นมสด<br>ระยะเวลา: 1-31 ก.ค. 2569<br><span style="background:#dcfce7;color:#15803d;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">กำลังดำเนินการ</span></div></div>
+      <div class="card" style="padding:16px;border-left:4px solid #16a34a"><div style="font-weight:800;font-size:14px;color:#1e293b">🟢 โปรฯ ร้านใหม่</div><div style="font-size:12px;color:#64748b;margin-top:6px;line-height:1.6">ส่วนลด 15% สำหรับร้านใหม่ ออเดอร์แรก<br>ตลอดปี 2569<br><span style="background:#dcfce7;color:#15803d;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">กำลังดำเนินการ</span></div></div>
+      <div class="card" style="padding:16px;border-left:4px solid #94a3b8"><div style="font-weight:800;font-size:14px;color:#1e293b">⚪ โปรฯ มิ.ย. 2569</div><div style="font-size:12px;color:#64748b;margin-top:6px;line-height:1.6">ซื้อครบ 500 ลด 5%<br>ระยะเวลา: 1-30 มิ.ย. 2569<br><span style="background:#dbeafe;color:#1d4ed8;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">สิ้นสุดแล้ว</span></div></div>
+    </div>
+  </div>
+
+  <!-- การสั่งซื้อ -->
+  <div id="amz-order" class="sub-section">
+    <div class="filter-bar" id="amzOrderPeriodBar" style="gap:6px;flex-wrap:wrap;margin-bottom:12px;display:flex;align-items:center;padding:8px 12px;background:var(--card);border-radius:10px;border:1px solid var(--border)">
+      <span style="font-size:12px;font-weight:700;color:var(--text2)">📅 ช่วงเวลา:</span>
+    </div>
+    <div class="kpi-grid" id="amzOrderKPI"></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px" id="amzOrderCharts">
+      <div class="chart-box"><h4>📈 ยอดขายรายเดือน</h4><div style="height:280px"><canvas id="amzOrderMonthlyBar"></canvas></div></div>
+      <div class="chart-box"><h4>📊 สัดส่วนช่องทาง</h4><div style="height:280px"><canvas id="amzOrderChPie"></canvas></div></div>
+    </div>
+    <div class="chart-box" style="margin-top:16px"><h4>📦 สินค้าขายดี Top 20</h4><div id="amzOrderProdTable"></div></div>
+    <div class="chart-box" style="margin-top:16px"><h4>🏪 ลูกค้า/สาขา Top 20</h4><div id="amzOrderBranchTable"></div></div>
+  </div>
+
+  <!-- Complaint -->
+  <div id="amz-complaint" class="sub-section">
+    <div id="amzComplaintBody"></div>
+  </div>
+
+  <!-- วิเคราะห์สินค้า -->
+  <div id="amz-product-analysis" class="sub-section">
+    <div id="amzProdAnalysisBody"></div>
+  </div>
+
+  <!-- วิเคราะห์ลูกค้า -->
+  <div id="amz-cust-analysis" class="sub-section">
+    <div class="kpi-grid" id="amzCustAnalysisKpi"></div>
+    <div id="amzCustAnalysisContent"></div>
+  </div>
+
+  <!-- ตัวชี้วัด (KPI) -->
+  <div id="amz-kpi" class="sub-section">
+    <div id="amzKpiBody"></div>
+  </div>
+
+  <!-- พยากรณ์ (Forecast) -->
+  <div id="amz-forecast" class="sub-section">
+    <div id="amzForecastBody"></div>
+  </div>
+
+  <!-- AI Insight -->
+  <div id="amz-ai" class="sub-section">
+    <div id="amzAiBody"></div>
+  </div>
+
+  <!-- ฝ่ายขาย -->
+  <div id="amz-team" class="sub-section">
+    <div id="amzTeamList"></div>
+  </div>
+
+  </div><!-- /mt-bi-content -->
+  </div><!-- /mt-bi-layout -->
 </div>
 
 
@@ -2183,6 +2848,11 @@
           <option value="Modern Trade">Modern Trade</option>
           <option value="Online">Online</option>
         </select>
+        <button class="rbac-export" onclick="openAddComplaintModal()" title="เพิ่มใบคอมเพลนใหม่"
+          style="padding:8px 16px;border-radius:10px;border:none;background:#dc2626;color:#fff;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap"
+          onmouseover="this.style.background='#b91c1c'" onmouseout="this.style.background='#dc2626'">
+          ➕ เพิ่มคอมเพลน
+        </button>
       </div>
     </div>
   </div>
@@ -2219,6 +2889,134 @@
         <thead id="snackTHead"></thead>
         <tbody id="snackTBody"></tbody>
       </table>
+    </div>
+  </div>
+
+  <!-- Complaint detail list (Form 3.1) -->
+  <div class="card" style="margin-top:16px">
+    <div class="card-title" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+      <span>📝 รายการคอมเพลน (ใบต่อใบ)</span>
+      <span id="snackComplaintCount" style="font-size:12px;font-weight:600;color:var(--muted)"></span>
+    </div>
+    <div style="font-size:11px;color:#94a3b8;margin:-4px 0 10px">ใบคอมเพลนที่เพิ่มเอง — กรองตามปี/ช่องทางด้านบน (ยอดจะถูกรวมเข้ากราฟ/ตารางสรุปด้วย)</div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th style="text-align:left">วันที่</th>
+            <th style="text-align:left">ช่องทาง</th>
+            <th style="text-align:left">สินค้า</th>
+            <th style="text-align:left">ประเภทปัญหา</th>
+            <th style="text-align:right">จำนวน</th>
+            <th style="text-align:right">มูลค่า (฿)</th>
+            <th style="text-align:left">ลูกค้า</th>
+            <th style="text-align:left">หมายเหตุ</th>
+            <th style="text-align:left">ผู้บันทึก</th>
+            <th style="text-align:center">รูป</th>
+            <th style="text-align:center">จัดการ</th>
+          </tr>
+        </thead>
+        <tbody id="snackComplaintBody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ===== ADD COMPLAINT MODAL (Form 3.1) ===== -->
+<div id="addComplaintModal" style="display:none;position:fixed;inset:0;background:rgba(15,23,42,.55);z-index:20050;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(3px)" onclick="if(event.target===this)closeAddComplaintModal()">
+  <div style="background:#fff;border-radius:16px;max-width:540px;width:100%;max-height:92vh;overflow-y:auto;box-shadow:0 24px 70px rgba(0,0,0,.35)">
+    <div style="padding:18px 22px;border-bottom:1px solid #e2e8f0;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:#fff;border-radius:16px 16px 0 0">
+      <div style="font-size:16px;font-weight:800;color:#dc2626">➕ เพิ่มใบคอมเพลน</div>
+      <button onclick="closeAddComplaintModal()" style="background:none;border:none;font-size:22px;cursor:pointer;color:#94a3b8;line-height:1">✕</button>
+    </div>
+    <div style="padding:20px 22px;display:grid;grid-template-columns:1fr 1fr;gap:14px 16px">
+      <label style="display:flex;flex-direction:column;gap:5px;font-size:12px;font-weight:700;color:#475569">วันที่ <span style="color:#dc2626">*</span>
+        <input id="scDate" type="date" style="border:1.5px solid #cbd5e1;border-radius:8px;padding:8px 10px;font-size:13px;color:#1e293b"></label>
+      <label style="display:flex;flex-direction:column;gap:5px;font-size:12px;font-weight:700;color:#475569">ช่องทาง <span style="color:#dc2626">*</span>
+        <select id="scChannel" style="border:1.5px solid #cbd5e1;border-radius:8px;padding:8px 10px;font-size:13px;background:#fff;color:#1e293b">
+          <option value="Amazon">Amazon</option>
+          <option value="Booth">Booth</option>
+          <option value="Modern Trade">Modern Trade</option>
+          <option value="Online">Online</option>
+        </select></label>
+      <label style="display:flex;flex-direction:column;gap:5px;font-size:12px;font-weight:700;color:#475569;grid-column:1/3">ชื่อสินค้า
+        <input id="scProduct" type="text" placeholder="ชื่อสินค้าที่ถูกคอมเพลน" style="border:1.5px solid #cbd5e1;border-radius:8px;padding:8px 10px;font-size:13px;color:#1e293b"></label>
+      <label style="display:flex;flex-direction:column;gap:5px;font-size:12px;font-weight:700;color:#475569;grid-column:1/3">ประเภทปัญหา <span style="color:#dc2626">*</span>
+        <select id="scIssueType" style="border:1.5px solid #cbd5e1;border-radius:8px;padding:8px 10px;font-size:13px;background:#fff;color:#1e293b">
+          <option value="expired">เสียก่อนหมดอายุ</option>
+          <option value="mold">ขึ้นรา</option>
+          <option value="nodate">ไม่ยิงวันหมดอายุ</option>
+          <option value="packaging">บรรจุภัณฑ์</option>
+          <option value="foreign">สิ่งแปลกปลอม</option>
+        </select></label>
+      <label style="display:flex;flex-direction:column;gap:5px;font-size:12px;font-weight:700;color:#475569">จำนวน (ชิ้น) <span style="color:#dc2626">*</span>
+        <input id="scQty" type="number" step="1" min="1" style="border:1.5px solid #cbd5e1;border-radius:8px;padding:8px 10px;font-size:13px;color:#1e293b"></label>
+      <label style="display:flex;flex-direction:column;gap:5px;font-size:12px;font-weight:700;color:#475569">มูลค่า (บาท)
+        <input id="scAmt" type="number" step="0.01" min="0" style="border:1.5px solid #cbd5e1;border-radius:8px;padding:8px 10px;font-size:13px;color:#1e293b"></label>
+      <label style="display:flex;flex-direction:column;gap:5px;font-size:12px;font-weight:700;color:#475569;grid-column:1/3">ลูกค้า (ไม่บังคับ)
+        <input id="scCustomer" type="text" style="border:1.5px solid #cbd5e1;border-radius:8px;padding:8px 10px;font-size:13px;color:#1e293b"></label>
+      <label style="display:flex;flex-direction:column;gap:5px;font-size:12px;font-weight:700;color:#475569;grid-column:1/3">หมายเหตุ (ไม่บังคับ)
+        <textarea id="scNote" rows="2" style="border:1.5px solid #cbd5e1;border-radius:8px;padding:8px 10px;font-size:13px;color:#1e293b;resize:vertical"></textarea></label>
+      <label style="display:flex;flex-direction:column;gap:5px;font-size:12px;font-weight:700;color:#475569;grid-column:1/3">แนบรูป (หลายรูปได้)
+        <input id="scImages" type="file" accept="image/*" multiple onchange="previewComplaintImages()" style="border:1.5px solid #cbd5e1;border-radius:8px;padding:7px 10px;font-size:12px;color:#1e293b;background:#fff">
+        <div id="scImgPreview" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:2px"></div></label>
+    </div>
+    <div style="padding:14px 22px;border-top:1px solid #e2e8f0;display:flex;justify-content:flex-end;gap:10px">
+      <button onclick="closeAddComplaintModal()" style="padding:8px 18px;border-radius:8px;border:1.5px solid #cbd5e1;background:#fff;color:#475569;font-size:13px;font-weight:700;cursor:pointer">ยกเลิก</button>
+      <button onclick="saveComplaint()" style="padding:8px 18px;border-radius:8px;border:none;background:#dc2626;color:#fff;font-size:13px;font-weight:700;cursor:pointer">💾 บันทึก</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== Lightbox: ดูรูปคอมเพลนใหญ่ (ข้อ 7) ===== -->
+<div id="cmpLightbox" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:20060;align-items:center;justify-content:center" onclick="if(event.target===this)closeComplaintLightbox()">
+  <button onclick="closeComplaintLightbox()" title="ปิด" style="position:absolute;top:16px;right:20px;background:rgba(255,255,255,.15);color:#fff;border:none;width:40px;height:40px;border-radius:50%;font-size:22px;cursor:pointer;line-height:1">✕</button>
+  <img id="cmpLightboxImg" alt="รูปคอมเพลน" style="max-width:90vw;max-height:84vh;border-radius:10px;box-shadow:0 20px 60px rgba(0,0,0,.5)">
+  <div id="cmpLightboxNav" style="display:none">
+    <button onclick="complaintLightboxNav(-1,event)" title="ก่อนหน้า" style="position:absolute;left:16px;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.15);color:#fff;border:none;width:48px;height:48px;border-radius:50%;font-size:30px;cursor:pointer;line-height:1">‹</button>
+    <button onclick="complaintLightboxNav(1,event)" title="ถัดไป" style="position:absolute;right:16px;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.15);color:#fff;border:none;width:48px;height:48px;border-radius:50%;font-size:30px;cursor:pointer;line-height:1">›</button>
+  </div>
+  <div id="cmpLightboxCount" style="position:absolute;bottom:20px;left:50%;transform:translateX(-50%);color:#fff;font-size:13px;font-weight:600;background:rgba(0,0,0,.4);padding:4px 14px;border-radius:20px"></div>
+</div>
+
+<!-- ===== Modal: บันทึกการโทรลูกค้า ===== -->
+<div id="addCallModal" style="display:none;position:fixed;inset:0;background:rgba(15,23,42,.55);z-index:20050;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(3px)" onclick="if(event.target===this)closeCallModal()">
+  <div style="background:#fff;border-radius:16px;max-width:560px;width:100%;max-height:92vh;overflow-y:auto;box-shadow:0 24px 70px rgba(0,0,0,.35)">
+    <div style="padding:18px 22px;border-bottom:1px solid #e2e8f0;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:#fff;border-radius:16px 16px 0 0;z-index:2">
+      <div style="font-size:16px;font-weight:800;color:#7c3aed">📞 บันทึกการโทรลูกค้า</div>
+      <button onclick="closeCallModal()" style="background:none;border:none;font-size:22px;cursor:pointer;color:#94a3b8;line-height:1">✕</button>
+    </div>
+    <div style="padding:20px 22px;display:grid;grid-template-columns:1fr 1fr;gap:14px 16px">
+      <label style="display:flex;flex-direction:column;gap:5px;font-size:12px;font-weight:700;color:#475569">พนักงานธุรการ <span style="color:#dc2626">*</span>
+        <select id="callStaff" style="border:1.5px solid #cbd5e1;border-radius:8px;padding:8px 10px;font-size:13px;background:#fff;color:#1e293b"></select></label>
+      <label style="display:flex;flex-direction:column;gap:5px;font-size:12px;font-weight:700;color:#475569">วันที่ <span style="color:#dc2626">*</span>
+        <input id="callDate" type="date" style="border:1.5px solid #cbd5e1;border-radius:8px;padding:8px 10px;font-size:13px;color:#1e293b"></label>
+      <label style="display:flex;flex-direction:column;gap:5px;font-size:12px;font-weight:700;color:#475569;grid-column:1/3;position:relative">ค้นหาลูกค้า <span style="color:#dc2626">*</span>
+        <input id="callCustSearch" type="text" autocomplete="off" placeholder="🔍 พิมพ์รหัสลูกค้า / ชื่อ / สาขา / เส้นทาง (4,393 ราย)" oninput="onCallCustSearch()" style="border:1.5px solid #cbd5e1;border-radius:8px;padding:8px 10px;font-size:13px;color:#1e293b">
+        <div id="callCustResults" class="call-cust-results" style="display:none"></div>
+        <div id="callCustSelected" class="call-cust-selected" style="display:none"></div></label>
+      <label style="display:flex;flex-direction:column;gap:5px;font-size:12px;font-weight:700;color:#475569">ผลการโทร <span style="color:#dc2626">*</span>
+        <select id="callResult" style="border:1.5px solid #cbd5e1;border-radius:8px;padding:8px 10px;font-size:13px;background:#fff;color:#1e293b">
+          <option value="contacted">ติดต่อได้</option>
+          <option value="noanswer">ไม่รับสาย</option>
+          <option value="unreachable">ติดต่อไม่ได้</option>
+        </select></label>
+      <label style="display:flex;flex-direction:column;gap:5px;font-size:12px;font-weight:700;color:#475569">สั่งซื้อ? <span style="color:#dc2626">*</span>
+        <select id="callOrdered" style="border:1.5px solid #cbd5e1;border-radius:8px;padding:8px 10px;font-size:13px;background:#fff;color:#1e293b">
+          <option value="no">ไม่สั่งซื้อ</option>
+          <option value="yes">สั่งซื้อ (ปิดการขาย)</option>
+        </select></label>
+      <label style="display:flex;flex-direction:column;gap:5px;font-size:12px;font-weight:700;color:#475569">ต้องติดตามต่อ?
+        <select id="callFollow" style="border:1.5px solid #cbd5e1;border-radius:8px;padding:8px 10px;font-size:13px;background:#fff;color:#1e293b">
+          <option value="no">ไม่ต้อง</option>
+          <option value="yes">ต้องติดตาม</option>
+        </select></label>
+      <label style="display:flex;flex-direction:column;gap:5px;font-size:12px;font-weight:700;color:#475569;grid-column:1/3">หมายเหตุ (ไม่บังคับ)
+        <textarea id="callNote" rows="2" style="border:1.5px solid #cbd5e1;border-radius:8px;padding:8px 10px;font-size:13px;color:#1e293b;resize:vertical"></textarea></label>
+    </div>
+    <div style="padding:14px 22px;border-top:1px solid #e2e8f0;display:flex;justify-content:flex-end;gap:10px">
+      <button onclick="closeCallModal()" style="padding:8px 18px;border-radius:8px;border:1.5px solid #cbd5e1;background:#fff;color:#475569;font-size:13px;font-weight:700;cursor:pointer">ยกเลิก</button>
+      <button onclick="saveCall()" style="padding:8px 18px;border-radius:8px;border:none;background:#7c3aed;color:#fff;font-size:13px;font-weight:700;cursor:pointer">💾 บันทึก</button>
     </div>
   </div>
 </div>
@@ -2301,6 +3099,40 @@
         </div>
         <div style="text-align:right;margin-top:10px;font-size:11px;color:#16a34a;font-weight:600">ดูรายละเอียด →</div>
       </div>
+      <!-- Telesales Card -->
+      <div class="card" style="cursor:pointer;padding:20px 24px;border:2px solid #c4b5fd;background:linear-gradient(135deg,#f5f3ff,#fce7f3);transition:all .2s" onclick="enterWfTsDetail()" onmouseover="this.style.boxShadow='0 8px 24px rgba(124,58,237,.15)';this.style.transform='translateY(-2px)'" onmouseout="this.style.boxShadow='';this.style.transform=''">
+        <div style="display:flex;align-items:center;gap:14px;margin-bottom:12px">
+          <div style="width:52px;height:52px;background:linear-gradient(135deg,#8b5cf6,#7c3aed);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0">📞</div>
+          <div>
+            <div style="font-size:16px;font-weight:800;color:#6d28d9">Telesales</div>
+            <div style="font-size:11px;color:#64748b;margin-top:2px">ขั้นตอนการขายทางโทรศัพท์ ตั้งแต่รับ Lead จนถึงติดตามหลังการขาย</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:10px">
+          <div style="background:#ede9fe;border-radius:6px;padding:6px 12px;text-align:center;flex:1;min-width:80px">
+            <div style="font-size:18px;font-weight:800;color:#7c3aed">14</div>
+            <div style="font-size:9px;color:#64748b;font-weight:600">ขั้นตอน</div>
+          </div>
+          <div style="background:#fce7f3;border-radius:6px;padding:6px 12px;text-align:center;flex:1;min-width:80px">
+            <div style="font-size:18px;font-weight:800;color:#db2777">12</div>
+            <div style="font-size:9px;color:#64748b;font-weight:600">Pain Points</div>
+          </div>
+          <div style="background:#fef3c7;border-radius:6px;padding:6px 12px;text-align:center;flex:1;min-width:80px">
+            <div style="font-size:18px;font-weight:800;color:#d97706">6</div>
+            <div style="font-size:9px;color:#64748b;font-weight:600">Approval Gates</div>
+          </div>
+          <div style="background:#dbeafe;border-radius:6px;padding:6px 12px;text-align:center;flex:1;min-width:80px">
+            <div style="font-size:18px;font-weight:800;color:#1d4ed8">7</div>
+            <div style="font-size:9px;color:#64748b;font-weight:600">ฝ่ายที่เกี่ยวข้อง</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;font-size:10px">
+          <span style="background:#f5f3ff;color:#7c3aed;padding:2px 8px;border-radius:4px;font-weight:600">Ver.01</span>
+          <span style="background:#fce7f3;color:#db2777;padding:2px 8px;border-radius:4px;font-weight:600">Telesales / ฝ่ายขาย</span>
+          <span style="background:#ede9fe;color:#6d28d9;padding:2px 8px;border-radius:4px;font-weight:600">Flow Chart · RACI · Pain Points</span>
+        </div>
+        <div style="text-align:right;margin-top:10px;font-size:11px;color:#7c3aed;font-weight:600">ดูรายละเอียด →</div>
+      </div>
     </div>
   </div>
 
@@ -2323,10 +3155,10 @@
         </div>
       </div>
       <div style="display:flex;gap:6px;flex-wrap:wrap">
-        <button class="wf-nav-btn active" onclick="showWfSub(this,'wf-flow')">📊 Flow Chart</button>
-        <button class="wf-nav-btn" onclick="showWfSub(this,'wf-raci')">👥 RACI Matrix</button>
-        <button class="wf-nav-btn" onclick="showWfSub(this,'wf-gate')">🚦 Decision Gates</button>
-        <button class="wf-nav-btn" onclick="showWfSub(this,'wf-pain')">⚡ Pain Points</button>
+        <button class="wf-nav-btn active" onclick="showWfSub(this,'wf-flow')">📊 ผังขั้นตอน</button>
+        <button class="wf-nav-btn" onclick="showWfSub(this,'wf-raci')">👥 ตารางความรับผิดชอบ</button>
+        <button class="wf-nav-btn" onclick="showWfSub(this,'wf-gate')">🚦 จุดตัดสินใจ</button>
+        <button class="wf-nav-btn" onclick="showWfSub(this,'wf-pain')">⚡ จุดปัญหา</button>
         <button class="wf-nav-btn" onclick="showWfSub(this,'wf-kpi')">🎯 KPI</button>
       </div>
     </div>
@@ -2571,7 +3403,7 @@
   <!-- ===== Sub: RACI Matrix ===== -->
   <div id="wf-raci" class="wf-sub">
     <div class="card" style="margin-bottom:16px">
-      <div class="card-title">👥 RACI Matrix — Product Development</div>
+      <div class="card-title">👥 ตารางความรับผิดชอบ — Product Development</div>
       <div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:14px;font-size:12px">
         <span style="display:inline-flex;align-items:center;gap:4px"><span style="background:#2563eb;color:#fff;border-radius:4px;padding:2px 8px;font-weight:700">R</span> Responsible — ผู้ปฏิบัติงานหลัก</span>
         <span style="display:inline-flex;align-items:center;gap:4px"><span style="background:#dc2626;color:#fff;border-radius:4px;padding:2px 8px;font-weight:700">A</span> Accountable — ผู้อนุมัติ</span>
@@ -2603,7 +3435,7 @@
   <!-- ===== Sub: Decision Gates ===== -->
   <div id="wf-gate" class="wf-sub">
     <div class="card" style="margin-bottom:16px">
-      <div class="card-title">🚦 Decision Gates หลักของโครงการ</div>
+      <div class="card-title">🚦 จุดตัดสินใจ หลักของโครงการ</div>
       <div id="wfGates" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;padding:4px 0"></div>
     </div>
 
@@ -2707,9 +3539,9 @@
         </div>
       </div>
       <div style="display:flex;gap:8px;flex-wrap:wrap">
-        <button class="wf-nav-btn active" id="wfAmzBtn0" onclick="showWfAmzSub(this,'wf-amz-flow')">📊 Flow Chart</button>
-        <button class="wf-nav-btn" id="wfAmzBtn1" onclick="showWfAmzSub(this,'wf-amz-raci')">👥 RACI Matrix</button>
-        <button class="wf-nav-btn" id="wfAmzBtn2" onclick="showWfAmzSub(this,'wf-amz-pain')">⚡ Pain Points</button>
+        <button class="wf-nav-btn active" id="wfAmzBtn0" onclick="showWfAmzSub(this,'wf-amz-flow')">📊 ผังขั้นตอน</button>
+        <button class="wf-nav-btn" id="wfAmzBtn1" onclick="showWfAmzSub(this,'wf-amz-raci')">👥 ตารางความรับผิดชอบ</button>
+        <button class="wf-nav-btn" id="wfAmzBtn2" onclick="showWfAmzSub(this,'wf-amz-pain')">⚡ จุดปัญหา</button>
       </div>
     </div>
 
@@ -2982,7 +3814,7 @@
 
       <!-- Pain Points by Role -->
       <div class="card" style="margin-bottom:16px">
-        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:12px">⚡ Pain Points แยกตามบทบาท</div>
+        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:12px">⚡ จุดปัญหา แยกตามบทบาท</div>
         <div class="table-wrap">
           <table>
             <thead>
@@ -3036,15 +3868,1202 @@
 
   </div><!-- /wf-amz-detail -->
 
-  </div><!-- /wf-detail -->
+  <!-- ===== Telesales Detail View ===== -->
+  <div id="wf-ts-detail" style="display:none">
 
+    <!-- Back button -->
+    <div style="margin-bottom:12px">
+      <button onclick="exitWfTsDetail()" style="display:inline-flex;align-items:center;gap:6px;background:none;border:1px solid var(--border);border-radius:8px;padding:6px 14px;font-size:12px;font-weight:600;color:var(--text2);cursor:pointer;transition:all .2s" onmouseover="this.style.background='var(--surface)'" onmouseout="this.style.background='none'">← กลับ Work Flow</button>
+    </div>
+
+    <!-- Header card -->
+    <div class="card" style="margin-bottom:16px;background:linear-gradient(135deg,#f5f3ff,#fce7f3);border:1px solid #c4b5fd;padding:20px 24px">
+      <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px">
+        <div style="width:48px;height:48px;background:linear-gradient(135deg,#8b5cf6,#7c3aed);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">📞</div>
+        <div>
+          <div style="font-size:17px;font-weight:800;color:#6d28d9">Work Flow — Telesales</div>
+          <div style="font-size:11px;color:#64748b;margin-top:2px">ขั้นตอนการขายทางโทรศัพท์ ตั้งแต่รับ Lead จนถึงติดตามหลังการขาย · Ver.01 · Total 14 ขั้นตอน · 7 ฝ่าย</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="wf-nav-btn active" id="wfTsBtn0" onclick="showWfTsSub(this,'wf-ts-flow')">📊 ผังขั้นตอน</button>
+        <button class="wf-nav-btn" id="wfTsBtn1" onclick="showWfTsSub(this,'wf-ts-raci')">👥 ตารางความรับผิดชอบ</button>
+        <button class="wf-nav-btn" id="wfTsBtn2" onclick="showWfTsSub(this,'wf-ts-pain')">⚡ จุดปัญหา</button>
+      </div>
+    </div>
+
+    <!-- KPI summary cards -->
+    <div class="kpi-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:16px">
+      <div class="kpi-card" style="border-top:3px solid #7c3aed"><div class="kpi-label">ขั้นตอนทั้งหมด</div><div class="kpi-value" style="color:#7c3aed">14</div><div class="kpi-sub">ขั้นตอน</div></div>
+      <div class="kpi-card" style="border-top:3px solid #db2777"><div class="kpi-label">Pain Points</div><div class="kpi-value" style="color:#db2777">12</div><div class="kpi-sub">จุดที่ต้องแก้ไข</div></div>
+      <div class="kpi-card" style="border-top:3px solid #d97706"><div class="kpi-label">Approval Gates</div><div class="kpi-value" style="color:#d97706">6</div><div class="kpi-sub">จุดอนุมัติ</div></div>
+      <div class="kpi-card" style="border-top:3px solid #1d4ed8"><div class="kpi-label">ฝ่ายที่เกี่ยวข้อง</div><div class="kpi-value" style="color:#1d4ed8">7</div><div class="kpi-sub">ฝ่าย</div></div>
+    </div>
+
+    <!-- ===== Flow Chart Sub ===== -->
+    <div id="wf-ts-flow" class="wf-sub active">
+      <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:8px">📊 WORK FLOW TELESALES — ขั้นตอนการขายทางโทรศัพท์</div>
+
+      <!-- Legend -->
+      <div class="wf-legend-bar">
+        <span><span class="wf-legend-dot" style="background:#c084fc"></span>Telesales</span>
+        <span><span class="wf-legend-dot" style="background:#818cf8"></span>Sales Supervisor</span>
+        <span><span class="wf-legend-dot" style="background:#fbbf24"></span>ฝ่ายขาย</span>
+        <span><span class="wf-legend-dot" style="background:#60a5fa"></span>คลังสินค้า</span>
+        <span><span class="wf-legend-dot" style="background:#34d399"></span>จัดส่ง</span>
+        <span><span class="wf-legend-dot" style="background:#f87171"></span>บัญชี</span>
+        <span><span class="wf-legend-dot" style="background:#a78bfa"></span>ลูกค้า</span>
+      </div>
+
+      <!-- Swim Lane Table -->
+      <div class="wf-swim">
+        <table>
+          <thead>
+            <tr>
+              <th style="width:130px;min-width:120px">ฝ่าย / ขั้นตอน</th>
+              <th style="text-align:center">WORK FLOW TELESALES</th>
+              <th style="width:90px;min-width:80px">เฟส</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Row 1: Telesales -->
+            <tr style="background:#faf5ff">
+              <td class="wf-td-dept" style="background:#faf5ff;border-left:4px solid #c084fc">📞 Telesales<br><span style="font-size:8px;color:#64748b">(Responsible)</span></td>
+              <td>
+                <div class="wf-frow">
+                  <span class="wf-fstart">เริ่มต้น</span>
+                  <span class="wf-fa">→</span>
+                  <span class="wf-fb" style="background:#ede9fe">1. รับรายชื่อลูกค้า (Lead)</span>
+                  <span class="wf-fa">→</span>
+                  <span class="wf-fb" style="background:#ede9fe">2. ตรวจสอบข้อมูลลูกค้า</span>
+                  <span class="wf-fa">→</span>
+                  <span class="wf-fb" style="background:#ede9fe">3. โทรติดต่อลูกค้า</span>
+                </div>
+                <div class="wf-frow" style="margin-top:6px">
+                  <span class="wf-fb" style="background:#ede9fe">4. นำเสนอสินค้าและโปรโมชั่น</span>
+                  <span class="wf-fa">→</span>
+                  <span class="wf-fb" style="background:#ede9fe">5. ตอบข้อสงสัยและเจรจา</span>
+                  <span class="wf-fa">→</span>
+                  <span class="wf-fb" style="background:#ede9fe">6. ปิดการขาย</span>
+                  <span class="wf-fa">→</span>
+                  <span class="wf-fb" style="background:#ede9fe">7. บันทึกข้อมูลลง CRM</span>
+                </div>
+                <div class="wf-frow" style="margin-top:6px">
+                  <span class="wf-fb" style="background:#ede9fe">13. ติดตามความพึงพอใจลูกค้า</span>
+                  <span class="wf-fa">→</span>
+                  <span class="wf-fb" style="background:#ede9fe">14. รายงานยอดขาย</span>
+                  <span class="wf-fa">→</span>
+                  <span class="wf-fend">จบ</span>
+                </div>
+              </td>
+              <td class="wf-td-lead" style="color:#7c3aed">Pre-Sales &<br>After Sales</td>
+            </tr>
+            <!-- Row 2: Sales Supervisor -->
+            <tr style="background:#f5f3ff">
+              <td class="wf-td-dept" style="background:#f5f3ff;border-left:4px solid #818cf8">👔 Sales Supervisor<br><span style="font-size:8px;color:#64748b">(Accountable)</span></td>
+              <td>
+                <div class="wf-frow">
+                  <span class="wf-fnote">Accountable ทุกขั้นตอน</span>
+                  <span class="wf-fa">|</span>
+                  <span class="wf-fb" style="background:#e0e7ff">กำหนดเป้าหมาย KPI</span>
+                  <span class="wf-fa">→</span>
+                  <span class="wf-fb" style="background:#e0e7ff">ตรวจสอบคุณภาพการโทร</span>
+                  <span class="wf-fa">→</span>
+                  <span class="wf-fb" style="background:#e0e7ff">อนุมัติส่วนลด/โปรโมชั่น</span>
+                </div>
+                <div class="wf-frow" style="margin-top:6px">
+                  <span class="wf-fb" style="background:#e0e7ff">วิเคราะห์ยอดขาย</span>
+                  <span class="wf-fa">→</span>
+                  <span class="wf-fb" style="background:#e0e7ff">Coaching และพัฒนาทีม</span>
+                  <span class="wf-fa">→</span>
+                  <span class="wf-fb" style="background:#e0e7ff">ติดตาม Performance</span>
+                </div>
+              </td>
+              <td class="wf-td-lead" style="color:#4f46e5">ดูแล<br>ทุกเฟส</td>
+            </tr>
+            <!-- Row 3: ฝ่ายขาย (Sales Admin) -->
+            <tr style="background:#fffbeb">
+              <td class="wf-td-dept" style="background:#fffbeb;border-left:4px solid #fbbf24">🗂️ ฝ่ายขาย<br><span style="font-size:8px;color:#64748b">(Sales Admin)</span></td>
+              <td>
+                <div class="wf-frow">
+                  <span class="wf-fb" style="background:#fef3c7">ตรวจสอบข้อมูลลูกค้า</span>
+                  <span class="wf-fa">→</span>
+                  <span class="wf-fb" style="background:#fef3c7">จัดทำเอกสารเสนอราคา</span>
+                  <span class="wf-fa">→</span>
+                  <span class="wf-fb" style="background:#fef3c7">9. ออกใบสั่งขาย (SO)</span>
+                  <span class="wf-fa">→</span>
+                  <span class="wf-fb" style="background:#fef3c7">ประสานงานคลังสินค้าและขนส่ง</span>
+                </div>
+              </td>
+              <td class="wf-td-lead" style="color:#b45309">Order</td>
+            </tr>
+            <!-- Row 4: คลังสินค้า -->
+            <tr style="background:#eff6ff">
+              <td class="wf-td-dept" style="background:#eff6ff;border-left:4px solid #60a5fa">🏭 คลังสินค้า</td>
+              <td>
+                <div class="wf-frow">
+                  <span class="wf-fb" style="background:#dbeafe">8. ตรวจสอบสต๊อกสินค้า</span>
+                  <span class="wf-fa">→</span>
+                  <span class="wf-fb" style="background:#dbeafe">10. เตรียมสินค้า</span>
+                  <span class="wf-fa">→</span>
+                  <span class="wf-fmeet" style="background:#bfdbfe">แพ็กสินค้า</span>
+                  <span class="wf-fa">→</span>
+                  <span class="wf-fnote">ส่งมอบสินค้าให้ฝ่ายขนส่ง</span>
+                </div>
+              </td>
+              <td class="wf-td-lead" style="color:#1d4ed8">Fulfillment</td>
+            </tr>
+            <!-- Row 5: จัดส่ง -->
+            <tr style="background:#f0fdf4">
+              <td class="wf-td-dept" style="background:#f0fdf4;border-left:4px solid #34d399">🚚 จัดส่ง<br><span style="font-size:8px;color:#64748b">(Logistics)</span></td>
+              <td>
+                <div class="wf-frow">
+                  <span class="wf-fb" style="background:#dcfce7">วางแผนการจัดส่ง</span>
+                  <span class="wf-fa">→</span>
+                  <span class="wf-fb" style="background:#dcfce7">11. จัดส่งสินค้า</span>
+                  <span class="wf-fa">→</span>
+                  <span class="wf-fb" style="background:#dcfce7">ติดตามสถานะการขนส่ง</span>
+                  <span class="wf-fa">→</span>
+                  <span class="wf-fnote">แจ้งปัญหาการจัดส่ง</span>
+                </div>
+              </td>
+              <td class="wf-td-lead" style="color:#16a34a">Delivery</td>
+            </tr>
+            <!-- Row 6: บัญชี -->
+            <tr style="background:#fff1f2">
+              <td class="wf-td-dept" style="background:#fff1f2;border-left:4px solid #f87171">💰 บัญชี<br><span style="font-size:8px;color:#64748b">(Finance)</span></td>
+              <td>
+                <div class="wf-frow">
+                  <span class="wf-fb" style="background:#fee2e2">12. ออกใบกำกับภาษี</span>
+                  <span class="wf-fa">→</span>
+                  <span class="wf-fb" style="background:#fee2e2">รับชำระเงิน</span>
+                  <span class="wf-fa">→</span>
+                  <span class="wf-fnote">ติดตามหนี้ค้างชำระ</span>
+                </div>
+              </td>
+              <td class="wf-td-lead" style="color:#dc2626">Finance</td>
+            </tr>
+            <!-- Row 7: ลูกค้า -->
+            <tr style="background:#fefce8">
+              <td class="wf-td-dept" style="background:#fefce8;border-left:4px solid #fbbf24">🛒 ลูกค้า<br><span style="font-size:8px;color:#64748b">(Customer)</span></td>
+              <td>
+                <div class="wf-frow">
+                  <span class="wf-fnote">ให้ข้อมูลความต้องการ</span>
+                  <span class="wf-fa">→</span>
+                  <span class="wf-fb" style="background:#fef9c3">ยืนยันคำสั่งซื้อ</span>
+                  <span class="wf-fa">→</span>
+                  <span class="wf-fb" style="background:#fef9c3">รับสินค้า</span>
+                  <span class="wf-fa">→</span>
+                  <span class="wf-fb" style="background:#fef9c3">แจ้งปัญหาหรือข้อเสนอแนะ</span>
+                </div>
+              </td>
+              <td class="wf-td-lead" style="color:#ca8a04">ลูกค้า</td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="2" style="text-align:center">ขั้นตอนทั้งหมด 14 ขั้น | 4 เฟสหลัก: Lead → Sales → Fulfillment → After Sales</td>
+              <td style="text-align:center">Ver.01</td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+
+      <!-- Phase Steps Timeline -->
+      <div style="margin-top:20px;display:grid;grid-template-columns:repeat(4,1fr);gap:12px">
+        <div style="background:#ede9fe;border-radius:12px;padding:14px;border-top:3px solid #8b5cf6">
+          <div style="font-size:11px;font-weight:800;color:#6d28d9;margin-bottom:8px">📌 เฟส 1: Lead Management</div>
+          <div style="font-size:11px;color:#374151;line-height:1.8">1. รับรายชื่อลูกค้า (Lead)<br>2. ตรวจสอบข้อมูลลูกค้า<br>3. โทรติดต่อลูกค้า</div>
+        </div>
+        <div style="background:#fce7f3;border-radius:12px;padding:14px;border-top:3px solid #ec4899">
+          <div style="font-size:11px;font-weight:800;color:#be185d;margin-bottom:8px">📌 เฟส 2: Sales Process</div>
+          <div style="font-size:11px;color:#374151;line-height:1.8">4. นำเสนอสินค้าและโปรโมชั่น<br>5. ตอบข้อสงสัยและเจรจา<br>6. ปิดการขาย<br>7. บันทึกข้อมูลลง CRM</div>
+        </div>
+        <div style="background:#dbeafe;border-radius:12px;padding:14px;border-top:3px solid #3b82f6">
+          <div style="font-size:11px;font-weight:800;color:#1d4ed8;margin-bottom:8px">📌 เฟส 3: Order & Fulfillment</div>
+          <div style="font-size:11px;color:#374151;line-height:1.8">8. ตรวจสอบสต๊อก<br>9. ออกใบสั่งขาย (SO)<br>10. เตรียมสินค้า<br>11. จัดส่งสินค้า<br>12. ออกใบกำกับภาษี / รับชำระ</div>
+        </div>
+        <div style="background:#dcfce7;border-radius:12px;padding:14px;border-top:3px solid #22c55e">
+          <div style="font-size:11px;font-weight:800;color:#16a34a;margin-bottom:8px">📌 เฟส 4: After Sales</div>
+          <div style="font-size:11px;color:#374151;line-height:1.8">13. ติดตามความพึงพอใจลูกค้า<br>14. รายงานยอดขาย<br>Follow Up ลูกค้าเก่า<br>สร้างโอกาสขายซ้ำ (Repeat Order)</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== RACI Matrix Sub ===== -->
+    <div id="wf-ts-raci" class="wf-sub">
+      <div style="margin-bottom:12px;display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+        <span style="font-size:12px;font-weight:700;color:var(--text)">สัญลักษณ์ RACI:</span>
+        <span class="raci-r">R</span><span style="font-size:11px;color:var(--text2)">Responsible</span>
+        <span class="raci-a">A</span><span style="font-size:11px;color:var(--text2)">Accountable</span>
+        <span class="raci-c">C</span><span style="font-size:11px;color:var(--text2)">Consulted</span>
+        <span class="raci-i">I</span><span style="font-size:11px;color:var(--text2)">Informed</span>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr style="background:#1e293b;color:#fff">
+              <th style="padding:10px 12px;text-align:left;font-size:12px">#</th>
+              <th style="padding:10px 12px;text-align:left;font-size:12px">กิจกรรม</th>
+              <th style="padding:10px;text-align:center;font-size:11px">📞 Telesales</th>
+              <th style="padding:10px;text-align:center;font-size:11px">👔 Supervisor</th>
+              <th style="padding:10px;text-align:center;font-size:11px">🗂️ ฝ่ายขาย</th>
+              <th style="padding:10px;text-align:center;font-size:11px">🏭 คลังสินค้า</th>
+              <th style="padding:10px;text-align:center;font-size:11px">🚚 จัดส่ง</th>
+              <th style="padding:10px;text-align:center;font-size:11px">💰 บัญชี</th>
+            </tr>
+          </thead>
+          <tbody id="wfTsRaciBody">
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Key Approval Gates -->
+      <div class="card" style="margin-top:16px;background:#fef3c7;border:1px solid #fbbf24">
+        <div style="font-size:13px;font-weight:700;color:#92400e;margin-bottom:10px">🚦 จุดควบคุมสำคัญ (Key Approval Gates)</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px;font-size:11px">
+          <div style="background:#fff;border-radius:8px;padding:8px 12px;border-left:3px solid #f59e0b"><b>อนุมัติเริ่มโครงการ</b><br><span style="color:#64748b">ผู้บริหาร</span></div>
+          <div style="background:#fff;border-radius:8px;padding:8px 12px;border-left:3px solid #f59e0b"><b>อนุมัติตัวอย่างสินค้า</b><br><span style="color:#64748b">ลูกค้า / ฝ่ายขาย</span></div>
+          <div style="background:#fff;border-radius:8px;padding:8px 12px;border-left:3px solid #f59e0b"><b>อนุมัติต้นทุนสินค้า</b><br><span style="color:#64748b">ผู้บริหาร</span></div>
+          <div style="background:#fff;border-radius:8px;padding:8px 12px;border-left:3px solid #f59e0b"><b>อนุมัติ Artwork</b><br><span style="color:#64748b">ผู้บริหาร / ลูกค้า</span></div>
+          <div style="background:#fff;border-radius:8px;padding:8px 12px;border-left:3px solid #f59e0b"><b>อนุมัติ First Trial</b><br><span style="color:#64748b">QA / ผู้บริหาร</span></div>
+          <div style="background:#fff;border-radius:8px;padding:8px 12px;border-left:3px solid #f59e0b"><b>อนุมัติผลิตจริง</b><br><span style="color:#64748b">ผู้บริหาร</span></div>
+        </div>
+      </div>
+
+      <!-- Roles summary -->
+      <div class="card" style="margin-top:16px;background:#f8fafc">
+        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:12px">👥 บทบาทหลักของแต่ละฝ่าย</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;font-size:11px">
+          <div style="background:#faf5ff;border-radius:8px;padding:10px;border-left:3px solid #c084fc"><b style="color:#7c3aed">📞 Telesales</b><br>โทรหาลูกค้า · นำเสนอสินค้า · ปิดการขาย · บันทึก CRM · ติดตามหลังการขาย · สร้างโอกาสขายซ้ำ</div>
+          <div style="background:#f5f3ff;border-radius:8px;padding:10px;border-left:3px solid #818cf8"><b style="color:#4f46e5">👔 Sales Supervisor</b><br>กำหนด KPI · ตรวจคุณภาพ · อนุมัติส่วนลด · วิเคราะห์ยอดขาย · Coaching</div>
+          <div style="background:#fffbeb;border-radius:8px;padding:10px;border-left:3px solid #fbbf24"><b style="color:#b45309">🗂️ ฝ่ายขาย (Sales Admin)</b><br>ตรวจสอบข้อมูล · เอกสารเสนอราคา · เปิด SO · ประสานงาน</div>
+          <div style="background:#eff6ff;border-radius:8px;padding:10px;border-left:3px solid #60a5fa"><b style="color:#1d4ed8">🏭 คลังสินค้า</b><br>ตรวจสอบสต๊อก · จัดสินค้า · แพ็ก · ส่งมอบ</div>
+          <div style="background:#f0fdf4;border-radius:8px;padding:10px;border-left:3px solid #34d399"><b style="color:#16a34a">🚚 จัดส่ง (Logistics)</b><br>วางแผนจัดส่ง · ส่งตรงเวลา · ติดตามสถานะ</div>
+          <div style="background:#fff1f2;border-radius:8px;padding:10px;border-left:3px solid #f87171"><b style="color:#dc2626">💰 บัญชี</b><br>ออกใบกำกับภาษี · รับชำระเงิน</div>
+          <div style="background:#fefce8;border-radius:8px;padding:10px;border-left:3px solid #eab308"><b style="color:#a16207">🛒 ลูกค้า (Customer)</b><br>ให้ข้อมูลความต้องการ · ยืนยันคำสั่งซื้อ · รับสินค้า · แจ้งปัญหา</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== Pain Points Sub ===== -->
+    <div id="wf-ts-pain" class="wf-sub">
+      <!-- Top Pain Points by Category -->
+      <div class="card" style="margin-bottom:16px">
+        <div style="font-size:13px;font-weight:700;color:#dc2626;margin-bottom:12px">🔥 Top 5 Pain Point Categories — Telesales</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:8px">
+          <div style="background:#fee2e2;border-radius:8px;padding:10px 14px;display:flex;align-items:center;gap:10px">
+            <span style="font-size:16px;font-weight:800;color:#dc2626;min-width:24px">1</span>
+            <div><div style="font-size:12px;font-weight:700;color:#7f1d1d">Lead Management</div><div style="font-size:10px;color:#991b1b">ไม่มีการแบ่งลูกค้าชัดเจน · โทรซ้ำ · Lead หาย · ลูกค้าเก่าไม่ได้ติดตาม</div><div style="font-size:10px;color:#dc2626;font-weight:600;margin-top:2px">● สูงมาก — Conversion Rate ลดลง</div></div>
+          </div>
+          <div style="background:#fee2e2;border-radius:8px;padding:10px 14px;display:flex;align-items:center;gap:10px">
+            <span style="font-size:16px;font-weight:800;color:#dc2626;min-width:24px">2</span>
+            <div><div style="font-size:12px;font-weight:700;color:#7f1d1d">Order Processing</div><div style="font-size:10px;color:#991b1b">กรอกข้อมูลผิด · สินค้าไม่ตรง · ราคาไม่ตรงโปรโมชั่น</div><div style="font-size:10px;color:#dc2626;font-weight:600;margin-top:2px">● สูงมาก — ยกเลิกคำสั่งซื้อ</div></div>
+          </div>
+          <div style="background:#fef3c7;border-radius:8px;padding:10px 14px;display:flex;align-items:center;gap:10px">
+            <span style="font-size:16px;font-weight:800;color:#d97706;min-width:24px">3</span>
+            <div><div style="font-size:12px;font-weight:700;color:#78350f">Inventory</div><div style="font-size:10px;color:#92400e">สต๊อกไม่อัปเดต · ขายเกินจำนวนจริง</div><div style="font-size:10px;color:#d97706;font-weight:600;margin-top:2px">● สูง — ลูกค้ายกเลิกคำสั่งซื้อ</div></div>
+          </div>
+          <div style="background:#fef3c7;border-radius:8px;padding:10px 14px;display:flex;align-items:center;gap:10px">
+            <span style="font-size:16px;font-weight:800;color:#d97706;min-width:24px">4</span>
+            <div><div style="font-size:12px;font-weight:700;color:#78350f">Communication</div><div style="font-size:10px;color:#92400e">ฝ่ายขาย คลัง ขนส่ง สื่อสารไม่ตรงกัน · ไม่มีผู้รับผิดชอบหลัก</div><div style="font-size:10px;color:#d97706;font-weight:600;margin-top:2px">● สูง — ส่งของล่าช้า · งานซ้ำซ้อน</div></div>
+          </div>
+          <div style="background:#fef9c3;border-radius:8px;padding:10px 14px;display:flex;align-items:center;gap:10px">
+            <span style="font-size:16px;font-weight:800;color:#ca8a04;min-width:24px">5</span>
+            <div><div style="font-size:12px;font-weight:700;color:#713f12">Customer Follow-up</div><div style="font-size:10px;color:#854d0e">ไม่มีระบบแจ้งเตือน · โทรติดตามไม่ครบ</div><div style="font-size:10px;color:#ca8a04;font-weight:600;margin-top:2px">◑ ปานกลาง — เสียโอกาสขายซ้ำ</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pain Points by Step -->
+      <div class="card" style="margin-bottom:16px">
+        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:12px">⚡ จุดปัญหา แยกตามขั้นตอน</div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr style="background:#1e293b;color:#fff">
+                <th style="padding:8px 12px;font-size:12px;width:160px">ขั้นตอน</th>
+                <th style="padding:8px 12px;font-size:12px">Pain Point</th>
+                <th style="padding:8px 12px;font-size:12px">สาเหตุ</th>
+                <th style="padding:8px 12px;font-size:12px">ผลกระทบ</th>
+                <th style="padding:8px 12px;font-size:12px">แนวทางปรับปรุง</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="background:#fff"><td style="padding:6px 12px;font-size:12px;font-weight:600">1. รับรายชื่อลูกค้า</td><td style="padding:6px 12px;font-size:12px">ข้อมูลลูกค้าไม่ครบ/ซ้ำ</td><td style="padding:6px 12px;font-size:12px;color:#64748b">ไม่มีการอัปเดตฐานข้อมูล</td><td style="padding:6px 12px;font-size:12px;color:#dc2626">โทรไม่ติด เสียเวลา</td><td style="padding:6px 12px;font-size:12px;color:#16a34a">ใช้ CRM กลางและกำหนดเจ้าของ Lead</td></tr>
+              <tr style="background:#f8fafc"><td style="padding:6px 12px;font-size:12px;font-weight:600">2. เตรียมข้อมูลสินค้า</td><td style="padding:6px 12px;font-size:12px">โปรโมชั่นไม่อัปเดต</td><td style="padding:6px 12px;font-size:12px;color:#64748b">ฝ่ายขายและการตลาดสื่อสารไม่ตรงกัน</td><td style="padding:6px 12px;font-size:12px;color:#dc2626">แจ้งข้อมูลลูกค้าผิด</td><td style="padding:6px 12px;font-size:12px;color:#16a34a">ใช้ Promotion Master เวอร์ชันเดียว</td></tr>
+              <tr style="background:#fff"><td style="padding:6px 12px;font-size:12px;font-weight:600">3. โทรหาลูกค้า</td><td style="padding:6px 12px;font-size:12px">โทรซ้ำหลายคน</td><td style="padding:6px 12px;font-size:12px;color:#64748b">ไม่ระบุ Responsible ชัดเจน</td><td style="padding:6px 12px;font-size:12px;color:#dc2626">ลูกค้าไม่พอใจ</td><td style="padding:6px 12px;font-size:12px;color:#16a34a">Lock เจ้าของลูกค้าใน CRM</td></tr>
+              <tr style="background:#f8fafc"><td style="padding:6px 12px;font-size:12px;font-weight:600">4. นำเสนอสินค้า</td><td style="padding:6px 12px;font-size:12px">ข้อมูลสินค้าไม่ครบ</td><td style="padding:6px 12px;font-size:12px;color:#64748b">ไม่มี Sales Kit มาตรฐาน</td><td style="padding:6px 12px;font-size:12px;color:#dc2626">ปิดการขายยาก</td><td style="padding:6px 12px;font-size:12px;color:#16a34a">จัดทำ Product Knowledge และ Sales Script</td></tr>
+              <tr style="background:#fff"><td style="padding:6px 12px;font-size:12px;font-weight:600">5. ปิดการขาย</td><td style="padding:6px 12px;font-size:12px">ขออนุมัติส่วนลดนาน</td><td style="padding:6px 12px;font-size:12px;color:#64748b">Supervisor ไม่พร้อมอนุมัติ</td><td style="padding:6px 12px;font-size:12px;color:#dc2626">ลูกค้าเปลี่ยนใจ</td><td style="padding:6px 12px;font-size:12px;color:#16a34a">กำหนด Discount Matrix ตามวงเงิน</td></tr>
+              <tr style="background:#f8fafc"><td style="padding:6px 12px;font-size:12px;font-weight:600">6. บันทึกคำสั่งซื้อ</td><td style="padding:6px 12px;font-size:12px">กรอกข้อมูลผิด</td><td style="padding:6px 12px;font-size:12px;color:#64748b">พิมพ์ข้อมูลด้วยมือ</td><td style="padding:6px 12px;font-size:12px;color:#dc2626">ส่งสินค้าผิด</td><td style="padding:6px 12px;font-size:12px;color:#16a34a">ใช้ Validation และ Dropdown ในระบบ</td></tr>
+              <tr style="background:#fff"><td style="padding:6px 12px;font-size:12px;font-weight:600">7. ตรวจสอบสต๊อก</td><td style="padding:6px 12px;font-size:12px">สต๊อกไม่ Real-time</td><td style="padding:6px 12px;font-size:12px;color:#64748b">ระบบไม่เชื่อมคลังสินค้า</td><td style="padding:6px 12px;font-size:12px;color:#dc2626">ขายเกินสต๊อก</td><td style="padding:6px 12px;font-size:12px;color:#16a34a">เชื่อม ERP กับ WMS แบบ Real-time</td></tr>
+              <tr style="background:#f8fafc"><td style="padding:6px 12px;font-size:12px;font-weight:600">8. ยืนยันคำสั่งซื้อ</td><td style="padding:6px 12px;font-size:12px">ลูกค้าไม่ได้รับการยืนยัน</td><td style="padding:6px 12px;font-size:12px;color:#64748b">ไม่มีผู้รับผิดชอบชัดเจน</td><td style="padding:6px 12px;font-size:12px;color:#dc2626">ลูกค้าสับสน</td><td style="padding:6px 12px;font-size:12px;color:#16a34a">ส่ง SMS / Email อัตโนมัติ</td></tr>
+              <tr style="background:#fff"><td style="padding:6px 12px;font-size:12px;font-weight:600">9. จัดเตรียมสินค้า</td><td style="padding:6px 12px;font-size:12px">หยิบสินค้าผิด</td><td style="padding:6px 12px;font-size:12px;color:#64748b">ไม่มี Barcode</td><td style="padding:6px 12px;font-size:12px;color:#dc2626">ส่งผิดรายการ</td><td style="padding:6px 12px;font-size:12px;color:#16a34a">ใช้ Barcode Scanner</td></tr>
+              <tr style="background:#f8fafc"><td style="padding:6px 12px;font-size:12px;font-weight:600">10. จัดส่งสินค้า</td><td style="padding:6px 12px;font-size:12px">ส่งล่าช้า</td><td style="padding:6px 12px;font-size:12px;color:#64748b">วางแผนเส้นทางไม่ดี</td><td style="padding:6px 12px;font-size:12px;color:#dc2626">ลูกค้าร้องเรียน</td><td style="padding:6px 12px;font-size:12px;color:#16a34a">Route Planning และ Tracking</td></tr>
+              <tr style="background:#fff"><td style="padding:6px 12px;font-size:12px;font-weight:600">11. ติดตามหลังการขาย</td><td style="padding:6px 12px;font-size:12px">ไม่มีการ Follow-up</td><td style="padding:6px 12px;font-size:12px;color:#64748b">Telesales งานมาก</td><td style="padding:6px 12px;font-size:12px;color:#dc2626">เสียโอกาสขายซ้ำ</td><td style="padding:6px 12px;font-size:12px;color:#16a34a">แจ้งเตือน Follow-up อัตโนมัติ</td></tr>
+              <tr style="background:#f8fafc"><td style="padding:6px 12px;font-size:12px;font-weight:600">12. รับข้อร้องเรียน</td><td style="padding:6px 12px;font-size:12px">ประสานงานหลายฝ่าย</td><td style="padding:6px 12px;font-size:12px;color:#64748b">ไม่มี Owner</td><td style="padding:6px 12px;font-size:12px;color:#dc2626">แก้ปัญหาล่าช้า</td><td style="padding:6px 12px;font-size:12px;color:#16a34a">กำหนด Complaint Owner และ SLA</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Pain Points by RACI Role -->
+      <div class="card" style="margin-bottom:16px">
+        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:12px">👥 Pain Points แยกตามบทบาท RACI</div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr style="background:#1e293b;color:#fff">
+                <th style="padding:8px 12px;font-size:12px;width:160px">บทบาท</th>
+                <th style="padding:8px 12px;font-size:12px">Pain Point</th>
+                <th style="padding:8px 12px;font-size:12px">ความเสี่ยง</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="background:#faf5ff"><td style="font-weight:700;color:#7c3aed;padding:8px 12px;border-left:4px solid #c084fc;font-size:12px">📞 Responsible<br>(Telesales)</td><td style="padding:6px 12px;font-size:12px">งานหลายขั้นตอน ต้องโทร บันทึกข้อมูล ติดตามลูกค้าเองทั้งหมด</td><td style="padding:6px 12px;font-size:12px;color:#dc2626">งานตกหล่น Follow-up ไม่ครบ</td></tr>
+              <tr style="background:#f5f3ff"><td style="font-weight:700;color:#4f46e5;padding:8px 12px;border-left:4px solid #818cf8;font-size:12px">👔 Accountable<br>(Supervisor)</td><td style="padding:6px 12px;font-size:12px">ต้องอนุมัติหลายเรื่องพร้อมกัน</td><td style="padding:6px 12px;font-size:12px;color:#dc2626">การอนุมัติล่าช้า ส่งผลต่อการปิดการขาย</td></tr>
+              <tr style="background:#fffbeb"><td style="font-weight:700;color:#b45309;padding:8px 12px;border-left:4px solid #fbbf24;font-size:12px">🗂️ Consulted<br>(Sales Admin / Warehouse)</td><td style="padding:6px 12px;font-size:12px">ได้รับข้อมูลไม่ครบหรือไม่ทันเวลา</td><td style="padding:6px 12px;font-size:12px;color:#dc2626">เอกสารผิด สินค้าผิด หรือสต๊อกคลาดเคลื่อน</td></tr>
+              <tr style="background:#f0fdf4"><td style="font-weight:700;color:#16a34a;padding:8px 12px;border-left:4px solid #34d399;font-size:12px">🚚 Informed<br>(Logistics / Customer)</td><td style="padding:6px 12px;font-size:12px">ไม่ได้รับข้อมูลการเปลี่ยนแปลง</td><td style="padding:6px 12px;font-size:12px;color:#dc2626">ส่งสินค้าผิดเวลา ลูกค้าไม่พึงพอใจ</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Improvement Plan -->
+      <div class="card">
+        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:12px">🚀 แนวทางปรับปรุง (Improvement Plan)</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px">
+          <div style="background:#faf5ff;border-radius:10px;padding:12px;border-top:3px solid #8b5cf6"><div style="font-weight:800;font-size:12px;color:#6d28d9;margin-bottom:6px">📋 Lead Management</div><div style="font-size:11px;color:#374151;line-height:1.6">ใช้ CRM กำหนด Owner ของลูกค้า และติดตามสถานะ Lead แบบ Real-time</div></div>
+          <div style="background:#fce7f3;border-radius:10px;padding:12px;border-top:3px solid #ec4899"><div style="font-weight:800;font-size:12px;color:#be185d;margin-bottom:6px">⚙️ Sales Process</div><div style="font-size:11px;color:#374151;line-height:1.6">จัดทำ SOP และ Workflow มาตรฐาน ลดความคลาดเคลื่อนในการทำงาน</div></div>
+          <div style="background:#eff6ff;border-radius:10px;padding:12px;border-top:3px solid #3b82f6"><div style="font-weight:800;font-size:12px;color:#1d4ed8;margin-bottom:6px">📦 Inventory</div><div style="font-size:11px;color:#374151;line-height:1.6">เชื่อมข้อมูลสต๊อกกับระบบขายแบบ Real-time</div></div>
+          <div style="background:#fef3c7;border-radius:10px;padding:12px;border-top:3px solid #f59e0b"><div style="font-weight:800;font-size:12px;color:#b45309;margin-bottom:6px">✅ Approval</div><div style="font-size:11px;color:#374151;line-height:1.6">กำหนดอำนาจอนุมัติ (Approval Matrix) และวงเงินส่วนลดที่ชัดเจน</div></div>
+          <div style="background:#dcfce7;border-radius:10px;padding:12px;border-top:3px solid #22c55e"><div style="font-weight:800;font-size:12px;color:#16a34a;margin-bottom:6px">🔔 Customer Follow-up</div><div style="font-size:11px;color:#374151;line-height:1.6">ตั้งระบบแจ้งเตือนการติดตามลูกค้าอัตโนมัติ</div></div>
+          <div style="background:#fff1f2;border-radius:10px;padding:12px;border-top:3px solid #ef4444"><div style="font-weight:800;font-size:12px;color:#dc2626;margin-bottom:6px">🎯 KPI</div><div style="font-size:11px;color:#374151;line-height:1.6">ติดตาม KPI: จำนวนสายโทร, Contact Rate, Conversion Rate, ยอดขาย, Order Accuracy, CSAT</div></div>
+          <div style="background:#f0f9ff;border-radius:10px;padding:12px;border-top:3px solid #0ea5e9"><div style="font-weight:800;font-size:12px;color:#0369a1;margin-bottom:6px">📊 Dashboard</div><div style="font-size:11px;color:#374151;line-height:1.6">สร้าง Dashboard ให้ผู้บริหารติดตามยอดขาย สถานะคำสั่งซื้อ และ Pain Point ได้แบบ Real-time</div></div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /wf-ts-detail -->
+
+</div><!-- /tab-workflow -->
+
+<!-- ===== TEAM (ทีมงานฝ่ายขาย) ===== -->
+<div id="tab-team" class="section">
+  <div class="sub-tabs">
+    <div class="sub-tab active" onclick="showSubTab(this,'team-list');renderStaffList()" data-i18n="team.list">👤 รายชื่อบุคลากร</div>
+    <div class="sub-tab" onclick="showSubTab(this,'team-org');renderOrgChart()" data-i18n="team.org">🏢 ผังองค์กร</div>
+  </div>
+
+  <!-- ---- Sub-tab: รายชื่อบุคลากร ---- -->
+  <div id="team-list" class="sub-section active">
+    <div class="card team-controls">
+      <div class="team-controls-row">
+        <input type="text" id="staffSearch" class="team-search" placeholder="🔍 ค้นหา ชื่อ / ชื่อเล่น / พื้นที่รับผิดชอบ..." oninput="renderStaffList()">
+      </div>
+      <div id="staffDeptFilter" class="team-dept-filter"></div>
+    </div>
+    <div id="staffContainer" class="team-groups"></div>
+  </div>
+
+  <!-- ---- Sub-tab: ผังองค์กร ---- -->
+  <div id="team-org" class="sub-section">
+    <div class="card">
+      <div class="card-title">ผังองค์กรฝ่ายขายและการตลาด</div>
+      <div id="orgChart" class="org-chart"></div>
+    </div>
+  </div>
 </div>
 
+<!-- ===== ORDERING (ธุรการขาย) ===== -->
+<div id="tab-ordering" class="section">
+  <div class="sub-tabs">
+    <div class="sub-tab active" onclick="showSubTab(this,'ord-staff');renderOrdStaff()" data-i18n="ord.staff">👥 พนักงาน &amp; เขต</div>
+    <div class="sub-tab" onclick="showSubTab(this,'ord-bills');renderOrdBills()" data-i18n="ord.bills">🧾 จำนวนบิล</div>
+    <div class="sub-tab" onclick="showSubTab(this,'ord-checklist');renderOrdChecklist()" data-i18n="ord.checklist">✅ เช็คลิสลูกค้า</div>
+    <div class="sub-tab" onclick="showSubTab(this,'ord-errors');renderOrdErrors()" data-i18n="ord.errors">⚠️ ความผิดพลาด &amp; เคลม</div>
+    <div class="sub-tab" onclick="showSubTab(this,'ord-calls');renderOrdCalls()" data-i18n="ord.calls">📞 การโทรลูกค้า</div>
+    <div class="sub-tab" onclick="showSubTab(this,'ord-manual');renderOrdManual()" data-i18n="ord.manual">📖 คู่มือการทำงาน</div>
+    <div class="sub-tab" data-min="manager" onclick="showSubTab(this,'ord-perf');renderOrdPerf()" data-i18n="ord.perf">📊 ผลงานรายคน</div>
+  </div>
+
+  <!-- ---- Sub-tab 1: พนักงาน & เขต ---- -->
+  <div id="ord-staff" class="sub-section active">
+    <div class="kpi-grid" id="ordStaffKPI"></div>
+    <div class="card">
+      <div class="card-title">👤 พนักงานธุรการขาย / ศูนย์รับออเดอร์</div>
+      <div id="ordStaffCards" class="ord-staff-grid"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">🗺️ เส้นทาง/เขต × วันคีย์ออเดอร์ × ผู้รับผิดชอบ</div>
+      <div class="team-controls-row" style="margin-bottom:10px">
+        <input type="text" id="ordRouteSearch" class="team-search" placeholder="🔍 ค้นหา เส้นทาง / ภาค / ผู้รับผิดชอบ / รหัสเซล..." oninput="renderOrdRoutes()">
+      </div>
+      <div class="table-wrap">
+        <table id="ordRoutesTable" data-sheet="เส้นทาง-เขต">
+          <thead><tr><th>เส้นทาง (Route)</th><th>วันคีย์ออเดอร์</th><th>ภาค</th><th>รหัสเซล</th><th>ผู้รับผิดชอบ</th></tr></thead>
+          <tbody id="ordRoutesTBody"></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">⏰ รอบรับออเดอร์รายวัน (Cut-off)</div>
+      <div id="ordCutoff" class="ord-cutoff-grid"></div>
+    </div>
+  </div>
+
+  <!-- ---- Sub-tab 2: จำนวนบิล ---- -->
+  <div id="ord-bills" class="sub-section">
+    <div class="kpi-grid" id="ordBillsKPI"></div>
+    <div class="card">
+      <div class="card-title">📈 จำนวนบิลรายวัน</div>
+      <div class="ord-filter-row">
+        <div class="filter-months" id="ordBillMonthTabs">
+          <div class="fmtab active" data-m="5" onclick="ordSelectBillMonth(5,this)">พ.ค. 2569</div>
+          <div class="fmtab" data-m="6" onclick="ordSelectBillMonth(6,this)">มิ.ย. 2569</div>
+        </div>
+        <label class="ord-sel-label">พนักงาน:
+          <select id="ordBillPerson" class="ord-select" onchange="renderOrdBillDaily()">
+            <option value="all">รวมทุกคน</option>
+          </select>
+        </label>
+      </div>
+      <div class="chart-wrap h320"><canvas id="ordBillDailyChart"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">📊 จำนวนบิลรายเดือนต่อคน (มี.ค.–มิ.ย. 2569)</div>
+      <div class="chart-wrap h320"><canvas id="ordBillMonthlyChart"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">📋 ตารางบิล/ชิ้น รายคนรายเดือน</div>
+      <div class="table-wrap">
+        <table id="ordBillSummaryTable" data-sheet="บิลรายเดือน">
+          <thead><tr><th>พนักงาน</th><th>ชื่อเล่น</th><th>เขต/โซน</th><th>เดือน</th><th style="text-align:right">จำนวนบิล</th><th style="text-align:right">จำนวนชิ้น</th></tr></thead>
+          <tbody id="ordBillSummaryTBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ---- Sub-tab 3: เช็คลิสลูกค้า ---- -->
+  <div id="ord-checklist" class="sub-section">
+    <div class="ord-note">ℹ️ ข้อมูลเดือน <b>มี.ค. 2569 เท่านั้น</b> — สถานะ derive จากยอดบิล (ยังไม่มีระบบเช็คลิสจริง) ทุกรายการที่บันทึกคือ "สั่งซื้อ" (มียอด &gt; 0). กรณี "ไม่สั่งซื้อ" ยังไม่มีข้อมูล เพราะยังไม่มีการติดตามลูกค้าที่ไม่สั่ง</div>
+    <div class="ord-filter-row">
+      <label class="ord-sel-label">พนักงาน:
+        <select id="ordChkPerson" class="ord-select" onchange="renderOrdChecklistData()"></select>
+      </label>
+    </div>
+    <div class="kpi-grid" id="ordChkKPI"></div>
+    <div class="row cols2">
+      <div class="card">
+        <div class="card-title">🍩 สั่งซื้อ vs ไม่สั่งซื้อ</div>
+        <div class="chart-wrap h280"><canvas id="ordChkDonut"></canvas></div>
+      </div>
+      <div class="card">
+        <div class="card-title">📋 รายการเช็คลิสลูกค้า</div>
+        <div id="ordChkTableNote" class="ord-subnote"></div>
+        <div class="table-wrap ord-scroll">
+          <table id="ordChkTable" data-sheet="เช็คลิสลูกค้า">
+            <thead><tr><th>รหัสลูกค้า</th><th>ชื่อลูกค้า</th><th>ผู้ดูแล</th><th>ช่วงเวลา</th><th style="text-align:right">จำนวน (ชิ้น)</th><th>สถานะ</th></tr></thead>
+            <tbody id="ordChkTBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ---- Sub-tab 4: ความผิดพลาด & เคลม ---- -->
+  <div id="ord-errors" class="sub-section">
+    <!-- หัวข้อ 5: proxy performance (ไม่ล็อกสิทธิ์) -->
+    <div class="card">
+      <div class="card-title">📞 ตัวชี้วัดประสิทธิภาพ (ประมาณจากยอดบิล)</div>
+      <div class="ord-note">ℹ️ <b>ตัวชี้วัดโดยประมาณจากยอดบิล</b> (ยังไม่มีบันทึกการโทรติดตามจริง) — แสดงจำนวนออเดอร์/บิลที่ปิดได้รายคน และจำนวนลูกค้าที่มีบิล เป็น proxy ของ performance</div>
+      <div class="chart-wrap h300"><canvas id="ordProxyChart"></canvas></div>
+      <div class="table-wrap" style="margin-top:12px">
+        <table id="ordProxyTable" data-sheet="Proxy Performance">
+          <thead><tr><th>พนักงาน</th><th>เขต/โซน</th><th style="text-align:right">บิลปิดได้ (มิ.ย.)</th><th style="text-align:right">ชิ้น (มิ.ย.)</th><th style="text-align:right">ลูกค้าที่มีบิล (มี.ค.)</th></tr></thead>
+          <tbody id="ordProxyTBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- หัวข้อ 6: ความผิดพลาดรายคน + ตีกลับ + เคลม (manager+ เท่านั้น) -->
+    <div data-min="manager">
+      <div class="ord-note ord-note-warn">🔒 ส่วนนี้เป็นข้อมูล performance รายบุคคล — แสดงเฉพาะสิทธิ์ผู้จัดการขึ้นไป</div>
+      <div class="card">
+        <div class="card-title">⚠️ ความผิดพลาดในการทำงานรายคน (รวม เม.ย.–มิ.ย. 2569)</div>
+        <div class="chart-wrap h320"><canvas id="ordErrorChart"></canvas></div>
+      </div>
+      <div class="card">
+        <div class="card-title">📋 ตารางความผิดพลาดรายคนรายเดือน</div>
+        <div class="table-wrap">
+          <table id="ordErrorTable" data-sheet="ความผิดพลาด">
+            <thead><tr><th>พนักงาน</th><th>เขต/โซน</th><th>เดือน</th><th style="text-align:right">ไม่ส่งผลิต</th><th style="text-align:right">คีย์สินค้าผิด</th><th style="text-align:right">ตกออเดอร์</th><th style="text-align:right">บิลซ้ำ</th><th style="text-align:right">ผิดสาขา</th><th style="text-align:right">รวม</th></tr></thead>
+            <tbody id="ordErrorTBody"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">↩️ รายการสินค้าตีกลับ (Returns)</div>
+        <div class="ord-filter-row">
+          <label class="ord-sel-label">ช่วงเวลา:
+            <select id="ordReturnPeriod" class="ord-select" onchange="renderOrdReturns()"></select>
+          </label>
+        </div>
+        <div class="table-wrap ord-scroll">
+          <table id="ordReturnTable" data-sheet="รายการตีกลับ">
+            <thead><tr><th>ลำดับ</th><th>วันที่ตีกลับ</th><th>สินค้า</th><th style="text-align:right">จำนวน</th><th>สาเหตุ</th><th>เส้นทาง</th><th>ผู้รับผิดชอบ</th><th>ผู้คีย์</th><th>การจัดการ</th></tr></thead>
+            <tbody id="ordReturnTBody"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">📑 สรุปการเคลมรายเดือน (ม.ค.–เม.ย. 2569)</div>
+        <div class="row cols2">
+          <div class="chart-wrap h260"><canvas id="ordClaimChart"></canvas></div>
+          <div class="table-wrap">
+            <table id="ordClaimTable" data-sheet="เคลมรายเดือน">
+              <thead><tr><th>เดือน</th><th style="text-align:right">จำนวนบิลเคลม</th></tr></thead>
+              <tbody id="ordClaimTBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ---- Sub-tab 5: การโทรลูกค้า (Customer Call) ---- -->
+  <div id="ord-calls" class="sub-section">
+    <!-- ส่วน 1: บันทึกการโทร -->
+    <div class="card">
+      <div class="ord-calls-head">
+        <div class="card-title" style="margin:0">📞 บันทึกการโทรลูกค้า</div>
+        <button class="rbac-export ord-call-add-btn" onclick="openCallModal()" title="บันทึกการโทรลูกค้าใหม่">➕ บันทึกการโทร</button>
+      </div>
+      <div class="ord-filter-row">
+        <label class="ord-sel-label">พนักงาน:
+          <select id="callLogStaff" class="ord-select" onchange="renderCallLogTable()"><option value="all">รวมทุกคน</option></select>
+        </label>
+        <label class="ord-sel-label">วันที่:
+          <input type="date" id="callLogDate" class="ord-select" onchange="renderCallLogTable()">
+        </label>
+        <button class="ord-clear-btn" onclick="callLogClearFilter()">ล้างตัวกรอง</button>
+      </div>
+      <div id="callLogNote" class="ord-subnote"></div>
+      <div class="table-wrap ord-scroll">
+        <table id="callLogTable" data-sheet="บันทึกการโทร">
+          <thead><tr><th>วันที่</th><th>พนักงาน</th><th>รหัสลูกค้า</th><th>ชื่อลูกค้า</th><th>เส้นทาง</th><th>ผลการโทร</th><th>สั่งซื้อ</th><th>ติดตามต่อ</th><th>หมายเหตุ</th><th style="text-align:center">จัดการ</th></tr></thead>
+          <tbody id="callLogTBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ส่วน 2: Dashboard การโทร -->
+    <div class="card">
+      <div class="card-title">📊 Dashboard การโทร <span class="ord-target-badge">🎯 เป้าหมาย 20 สาย/วัน/คน</span></div>
+      <div class="ord-filter-row">
+        <label class="ord-sel-label">วันที่:
+          <input type="date" id="callDashDate" class="ord-select" onchange="renderCallDashboard()">
+        </label>
+        <label class="ord-sel-label">พนักงาน:
+          <select id="callDashStaff" class="ord-select" onchange="renderCallDashboard()"><option value="all">ทั้งทีม</option></select>
+        </label>
+      </div>
+      <div class="kpi-grid" id="callDashKPI"></div>
+      <div class="chart-wrap h320"><canvas id="callDashChart"></canvas></div>
+      <div class="table-wrap" style="margin-top:12px">
+        <table id="callDashTable" data-sheet="สรุปการโทร">
+          <thead><tr><th>พนักงาน</th><th style="text-align:right">เป้าหมาย</th><th style="text-align:right">โทรแล้ว</th><th style="text-align:right">ปิดการขาย</th><th style="text-align:right">Conversion</th><th style="text-align:right">%บรรลุเป้า</th></tr></thead>
+          <tbody id="callDashTBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ส่วน 3: สถานะรอบเช็คล่าสุดจริง (reference) -->
+    <div class="card">
+      <div class="card-title">🗂️ สถานะรอบเช็คล่าสุดจริง (อ้างอิงจาก Check List)</div>
+      <div class="ord-note">ℹ️ ข้อมูลจากรอบเช็คลูกค้าล่าสุดของแต่ละเส้นทาง (ไม่ใช่บันทึกการโทรด้านบน) — ใช้เป็นข้อมูลอ้างอิงว่ารอบล่าสุดลูกค้าสั่ง/ไม่สั่ง/ต้องติดตามกี่ราย</div>
+      <div class="table-wrap ord-scroll">
+        <table id="callRefTable" data-sheet="รอบเช็คล่าสุด">
+          <thead><tr><th>เส้นทาง (Route)</th><th>วันที่รอบเช็ค</th><th style="text-align:right">ลูกค้า</th><th style="text-align:right">สั่งซื้อ</th><th style="text-align:right">ไม่สั่งซื้อ</th><th style="text-align:right">ติดตามต่อ</th></tr></thead>
+          <tbody id="callRefTBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ---- Sub-tab: คู่มือการทำงาน ---- -->
+  <div id="ord-manual" class="sub-section"></div>
+
+  <!-- ---- Sub-tab 6: Performance รายคน (ranking + detail) ---- -->
+  <div id="ord-perf" class="sub-section">
+    <div data-min="manager">
+      <div class="ord-note ord-note-warn">🔒 ส่วนนี้เป็นการเปรียบเทียบ performance รายบุคคล — แสดงเฉพาะสิทธิ์ผู้จัดการขึ้นไป</div>
+      <div class="ord-note">ℹ️ ระบบ<b>ไม่มีข้อมูล "ยอดขาย (บาท)" และ "ลูกค้าใหม่" รายคน</b> — แสดงเฉพาะตัวชี้วัดที่มีจริง: จำนวนบิล, จำนวนชิ้น, จำนวนโทร, ปิดการขาย, Conversion% (จากบันทึกการโทร) และข้อผิดพลาด/เคลม</div>
+
+      <!-- ตัวกรองช่วงเวลาของ sub-tab นี้เอง (context-aware) -->
+      <div class="card">
+        <div class="ord-filter-row">
+          <div class="filter-months" id="ordPerfModeTabs">
+            <div class="fmtab" data-mode="month" onclick="ordPerfSetMode('month',this)">รายเดือน</div>
+            <div class="fmtab" data-mode="3m" onclick="ordPerfSetMode('3m',this)">3 เดือน</div>
+            <div class="fmtab active" data-mode="ytd" onclick="ordPerfSetMode('ytd',this)">ทั้งหมด (YTD)</div>
+            <div class="fmtab" data-mode="range" onclick="ordPerfSetMode('range',this)">กำหนดช่วงวันที่เอง</div>
+          </div>
+          <label class="ord-sel-label" id="ordPerfMonthWrap" style="display:none">เดือน:
+            <select id="ordPerfPeriod" class="ord-select" onchange="ordPerfSetPeriod()">
+              <option value="2569-03">มี.ค. 2569</option>
+              <option value="2569-04">เม.ย. 2569</option>
+              <option value="2569-05">พ.ค. 2569</option>
+              <option value="2569-06" selected>มิ.ย. 2569</option>
+            </select>
+          </label>
+          <span id="ordPerfRangeWrap" style="display:none">
+            <label class="ord-sel-label">จาก
+              <input type="date" id="ordPerfStart" class="ord-select" min="2026-05-01" max="2026-06-30" value="2026-05-01" onchange="ordPerfSetRange()">
+            </label>
+            <label class="ord-sel-label">ถึง
+              <input type="date" id="ordPerfEnd" class="ord-select" min="2026-05-01" max="2026-06-30" value="2026-06-30" onchange="ordPerfSetRange()">
+            </label>
+          </span>
+        </div>
+        <div id="ordPerfLabel" class="ord-subnote"></div>
+      </div>
+
+      <!-- Ranking Dashboard (เปรียบเทียบทุกคน) -->
+      <div class="kpi-grid" id="ordPerfTeamKPI"></div>
+      <div class="card">
+        <div class="ord-perf-rank-head">
+          <div class="card-title" style="margin:0">🏆 จัดอันดับผลงานธุรการขาย</div>
+          <label class="ord-sel-label">เรียงตาม:
+            <select id="ordPerfSort" class="ord-select" onchange="ordPerfSetSort(this.value)">
+              <option value="bills">จำนวนบิล</option>
+              <option value="pieces">จำนวนชิ้น</option>
+              <option value="calls">จำนวนโทร</option>
+              <option value="closed">ปิดการขาย</option>
+              <option value="conv">Conversion %</option>
+              <option value="errors">ข้อผิดพลาด</option>
+            </select>
+          </label>
+        </div>
+        <div class="ord-subnote">💡 คลิกชื่อพนักงานในตารางเพื่อดูรายละเอียดเชิงลึกด้านล่าง</div>
+        <div class="table-wrap">
+          <table id="ordPerfRankTable" data-sheet="Performance รายคน">
+            <thead><tr><th>อันดับ</th><th>พนักงาน</th><th>เขต/โซน</th><th style="text-align:right">บิล</th><th style="text-align:right">ชิ้น</th><th style="text-align:right">โทร</th><th style="text-align:right">ปิดการขาย</th><th style="text-align:right">Conversion</th><th style="text-align:right">ข้อผิดพลาด</th></tr></thead>
+            <tbody id="ordPerfRankTBody"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="row cols2">
+        <div class="card">
+          <div class="card-title">📊 จำนวนบิลรายคน</div>
+          <div class="chart-wrap h320"><canvas id="ordPerfRankBillChart"></canvas></div>
+        </div>
+        <div class="card">
+          <div class="card-title">🎯 Conversion Rate รายคน <span class="ord-subnote">(จากบันทึกการโทร)</span></div>
+          <div class="chart-wrap h320"><canvas id="ordPerfRankConvChart"></canvas></div>
+        </div>
+      </div>
+
+      <!-- Performance Detail รายบุคคล -->
+      <div class="card">
+        <div class="ord-perf-rank-head">
+          <div class="card-title" style="margin:0">👤 เจาะรายบุคคล</div>
+          <label class="ord-sel-label">พนักงาน:
+            <select id="ordPerfPerson" class="ord-select" onchange="ordPerfDetailChange()"></select>
+          </label>
+        </div>
+        <div class="kpi-grid" id="ordPerfDetailKPI"></div>
+        <div class="chart-wrap h320"><canvas id="ordPerfDetailChart"></canvas></div>
+        <div class="ord-subnote" style="margin-top:10px">ℹ️ ตารางด้านล่างแสดงรายเดือนเต็มเดือน (มี.ค.–มิ.ย. 2569) เป็นบริบท — KPI/กราฟด้านบนอิงตามช่วงเวลาที่เลือก</div>
+        <div class="table-wrap">
+          <table id="ordPerfDetailTable" data-sheet="Performance รายบุคคล">
+            <thead><tr><th>เดือน</th><th style="text-align:right">บิล</th><th style="text-align:right">ชิ้น</th><th style="text-align:right">โทร</th><th style="text-align:right">ปิดการขาย</th><th style="text-align:right">Conversion</th><th style="text-align:right">ข้อผิดพลาด</th></tr></thead>
+            <tbody id="ordPerfDetailTBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
+
+<!-- ===== KPI / Forecast ===== -->
+<div id="tab-kpi" class="section">
+  <div class="sub-tabs">
+    <div class="sub-tab active" onclick="showSubTab(this,'kpi-overview');renderKpiOverview()" data-i18n="kpi.overview">🎯 KPI รวม</div>
+    <div class="sub-tab" onclick="showSubTab(this,'kpi-dept');renderKpiDept()" data-i18n="kpi.dept">📊 KPI แต่ละแผนก</div>
+  </div>
+
+  <!-- KPI รวม -->
+  <div id="kpi-overview" class="sub-section active">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:16px" id="kpiOverviewCards"></div>
+    <div class="card"><div class="card-title">📊 Achievement รายช่องทาง</div><div class="table-wrap" style="margin-top:12px"><div id="kpiOverviewTable"></div></div></div>
+    <div class="card" style="margin-top:16px"><div class="card-title">📈 Trend ยอดขายรวม vs เป้า (รายเดือน)</div><div style="position:relative;height:300px;margin-top:12px"><canvas id="kpiTrendChart"></canvas></div></div>
+  </div>
+
+  <!-- KPI แต่ละแผนก -->
+  <div id="kpi-dept" class="sub-section">
+    <div style="margin-bottom:12px;display:flex;gap:8px;align-items:center">
+      <span style="font-size:13px;font-weight:600;color:#64748b">เลือกแผนก:</span>
+      <select id="kpiDeptSel" class="ord-select" onchange="renderKpiDept()">
+        <option value="mt">ห้างค้าปลีก</option>
+        <option value="amazon">อเมซอน & ของฝาก</option>
+        <option value="booth">บูธ</option>
+        <option value="online">ออนไลน์</option>
+      </select>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:16px" id="kpiDeptCards"></div>
+    <div class="card"><div class="card-title" id="kpiDeptTitle">📊 KPI รายพนักงาน</div><div class="table-wrap" style="margin-top:12px"><div id="kpiDeptTable"></div></div></div>
+  </div>
+
+  <!-- Forecast / Revised -->
+  <div id="kpi-forecast" class="sub-section">
+    <div style="margin-bottom:12px;display:flex;gap:8px;align-items:center">
+      <span style="font-size:13px;font-weight:600;color:#64748b">ช่องทาง:</span>
+      <select id="kpiFcSel" class="ord-select" onchange="renderKpiForecast()">
+        <option value="all">ทุกช่องทาง</option>
+        <option value="Modern Trade">Modern Trade</option>
+        <option value="Amazon & Souvenir">Amazon & Souvenir</option>
+        <option value="Booth">Booth</option>
+        <option value="Online">Online</option>
+      </select>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px" id="kpiFcCards"></div>
+    <div class="card"><div class="card-title">📅 Forecast vs Revised vs Actual (รายเดือน)</div><div class="table-wrap" style="margin-top:12px"><div id="kpiFcTable"></div></div></div>
+    <div class="card" style="margin-top:16px"><div class="card-title">📈 กราฟเปรียบเทียบ</div><div style="position:relative;height:300px;margin-top:12px"><canvas id="kpiFcChart"></canvas></div></div>
+    <div id="kpiFcMtDetail" style="margin-top:16px"></div>
+  </div>
+</div>
+
+<!-- ===== CRM ===== -->
+<div id="tab-crm" class="section">
+  <div class="sub-tabs">
+    <div class="sub-tab active" onclick="showSubTab(this,'crm-overview');renderCrmOverview()" data-i18n="crm.overview">📋 ภาพรวม</div>
+    <div class="sub-tab" onclick="showSubTab(this,'crm-mt');renderCrmChannel('mt')" data-i18n="crm.mt">🏪 ห้างค้าปลีก</div>
+    <div class="sub-tab" onclick="showSubTab(this,'crm-amazon');renderCrmChannel('amazon')" data-i18n="crm.amazon">📦 อเมซอน</div>
+    <div class="sub-tab" onclick="showSubTab(this,'crm-booth');renderCrmChannel('booth')" data-i18n="crm.booth">🏕️ บูธ</div>
+    <div class="sub-tab" onclick="showSubTab(this,'crm-online');renderCrmChannel('online')" data-i18n="crm.online">🛒 ออนไลน์</div>
+    <div class="sub-tab" onclick="showSubTab(this,'crm-telesales');renderCrmChannel('telesales')" data-i18n="crm.telesales">📞 โทรขาย</div>
+  </div>
+
+  <!-- CRM ภาพรวม -->
+  <div id="crm-overview" class="sub-section active">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:16px" id="crmOverviewCards"></div>
+    <div class="card"><div class="card-title">🔄 ท่อส่งการขาย</div><div id="crmPipeline" style="margin-top:12px"></div></div>
+    <div class="card" style="margin-top:16px"><div class="card-title">📅 กิจกรรมล่าสุด</div><div id="crmActivityLog" style="margin-top:12px"></div></div>
+  </div>
+
+  <!-- CRM per channel -->
+  <div id="crm-mt" class="sub-section">
+    <div id="crmMtContent"></div>
+  </div>
+  <div id="crm-amazon" class="sub-section">
+    <div id="crmAmazonContent"></div>
+  </div>
+  <div id="crm-booth" class="sub-section">
+    <div id="crmBoothContent"></div>
+  </div>
+  <div id="crm-online" class="sub-section">
+    <div id="crmOnlineContent"></div>
+  </div>
+  <div id="crm-telesales" class="sub-section">
+    <div id="crmTelesalesContent"></div>
+  </div>
+</div>
+
+<!-- ===== แผงแอดมิน (Master Data) — ข้อ 4 ===== -->
+<!-- ทั้งแท็บครอบด้วย data-min="admin": viewer/sales/manager ไม่เห็น -->
+<div id="tab-admin" class="section" data-min="admin">
+  <div class="sub-tabs">
+    <div class="sub-tab active" onclick="showSubTab(this,'adm-staff');renderAdminStaff()">👥 พนักงาน</div>
+    <div class="sub-tab" onclick="showSubTab(this,'adm-prod');renderAdminProd()">📦 สินค้า</div>
+    <div class="sub-tab" onclick="showSubTab(this,'adm-sales');renderAdminSales()">💰 ยอดขาย</div>
+    <div class="sub-tab" onclick="showSubTab(this,'adm-roles');renderAdminRoles()">🔐 ผู้ใช้/สิทธิ์</div>
+    <div class="sub-tab" onclick="showSubTab(this,'adm-leave');renderAdminLeave()">📅 วันหยุด</div>
+    <div class="sub-tab" onclick="showSubTab(this,'adm-guide')">📖 คู่มือ</div>
+    <div class="sub-tab" onclick="showSubTab(this,'adm-complaints');renderAdminComplaints()">📋 ปัญหาจากลูกค้า</div>
+    <div class="sub-tab" onclick="showSubTab(this,'adm-sm-sales');renderAdmSmExpenses('sales')" data-i18n="adm.sm.sales">💼 ค่าใช้จ่ายเซลล์</div>
+    <div class="sub-tab" onclick="showSubTab(this,'adm-sm-fda');renderAdmSmExpenses('fda')" data-i18n="adm.sm.fda">🏷️ ค่าจดทะเบียน อ.ย.</div>
+    <div class="sub-tab" onclick="showSubTab(this,'adm-sm-sample');renderAdmSmExpenses('sample')" data-i18n="adm.sm.sample">🧪 ค่าสินค้าตัวอย่าง</div>
+    <div class="sub-tab" onclick="showSubTab(this,'adm-sm-supply');renderAdmSmExpenses('supply')" data-i18n="adm.sm.supply">📦 ของใช้ในแผนก</div>
+    <div class="sub-tab" onclick="showSubTab(this,'adm-target');renderAdminTarget()">🎯 เป้าหมาย 2026</div>
+    <div class="sub-tab" onclick="showSubTab(this,'adm-calllog');renderAdminCallLog()">📞 ข้อมูลการโทร</div>
+  </div>
+
+  <div class="admin-banner">⚙️ แผงจัดการข้อมูลหลัก (Master Data) — การแก้ไขจะถูกเก็บเป็น override ใน localStorage แล้ว merge ทับข้อมูลตั้งต้นตอนโหลด ทุกชุดข้อมูลมีปุ่ม "รีเซ็ตกลับค่าเดิม"</div>
+
+  <!-- ---- 1) จัดการพนักงาน ---- -->
+  <div id="adm-staff" class="sub-section active">
+    <div class="card">
+      <div class="admin-card-head">
+        <div class="card-title">👥 จัดการพนักงาน (SM_STAFF_DB)</div>
+        <div class="admin-actions">
+          <button class="admin-btn add" onclick="adminAddStaff()">➕ เพิ่มพนักงาน</button>
+          <button class="admin-btn" onclick="adminDownloadStaff()" style="background:#2563eb;color:#fff">⬇️ ดาวน์โหลด CSV</button>
+          <button class="admin-btn reset" onclick="adminResetStaff()">↺ รีเซ็ตกลับค่าเดิม</button>
+        </div>
+      </div>
+      <div class="admin-note" id="adminStaffNote"></div>
+      <div class="table-wrap"><div id="adminStaffTable"></div></div>
+    </div>
+  </div>
+
+  <!-- ---- 2) จัดการสินค้า ---- -->
+  <div id="adm-prod" class="sub-section">
+    <div class="card">
+      <div class="admin-card-head">
+        <div class="card-title">📦 จัดการสินค้า (PRODUCTS)</div>
+        <div class="admin-actions" style="flex-wrap:wrap;gap:8px">
+          <label class="admin-sel-label">ช่องทาง:
+            <select id="adminProdChannel" class="ord-select" onchange="renderAdminProd()"></select>
+          </label>
+          <button class="admin-btn" onclick="openAddProdModal()" style="background:#22c55e;color:#fff">➕ เพิ่มสินค้า</button>
+          <button class="admin-btn" onclick="adminDownloadProd()" style="background:#2563eb;color:#fff">⬇️ ดาวน์โหลด CSV</button>
+          <button class="admin-btn reset" onclick="adminResetProd()">↺ รีเซ็ตกลับค่าเดิม</button>
+        </div>
+      </div>
+      <div class="admin-note" id="adminProdNote"></div>
+      <div class="table-wrap"><div id="adminProdTable"></div></div>
+    </div>
+  </div>
+
+  <!-- ---- 3) จัดการยอดขายรายเดือน ---- -->
+  <div id="adm-sales" class="sub-section">
+    <div class="card">
+      <div class="admin-card-head">
+        <div class="card-title">💰 ยอดขายรายเดือนต่อช่องทาง (CHANNEL_MONTHLY)</div>
+        <div class="admin-actions">
+          <label class="admin-sel-label">ปี:
+            <select id="adminSalesYear" class="ord-select" onchange="renderAdminSales()"></select>
+          </label>
+          <button class="admin-btn" onclick="adminDownloadSales()" style="background:#2563eb;color:#fff">⬇️ ดาวน์โหลด CSV</button>
+          <button class="admin-btn reset" onclick="adminResetSales()">↺ รีเซ็ตกลับค่าเดิม</button>
+        </div>
+      </div>
+      <div class="admin-note" id="adminSalesNote"></div>
+      <div class="table-wrap"><div id="adminSalesTable"></div></div>
+    </div>
+  </div>
+
+  <!-- ---- 4) จัดการผู้ใช้ / สิทธิ์ ---- -->
+  <div id="adm-roles" class="sub-section">
+    <div class="card">
+      <div class="admin-card-head">
+        <div class="card-title">🔐 จัดการผู้ใช้ / สิทธิ์การเข้าถึง</div>
+        <div class="admin-actions">
+          <button class="admin-btn add" onclick="adminRolesAddUser()">➕ เพิ่มผู้ใช้</button>
+          <button class="admin-btn reset" onclick="adminResetRoles()">↺ รีเซ็ตกลับค่าเดิม</button>
+        </div>
+      </div>
+      <div class="admin-warn">⚠️ นี่คือระบบล็อกอินเดโมฝั่ง client — การเปลี่ยนสิทธิ์จะมีผลเมื่อผู้ใช้นั้น login ครั้งถัดไป</div>
+      <div id="adminRolesTable"></div>
+    </div>
+  </div>
+
+  <!-- ---- 5) Organization ---- -->
+  <div id="adm-org" class="sub-section">
+    <div class="card">
+      <div class="admin-card-head">
+        <div class="card-title">🏢 Organization — โครงสร้างองค์กรฝ่ายขาย</div>
+        <div class="admin-actions">
+          <button class="admin-btn" onclick="adminDownloadOrg()" style="background:#2563eb;color:#fff">⬇️ ดาวน์โหลด CSV</button>
+        </div>
+      </div>
+      <div id="adminOrgContent"></div>
+    </div>
+  </div>
+
+  <!-- ---- 6) วันหยุดพนักงาน ---- -->
+  <div id="adm-leave" class="sub-section">
+    <div class="card">
+      <div class="admin-card-head">
+        <div class="card-title">📅 จัดการวันหยุดพนักงาน</div>
+        <div class="admin-actions">
+          <button class="admin-btn add" onclick="adminLeaveAdd()">➕ ลงวันหยุด</button>
+          <button class="admin-btn" onclick="adminDownloadLeave()" style="background:#2563eb;color:#fff">⬇️ ดาวน์โหลด CSV</button>
+          <button class="admin-btn reset" onclick="adminResetLeave()">↺ รีเซ็ตข้อมูล</button>
+        </div>
+      </div>
+      <div id="adminLeaveContent"></div>
+    </div>
+  </div>
+
+
+  <!-- ---- 8) KPI รวม/ทุกแผนก ---- -->
+
+  <!-- ---- 9) Forecast / Revised ---- -->
+
+  <!-- ---- 10) คู่มือการใช้งาน ---- -->
+  <div id="adm-guide" class="sub-section">
+    <div class="card">
+      <div class="card-title">📖 คู่มือการใช้งาน — Sales Dashboard 2026</div>
+      <div style="margin-top:16px;display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px">
+        <div style="background:#eff6ff;border-radius:12px;padding:16px;border:1px solid #bfdbfe;cursor:pointer;transition:all .2s" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 4px 12px rgba(0,0,0,.08)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
+          <div style="font-size:28px;margin-bottom:8px">📊</div>
+          <div style="font-size:14px;font-weight:700;color:#1d4ed8;margin-bottom:4px">1. ภาพรวมยอดขาย</div>
+          <div style="font-size:11px;color:#64748b;line-height:1.6">ดูงบประมาณ vs จริง, กราฟรายเดือน, กรองตามช่วงเวลา, ดูตามช่องทาง/ลูกค้า/พนักงาน</div>
+        </div>
+        <div style="background:#f0fdf4;border-radius:12px;padding:16px;border:1px solid #bbf7d0;cursor:pointer;transition:all .2s" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 4px 12px rgba(0,0,0,.08)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
+          <div style="font-size:28px;margin-bottom:8px">📦</div>
+          <div style="font-size:14px;font-weight:700;color:#16a34a;margin-bottom:4px">2. รายการสินค้า</div>
+          <div style="font-size:11px;color:#64748b;line-height:1.6">ดูสินค้าปัจจุบัน, สินค้าใหม่ (NPD), สินค้ายกเลิก แยกตามช่องทาง</div>
+        </div>
+        <div style="background:#fef3c7;border-radius:12px;padding:16px;border:1px solid #fde68a;cursor:pointer;transition:all .2s" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 4px 12px rgba(0,0,0,.08)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
+          <div style="font-size:28px;margin-bottom:8px">🏪</div>
+          <div style="font-size:14px;font-weight:700;color:#b45309;margin-bottom:4px">3. ช่องทางการขาย</div>
+          <div style="font-size:11px;color:#64748b;line-height:1.6">Modern Trade, Amazon, Booth, Online — ดูรายละเอียดยอดขายแต่ละช่องทาง</div>
+        </div>
+        <div style="background:#fce7f3;border-radius:12px;padding:16px;border:1px solid #fbcfe8;cursor:pointer;transition:all .2s" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 4px 12px rgba(0,0,0,.08)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
+          <div style="font-size:28px;margin-bottom:8px">⚠️</div>
+          <div style="font-size:14px;font-weight:700;color:#be185d;margin-bottom:4px">4. ปัญหาขนม</div>
+          <div style="font-size:11px;color:#64748b;line-height:1.6">บันทึกปัญหาสินค้า, ติดตามสถานะ QA, การแก้ไข, ค่าใช้จ่าย</div>
+        </div>
+        <div style="background:#f5f3ff;border-radius:12px;padding:16px;border:1px solid #ddd6fe;cursor:pointer;transition:all .2s" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 4px 12px rgba(0,0,0,.08)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
+          <div style="font-size:28px;margin-bottom:8px">🔄</div>
+          <div style="font-size:14px;font-weight:700;color:#7c3aed;margin-bottom:4px">5. WorkFlow</div>
+          <div style="font-size:11px;color:#64748b;line-height:1.6">ดู Flow Chart, RACI Matrix, Pain Points ของ NPD, Amazon, Telesales</div>
+        </div>
+        <div style="background:#f0f9ff;border-radius:12px;padding:16px;border:1px solid #bae6fd;cursor:pointer;transition:all .2s" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 4px 12px rgba(0,0,0,.08)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
+          <div style="font-size:28px;margin-bottom:8px">⚙️</div>
+          <div style="font-size:14px;font-weight:700;color:#0369a1;margin-bottom:4px">6. แผงแอดมิน</div>
+          <div style="font-size:11px;color:#64748b;line-height:1.6">จัดการพนักงาน, สินค้า, ยอดขาย, ผู้ใช้/สิทธิ์, Organization, วันหยุด, JD, KPI, Forecast</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ---- 11) ปัญหาจากลูกค้า ---- -->
+  <div id="adm-complaints" class="sub-section" data-min="admin">
+    <div class="card">
+      <div class="admin-card-head">
+        <div class="card-title">📋 ฐานข้อมูลปัญหาจากลูกค้า (qaComplaints)</div>
+      </div>
+      <div id="adm-complaints-body"></div>
+    </div>
+  </div>
+
+  <div id="adm-sm-sales" class="sub-section" data-min="admin">
+    <div class="card"><div class="admin-card-head"><div class="card-title">💼 ค่าใช้จ่ายเซลล์ (smExpSales)</div></div><div id="adm-sm-sales-body"></div></div>
+  </div>
+  <div id="adm-sm-fda" class="sub-section" data-min="admin">
+    <div class="card"><div class="admin-card-head"><div class="card-title">🏷️ ค่าจดทะเบียน อ.ย. (smExpFda)</div></div><div id="adm-sm-fda-body"></div></div>
+  </div>
+  <div id="adm-sm-sample" class="sub-section" data-min="admin">
+    <div class="card"><div class="admin-card-head"><div class="card-title">🧪 ค่าสินค้าตัวอย่าง (smExpSample)</div></div><div id="adm-sm-sample-body"></div></div>
+  </div>
+  <div id="adm-sm-supply" class="sub-section" data-min="admin">
+    <div class="card"><div class="admin-card-head"><div class="card-title">📦 ของใช้ในแผนก (smExpSupply)</div></div><div id="adm-sm-supply-body"></div></div>
+  </div>
+
+  <!-- ---- ข้อมูลการโทร (Admin) ---- -->
+  <div id="adm-calllog" class="sub-section" data-min="admin">
+  </div>
+
+  <!-- ---- Target 2026 ---- -->
+  <div id="adm-target" class="sub-section" data-min="admin">
+    <div class="card">
+      <div class="admin-card-head">
+        <div class="card-title">🎯 Target 2026 — เป้าหมายยอดขายทุกช่องทาง</div>
+      </div>
+      <div class="admin-note">ข้อมูลจากไฟล์ Target 2026.xlsx — แสดงเป้าหมายรายเดือนทุกช่องทางการขาย</div>
+      <div id="adminTargetBody"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Admin modal กลาง (ใช้แก้ไข/เพิ่มระเบียน) -->
+<div id="adminModal" class="admin-modal-overlay" style="display:none">
+  <div class="admin-modal">
+    <div class="admin-modal-head">
+      <span id="adminModalTitle">แก้ไข</span>
+      <button class="admin-modal-x" onclick="adminModalClose()">✕</button>
+    </div>
+    <div class="admin-modal-body" id="adminModalBody"></div>
+    <div class="admin-modal-foot">
+      <button class="admin-btn" onclick="adminModalClose()">ยกเลิก</button>
+      <button class="admin-btn add" id="adminModalSave">บันทึก</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== QUALITY (คุณภาพสินค้า) ===== -->
+<div id="tab-quality" class="section">
+  <div class="sub-tabs">
+    <div class="sub-tab active" onclick="showSubTab(this,'qa-overview');renderQaOverview()">📊 ภาพรวมคุณภาพ</div>
+    <div class="sub-tab" onclick="showSubTab(this,'qa-complaint');renderQaComplaint()">⚠️ ประเภทปัญหา</div>
+    <div class="sub-tab" onclick="showSubTab(this,'qa-product');renderQaProduct()">📦 ตามสินค้า</div>
+    <div class="sub-tab" onclick="showSubTab(this,'qa-lot');renderQaLot()">🏭 ตามล็อต</div>
+    <div class="sub-tab" onclick="showSubTab(this,'qa-process');renderQaProcess()">⚙️ ตามกระบวนการ</div>
+    <div class="sub-tab" onclick="showSubTab(this,'qa-material');renderQaMaterial()">🧪 ตามวัตถุดิบ</div>
+    <div class="sub-tab" onclick="showSubTab(this,'qa-customer');renderQaCustomer()">🏪 ตามลูกค้า</div>
+    <div class="sub-tab" onclick="showSubTab(this,'qa-geo');renderQaGeo()">📍 ตามพื้นที่</div>
+    <div class="sub-tab" onclick="showSubTab(this,'qa-rca');renderQaRca()">🔬 สาเหตุรากเหง้า</div>
+    <div class="sub-tab" onclick="showSubTab(this,'qa-capa');renderQaCapa()">📋 การแก้ไข/ป้องกัน</div>
+    <div class="sub-tab" onclick="showSubTab(this,'qa-form');renderQaForm()">📝 แจ้งปัญหาใหม่</div>
+  </div>
+
+  <!-- Filter bar สำหรับกรองข้อมูลตามปี/เดือน -->
+  <div class="qa-filter-bar">
+    <span class="filter-label">กรองข้อมูล:</span>
+    <label class="qa-filter-label" for="qaFilterYear">ปี</label>
+    <select id="qaFilterYear" class="qa-filter-select" onchange="qaApplyFilter()">
+      <option value="all">ทั้งหมด</option>
+      <option value="2568">2568</option>
+      <option value="2569">2569</option>
+    </select>
+    <label class="qa-filter-label" for="qaFilterMonth">เดือน</label>
+    <select id="qaFilterMonth" class="qa-filter-select" onchange="qaApplyFilter()">
+      <option value="all">ทั้งหมด</option>
+      <option value="1">ม.ค.</option>
+      <option value="2">ก.พ.</option>
+      <option value="3">มี.ค.</option>
+      <option value="4">เม.ย.</option>
+      <option value="5">พ.ค.</option>
+      <option value="6">มิ.ย.</option>
+      <option value="7">ก.ค.</option>
+      <option value="8">ส.ค.</option>
+      <option value="9">ก.ย.</option>
+      <option value="10">ต.ค.</option>
+      <option value="11">พ.ย.</option>
+      <option value="12">ธ.ค.</option>
+    </select>
+    <span id="qaFilterStatus" class="qa-filter-status">แสดงข้อมูล: ทุกปี ทุกเดือน</span>
+  </div>
+
+  <div id="qa-overview" class="sub-section active"></div>
+  <div id="qa-complaint" class="sub-section"></div>
+  <div id="qa-product" class="sub-section"></div>
+  <div id="qa-lot" class="sub-section"></div>
+  <div id="qa-process" class="sub-section"></div>
+  <div id="qa-material" class="sub-section"></div>
+  <div id="qa-customer" class="sub-section"></div>
+  <div id="qa-geo" class="sub-section"></div>
+  <div id="qa-rca" class="sub-section"></div>
+  <div id="qa-capa" class="sub-section"></div>
+  <div id="qa-form" class="sub-section"></div>
+</div><!-- /tab-quality -->
+
+<!-- ===== ฝ่ายขาย - การตลาด: ค่าใช้จ่าย ===== -->
+<div id="tab-sm-expense" class="section">
+  <!-- Level-1: 8 main menus -->
+  <div class="sub-tabs" id="smMainTabs">
+    <div class="sub-tab active" onclick="smSelectMain(this,'sm-products')" data-i18n="sm.products">📋 รายการสินค้า</div>
+    <div class="sub-tab" onclick="smSelectMain(this,'sm-quality')" data-i18n="sm.quality">🔍 คุณภาพสินค้า</div>
+    <div class="sub-tab" onclick="smSelectMain(this,'sm-workflow')" data-i18n="sm.workflow">🔄 ขั้นตอนการทำงาน</div>
+    <div class="sub-tab" onclick="smSelectMain(this,'sm-performance')" data-i18n="sm.performance">📈 ผลงานเซลล์</div>
+    <div class="sub-tab" onclick="smSelectMain(this,'sm-kpi')" data-i18n="sm.kpi">🎯 ตัวชี้วัด</div>
+    <div class="sub-tab" onclick="smSelectMain(this,'sm-expense')" data-i18n="sm.expense">💼 ค่าใช้จ่าย</div>
+    <div class="sub-tab" onclick="smSelectMain(this,'sm-leave')" data-i18n="sm.leave">📅 ลงวันหยุด</div>
+    <div class="sub-tab" onclick="smSelectMain(this,'sm-hr')" data-i18n="sm.hr">👥 ข้อมูลบุคลากร</div>
+    <div class="sub-tab" onclick="smSelectMain(this,'sm-delist')" data-i18n="sm.delist">⚠️ สินค้าเสี่ยงถอด</div>
+    <div class="sub-tab" onclick="smSelectMain(this,'sm-jd')" data-i18n="sm.jd">📋 รายละเอียดงาน</div>
+  </div>
+  <!-- Level-2: sub-tabs (built dynamically) -->
+  <div class="sub-tabs sm-sub-tabs" id="smSubTabs" style="background:#fff7ed;border-bottom:2px solid #f97316"></div>
+
+  <!-- All sub-sections -->
+  <!-- 1. รายการสินค้า -->
+  <div id="sm-products" class="sub-section active"></div>
+
+  <!-- 2. คุณภาพสินค้า -->
+  <div id="sm-quality" class="sub-section"></div>
+
+  <!-- 3. Work Flow -->
+  <div id="sm-workflow" class="sub-section"></div>
+
+  <!-- 4. Performance Sales -->
+  <div id="sm-perf-mt" class="sub-section"></div>
+  <div id="sm-perf-booth" class="sub-section"></div>
+  <div id="sm-perf-online" class="sub-section"></div>
+  <div id="sm-perf-amazon" class="sub-section"></div>
+  <div id="sm-perf-oc" class="sub-section"></div>
+
+  <!-- 6. KPI -->
+  <div id="sm-kpi" class="sub-section"></div>
+
+  <!-- 7. ค่าใช้จ่าย -->
+  <div id="sm-summary" class="sub-section"><div id="ovExpContent"></div></div>
+  <div id="sm-exp-sales" class="sub-section"></div>
+  <div id="sm-fda" class="sub-section"></div>
+  <div id="sm-sample" class="sub-section"></div>
+  <div id="sm-supply" class="sub-section"></div>
+
+  <!-- 8. ลงวันหยุด -->
+  <div id="sm-leave-dashboard" class="sub-section"></div>
+  <div id="sm-leave-calendar" class="sub-section"></div>
+  <div id="sm-leave-form" class="sub-section"></div>
+
+  <!-- 9. ข้อมูลบุคลากร -->
+  <div id="sm-hr-org" class="sub-section"></div>
+  <div id="sm-hr-data" class="sub-section"></div>
+
+  <!-- 10. ข้อมูลลูกค้า -->
+  <div id="sm-cust-mt" class="sub-section"></div>
+  <div id="sm-cust-amazon" class="sub-section"></div>
+  <div id="sm-cust-booth" class="sub-section"></div>
+  <div id="sm-cust-online" class="sub-section"></div>
+
+  <!-- 11. สินค้าเสี่ยงถอด -->
+  <div id="sm-delist-form" class="sub-section"></div>
+  <div id="sm-delist-list" class="sub-section"></div>
+  <div id="sm-delist-dash" class="sub-section"></div>
+
+  <!-- 12. JD -->
+  <div id="sm-jd" class="sub-section"><div id="smJdContainer"></div></div>
+</div><!-- /tab-sm-expense -->
+
+</main><!-- /contentArea -->
+  </div><!-- /app-body -->
+</div><!-- /app-shell -->
 
 <button id="scrollTopBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="กลับด้านบน">▲</button>
 <button id="scrollBotBtn" onclick="window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'})" title="ลงด้านล่าง">▼</button>
 
+<script src="js/staff-data.js"></script>
+<script src="js/ordering-data.js"></script>
+<script src="js/amazon-customers.js"></script>
+<script src="js/amz-visit-tracker.js"></script>
+<script src="js/amz-branches.js"></script>
+<script src="js/bc-branches.js"></script>
+<script src="js/amz-order-data.js"></script>
+<script src="js/amz-portal.js?v=20260727"></script>
+<script src="js/call-log.js"></script>
+<script src="js/ord-manual.js"></script>
+<script src="js/customers-data.js"></script>
+<script src="js/img-store.js"></script>
+<script src="js/sales-data-gen.js"></script>
+<script src="js/order-list-gen.js"></script>
+<script src="js/cj-compensate.js"></script>
+<script src="js/quality.js"></script>
+<script src="js/quality-form.js"></script>
+<script src="js/sales-expense.js"></script>
+<script src="js/delist.js"></script>
+<script src="js/cj-branches.js"></script>
+<script src="js/bigc-branches.js"></script>
+<script src="js/tops-branches.js"></script>
+<script src="js/mall-branches.js"></script>
+<script src="js/makro-branches.js"></script>
+<script src="js/aeon-branches.js"></script>
+<script src="js/target-data.js"></script>
 <script src="js/app.js"></script>
+<script src="js/forecast-data.js"></script>
+<script src="js/mt-bi.js"></script>
+<script src="js/export.js"></script>
+<!-- Shell: Sidebar + TopBar navigation (config-driven + RBAC). โหลดหลัง app.js เพราะ reuse showTab/updateTabBells -->
+<script src="js/kpi-crm.js"></script>
+<script src="js/shell.js"></script>
+<script src="js/i18n.js"></script>
+<script>
+  // เติมข้อมูลผู้ใช้บน header + บังคับ RBAC หลัง DOM + app.js พร้อม
+  (function () {
+    var s = window.__spbiSession || (typeof getSession === 'function' && getSession());
+    if (!s) return; // ไม่มี session (ปกติ requireAuth เด้งออกไปแล้ว)
+    var nameEl = document.getElementById('userBadgeName');
+    var roleEl = document.getElementById('userBadgeRole');
+    if (nameEl) nameEl.textContent = s.name || s.email;
+    if (roleEl) roleEl.textContent = (typeof _t === 'function') ? _t('role.' + s.role) : ((window.ROLE_LABEL_TH && ROLE_LABEL_TH[s.role]) || s.role);
+    if (typeof applyRBAC === 'function') applyRBAC(s.role);
+  })();
+</script>
 </body>
 </html>
