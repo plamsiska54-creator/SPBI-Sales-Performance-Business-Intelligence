@@ -222,14 +222,20 @@ function mtSetPeriod(type, btnEl) {
   if (type === 'quarter') {
     if (qBtn) { qBtn.classList.add('active'); document.getElementById('mtQuarterLabel').textContent = '📆 ' + _mtPeriod.label; }
     if (yBtn) { yBtn.classList.remove('active'); document.getElementById('mtYearLabel').textContent = '📅 รายปี'; }
+    var mBtn2 = document.getElementById('mtMonthDropBtn');
+    if (mBtn2) { mBtn2.classList.remove('active'); document.getElementById('mtMonthLabel').textContent = '📅 รายเดือน'; }
   } else if (type === 'year') {
     var thaiY = _mtPeriod.year + 543;
     if (yBtn) { yBtn.classList.add('active'); document.getElementById('mtYearLabel').textContent = '📅 ปี ' + thaiY; }
     if (qBtn) { qBtn.classList.remove('active'); document.getElementById('mtQuarterLabel').textContent = '📆 รายไตรมาส'; }
+    var mBtn3 = document.getElementById('mtMonthDropBtn');
+    if (mBtn3) { mBtn3.classList.remove('active'); document.getElementById('mtMonthLabel').textContent = '📅 รายเดือน'; }
   } else {
     if (btnEl) btnEl.classList.add('active');
     if (qBtn) { qBtn.classList.remove('active'); document.getElementById('mtQuarterLabel').textContent = '📆 รายไตรมาส'; }
     if (yBtn) { yBtn.classList.remove('active'); document.getElementById('mtYearLabel').textContent = '📅 รายปี'; }
+    var mBtn = document.getElementById('mtMonthDropBtn');
+    if (mBtn) { mBtn.classList.remove('active'); document.getElementById('mtMonthLabel').textContent = '📅 รายเดือน'; }
   }
 
   // Update label
@@ -330,6 +336,47 @@ function mtPickYear(yr, el) {
   if (el) el.classList.add('active');
   document.getElementById('mtYearSelect').value = String(yr);
   mtSetPeriod('year', null);
+}
+
+// ===== Month dropdown =====
+function mtToggleMoMenu() {
+  var m = document.getElementById('mtMonthMenu');
+  if (m.style.display !== 'none') { m.style.display = 'none'; return; }
+  m.style.display = 'block';
+  document.getElementById('mtQuarterMenu').style.display = 'none';
+  document.getElementById('mtYearMenu').style.display = 'none';
+  setTimeout(function () { document.addEventListener('click', _mtCloseMoMenu); }, 0);
+}
+function _mtCloseMoMenu(e) {
+  var d = document.getElementById('mtMonthDropdown');
+  if (d && !d.contains(e.target)) {
+    document.getElementById('mtMonthMenu').style.display = 'none';
+    document.removeEventListener('click', _mtCloseMoMenu);
+  }
+}
+function mtPickMonth(mo, el) {
+  document.getElementById('mtMonthMenu').style.display = 'none';
+  document.removeEventListener('click', _mtCloseMoMenu);
+  var items = document.querySelectorAll('#mtMonthMenu .qmenu-item');
+  items.forEach(function (i) { i.classList.remove('active'); });
+  if (el) el.classList.add('active');
+  var ML = {Jan:'ม.ค.',Feb:'ก.พ.',Mar:'มี.ค.',Apr:'เม.ย.',May:'พ.ค.',Jun:'มิ.ย.',Jul:'ก.ค.',Aug:'ส.ค.',Sep:'ก.ย.',Oct:'ต.ค.',Nov:'พ.ย.',Dec:'ธ.ค.'};
+  var MI = {Jan:0,Feb:1,Mar:2,Apr:3,May:4,Jun:5,Jul:6,Aug:7,Sep:8,Oct:9,Nov:10,Dec:11};
+  var now = new Date();
+  var curY = now.getFullYear();
+  _mtPeriod = { type: 'pickmonth', year: curY, months: [MI[mo]], label: ML[mo] + ' ' + curY };
+  document.querySelectorAll('#mtPeriodFilter .fmtab').forEach(function (b) { b.classList.remove('active'); });
+  var qBtn = document.getElementById('mtQuarterDropBtn');
+  var yBtn = document.getElementById('mtYearDropBtn');
+  var mBtn = document.getElementById('mtMonthDropBtn');
+  if (qBtn) { qBtn.classList.remove('active'); document.getElementById('mtQuarterLabel').textContent = '📆 รายไตรมาส'; }
+  if (yBtn) { yBtn.classList.remove('active'); document.getElementById('mtYearLabel').textContent = '📅 รายปี'; }
+  if (mBtn) { mBtn.classList.add('active'); document.getElementById('mtMonthLabel').textContent = '📅 ' + ML[mo]; }
+  document.getElementById('mtQuarterSelect').value = '';
+  document.getElementById('mtYearSelect').value = '';
+  var lbl = document.getElementById('mtPeriodLabel');
+  if (lbl) lbl.textContent = 'กำลังแสดง: ' + _mtPeriod.label;
+  _mtPeriodRefresh();
 }
 
 // Helper: get filtered monthly data from SALES_DATA for given channel + period
@@ -3364,8 +3411,14 @@ function _mtBiRenderAI(){
   html+='<div class="card" style="background:linear-gradient(135deg,#7c3aed,#4f46e5);color:#fff;padding:24px 28px;margin-bottom:18px;border-radius:14px">';
   html+='<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px">';
   html+='<div><div style="font-size:20px;font-weight:800">🤖 วิเคราะห์ AI ⭐</div>';
-  html+='<div style="font-size:13px;opacity:.85;margin-top:4px">'+chLabel+' — วิเคราะห์อัตโนมัติจากข้อมูลจริง (YTD '+yr+')</div></div>';
+  html+='<div style="font-size:13px;opacity:.85;margin-top:4px">'+chLabel+' — วิเคราะห์อัตโนมัติจากข้อมูลจริง (YTD '+yr+')</div>';
+  var _ais=typeof getAiSchedule==='function'?getAiSchedule():null;
+  if(_ais) html+='<div style="font-size:11px;opacity:.7;margin-top:2px">⏰ ความถี่วิเคราะห์: '+_ais.label+'</div>';
+  html+='</div>';
+  html+='<div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">';
   html+='<div style="background:rgba(255,255,255,.2);padding:6px 16px;border-radius:20px;font-size:12px;font-weight:700">'+chLabel+'</div>';
+  if(_ais&&_ais.lastRun&&_ais.lastRun!=='ยังไม่เคยรัน') html+='<div style="font-size:10px;opacity:.6">อัปเดตล่าสุด: '+_ais.lastRun.replace('T',' ')+'</div>';
+  html+='</div>';
   html+='</div></div>';
 
   // KPIs

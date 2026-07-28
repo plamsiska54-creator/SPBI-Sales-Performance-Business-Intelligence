@@ -94,6 +94,33 @@ http.createServer(function(req, res) {
     return;
   }
 
+  // --- Google Sheets Proxy ---
+  if (req.method === 'GET' && req.url.indexOf('/api/sheet/') === 0) {
+    var sheetId = req.url.replace('/api/sheet/', '').split('?')[0];
+    if (!sheetId || sheetId.length < 10) {
+      res.writeHead(400, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+      res.end(JSON.stringify({ error: 'Invalid sheet ID' }));
+      return;
+    }
+    var gUrl = 'https://docs.google.com/spreadsheets/d/' + sheetId + '/gviz/tq?tqx=out:json';
+    https.get(gUrl, function(gRes) {
+      var chunks = '';
+      gRes.on('data', function(c) { chunks += c; });
+      gRes.on('end', function() {
+        res.writeHead(gRes.statusCode, {
+          'Content-Type': 'application/json; charset=utf-8',
+          'Access-Control-Allow-Origin': '*',
+          'Cache-Control': 'public, max-age=300'
+        });
+        res.end(chunks);
+      });
+    }).on('error', function(err) {
+      res.writeHead(502, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: err.message }));
+    });
+    return;
+  }
+
   // --- Static File Server ---
   var urlPath = req.url.split('?')[0];
   if (urlPath === '/') urlPath = '/sales_dashboard.html';
@@ -112,6 +139,7 @@ http.createServer(function(req, res) {
     res.end(data);
   });
 
-}).listen(PORT, function() {
-  console.log('Server on ' + PORT);
+}).listen(PORT, '0.0.0.0', function() {
+  console.log('Server on http://0.0.0.0:' + PORT);
+  console.log('LAN access: http://192.168.1.33:' + PORT);
 });

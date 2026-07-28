@@ -546,6 +546,7 @@ window.showTab = function(el, name){
 };
 
 // Init: inject booth alerts on page load
-setTimeout(function(){try{injectBoothAlerts();}catch(e){}},600);
+// booth alerts now handled by notifications.js
+// setTimeout(function(){try{injectBoothAlerts();}catch(e){}},600);
 
 })();

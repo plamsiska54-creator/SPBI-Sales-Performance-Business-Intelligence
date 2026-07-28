@@ -15,6 +15,7 @@
       { sub: 'ov-daily',    icon: '📅', label: 'รายวัน' },
       { sub: 'ov-customer', icon: '🏪', label: 'ลูกค้า' },
       { sub: 'ov-sales',    icon: '👤', label: 'พนักงานขาย' },
+      { sub: 'ov-ai',       icon: '🤖', label: 'วิเคราะห์ AI' },
       { sub: 'ov-update',   icon: '🔄', label: 'อัพเดทข้อมูล', rbac: 'rbac-import' }
     ]},
     { id: 'mt', icon: '🏪', label: 'ห้างค้าปลีก', children: [
@@ -70,7 +71,8 @@
       { sub: 'ord-errors',    icon: '⚠️', label: 'ผิดพลาด & เคลม' },
       { sub: 'ord-calls',     icon: '📞', label: 'การโทรลูกค้า' },
       { sub: 'ord-manual',    icon: '📖', label: 'คู่มือการทำงาน' },
-      { sub: 'ord-perf',      icon: '📊', label: 'ผลงานรายคน', minRole: 'manager' }
+      { sub: 'ord-perf',      icon: '📊', label: 'ผลงานรายคน', minRole: 'manager' },
+      { sub: 'ord-ai',        icon: '🤖', label: 'วิเคราะห์ AI' }
     ]},
     { id: 'sm-expense', icon: '💼', label: 'ฝ่ายขาย - การตลาด', children: [
       { sub: 'sm-products',    icon: '📋', label: 'รายการสินค้า' },
@@ -82,7 +84,9 @@
       { sub: 'sm-leave',      icon: '📅', label: 'ลงวันหยุด' },
       { sub: 'sm-hr',         icon: '👥', label: 'ข้อมูลบุคลากร' },
       { sub: 'sm-delist',     icon: '⚠️', label: 'สินค้าเสี่ยงถอด' },
-      { sub: 'sm-jd',         icon: '📋', label: 'รายละเอียดงาน' }
+      { sub: 'sm-jd',         icon: '📋', label: 'รายละเอียดงาน' },
+      { sub: 'sm-docs',       icon: '📂', label: 'ศูนย์เอกสาร' },
+      { sub: 'sm-ai',         icon: '🤖', label: 'วิเคราะห์ AI' }
     ]},
     { id: 'admin', icon: '⚙️', label: 'แผงแอดมิน', minRole: 'admin', children: [
       { sub: 'adm-staff',      icon: '👥', label: 'พนักงาน' },
@@ -105,7 +109,9 @@
   var ROLE_LABEL_TH_MAP = {
     admin: 'ผู้ดูแลระบบ',
     manager: 'ผู้จัดการ',
+    leader: 'หัวหน้างาน',
     sales: 'ฝ่ายขาย',
+    officer: 'เจ้าหน้าที่',
     viewer: 'ผู้ดูรายงาน'
   };
   window.ROLE_LABEL_TH = ROLE_LABEL_TH_MAP;
@@ -118,16 +124,16 @@
       var minAttr = item.minRole ? ' data-min="' + item.minRole + '"' : '';
 
       if (item.children && item.children.length) {
-        var openClass = item.id === 'overview' ? ' open' : '';
+        var openClass = '';
         html += '<div class="nav-group' + openClass + '" data-group="' + item.id + '"' + minAttr + '>';
         html += '<button class="nav-group-head" onclick="toggleNavGroup(this)">'
           + '<span class="nav-ico">' + item.icon + '</span>'
-          + '<span class="nav-txt">' + item.label + '</span>'
+          + '<span class="nav-txt" data-i18n="menu.' + item.id + '">' + ((typeof _t === 'function') ? _t('menu.' + item.id) : item.label) + '</span>'
           + '<span class="nav-caret">▶</span>'
           + '</button>';
         html += '<div class="nav-group-children">';
         item.children.forEach(function (child, ci) {
-          var activeClass = (item.id === 'overview' && ci === 0) ? ' active' : '';
+          var activeClass = '';
           var childMin = child.minRole ? ' data-min="' + child.minRole + '"' : '';
           var rbacClass = child.rbac ? ' ' + child.rbac : '';
           html += '<a class="nav-link' + activeClass + rbacClass + '" data-tab="' + item.id
@@ -135,7 +141,7 @@
             + childMin
             + ' onclick="shellNavClickSub(this,\'' + item.id + '\',\'' + child.sub.replace(/'/g, "\\'") + '\')">'
             + '<span class="nav-ico">' + child.icon + '</span>'
-            + '<span class="nav-txt">' + child.label + '</span>'
+            + '<span class="nav-txt" data-i18n="sub.' + child.sub + '">' + ((typeof _t === 'function') ? _t('sub.' + child.sub, child.label) : child.label) + '</span>'
             + '</a>';
         });
         html += '</div></div>';
@@ -145,7 +151,7 @@
           + minAttr
           + ' onclick="shellNavClick(this,\'' + item.id + '\')">'
           + '<span class="nav-ico">' + item.icon + '</span>'
-          + '<span class="nav-txt">' + item.label + '</span>'
+          + '<span class="nav-txt" data-i18n="menu.' + item.id + '">' + ((typeof _t === 'function') ? _t('menu.' + item.id) : item.label) + '</span>'
           + '<span class="nav-bell" id="bell-' + item.id + '"></span>'
           + '</a>';
       }
@@ -211,8 +217,8 @@
       : null;
     var title = document.getElementById('tbPageTitle');
     var breadcrumb = document.getElementById('tbBreadcrumb');
-    if (title && child) title.textContent = child.label;
-    if (breadcrumb && parent) breadcrumb.textContent = parent.label;
+    if (title && child) title.textContent = (typeof _t === 'function') ? _t('sub.' + child.sub, child.label) : child.label;
+    if (breadcrumb && parent) breadcrumb.textContent = (typeof _t === 'function') ? _t('menu.' + parent.id) : parent.label;
 
     closeSidebarDrawer();
 
@@ -285,24 +291,52 @@
     if (menu) menu.style.display = 'none';
   });
 
-  // ---- Initial tab: show overview + hide all other sections ----
+  // ---- Initial load: show welcome landing (overview hidden until user navigates) ----
   window.addEventListener('DOMContentLoaded', function () {
-    if (typeof showTab === 'function') {
-      var firstLink = document.querySelector('#sidebarNav .nav-link.active') || document.querySelector('#sidebarNav .nav-link');
-      if (firstLink) showTab(firstLink, 'overview');
-    }
+    document.querySelectorAll('.section').forEach(function (s) {
+      s.classList.remove('active');
+      s.style.display = 'none';
+    });
+    var wl = document.getElementById('welcomeLanding');
+    if (wl) wl.style.display = 'block';
   });
 
   // ---- RBAC ----
+  var ROLE_LEVELS = { viewer: 0, officer: 1, sales: 1, leader: 2, manager: 3, admin: 4 };
+
   window.applyRBAC = function (role) {
+    var session = (typeof getSession === 'function') ? getSession() : null;
+    var allowed = session ? session.allowedMenus : null;
+
+    // data-min: role hierarchy check
     document.querySelectorAll('[data-min]').forEach(function (el) {
       var minRole = el.getAttribute('data-min');
-      var levels = { viewer: 0, sales: 1, manager: 2, admin: 3 };
-      var userLevel = levels[role] || 0;
-      var minLevel = levels[minRole] || 0;
-      if (userLevel < minLevel) el.style.display = 'none';
+      var userLevel = ROLE_LEVELS[role] || 0;
+      var minLevel = ROLE_LEVELS[minRole] || 0;
+      if (userLevel < minLevel) {
+        el.style.display = 'none';
+      } else {
+        el.style.removeProperty('display');
+      }
     });
-    // Hide rbac-import items for non-admin
+
+    // Per-user menu access: hide sidebar groups not in allowedMenus
+    if (allowed && Array.isArray(allowed)) {
+      document.querySelectorAll('#sidebarNav .nav-group').forEach(function (group) {
+        var groupId = group.getAttribute('data-group');
+        if (groupId && allowed.indexOf(groupId) === -1) {
+          group.style.display = 'none';
+        }
+      });
+      document.querySelectorAll('#sidebarNav > .nav-link').forEach(function (link) {
+        var tab = link.getAttribute('data-tab');
+        if (tab && allowed.indexOf(tab) === -1) {
+          link.style.display = 'none';
+        }
+      });
+    }
+
+    // Hide rbac-import items for non-admin/manager
     if (role !== 'admin' && role !== 'manager') {
       document.querySelectorAll('.rbac-import').forEach(function (el) {
         el.style.display = 'none';

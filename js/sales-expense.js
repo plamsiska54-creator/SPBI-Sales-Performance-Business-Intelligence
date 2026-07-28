@@ -37,7 +37,13 @@ var SM_MENU = {
     { id: 'sm-delist-list',  label: '📋 รายการทั้งหมด', render: 'renderDelistList' },
     { id: 'sm-delist-dash',  label: '📊 Dashboard',     render: 'renderDelistDash' }
   ]},
-  'sm-jd':           { label: '📋 JD', subs: null, render: 'renderSmJD' }
+  'sm-jd':           { label: '📋 JD', subs: null, render: 'renderSmJD' },
+  'sm-docs':         { label: '📂 ศูนย์เอกสาร', subs: [
+    { id: 'sm-docs-profile',   label: '🏢 Company Profile',   render: 'renderDocsProfile' },
+    { id: 'sm-docs-products',  label: '📦 Product Catalog',   render: 'renderDocsCatalog' },
+    { id: 'sm-docs-certs',     label: '🛡️ Certifications',    render: 'renderDocsCerts' }
+  ]},
+  'sm-ai':           { label: '🤖 วิเคราะห์ AI', subs: null, render: 'renderSmAI' }
 };
 
 var _smCurrentMain = 'sm-products';
@@ -73,9 +79,10 @@ function smSelectMain(el, mainKey) {
         (sub.render ? ',\'' + sub.render + '\'' : '') + ')">' + sub.label + '</div>';
     });
     subBar.innerHTML = h;
-    // Show first sub-section
+    // Show first sub-section (fallback to parent if sub-element not found)
     var first = menu.subs[0];
     var sec = document.getElementById(first.id);
+    if (!sec) sec = document.getElementById(mainKey);
     if (sec) sec.classList.add('active');
     if (first.render && window[first.render]) window[first.render]();
     else _smRenderSection(first.id);
@@ -92,8 +99,12 @@ function smSelectSub(el, subId, renderFn) {
   // Hide all sub-sections
   var allSubs = document.querySelectorAll('#tab-sm-expense .sub-section');
   for (var i = 0; i < allSubs.length; i++) allSubs[i].classList.remove('active');
-  // Show target
+  // Show target (fallback to parent section if sub-element not found)
   var sec = document.getElementById(subId);
+  if (!sec) {
+    var parentKey = subId.replace(/-[^-]+$/, '');
+    sec = document.getElementById(parentKey);
+  }
   if (sec) sec.classList.add('active');
   if (renderFn && window[renderFn]) window[renderFn]();
   else _smRenderSection(subId);

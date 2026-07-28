@@ -13,9 +13,13 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700;800;900&display=swap">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<link rel="stylesheet" href="css/dashboard.css">
+<link rel="stylesheet" href="css/dashboard.css?v=20260728b">
+<script>
+  // Apply saved theme before first paint to prevent flash
+  (function(){var t=localStorage.getItem('spbi-theme');if(t)document.documentElement.setAttribute('data-theme',t)})();
+</script>
 <!-- Auth + RBAC (โหลดก่อน app.js). Guard เช็ค session ทันทีก่อน render -->
-<script src="js/auth.js"></script>
+<script src="js/auth.js?v=20260728b"></script>
 <script>
   // Session guard: ถ้ายังไม่ login เด้งไป login.html ก่อนโหลดเนื้อหา/app.js
   window.__spbiSession = (typeof requireAuth === 'function') ? requireAuth() : null;
@@ -54,7 +58,7 @@
         <button type="button" id="sidebarToggleBtn" class="tb-hamburger" title="เมนู" data-i18n-title="topbar.menu" onclick="toggleSidebar()">☰</button>
         <div class="tb-titles">
           <div class="tb-breadcrumb" id="tbBreadcrumb">Dashboard</div>
-          <div class="tb-title" id="tbPageTitle">ภาพรวมยอดขาย</div>
+          <div class="tb-title" id="tbPageTitle">Sales Dashboard 2026</div>
         </div>
       </div>
       <div class="tb-right">
@@ -150,6 +154,81 @@
 
 <main class="main" id="contentArea">
 
+<!-- ===== WELCOME LANDING ===== -->
+<div id="welcomeLanding" style="display:block;padding:0;margin:0">
+  <div style="background:linear-gradient(180deg,#fef3e2 0%,#fde8cc 30%,#f5d3a3 100%);padding:0 0 40px">
+
+    <div style="min-height:calc(100vh - 120px);display:flex;align-items:center;justify-content:center;padding:32px 20px">
+    <div style="max-width:900px;width:100%;text-align:center">
+
+      <!-- Company name -->
+      <div style="margin-bottom:28px">
+        <div style="font-size:42px;font-weight:900;color:#c2410c;font-family:'Noto Sans Thai',sans-serif;letter-spacing:1px;line-height:1.2">วรรณวนัช</div>
+        <div style="font-size:18px;font-weight:700;color:#ea580c;letter-spacing:3px;margin-top:2px">WANWANACH</div>
+      </div>
+
+      <!-- Company Overview Card -->
+      <div style="background:rgba(255,255,255,.85);backdrop-filter:blur(8px);border-radius:24px;padding:36px 32px;box-shadow:0 8px 32px rgba(194,65,12,.12);margin-bottom:32px">
+        <h1 style="font-size:26px;font-weight:900;color:#1e293b;margin:0 0 14px;letter-spacing:1px">COMPANY OVERVIEW</h1>
+        <p style="font-size:14px;line-height:1.9;color:#475569;max-width:680px;margin:0 auto">
+          วรรณวนัชเบเกอรี่ คือผู้ผลิตและจัดจำหน่ายผลิตภัณฑ์เบเกอรี่และขนมคุณภาพ
+          ด้วยประสบการณ์ยาวนานกว่า 20 ปี เราใส่ใจในทุกขั้นตอนการผลิต คัดสรรวัตถุดิบคุณภาพ
+          พัฒนาอย่างต่อเนื่อง และยึดมั่นในมาตรฐานการผลิต เพื่อส่งมอบความอร่อย
+          ความปลอดภัย และความสุขให้กับผู้บริโภคทั่วประเทศ
+        </p>
+      </div>
+
+      <!-- Stats Row -->
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:16px;margin-bottom:36px">
+        <div style="text-align:center">
+          <div style="font-size:40px;margin-bottom:4px">🏆</div>
+          <div style="font-size:26px;font-weight:900;color:#c2410c">20+</div>
+          <div style="font-size:11px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:1px">Years<br>Experience</div>
+        </div>
+        <div style="text-align:center">
+          <div style="font-size:40px;margin-bottom:4px">👥</div>
+          <div style="font-size:26px;font-weight:900;color:#c2410c">600+</div>
+          <div style="font-size:11px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:1px">Employees</div>
+        </div>
+        <div style="text-align:center">
+          <div style="font-size:40px;margin-bottom:4px">📦</div>
+          <div style="font-size:26px;font-weight:900;color:#c2410c">300+</div>
+          <div style="font-size:11px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:1px">SKU</div>
+        </div>
+        <div style="text-align:center">
+          <div style="font-size:40px;margin-bottom:4px">📍</div>
+          <div style="font-size:26px;font-weight:900;color:#c2410c">5000+</div>
+          <div style="font-size:11px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:1px">Distribution<br>Points</div>
+        </div>
+        <div style="text-align:center">
+          <div style="font-size:40px;margin-bottom:4px">📈</div>
+          <div style="font-size:26px;font-weight:900;color:#c2410c">568 M</div>
+          <div style="font-size:11px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:1px">Revenue<br>(2568)</div>
+        </div>
+        <div style="text-align:center">
+          <div style="font-size:40px;margin-bottom:4px">🛡️</div>
+          <div style="font-size:24px;font-weight:900;color:#c2410c">GHP</div>
+          <div style="font-size:11px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:1px">HACCP, Halal<br>Certified</div>
+        </div>
+      </div>
+
+      <!-- Enter Button -->
+      <button type="button" onclick="dismissWelcome()" style="
+        background:linear-gradient(135deg,#f97316,#ea580c);color:#fff;border:none;
+        padding:14px 48px;border-radius:50px;font-size:16px;font-weight:800;
+        cursor:pointer;box-shadow:0 4px 16px rgba(249,115,22,.4);
+        transition:all .3s;letter-spacing:1px;font-family:'Noto Sans Thai',sans-serif
+      " onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 24px rgba(249,115,22,.5)'"
+         onmouseout="this.style.transform='';this.style.boxShadow='0 4px 16px rgba(249,115,22,.4)'">
+        เข้าสู่ระบบ Dashboard &rarr;
+      </button>
+      <div style="margin-top:12px;font-size:12px;color:#94a3b8">หรือคลิกเมนูด้านซ้ายเพื่อเริ่มใช้งาน</div>
+
+    </div>
+    </div>
+  </div>
+</div>
+
 <!-- ===== OVERVIEW ===== -->
 
 <div id="tab-overview" class="section active">
@@ -160,23 +239,41 @@
     <div class="sub-tab" onclick="showSubTab(this,'ov-daily');showDailySub(_dailySub||'channel')" data-i18n="ov.daily">📅 รายวัน</div>
     <div class="sub-tab" onclick="showSubTab(this,'ov-customer');renderCustomer()" data-i18n="ov.customer">🏪 ลูกค้า</div>
     <div class="sub-tab" onclick="showSubTab(this,'ov-sales');renderSales()" data-i18n="ov.sales">👤 พนักงานขาย</div>
+    <div class="sub-tab" onclick="showSubTab(this,'ov-ai');renderOverviewAI()" data-i18n="ov.ai">🤖 วิเคราะห์ AI</div>
     <div class="sub-tab rbac-import" onclick="showSubTab(this,'ov-update')" data-i18n="ov.update">🔄 อัพเดทข้อมูล</div>
   </div>
 
 <div class="filter-bar" id="globalFilterBar" style="gap:6px;flex-wrap:wrap;margin-bottom:16px">
-  <div class="filter-label">📅 ช่วงเวลา:</div>
+  <div class="filter-label" data-i18n="filter.period">📅 ช่วงเวลา:</div>
   <div style="display:flex;gap:4px;flex-wrap:wrap" id="quickPeriodBtns">
-    <div class="period-type-btn active" data-preset="all"        onclick="setQuickPeriod('all',this)">ทั้งหมด</div>
-    <div class="period-type-btn"        data-preset="thismonth"  onclick="setQuickPeriod('thismonth',this)">เดือนนี้</div>
-    <div class="period-type-btn"        data-preset="lastmonth"  onclick="setQuickPeriod('lastmonth',this)">เดือนที่แล้ว</div>
-    <div class="period-type-btn"        data-preset="3months"    onclick="setQuickPeriod('3months',this)">3 เดือน</div>
+    <div class="period-type-btn active" data-preset="all"        onclick="setQuickPeriod('all',this)" data-i18n="filter.all">ทั้งหมด</div>
+    <div class="period-type-btn"        data-preset="thismonth"  onclick="setQuickPeriod('thismonth',this)" data-i18n="filter.thisMonth">เดือนนี้</div>
+    <div class="period-type-btn"        data-preset="lastmonth"  onclick="setQuickPeriod('lastmonth',this)" data-i18n="filter.lastMonth">เดือนที่แล้ว</div>
+    <div class="period-type-btn"        data-preset="3months"    onclick="setQuickPeriod('3months',this)" data-i18n="filter.3months">3 เดือน</div>
     <div id="quarterDropdown" style="position:relative;display:inline-block">
-      <div id="quarterDropBtn" class="period-type-btn" data-preset="qany" onclick="toggleQuarterMenu(this)" style="padding-right:22px;cursor:pointer"><span id="quarterLabel">📆 รายไตรมาส</span><span style="position:absolute;right:7px;top:50%;transform:translateY(-50%);font-size:10px;pointer-events:none">▾</span></div>
+      <div id="quarterDropBtn" class="period-type-btn" data-preset="qany" onclick="toggleQuarterMenu(this)" style="padding-right:22px;cursor:pointer"><span id="quarterLabel" data-i18n="filter.quarterly">📆 รายไตรมาส</span><span style="position:absolute;right:7px;top:50%;transform:translateY(-50%);font-size:10px;pointer-events:none">▾</span></div>
       <div id="quarterMenu" style="display:none;position:absolute;top:calc(100% + 4px);left:0;background:#fff;border:1px solid #e2e8f0;border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,.1);min-width:170px;z-index:200;padding:4px 0">
         <div class="qmenu-item" onclick="pickQuarter('q1',this)">Q1 ม.ค.–มี.ค.</div>
         <div class="qmenu-item" onclick="pickQuarter('q2',this)">Q2 เม.ย.–มิ.ย.</div>
         <div class="qmenu-item" onclick="pickQuarter('q3',this)">Q3 ก.ค.–ก.ย.</div>
         <div class="qmenu-item" onclick="pickQuarter('q4',this)">Q4 ต.ค.–ธ.ค.</div>
+      </div>
+    </div>
+    <div id="monthDropdown" style="position:relative;display:inline-block">
+      <div id="monthDropBtn" class="period-type-btn" data-preset="monthany" onclick="toggleMonthMenu(this)" style="padding-right:22px;cursor:pointer"><span id="monthLabel" data-i18n="filter.monthly">📅 รายเดือน</span><span style="position:absolute;right:7px;top:50%;transform:translateY(-50%);font-size:10px;pointer-events:none">▾</span></div>
+      <div id="monthMenu" style="display:none;position:absolute;top:calc(100% + 4px);left:0;background:#fff;border:1px solid #e2e8f0;border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,.1);min-width:140px;z-index:200;padding:4px 0">
+        <div class="qmenu-item" onclick="pickMonthFilter('Jan',this)" data-i18n="month.1">ม.ค.</div>
+        <div class="qmenu-item" onclick="pickMonthFilter('Feb',this)" data-i18n="month.2">ก.พ.</div>
+        <div class="qmenu-item" onclick="pickMonthFilter('Mar',this)" data-i18n="month.3">มี.ค.</div>
+        <div class="qmenu-item" onclick="pickMonthFilter('Apr',this)" data-i18n="month.4">เม.ย.</div>
+        <div class="qmenu-item" onclick="pickMonthFilter('May',this)" data-i18n="month.5">พ.ค.</div>
+        <div class="qmenu-item" onclick="pickMonthFilter('Jun',this)" data-i18n="month.6">มิ.ย.</div>
+        <div class="qmenu-item" onclick="pickMonthFilter('Jul',this)" data-i18n="month.7">ก.ค.</div>
+        <div class="qmenu-item" onclick="pickMonthFilter('Aug',this)" data-i18n="month.8">ส.ค.</div>
+        <div class="qmenu-item" onclick="pickMonthFilter('Sep',this)" data-i18n="month.9">ก.ย.</div>
+        <div class="qmenu-item" onclick="pickMonthFilter('Oct',this)" data-i18n="month.10">ต.ค.</div>
+        <div class="qmenu-item" onclick="pickMonthFilter('Nov',this)" data-i18n="month.11">พ.ย.</div>
+        <div class="qmenu-item" onclick="pickMonthFilter('Dec',this)" data-i18n="month.12">ธ.ค.</div>
       </div>
     </div>
     <div id="annualDropdown" style="position:relative;display:inline-block">
@@ -188,7 +285,7 @@
       </div>
     </div>
   </div>
-  <div class="period-type-btn" onclick="resetFilters()" style="background:none;border:1.5px dashed var(--border);color:var(--text2);font-weight:600" title="ล้างตัวเลือกทั้งหมด">✕ ล้าง</div>
+  <div class="period-type-btn" onclick="resetFilters()" style="background:none;border:1.5px dashed var(--border);color:var(--text2);font-weight:600" title="ล้างตัวเลือกทั้งหมด" data-i18n="filter.clear">✕ ล้าง</div>
   <div style="width:1px;height:24px;background:var(--border);flex-shrink:0"></div>
   <div id="filterYearLabel" style="font-size:12px;color:var(--text2);font-weight:600">ปี 2026 (YTD ม.ค.–มิ.ย.)</div>
 </div><!-- /globalFilterBar -->
@@ -199,7 +296,7 @@
   <div id="ovBelowTarget" style="margin-top:12px;margin-bottom:20px"></div>
   <div class="row cols2">
     <div class="card">
-      <div class="card-title" id="overviewBarTitle">งบประมาณ vs จริง รายเดือน (ล้านบาท)</div>
+      <div class="card-title" id="overviewBarTitle" data-i18n="chart.budgetVsActual">งบประมาณ vs จริง รายเดือน (ล้านบาท)</div>
       <div class="chart-wrap h280"><canvas id="overviewBar"></canvas></div>
     </div>
     <div class="card">
@@ -210,16 +307,16 @@
   </div>
   <div class="row cols2" style="margin-top:12px">
     <div class="card">
-      <div class="card-title">📈 TREND รายเดือน (ล้านบาท)</div>
+      <div class="card-title" data-i18n="chart.trendMonthly">📈 TREND รายเดือน (ล้านบาท)</div>
       <div class="chart-wrap h280"><canvas id="overviewLine"></canvas></div>
     </div>
     <div class="card">
-      <div class="card-title">🍩 สัดส่วน ACTUAL รายเดือน</div>
+      <div class="card-title" data-i18n="chart.actualShare">🍩 สัดส่วน ACTUAL รายเดือน</div>
       <div class="chart-wrap h280"><canvas id="overviewPie"></canvas></div>
     </div>
   </div>
   <div class="card">
-    <div class="card-title" id="overviewTableTitle">ตารางรายเดือน</div>
+    <div class="card-title" id="overviewTableTitle" data-i18n="chart.tableMonthly">ตารางรายเดือน</div>
     <div class="table-wrap"><table style="width:100%;border-collapse:collapse;table-layout:fixed;font-size:13px"><colgroup>
         <col style="width:16%">
         <col style="width:16%">
@@ -470,7 +567,7 @@
   </div>
   <div class="divider"></div>
   <div class="kpi-grid" id="salesKPI"></div>
-  <div class="row cols2">
+  <div id="salesChartsRow" class="row cols2">
     <div class="card">
       <div class="card-title">ยอดจริงรายพนักงาน</div>
       <div class="chart-wrap h280"><canvas id="salesActBar"></canvas></div>
@@ -480,7 +577,7 @@
       <div class="chart-wrap h280"><canvas id="salesAchBar"></canvas></div>
     </div>
   </div>
-  <div class="card mt">
+  <div id="salesRankCard" class="card mt">
     <div class="card-title">Ranking & KPI พนักงานขาย</div>
     <div class="table-wrap"><table><thead><tr>
       <th>Rank</th><th>พนักงานขาย</th><th>Zone</th>
@@ -488,7 +585,7 @@
       <th style="text-align:right">Diff</th><th style="min-width:120px">% Achieve</th><th>KPI</th>
     </tr></thead><tbody id="salesTable"></tbody></table></div>
   </div>
-  <div class="card mt">
+  <div id="salesMthCard" class="card mt">
     <div class="card-title">Monthly Breakdown รายพนักงาน (บาท)</div>
     <div class="table-wrap"><table><thead><tr>
       <th>พนักงานขาย</th>
@@ -499,6 +596,8 @@
     </tr></thead><tbody id="salesMthTable"></tbody></table></div>
   </div>
 
+  <!-- Channel breakdown (shown when "รวมทุกคน" selected) -->
+  <div id="salesAllDetail" style="margin-top:20px"></div>
 
   <!-- PERSON DETAIL PANEL -->
   <div id="personDetail">
@@ -514,6 +613,8 @@
         <div class="ph-stat"><div class="ph-stat-label">% Diff</div><div class="ph-stat-val" id="pdPct">—</div></div>
       </div>
     </div>
+
+    <div id="pdPerfSection"></div>
 
     <div class="row cols2">
       <div class="card">
@@ -554,6 +655,20 @@
       <div class="table-wrap"><table id="pdMthTable"><thead><tr id="pdMthHead"></tr></thead><tbody id="pdMthBody"></tbody></table></div>
     </div>
   </div>
+  </div>
+
+  <!-- sub-section: วิเคราะห์ AI -->
+  <div id="ov-ai" class="sub-section">
+    <div class="card" style="padding:0;overflow:hidden;margin-bottom:16px">
+      <div id="overviewAIHeader" style="background:linear-gradient(135deg,#7c3aed,#a78bfa);padding:18px 22px;color:#fff">
+        <div style="font-size:16px;font-weight:800">🤖 AI วิเคราะห์ภาพรวมยอดขาย</div>
+        <div id="overviewAISchedule" style="font-size:11px;opacity:.8;margin-top:4px"></div>
+      </div>
+      <div style="padding:16px 20px">
+        <div id="overviewAIKPI" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;margin-bottom:16px"></div>
+        <div id="overviewAIBody"></div>
+      </div>
+    </div>
   </div>
 
   <!-- sub-section: อัพเดทข้อมูล -->
@@ -869,6 +984,12 @@
         <div class="qmenu-item" onclick="mtPickQuarter('2024-Q2',this)">Q2/2024 เม.ย.–มิ.ย.</div>
         <div class="qmenu-item" onclick="mtPickQuarter('2024-Q3',this)">Q3/2024 ก.ค.–ก.ย.</div>
         <div class="qmenu-item" onclick="mtPickQuarter('2024-Q4',this)">Q4/2024 ต.ค.–ธ.ค.</div>
+      </div>
+    </div>
+    <div id="mtMonthDropdown" style="position:relative;display:inline-block">
+      <div id="mtMonthDropBtn" class="period-type-btn" onclick="mtToggleMoMenu()" style="padding-right:22px;cursor:pointer"><span id="mtMonthLabel">📅 รายเดือน</span><span style="position:absolute;right:7px;top:50%;transform:translateY(-50%);font-size:10px;pointer-events:none">▾</span></div>
+      <div id="mtMonthMenu" style="display:none;position:absolute;top:calc(100% + 4px);left:0;background:#fff;border:1px solid #e2e8f0;border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,.1);min-width:140px;z-index:200;padding:4px 0;max-height:260px;overflow-y:auto">
+        <div class="qmenu-item" onclick="mtPickMonth('Jan',this)">ม.ค.</div><div class="qmenu-item" onclick="mtPickMonth('Feb',this)">ก.พ.</div><div class="qmenu-item" onclick="mtPickMonth('Mar',this)">มี.ค.</div><div class="qmenu-item" onclick="mtPickMonth('Apr',this)">เม.ย.</div><div class="qmenu-item" onclick="mtPickMonth('May',this)">พ.ค.</div><div class="qmenu-item" onclick="mtPickMonth('Jun',this)">มิ.ย.</div><div class="qmenu-item" onclick="mtPickMonth('Jul',this)">ก.ค.</div><div class="qmenu-item" onclick="mtPickMonth('Aug',this)">ส.ค.</div><div class="qmenu-item" onclick="mtPickMonth('Sep',this)">ก.ย.</div><div class="qmenu-item" onclick="mtPickMonth('Oct',this)">ต.ค.</div><div class="qmenu-item" onclick="mtPickMonth('Nov',this)">พ.ย.</div><div class="qmenu-item" onclick="mtPickMonth('Dec',this)">ธ.ค.</div>
       </div>
     </div>
     <div id="mtYearDropdown" style="position:relative;display:inline-block">
@@ -2192,6 +2313,23 @@
   </div>
   <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px">
 
+    <!-- 0. ยอดขายแบบเงินเข้าบัญชี -->
+    <div style="background:#fff;border-radius:14px;border:1px solid #e2e8f0;padding:18px;border-left:4px solid #16a34a">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+        <span style="font-size:22px">🏦</span>
+        <div>
+          <div style="font-weight:800;font-size:14px;color:#1e293b">ยอดขายแบบเงินเข้าบัญชี</div>
+          <div style="font-size:11px;color:#64748b">ยอดเงินจริงที่เข้าบัญชีจากแพลตฟอร์มออนไลน์รายเดือน</div>
+        </div>
+      </div>
+      <div style="font-size:11px;color:#94a3b8;margin-bottom:10px">📋 รูปแบบไฟล์: Excel (.xlsx) — คอลัมน์: เดือน, แพลตฟอร์ม, ยอดเงินเข้าบัญชี</div>
+      <label style="display:inline-flex;align-items:center;gap:6px;padding:7px 16px;background:#16a34a;color:#fff;border-radius:8px;cursor:pointer;font-size:12px;font-weight:700">
+        <span>📁 เลือกไฟล์</span>
+        <input type="file" accept=".xlsx,.xls" style="display:none" onchange="handleDataUpload(this,'bank-income')">
+      </label>
+      <span id="upload-status-bank-income" style="font-size:11px;color:#64748b;margin-left:8px"></span>
+    </div>
+
     <!-- 1. ADS & Campaign -->
     <div style="background:#fff;border-radius:14px;border:1px solid #e2e8f0;padding:18px;border-left:4px solid #f59e0b">
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
@@ -2392,6 +2530,12 @@
             <div class="qmenu-item" onclick="amzPickQtr('q4',this)">Q4 ต.ค.–ธ.ค.</div>
           </div>
         </div>
+        <div id="amzMonthDropdown" style="position:relative;display:inline-block">
+          <div class="period-type-btn" onclick="amzToggleMoMenu(this)" style="padding-right:22px;cursor:pointer"><span id="amzMonthLabel">📅 รายเดือน</span><span style="position:absolute;right:7px;top:50%;transform:translateY(-50%);font-size:10px;pointer-events:none">▾</span></div>
+          <div id="amzMonthMenu" style="display:none;position:absolute;top:calc(100% + 4px);left:0;background:#fff;border:1px solid #e2e8f0;border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,.1);min-width:140px;z-index:200;padding:4px 0;max-height:260px;overflow-y:auto">
+            <div class="qmenu-item" onclick="amzPickMonth('Jan',this)">ม.ค.</div><div class="qmenu-item" onclick="amzPickMonth('Feb',this)">ก.พ.</div><div class="qmenu-item" onclick="amzPickMonth('Mar',this)">มี.ค.</div><div class="qmenu-item" onclick="amzPickMonth('Apr',this)">เม.ย.</div><div class="qmenu-item" onclick="amzPickMonth('May',this)">พ.ค.</div><div class="qmenu-item" onclick="amzPickMonth('Jun',this)">มิ.ย.</div><div class="qmenu-item" onclick="amzPickMonth('Jul',this)">ก.ค.</div><div class="qmenu-item" onclick="amzPickMonth('Aug',this)">ส.ค.</div><div class="qmenu-item" onclick="amzPickMonth('Sep',this)">ก.ย.</div><div class="qmenu-item" onclick="amzPickMonth('Oct',this)">ต.ค.</div><div class="qmenu-item" onclick="amzPickMonth('Nov',this)">พ.ย.</div><div class="qmenu-item" onclick="amzPickMonth('Dec',this)">ธ.ค.</div>
+          </div>
+        </div>
         <div id="amzYearDropdown" style="position:relative;display:inline-block">
           <div class="period-type-btn" onclick="amzToggleYearMenu(this)" style="padding-right:22px;cursor:pointer"><span id="amzYearLabel">📅 รายปี</span><span style="position:absolute;right:7px;top:50%;transform:translateY(-50%);font-size:10px;pointer-events:none">▾</span></div>
           <div id="amzYearMenu" style="display:none;position:absolute;top:calc(100% + 4px);left:0;background:#fff;border:1px solid #e2e8f0;border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,.1);min-width:150px;z-index:200;padding:4px 0">
@@ -2454,6 +2598,12 @@
             <div class="qmenu-item" onclick="amzSalesPickQtr('q2',this)">Q2 เม.ย.–มิ.ย.</div>
             <div class="qmenu-item" onclick="amzSalesPickQtr('q3',this)">Q3 ก.ค.–ก.ย.</div>
             <div class="qmenu-item" onclick="amzSalesPickQtr('q4',this)">Q4 ต.ค.–ธ.ค.</div>
+          </div>
+        </div>
+        <div id="amzSalesMoDD" style="position:relative;display:inline-block">
+          <div class="period-type-btn" onclick="amzSalesToggleMo(this)" style="padding-right:22px;cursor:pointer"><span id="amzSalesMoLabel">📅 รายเดือน</span><span style="position:absolute;right:7px;top:50%;transform:translateY(-50%);font-size:10px;pointer-events:none">▾</span></div>
+          <div id="amzSalesMoMenu" style="display:none;position:absolute;top:calc(100% + 4px);left:0;background:#fff;border:1px solid #e2e8f0;border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,.1);min-width:140px;z-index:200;padding:4px 0;max-height:260px;overflow-y:auto">
+            <div class="qmenu-item" onclick="amzSalesPickMo('Jan',this)">ม.ค.</div><div class="qmenu-item" onclick="amzSalesPickMo('Feb',this)">ก.พ.</div><div class="qmenu-item" onclick="amzSalesPickMo('Mar',this)">มี.ค.</div><div class="qmenu-item" onclick="amzSalesPickMo('Apr',this)">เม.ย.</div><div class="qmenu-item" onclick="amzSalesPickMo('May',this)">พ.ค.</div><div class="qmenu-item" onclick="amzSalesPickMo('Jun',this)">มิ.ย.</div><div class="qmenu-item" onclick="amzSalesPickMo('Jul',this)">ก.ค.</div><div class="qmenu-item" onclick="amzSalesPickMo('Aug',this)">ส.ค.</div><div class="qmenu-item" onclick="amzSalesPickMo('Sep',this)">ก.ย.</div><div class="qmenu-item" onclick="amzSalesPickMo('Oct',this)">ต.ค.</div><div class="qmenu-item" onclick="amzSalesPickMo('Nov',this)">พ.ย.</div><div class="qmenu-item" onclick="amzSalesPickMo('Dec',this)">ธ.ค.</div>
           </div>
         </div>
         <div id="amzSalesYearDD" style="position:relative;display:inline-block">
@@ -2519,6 +2669,12 @@
             <div class="qmenu-item" onclick="amzTargetPickQtr('q2',this)">Q2 เม.ย.–มิ.ย.</div>
             <div class="qmenu-item" onclick="amzTargetPickQtr('q3',this)">Q3 ก.ค.–ก.ย.</div>
             <div class="qmenu-item" onclick="amzTargetPickQtr('q4',this)">Q4 ต.ค.–ธ.ค.</div>
+          </div>
+        </div>
+        <div id="amzTargetMoDD" style="position:relative;display:inline-block">
+          <div class="period-type-btn" onclick="amzTargetToggleMo(this)" style="padding-right:22px;cursor:pointer"><span id="amzTargetMoLabel">📅 รายเดือน</span><span style="position:absolute;right:7px;top:50%;transform:translateY(-50%);font-size:10px;pointer-events:none">▾</span></div>
+          <div id="amzTargetMoMenu" style="display:none;position:absolute;top:calc(100% + 4px);left:0;background:#fff;border:1px solid #e2e8f0;border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,.1);min-width:140px;z-index:200;padding:4px 0;max-height:260px;overflow-y:auto">
+            <div class="qmenu-item" onclick="amzTargetPickMo('Jan',this)">ม.ค.</div><div class="qmenu-item" onclick="amzTargetPickMo('Feb',this)">ก.พ.</div><div class="qmenu-item" onclick="amzTargetPickMo('Mar',this)">มี.ค.</div><div class="qmenu-item" onclick="amzTargetPickMo('Apr',this)">เม.ย.</div><div class="qmenu-item" onclick="amzTargetPickMo('May',this)">พ.ค.</div><div class="qmenu-item" onclick="amzTargetPickMo('Jun',this)">มิ.ย.</div><div class="qmenu-item" onclick="amzTargetPickMo('Jul',this)">ก.ค.</div><div class="qmenu-item" onclick="amzTargetPickMo('Aug',this)">ส.ค.</div><div class="qmenu-item" onclick="amzTargetPickMo('Sep',this)">ก.ย.</div><div class="qmenu-item" onclick="amzTargetPickMo('Oct',this)">ต.ค.</div><div class="qmenu-item" onclick="amzTargetPickMo('Nov',this)">พ.ย.</div><div class="qmenu-item" onclick="amzTargetPickMo('Dec',this)">ธ.ค.</div>
           </div>
         </div>
         <div id="amzTargetYearDD" style="position:relative;display:inline-block">
@@ -4280,11 +4436,45 @@
   <div class="sub-tabs">
     <div class="sub-tab active" onclick="showSubTab(this,'ord-staff');renderOrdStaff()" data-i18n="ord.staff">👥 พนักงาน &amp; เขต</div>
     <div class="sub-tab" onclick="showSubTab(this,'ord-bills');renderOrdBills()" data-i18n="ord.bills">🧾 จำนวนบิล</div>
-    <div class="sub-tab" onclick="showSubTab(this,'ord-checklist');renderOrdChecklist()" data-i18n="ord.checklist">✅ เช็คลิสลูกค้า</div>
+    <div class="sub-tab" onclick="showSubTab(this,'ord-checklist');renderOrdChecklist()" data-i18n="ord.checklist">✅ เช็คลิสร้านค้า</div>
+    <div class="sub-tab" onclick="showSubTab(this,'ord-custdb');renderCustomerDB()" data-i18n="ord.custdb">🏪 ฐานข้อมูลลูกค้า</div>
     <div class="sub-tab" onclick="showSubTab(this,'ord-errors');renderOrdErrors()" data-i18n="ord.errors">⚠️ ความผิดพลาด &amp; เคลม</div>
     <div class="sub-tab" onclick="showSubTab(this,'ord-calls');renderOrdCalls()" data-i18n="ord.calls">📞 การโทรลูกค้า</div>
     <div class="sub-tab" onclick="showSubTab(this,'ord-manual');renderOrdManual()" data-i18n="ord.manual">📖 คู่มือการทำงาน</div>
     <div class="sub-tab" data-min="manager" onclick="showSubTab(this,'ord-perf');renderOrdPerf()" data-i18n="ord.perf">📊 ผลงานรายคน</div>
+    <div class="sub-tab" onclick="showSubTab(this,'ord-ai');renderOrdAI()" data-i18n="ord.ai">🤖 วิเคราะห์ AI</div>
+  </div>
+
+  <!-- ---- ตัวกรองช่วงเวลารวม (ธุรการขาย) ---- -->
+  <div id="ordPeriodFilter" style="display:none;align-items:center;gap:8px;flex-wrap:wrap;padding:10px 12px;margin-bottom:4px;background:var(--surface);border-radius:10px;border:1px solid var(--border);box-shadow:0 2px 6px rgba(0,0,0,.08)">
+    <span style="font-size:12px;font-weight:700;color:var(--text2)">📅 ช่วงเวลา:</span>
+    <button class="fmtab active" onclick="ordSetPeriod('all',this)">ทั้งหมด</button>
+    <button class="fmtab" onclick="ordSetPeriod('month',this)">เดือนนี้</button>
+    <button class="fmtab" onclick="ordSetPeriod('lastmonth',this)">เดือนที่แล้ว</button>
+    <div style="position:relative;display:inline-block">
+      <div class="period-type-btn" onclick="ordToggleQMenu()" style="padding-right:22px;cursor:pointer"><span id="ordQuarterLabel">📆 รายไตรมาส</span><span style="position:absolute;right:7px;top:50%;transform:translateY(-50%);font-size:10px;pointer-events:none">▾</span></div>
+      <div id="ordQuarterMenu" style="display:none;position:absolute;top:calc(100% + 4px);left:0;background:#fff;border:1px solid #e2e8f0;border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,.1);min-width:170px;z-index:200;padding:4px 0">
+        <div class="qmenu-item" onclick="ordPickQuarter('2026-Q1',this)">Q1/2026 ม.ค.–มี.ค.</div>
+        <div class="qmenu-item" onclick="ordPickQuarter('2026-Q2',this)">Q2/2026 เม.ย.–มิ.ย.</div>
+        <div class="qmenu-item" onclick="ordPickQuarter('2026-Q3',this)">Q3/2026 ก.ค.–ก.ย.</div>
+        <div class="qmenu-item" onclick="ordPickQuarter('2026-Q4',this)">Q4/2026 ต.ค.–ธ.ค.</div>
+      </div>
+    </div>
+    <div style="position:relative;display:inline-block">
+      <div class="period-type-btn" onclick="ordToggleMoMenu()" style="padding-right:22px;cursor:pointer"><span id="ordMonthLabel">📅 รายเดือน</span><span style="position:absolute;right:7px;top:50%;transform:translateY(-50%);font-size:10px;pointer-events:none">▾</span></div>
+      <div id="ordMonthMenu" style="display:none;position:absolute;top:calc(100% + 4px);left:0;background:#fff;border:1px solid #e2e8f0;border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,.1);min-width:140px;z-index:200;padding:4px 0;max-height:260px;overflow-y:auto">
+        <div class="qmenu-item" onclick="ordPickMonth('Jan',this)">ม.ค.</div><div class="qmenu-item" onclick="ordPickMonth('Feb',this)">ก.พ.</div><div class="qmenu-item" onclick="ordPickMonth('Mar',this)">มี.ค.</div><div class="qmenu-item" onclick="ordPickMonth('Apr',this)">เม.ย.</div><div class="qmenu-item" onclick="ordPickMonth('May',this)">พ.ค.</div><div class="qmenu-item" onclick="ordPickMonth('Jun',this)">มิ.ย.</div><div class="qmenu-item" onclick="ordPickMonth('Jul',this)">ก.ค.</div><div class="qmenu-item" onclick="ordPickMonth('Aug',this)">ส.ค.</div><div class="qmenu-item" onclick="ordPickMonth('Sep',this)">ก.ย.</div><div class="qmenu-item" onclick="ordPickMonth('Oct',this)">ต.ค.</div><div class="qmenu-item" onclick="ordPickMonth('Nov',this)">พ.ย.</div><div class="qmenu-item" onclick="ordPickMonth('Dec',this)">ธ.ค.</div>
+      </div>
+    </div>
+    <div style="position:relative;display:inline-block">
+      <div class="period-type-btn" onclick="ordToggleYMenu()" style="padding-right:22px;cursor:pointer"><span id="ordYearLabel">📅 รายปี</span><span style="position:absolute;right:7px;top:50%;transform:translateY(-50%);font-size:10px;pointer-events:none">▾</span></div>
+      <div id="ordYearMenu" style="display:none;position:absolute;top:calc(100% + 4px);left:0;background:#fff;border:1px solid #e2e8f0;border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,.1);min-width:180px;z-index:200;padding:4px 0">
+        <div class="qmenu-item" onclick="ordPickYear(2026,this)">📅 ปี 2569 (2026)</div>
+        <div class="qmenu-item" onclick="ordPickYear(2025,this)">📅 ปี 2568 (2025)</div>
+        <div class="qmenu-item" onclick="ordPickYear(2024,this)">📅 ปี 2567 (2024)</div>
+      </div>
+    </div>
+    <span id="ordPeriodLabel" style="font-size:11px;color:var(--muted);margin-left:4px">กำลังแสดง: ทั้งหมด</span>
   </div>
 
   <!-- ---- Sub-tab 1: พนักงาน & เขต ---- -->
@@ -4345,31 +4535,43 @@
     </div>
   </div>
 
-  <!-- ---- Sub-tab 3: เช็คลิสลูกค้า ---- -->
+  <!-- ---- Sub-tab 3: เช็คลิสร้านค้า ---- -->
   <div id="ord-checklist" class="sub-section">
-    <div class="ord-note">ℹ️ ข้อมูลเดือน <b>มี.ค. 2569 เท่านั้น</b> — สถานะ derive จากยอดบิล (ยังไม่มีระบบเช็คลิสจริง) ทุกรายการที่บันทึกคือ "สั่งซื้อ" (มียอด &gt; 0). กรณี "ไม่สั่งซื้อ" ยังไม่มีข้อมูล เพราะยังไม่มีการติดตามลูกค้าที่ไม่สั่ง</div>
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap">
+      <button onclick="loadLiveChecklist()" style="background:#3b82f6;color:#fff;border:none;padding:8px 18px;border-radius:8px;cursor:pointer;font-size:0.9rem;display:flex;align-items:center;gap:6px">🔄 โหลดข้อมูลจาก Google Sheets</button>
+      <button onclick="refreshChecklist()" style="background:#f59e0b;color:#fff;border:none;padding:8px 14px;border-radius:8px;cursor:pointer;font-size:0.85rem">♻️ รีเฟรช</button>
+      <span id="ordChkTimestamp" style="color:#94a3b8;font-size:0.8rem;margin-left:auto"></span>
+    </div>
+    <div id="ordChkProgress" style="display:none"></div>
+    <div id="ordChkNotif"></div>
     <div class="ord-filter-row">
       <label class="ord-sel-label">พนักงาน:
         <select id="ordChkPerson" class="ord-select" onchange="renderOrdChecklistData()"></select>
       </label>
+      <input type="text" id="ordChkSearch" class="team-search" placeholder="🔍 ค้นหาเส้นทาง..." oninput="renderOrdChecklistData()" style="max-width:260px">
     </div>
     <div class="kpi-grid" id="ordChkKPI"></div>
-    <div class="row cols2">
-      <div class="card">
-        <div class="card-title">🍩 สั่งซื้อ vs ไม่สั่งซื้อ</div>
-        <div class="chart-wrap h280"><canvas id="ordChkDonut"></canvas></div>
-      </div>
-      <div class="card">
-        <div class="card-title">📋 รายการเช็คลิสลูกค้า</div>
-        <div id="ordChkTableNote" class="ord-subnote"></div>
-        <div class="table-wrap ord-scroll">
-          <table id="ordChkTable" data-sheet="เช็คลิสลูกค้า">
-            <thead><tr><th>รหัสลูกค้า</th><th>ชื่อลูกค้า</th><th>ผู้ดูแล</th><th>ช่วงเวลา</th><th style="text-align:right">จำนวน (ชิ้น)</th><th>สถานะ</th></tr></thead>
-            <tbody id="ordChkTBody"></tbody>
-          </table>
-        </div>
-      </div>
+    <div id="ordChkCards"></div>
+  </div>
+
+  <!-- ---- Sub-tab 3.5: ฐานข้อมูลลูกค้า ---- -->
+  <div id="ord-custdb" class="sub-section">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap">
+      <button onclick="loadLiveChecklist()" style="background:#3b82f6;color:#fff;border:none;padding:8px 18px;border-radius:8px;cursor:pointer;font-size:0.9rem">🔄 โหลดข้อมูลลูกค้า</button>
+      <input type="text" id="custDBSearch" class="team-search" placeholder="🔍 ค้นหาร้านค้า / รหัส / สาขา / จังหวัด..." oninput="renderCustomerDB()" style="max-width:350px">
+      <label class="ord-sel-label">พนักงาน:
+        <select id="custDBPerson" class="ord-select" onchange="renderCustomerDB()">
+          <option value="all">ทุกคน</option>
+          <option value="แตงกวา">แตงกวา (S01)</option>
+          <option value="บิวตี้">บิวตี้ (S02)</option>
+          <option value="อ้อ">อ้อ (S03)</option>
+          <option value="โบว์">โบว์ (S05)</option>
+          <option value="อัพ">อัพ (S06)</option>
+        </select>
+      </label>
     </div>
+    <div class="kpi-grid" id="custDBKPI"></div>
+    <div id="ordCustomerDB"></div>
   </div>
 
   <!-- ---- Sub-tab 4: ความผิดพลาด & เคลม ---- -->
@@ -4501,34 +4703,6 @@
       <div class="ord-note ord-note-warn">🔒 ส่วนนี้เป็นการเปรียบเทียบ performance รายบุคคล — แสดงเฉพาะสิทธิ์ผู้จัดการขึ้นไป</div>
       <div class="ord-note">ℹ️ ระบบ<b>ไม่มีข้อมูล "ยอดขาย (บาท)" และ "ลูกค้าใหม่" รายคน</b> — แสดงเฉพาะตัวชี้วัดที่มีจริง: จำนวนบิล, จำนวนชิ้น, จำนวนโทร, ปิดการขาย, Conversion% (จากบันทึกการโทร) และข้อผิดพลาด/เคลม</div>
 
-      <!-- ตัวกรองช่วงเวลาของ sub-tab นี้เอง (context-aware) -->
-      <div class="card">
-        <div class="ord-filter-row">
-          <div class="filter-months" id="ordPerfModeTabs">
-            <div class="fmtab" data-mode="month" onclick="ordPerfSetMode('month',this)">รายเดือน</div>
-            <div class="fmtab" data-mode="3m" onclick="ordPerfSetMode('3m',this)">3 เดือน</div>
-            <div class="fmtab active" data-mode="ytd" onclick="ordPerfSetMode('ytd',this)">ทั้งหมด (YTD)</div>
-            <div class="fmtab" data-mode="range" onclick="ordPerfSetMode('range',this)">กำหนดช่วงวันที่เอง</div>
-          </div>
-          <label class="ord-sel-label" id="ordPerfMonthWrap" style="display:none">เดือน:
-            <select id="ordPerfPeriod" class="ord-select" onchange="ordPerfSetPeriod()">
-              <option value="2569-03">มี.ค. 2569</option>
-              <option value="2569-04">เม.ย. 2569</option>
-              <option value="2569-05">พ.ค. 2569</option>
-              <option value="2569-06" selected>มิ.ย. 2569</option>
-            </select>
-          </label>
-          <span id="ordPerfRangeWrap" style="display:none">
-            <label class="ord-sel-label">จาก
-              <input type="date" id="ordPerfStart" class="ord-select" min="2026-05-01" max="2026-06-30" value="2026-05-01" onchange="ordPerfSetRange()">
-            </label>
-            <label class="ord-sel-label">ถึง
-              <input type="date" id="ordPerfEnd" class="ord-select" min="2026-05-01" max="2026-06-30" value="2026-06-30" onchange="ordPerfSetRange()">
-            </label>
-          </span>
-        </div>
-        <div id="ordPerfLabel" class="ord-subnote"></div>
-      </div>
 
       <!-- Ranking Dashboard (เปรียบเทียบทุกคน) -->
       <div class="kpi-grid" id="ordPerfTeamKPI"></div>
@@ -4575,7 +4749,6 @@
         </div>
         <div class="kpi-grid" id="ordPerfDetailKPI"></div>
         <div class="chart-wrap h320"><canvas id="ordPerfDetailChart"></canvas></div>
-        <div class="ord-subnote" style="margin-top:10px">ℹ️ ตารางด้านล่างแสดงรายเดือนเต็มเดือน (มี.ค.–มิ.ย. 2569) เป็นบริบท — KPI/กราฟด้านบนอิงตามช่วงเวลาที่เลือก</div>
         <div class="table-wrap">
           <table id="ordPerfDetailTable" data-sheet="Performance รายบุคคล">
             <thead><tr><th>เดือน</th><th style="text-align:right">บิล</th><th style="text-align:right">ชิ้น</th><th style="text-align:right">โทร</th><th style="text-align:right">ปิดการขาย</th><th style="text-align:right">Conversion</th><th style="text-align:right">ข้อผิดพลาด</th></tr></thead>
@@ -4585,6 +4758,12 @@
       </div>
     </div>
   </div>
+
+  <!-- วิเคราะห์ AI — ธุรการขาย -->
+  <div id="ord-ai" class="sub-section">
+    <div id="ordAIBody"></div>
+  </div>
+
 </div>
 
 <!-- ===== KPI / Forecast ===== -->
@@ -4957,6 +5136,8 @@
     <div class="sub-tab" onclick="smSelectMain(this,'sm-hr')" data-i18n="sm.hr">👥 ข้อมูลบุคลากร</div>
     <div class="sub-tab" onclick="smSelectMain(this,'sm-delist')" data-i18n="sm.delist">⚠️ สินค้าเสี่ยงถอด</div>
     <div class="sub-tab" onclick="smSelectMain(this,'sm-jd')" data-i18n="sm.jd">📋 รายละเอียดงาน</div>
+    <div class="sub-tab" onclick="smSelectMain(this,'sm-docs')" data-i18n="sm.docs">📂 ศูนย์เอกสาร</div>
+    <div class="sub-tab" onclick="smSelectMain(this,'sm-ai')" data-i18n="sm.ai">🤖 วิเคราะห์ AI</div>
   </div>
   <!-- Level-2: sub-tabs (built dynamically) -->
   <div class="sub-tabs sm-sub-tabs" id="smSubTabs" style="background:#fff7ed;border-bottom:2px solid #f97316"></div>
@@ -5010,6 +5191,16 @@
 
   <!-- 12. JD -->
   <div id="sm-jd" class="sub-section"><div id="smJdContainer"></div></div>
+
+  <!-- 13. ศูนย์เอกสาร -->
+  <div id="sm-docs" class="sub-section"><div id="smDocsBody"></div></div>
+
+  <!-- 14. AI Analysis -->
+  <div id="sm-ai" class="sub-section">
+    <div class="card" style="margin-top:8px">
+      <div id="smAIBody"></div>
+    </div>
+  </div>
 </div><!-- /tab-sm-expense -->
 
 </main><!-- /contentArea -->
@@ -5021,6 +5212,7 @@
 
 <script src="js/staff-data.js"></script>
 <script src="js/ordering-data.js"></script>
+<script src="js/checklist-live.js"></script>
 <script src="js/amazon-customers.js"></script>
 <script src="js/amz-visit-tracker.js"></script>
 <script src="js/amz-branches.js"></script>
@@ -5036,7 +5228,7 @@
 <script src="js/cj-compensate.js"></script>
 <script src="js/quality.js"></script>
 <script src="js/quality-form.js"></script>
-<script src="js/sales-expense.js"></script>
+<script src="js/sales-expense.js?v=20260729h"></script>
 <script src="js/delist.js"></script>
 <script src="js/cj-branches.js"></script>
 <script src="js/bigc-branches.js"></script>
@@ -5045,14 +5237,15 @@
 <script src="js/makro-branches.js"></script>
 <script src="js/aeon-branches.js"></script>
 <script src="js/target-data.js"></script>
-<script src="js/app.js"></script>
+<script src="js/app.js?v=20260729h"></script>
 <script src="js/forecast-data.js"></script>
-<script src="js/mt-bi.js"></script>
+<script src="js/mt-bi.js?v=20260729h"></script>
 <script src="js/export.js"></script>
 <!-- Shell: Sidebar + TopBar navigation (config-driven + RBAC). โหลดหลัง app.js เพราะ reuse showTab/updateTabBells -->
 <script src="js/kpi-crm.js"></script>
-<script src="js/shell.js"></script>
-<script src="js/i18n.js"></script>
+<script src="js/shell.js?v=20260729h"></script>
+<script src="js/notifications.js?v=20260729h"></script>
+<script src="js/i18n.js?v=20260729h"></script>
 <script>
   // เติมข้อมูลผู้ใช้บน header + บังคับ RBAC หลัง DOM + app.js พร้อม
   (function () {
@@ -5061,7 +5254,10 @@
     var nameEl = document.getElementById('userBadgeName');
     var roleEl = document.getElementById('userBadgeRole');
     if (nameEl) nameEl.textContent = s.name || s.email;
-    if (roleEl) roleEl.textContent = (typeof _t === 'function') ? _t('role.' + s.role) : ((window.ROLE_LABEL_TH && ROLE_LABEL_TH[s.role]) || s.role);
+    if (roleEl) {
+      roleEl.textContent = (typeof _t === 'function') ? _t('role.' + s.role) : ((window.ROLE_LABEL_TH && ROLE_LABEL_TH[s.role]) || s.role);
+      roleEl.setAttribute('data-i18n', 'role.' + s.role);
+    }
     if (typeof applyRBAC === 'function') applyRBAC(s.role);
   })();
 </script>

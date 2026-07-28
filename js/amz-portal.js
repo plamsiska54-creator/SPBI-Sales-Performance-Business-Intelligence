@@ -111,6 +111,29 @@
     _amzApplyPeriod();
   };
 
+  // ===== Month dropdown (Dashboard) =====
+  window.amzToggleMoMenu = function(btn) {
+    var m = document.getElementById('amzMonthMenu');
+    if(m) m.style.display = m.style.display==='none'?'block':'none';
+    var m2 = document.getElementById('amzQtrMenu'); if(m2) m2.style.display='none';
+    var m3 = document.getElementById('amzYearMenu'); if(m3) m3.style.display='none';
+  };
+  window.amzPickMonth = function(mo, btn) {
+    var ML = {Jan:'ม.ค.',Feb:'ก.พ.',Mar:'มี.ค.',Apr:'เม.ย.',May:'พ.ค.',Jun:'มิ.ย.',Jul:'ก.ค.',Aug:'ส.ค.',Sep:'ก.ย.',Oct:'ต.ค.',Nov:'พ.ย.',Dec:'ธ.ค.'};
+    _amzPeriod = mo;
+    document.querySelectorAll('#amzPeriodBtns .period-type-btn').forEach(function(b){ b.classList.remove('active'); });
+    var dd = document.getElementById('amzMonthDropdown');
+    if(dd) dd.querySelector('.period-type-btn').classList.add('active');
+    document.querySelectorAll('#amzMonthMenu .qmenu-item').forEach(function(b){ b.classList.remove('active'); });
+    if(btn) btn.classList.add('active');
+    var label = document.getElementById('amzMonthLabel');
+    if(label) label.textContent = '📅 ' + ML[mo];
+    var ql = document.getElementById('amzQtrLabel'); if(ql) ql.textContent = '📆 รายไตรมาส';
+    var yl = document.getElementById('amzYearLabel'); if(yl) yl.textContent = '📅 รายปี';
+    var m = document.getElementById('amzMonthMenu'); if(m) m.style.display='none';
+    _amzApplyPeriod();
+  };
+
   function _amzApplyPeriod() {
     var f = _amzGetFilteredMonths();
     AMZ_MONTHS = f.months;
@@ -667,6 +690,29 @@
     _amzSalesRefresh();
   };
 
+  // ===== Month dropdown (Sales) =====
+  window.amzSalesToggleMo = function(btn) {
+    var m = document.getElementById('amzSalesMoMenu');
+    if(m) m.style.display = m.style.display==='none'?'block':'none';
+    var m2 = document.getElementById('amzSalesQtrMenu'); if(m2) m2.style.display='none';
+    var m3 = document.getElementById('amzSalesYearMenu'); if(m3) m3.style.display='none';
+  };
+  window.amzSalesPickMo = function(mo, btn) {
+    var ML = {Jan:'ม.ค.',Feb:'ก.พ.',Mar:'มี.ค.',Apr:'เม.ย.',May:'พ.ค.',Jun:'มิ.ย.',Jul:'ก.ค.',Aug:'ส.ค.',Sep:'ก.ย.',Oct:'ต.ค.',Nov:'พ.ย.',Dec:'ธ.ค.'};
+    _amzSalesPeriod = mo;
+    document.querySelectorAll('#amzSalesPeriodBtns .period-type-btn').forEach(function(b){ b.classList.remove('active'); });
+    var dd = document.getElementById('amzSalesMoDD');
+    if(dd) dd.querySelector('.period-type-btn').classList.add('active');
+    document.querySelectorAll('#amzSalesMoMenu .qmenu-item').forEach(function(b){ b.classList.remove('active'); });
+    if(btn) btn.classList.add('active');
+    var label = document.getElementById('amzSalesMoLabel');
+    if(label) label.textContent = '📅 ' + ML[mo];
+    var ql = document.getElementById('amzSalesQtrLabel'); if(ql) ql.textContent = '📆 รายไตรมาส';
+    var yl = document.getElementById('amzSalesYearLabel'); if(yl) yl.textContent = '📅 รายปี';
+    var m = document.getElementById('amzSalesMoMenu'); if(m) m.style.display='none';
+    _amzSalesRefresh();
+  };
+
   window.amzSalesSetCh = function (ch, btnEl) {
     _amzSalesCh = ch;
     document.querySelectorAll('#amzSalesTypeFilter .fmtab').forEach(function (b) { b.classList.remove('active'); });
@@ -896,6 +942,29 @@
     var label = document.getElementById('amzTargetYearLabel');
     if(label) label.textContent = y === 'all' ? '📅 ทั้งหมด (3 ปี)' : '📅 ปี ' + (parseInt(y) + 543);
     var m = document.getElementById('amzTargetYearMenu'); if(m) m.style.display='none';
+    _amzTargetRefresh();
+  };
+
+  // ===== Month dropdown (Target) =====
+  window.amzTargetToggleMo = function(btn) {
+    var m = document.getElementById('amzTargetMoMenu');
+    if(m) m.style.display = m.style.display==='none'?'block':'none';
+    var m2 = document.getElementById('amzTargetQtrMenu'); if(m2) m2.style.display='none';
+    var m3 = document.getElementById('amzTargetYearMenu'); if(m3) m3.style.display='none';
+  };
+  window.amzTargetPickMo = function(mo, btn) {
+    var ML = {Jan:'ม.ค.',Feb:'ก.พ.',Mar:'มี.ค.',Apr:'เม.ย.',May:'พ.ค.',Jun:'มิ.ย.',Jul:'ก.ค.',Aug:'ส.ค.',Sep:'ก.ย.',Oct:'ต.ค.',Nov:'พ.ย.',Dec:'ธ.ค.'};
+    _amzTargetPeriod = mo;
+    document.querySelectorAll('#amzTargetPeriodBtns .period-type-btn').forEach(function(b){ b.classList.remove('active'); });
+    var dd = document.getElementById('amzTargetMoDD');
+    if(dd) dd.querySelector('.period-type-btn').classList.add('active');
+    document.querySelectorAll('#amzTargetMoMenu .qmenu-item').forEach(function(b){ b.classList.remove('active'); });
+    if(btn) btn.classList.add('active');
+    var label = document.getElementById('amzTargetMoLabel');
+    if(label) label.textContent = '📅 ' + ML[mo];
+    var ql = document.getElementById('amzTargetQtrLabel'); if(ql) ql.textContent = '📆 รายไตรมาส';
+    var yl = document.getElementById('amzTargetYearLabel'); if(yl) yl.textContent = '📅 รายปี';
+    var m = document.getElementById('amzTargetMoMenu'); if(m) m.style.display='none';
     _amzTargetRefresh();
   };
 
