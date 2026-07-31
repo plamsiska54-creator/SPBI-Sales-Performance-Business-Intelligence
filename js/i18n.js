@@ -418,6 +418,7 @@
     'sub.adm-leave':      { th: 'วันหยุด',           en: 'Leave' },
     'sub.adm-guide':      { th: 'คู่มือ',             en: 'Guide' },
     'sub.adm-complaints': { th: 'ปัญหาจากลูกค้า',   en: 'Customer Complaints' },
+    'sub.adm-booth':      { th: 'ข้อมูลบูธ',          en: 'Booth Info' },
     'sub.adm-sm-sales':   { th: 'ค่าใช้จ่ายเซลล์',    en: 'Sales Expenses' },
     'sub.adm-sm-fda':     { th: 'จดทะเบียน อ.ย.',   en: 'FDA Registration' },
     'sub.adm-sm-sample':  { th: 'สินค้าตัวอย่าง',    en: 'Sample Products' },

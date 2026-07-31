@@ -1222,6 +1222,109 @@
 
   <!-- 1. ข้อมูลบูธ -->
   <div id="bth-info" class="bth-sub">
+    <!-- ปุ่มเปิดฟอร์มเพิ่มบูธ -->
+    <div style="margin-bottom:16px">
+      <button onclick="toggleBoothForm()" class="admin-btn" style="background:linear-gradient(135deg,#ea580c,#f97316);color:#fff;padding:8px 20px;border-radius:8px;font-size:14px;font-weight:700;border:none;cursor:pointer;box-shadow:0 2px 8px rgba(234,88,12,.3)">➕ เพิ่มข้อมูลบูธ</button>
+    </div>
+    <!-- ฟอร์มเพิ่มข้อมูลบูธ (ซ่อนเริ่มต้น) -->
+    <div id="boothFormCard" class="card" style="display:none;margin-bottom:20px;border:2px solid #fed7aa">
+      <div class="admin-card-head">
+        <div class="card-title">📝 เพิ่มข้อมูลบูธใหม่</div>
+        <button class="admin-btn" onclick="toggleBoothForm()" style="background:#94a3b8;color:#fff;font-size:12px">✕ ปิด</button>
+      </div>
+      <form id="boothEntryForm" onsubmit="event.preventDefault();submitBoothForm()" style="padding:16px">
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px" id="boothFormGrid">
+          <label style="display:flex;flex-direction:column;gap:4px;font-size:13px;font-weight:600;color:#334155">
+            รหัส .1 <span style="color:#dc2626;font-size:11px">*</span>
+            <input name="bf_code" type="text" required style="padding:8px 10px;border:1.5px solid #cbd5e1;border-radius:6px;font-size:13px;outline:none" placeholder="เช่น 10203">
+          </label>
+          <label style="display:flex;flex-direction:column;gap:4px;font-size:13px;font-weight:600;color:#334155">
+            ชื่อบูธ <span style="color:#dc2626;font-size:11px">*</span>
+            <input name="bf_name" type="text" required style="padding:8px 10px;border:1.5px solid #cbd5e1;border-radius:6px;font-size:13px;outline:none" placeholder="ชื่อบูธ">
+          </label>
+          <label style="display:flex;flex-direction:column;gap:4px;font-size:13px;font-weight:600;color:#334155">
+            ประเภท
+            <select name="bf_type" style="padding:8px 10px;border:1.5px solid #cbd5e1;border-radius:6px;font-size:13px;outline:none;background:#fff">
+              <option value="บูธหลัก">บูธหลัก</option>
+              <option value="บูธชั่วคราว">บูธชั่วคราว</option>
+              <option value="บูธของเล่น">บูธของเล่น</option>
+            </select>
+          </label>
+          <label style="display:flex;flex-direction:column;gap:4px;font-size:13px;font-weight:600;color:#334155">
+            รหัสจังหวัด
+            <input name="bf_recCode" type="text" style="padding:8px 10px;border:1.5px solid #cbd5e1;border-radius:6px;font-size:13px;outline:none" placeholder="เช่น 33">
+          </label>
+          <label style="display:flex;flex-direction:column;gap:4px;font-size:13px;font-weight:600;color:#334155">
+            สถานกรรมสม
+            <input name="bf_zone" type="text" style="padding:8px 10px;border:1.5px solid #cbd5e1;border-radius:6px;font-size:13px;outline:none" placeholder="โซน">
+          </label>
+          <label style="display:flex;flex-direction:column;gap:4px;font-size:13px;font-weight:600;color:#334155">
+            หมวกรรมบูธ
+            <select name="bf_category" style="padding:8px 10px;border:1.5px solid #cbd5e1;border-radius:6px;font-size:13px;outline:none;background:#fff">
+              <option value="บูธ รายวัน">บูธ รายวัน</option>
+              <option value="จ.กาญจนบุรี">จ.กาญจนบุรี</option>
+              <option value="จ.ราชบุรี">จ.ราชบุรี</option>
+              <option value="บูธของเล่น">บูธของเล่น</option>
+            </select>
+          </label>
+          <label style="display:flex;flex-direction:column;gap:4px;font-size:13px;font-weight:600;color:#334155">
+            รหัสพนักงาน
+            <input name="bf_staffCode" type="text" style="padding:8px 10px;border:1.5px solid #cbd5e1;border-radius:6px;font-size:13px;outline:none" placeholder="รหัสพนักงาน">
+          </label>
+          <label style="display:flex;flex-direction:column;gap:4px;font-size:13px;font-weight:600;color:#334155">
+            ชื่อ - นามสกุล
+            <input name="bf_staffName" type="text" style="padding:8px 10px;border:1.5px solid #cbd5e1;border-radius:6px;font-size:13px;outline:none" placeholder="ชื่อ-นามสกุลพนักงาน">
+          </label>
+          <label style="display:flex;flex-direction:column;gap:4px;font-size:13px;font-weight:600;color:#334155">
+            รูป
+            <input name="bf_photo" type="file" accept="image/*" style="padding:6px 10px;border:1.5px solid #cbd5e1;border-radius:6px;font-size:12px;outline:none">
+          </label>
+          <label style="display:flex;flex-direction:column;gap:4px;font-size:13px;font-weight:600;color:#334155">
+            เบอร์โทรศัพท์
+            <input name="bf_phone" type="text" style="padding:8px 10px;border:1.5px solid #cbd5e1;border-radius:6px;font-size:13px;outline:none" placeholder="0xx-xxxxxxx">
+          </label>
+          <label style="display:flex;flex-direction:column;gap:4px;font-size:13px;font-weight:600;color:#334155">
+            ค่าเช่า
+            <input name="bf_rent" type="number" min="0" style="padding:8px 10px;border:1.5px solid #cbd5e1;border-radius:6px;font-size:13px;outline:none" placeholder="0">
+          </label>
+          <label style="display:flex;flex-direction:column;gap:4px;font-size:13px;font-weight:600;color:#334155">
+            กินทลาน/เงินทอน
+            <input name="bf_change" type="text" style="padding:8px 10px;border:1.5px solid #cbd5e1;border-radius:6px;font-size:13px;outline:none" placeholder="จำนวน">
+          </label>
+          <label style="display:flex;flex-direction:column;gap:4px;font-size:13px;font-weight:600;color:#334155">
+            เบอร์โทรบูธ
+            <input name="bf_boothPhone" type="text" style="padding:8px 10px;border:1.5px solid #cbd5e1;border-radius:6px;font-size:13px;outline:none" placeholder="0xx-xxxxxxx">
+          </label>
+          <label style="display:flex;flex-direction:column;gap:4px;font-size:13px;font-weight:600;color:#334155">
+            เลขบัญชีธนาคิน
+            <input name="bf_account" type="text" style="padding:8px 10px;border:1.5px solid #cbd5e1;border-radius:6px;font-size:13px;outline:none" placeholder="ชื่อบัญชี/เลขบัญชี">
+          </label>
+          <label style="display:flex;flex-direction:column;gap:4px;font-size:13px;font-weight:600;color:#334155">
+            สถานะบูธ
+            <select name="bf_status" style="padding:8px 10px;border:1.5px solid #cbd5e1;border-radius:6px;font-size:13px;outline:none;background:#fff">
+              <option value="เปิดกิจการอยู่">เปิดกิจการอยู่</option>
+              <option value="ปิดกิจการ">ปิดกิจการ</option>
+            </select>
+          </label>
+          <label style="display:flex;flex-direction:column;gap:4px;font-size:13px;font-weight:600;color:#334155;grid-column:span 2">
+            ที่อยู่บูธ
+            <textarea name="bf_address" rows="2" style="padding:8px 10px;border:1.5px solid #cbd5e1;border-radius:6px;font-size:13px;outline:none;resize:vertical" placeholder="ที่อยู่บูธ"></textarea>
+          </label>
+          <label style="display:flex;flex-direction:column;gap:4px;font-size:13px;font-weight:600;color:#334155;grid-column:span 3">
+            หมายเหตุ
+            <textarea name="bf_notes" rows="2" style="padding:8px 10px;border:1.5px solid #cbd5e1;border-radius:6px;font-size:13px;outline:none;resize:vertical" placeholder="หมายเหตุเพิ่มเติม"></textarea>
+          </label>
+        </div>
+        <div style="margin-top:16px;text-align:right">
+          <button type="button" onclick="toggleBoothForm()" style="padding:8px 20px;border:1.5px solid #cbd5e1;border-radius:6px;background:#fff;color:#64748b;font-size:13px;font-weight:600;cursor:pointer;margin-right:8px">ยกเลิก</button>
+          <button type="submit" style="padding:8px 24px;border:none;border-radius:6px;background:linear-gradient(135deg,#ea580c,#f97316);color:#fff;font-size:13px;font-weight:700;cursor:pointer;box-shadow:0 2px 8px rgba(234,88,12,.25)">💾 บันทึกข้อมูลบูธ</button>
+        </div>
+      </form>
+      <style>
+        @media(max-width:900px){#boothFormGrid{grid-template-columns:repeat(2,1fr)!important}#boothFormGrid label[style*="span 3"]{grid-column:span 2!important}}
+        @media(max-width:600px){#boothFormGrid{grid-template-columns:1fr!important}#boothFormGrid label[style*="span 2"],#boothFormGrid label[style*="span 3"]{grid-column:span 1!important}}
+      </style>
+    </div>
     <!-- KPI summary row -->
     <div id="bthInfoKPI" style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px"></div>
     <!-- Filter tabs -->
@@ -1519,8 +1622,8 @@
   <div class="sub-tabs">
     <div class="sub-tab active" onclick="showOnlineSub(this,'ol-sales');renderOnline()" data-i18n="ol.sales">📊 ยอดขาย</div>
     <div class="sub-tab" onclick="showOnlineSub(this,'ol-ads');_adsSelMonths=ADS_MONTHS.slice();_adsSelPlats=ADS_PLATFORMS.slice();renderAds()" data-i18n="ol.ads">📢 ข้อมูล ADS &amp; Campaign</div>
-    <div class="sub-tab" onclick="showOnlineSub(this,'ol-influencer');renderInfluencer()" data-i18n="ol.influencer">👥 ข้อมูลอินฟลูเอนเซอร์</div>
-    <div class="sub-tab" onclick="showOnlineSub(this,'ol-shipping');renderShipping()" data-i18n="ol.shipping">📦 ข้อมูลค่าขนส่ง</div>
+    <div class="sub-tab" onclick="showOnlineSub(this,'ol-influencer');renderInfluencer();renderInfluOrderTable()" data-i18n="ol.influencer">👥 ข้อมูลอินฟลูเอนเซอร์</div>
+    <div class="sub-tab" onclick="showOnlineSub(this,'ol-shipping');renderShipping();renderShipDailyTable();renderShipItemTable()" data-i18n="ol.shipping">📦 ข้อมูลค่าขนส่ง</div>
     <div class="sub-tab" onclick="showOnlineSub(this,'ol-cod');renderCOD()" data-i18n="ol.cod">💰 ข้อมูล COD</div>
       <div class="sub-tab" onclick="showOnlineSub(this,'ol-return');renderReturn()" data-i18n="ol.return">📦 สินค้าตีกลับ</div>
     <div class="sub-tab" onclick="showOnlineSub(this,'ol-claim');renderClaim()" data-i18n="ol.claim">📋 ข้อมูลออเดอร์ส่งเคลม</div>
@@ -1528,6 +1631,7 @@
     <div class="sub-tab" onclick="showOnlineSub(this,'ol-supply');renderSupply()" data-i18n="ol.supply">🧾 ข้อมูลเบิกวัสดุสิ้นเปลือง</div>
     <div class="sub-tab" onclick="showOnlineSub(this,'ol-cost');setCostMode(_costMode);updateCostFilter()" data-i18n="ol.cost">💰 ต้นทุนขายสินค้า</div>
     <div class="sub-tab" onclick="showOnlineSub(this,'ol-prodrank');renderProdRank()" data-i18n="ol.prodrank">📋 รายการขายสินค้า</div>
+    <div class="sub-tab" onclick="showOnlineSub(this,'ol-shops');renderOlShops()" data-i18n="ol.shops">🏪 ข้อมูลร้านค้า</div>
     <div class="sub-tab" onclick="showOnlineSub(this,'ol-ai');renderOnlineAI()" data-i18n="ol.ai">🤖 AI วิเคราะห์</div>
     <div class="sub-tab rbac-import" onclick="showOnlineSub(this,'ol-dataupdate')" data-i18n="ol.dataupdate">🔄 อัพเดทข้อมูล</div>
   </div>
@@ -1630,255 +1734,309 @@
 
   <!-- ADS & Campaign -->
   <div id="ol-ads" class="ol-sub" style="display:none">
-    <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap">
-      <div style="font-size:1.1rem;font-weight:800;color:#7c3aed">📢 ข้อมูล ADS &amp; Campaign</div>
-      <div style="display:flex;gap:8px;align-items:center;margin-left:auto;flex-wrap:wrap">
-        <select id="adsYearSel" onchange="_adsYear=parseInt(this.value);_adsMo='';renderAds()" style="padding:5px 10px;border-radius:8px;border:1.5px solid #8b5cf6;background:#fff;font-size:12px;font-weight:700;cursor:pointer;color:#8b5cf6"><option value="2567">ปี 2567</option><option value="2568">ปี 2568</option><option value="2569">ปี 2569</option></select>
-        <select id="adsMonthSel" onchange="_adsMo=this.value;renderAds()" style="padding:5px 10px;border-radius:8px;border:1.5px solid #8b5cf6;background:#fff;font-size:12px;font-weight:700;cursor:pointer;color:#8b5cf6"><option value="">ทั้งหมด</option><option value="ม.ค.">ม.ค.</option><option value="ก.พ.">ก.พ.</option><option value="มี.ค.">มี.ค.</option><option value="เม.ย.">เม.ย.</option><option value="พ.ค.">พ.ค.</option><option value="มิ.ย.">มิ.ย.</option></select>
-        <select id="adsPlatSel" onchange="_adsPlat=this.value;renderAds()" style="padding:5px 10px;border-radius:8px;border:1.5px solid #7c3aed;background:#fff;font-size:12px;font-weight:700;cursor:pointer;color:#7c3aed"><option value="">ทุกแพลตฟอร์ม</option><option value="Tiktok">Tiktok</option><option value="Facebook">Facebook</option><option value="Lazada">Lazada</option><option value="Shopee">Shopee</option></select>
-        <button onclick="_adsMo='';_adsPlat='';renderAds()" style="padding:5px 10px;border-radius:8px;border:1.5px solid #8b5cf6;background:#fff;cursor:pointer;font-size:13px" title="รีเฟรส">🔄</button>
-      </div>
+    <!-- เมนูย่อยภายใน -->
+    <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap">
+      <button onclick="switchAdsInner('ads-data',this)" class="ads-inner-tab ads-inner-active" style="padding:8px 20px;border-radius:20px;border:2px solid #7c3aed;background:#7c3aed;color:#fff;font-weight:700;font-size:13px;cursor:pointer;transition:all .2s">📊 Data</button>
+      <button onclick="switchAdsInner('ads-entry',this)" class="ads-inner-tab" style="padding:8px 20px;border-radius:20px;border:2px solid #3b82f6;background:#fff;color:#3b82f6;font-weight:700;font-size:13px;cursor:pointer;transition:all .2s">📝 กรอกข้อมูลยิง ADS รายวัน</button>
     </div>
-    <div class="kpi-grid" id="adsKPI"></div>
-    <!-- Monthly trend: Sales + Ad% combo -->
-    <div class="card mt">
-      <div class="card-title">📈 ยอดขาย vs ค่าแอด รายเดือน (YTD 2569)</div>
-      <div class="chart-wrap h300"><canvas id="adsTrendChart"></canvas></div>
-    </div>
-    <!-- Platform breakdown charts -->
-    <div class="row cols2 mt">
-      <div class="card">
-        <div class="card-title">🏆 ยอดขาย ADS รายแพลตฟอร์ม รายเดือน</div>
-        <div class="chart-wrap h300"><canvas id="adsSalesChart"></canvas></div>
+
+    <!-- ===== เมนูย่อย 1: Data ===== -->
+    <div id="ads-data" class="ads-inner-section">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap">
+        <div style="font-size:1.1rem;font-weight:800;color:#7c3aed">📢 ข้อมูล ADS &amp; Campaign</div>
+        <div style="display:flex;gap:8px;align-items:center;margin-left:auto;flex-wrap:wrap">
+          <select id="adsYearSel" onchange="_adsYear=parseInt(this.value);_adsMo='';renderAds()" style="padding:5px 10px;border-radius:8px;border:1.5px solid #8b5cf6;background:#fff;font-size:12px;font-weight:700;cursor:pointer;color:#8b5cf6"><option value="2567">ปี 2567</option><option value="2568">ปี 2568</option><option value="2569">ปี 2569</option></select>
+          <select id="adsMonthSel" onchange="_adsMo=this.value;renderAds()" style="padding:5px 10px;border-radius:8px;border:1.5px solid #8b5cf6;background:#fff;font-size:12px;font-weight:700;cursor:pointer;color:#8b5cf6"><option value="">ทั้งหมด</option><option value="ม.ค.">ม.ค.</option><option value="ก.พ.">ก.พ.</option><option value="มี.ค.">มี.ค.</option><option value="เม.ย.">เม.ย.</option><option value="พ.ค.">พ.ค.</option><option value="มิ.ย.">มิ.ย.</option></select>
+          <select id="adsPlatSel" onchange="_adsPlat=this.value;renderAds()" style="padding:5px 10px;border-radius:8px;border:1.5px solid #7c3aed;background:#fff;font-size:12px;font-weight:700;cursor:pointer;color:#7c3aed"><option value="">ทุกแพลตฟอร์ม</option><option value="Tiktok">Tiktok</option><option value="Facebook">Facebook</option><option value="Lazada">Lazada</option><option value="Shopee">Shopee</option></select>
+          <button onclick="_adsMo='';_adsPlat='';renderAds()" style="padding:5px 10px;border-radius:8px;border:1.5px solid #8b5cf6;background:#fff;cursor:pointer;font-size:13px" title="รีเฟรส">🔄</button>
+        </div>
       </div>
-      <div class="card">
-        <div class="card-title">💰 ค่าแอด รายแพลตฟอร์ม รายเดือน</div>
-        <div class="chart-wrap h300"><canvas id="adsSpendChart"></canvas></div>
+      <div class="kpi-grid" id="adsKPI"></div>
+      <div class="card mt">
+        <div class="card-title">📈 ยอดขาย vs ค่าแอด รายเดือน (YTD 2569)</div>
+        <div class="chart-wrap h300"><canvas id="adsTrendChart"></canvas></div>
       </div>
-    </div>
-    <!-- Ad% by platform + YTD share -->
-    <div class="row cols2 mt">
-      <div class="card">
-        <div class="card-title">📊 % ค่าแอด รายแพลตฟอร์ม รายเดือน</div>
-        <div class="chart-wrap h300"><canvas id="adsPctChart"></canvas></div>
+      <div class="row cols2 mt">
+        <div class="card">
+          <div class="card-title">🏆 ยอดขาย ADS รายแพลตฟอร์ม รายเดือน</div>
+          <div class="chart-wrap h300"><canvas id="adsSalesChart"></canvas></div>
+        </div>
+        <div class="card">
+          <div class="card-title">💰 ค่าแอด รายแพลตฟอร์ม รายเดือน</div>
+          <div class="chart-wrap h300"><canvas id="adsSpendChart"></canvas></div>
+        </div>
       </div>
-      <div class="card">
-        <div class="card-title">🍩 สัดส่วนยอดขาย ADS (YTD)</div>
-        <div class="chart-wrap h300"><canvas id="adsPieChart"></canvas></div>
+      <div class="row cols2 mt">
+        <div class="card">
+          <div class="card-title">📊 % ค่าแอด รายแพลตฟอร์ม รายเดือน</div>
+          <div class="chart-wrap h300"><canvas id="adsPctChart"></canvas></div>
+        </div>
+        <div class="card">
+          <div class="card-title">🍩 สัดส่วนยอดขาย ADS (YTD)</div>
+          <div class="chart-wrap h300"><canvas id="adsPieChart"></canvas></div>
+        </div>
       </div>
-    </div>
-    <!-- Platform summary cards -->
-    <div id="adsPlatCards" class="row" style="gap:12px;margin-top:16px;flex-wrap:wrap"></div>
-    <!-- Monthly detail table -->
-    <div class="card mt">
-      <div class="card-title">📋 ตารางสรุปรายเดือน — ยอดขาย / ค่าแอด / % ค่าแอด แยกตามแพลตฟอร์ม</div>
-      <div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:12.5px" id="adsTable"></table></div>
-    </div>
+      <div id="adsPlatCards" class="row" style="gap:12px;margin-top:16px;flex-wrap:wrap"></div>
+      <div class="card mt">
+        <div class="card-title">📋 ตารางสรุปรายเดือน — ยอดขาย / ค่าแอด / % ค่าแอด แยกตามแพลตฟอร์ม</div>
+        <div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:12.5px" id="adsTable"></table></div>
+      </div>
+    </div><!-- end ads-data -->
+
+    <!-- ===== เมนูย่อย 2: กรอกข้อมูลยิง ADS รายวัน ===== -->
+    <div id="ads-entry" class="ads-inner-section" style="display:none">
+      <div style="font-size:1.1rem;font-weight:800;color:#3b82f6;margin-bottom:12px">📝 กรอกข้อมูลยิง ADS รายวัน</div>
+      <div id="adsDailySection"></div>
+    </div><!-- end ads-entry -->
+
   </div><!-- end ol-ads -->
 
     <!-- อินฟลูเอนเซอร์ -->
   <div id="ol-influencer" class="ol-sub" style="display:none">
-    <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap">
-      <div style="font-size:1.1rem;font-weight:800;color:#1e293b">👥 ข้อมูลอินฟลูเอนเซอร์</div>
-      <div style="display:flex;gap:8px;align-items:center;margin-left:auto;flex-wrap:wrap">
-        <select id="influYearSel" onchange="_influYear=parseInt(this.value);_influMo='';renderInfluencer()" style="padding:5px 10px;border-radius:8px;border:1.5px solid #16a34a;background:#fff;font-size:12px;font-weight:700;cursor:pointer;color:#16a34a"><option value="2567">ปี 2567</option><option value="2568">ปี 2568</option><option value="2569" selected>ปี 2569</option></select>
-        <select id="influMonthSel" onchange="_influMo=this.value;renderInfluencer()" style="padding:5px 10px;border-radius:8px;border:1.5px solid #16a34a;background:#fff;font-size:12px;font-weight:700;cursor:pointer;color:#16a34a"><option value="">ทั้งหมด</option><option value="ม.ค.">ม.ค.</option><option value="ก.พ.">ก.พ.</option><option value="มี.ค.">มี.ค.</option><option value="เม.ย.">เม.ย.</option><option value="พ.ค.">พ.ค.</option><option value="มิ.ย.">มิ.ย.</option><option value="ก.ค.">ก.ค.</option><option value="ส.ค.">ส.ค.</option><option value="ก.ย.">ก.ย.</option><option value="ต.ค.">ต.ค.</option><option value="พ.ย.">พ.ย.</option><option value="ธ.ค.">ธ.ค.</option></select>
-        <button onclick="_influMo='';renderInfluencer()" style="padding:5px 10px;border-radius:8px;border:1.5px solid #16a34a;background:#fff;cursor:pointer;font-size:13px" title="รีเฟรส">🔄</button>
+    <!-- เมนูย่อยภายใน -->
+    <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap">
+      <button onclick="switchInfluInner('influ-data',this)" class="influ-inner-tab influ-inner-active" style="padding:8px 20px;border-radius:20px;border:2px solid #16a34a;background:#16a34a;color:#fff;font-weight:700;font-size:13px;cursor:pointer;transition:all .2s">📊 Data</button>
+      <button onclick="switchInfluInner('influ-entry',this)" class="influ-inner-tab" style="padding:8px 20px;border-radius:20px;border:2px solid #3b82f6;background:#fff;color:#3b82f6;font-weight:700;font-size:13px;cursor:pointer;transition:all .2s">📝 กรอกข้อมูลออเดอร์อินฟลูเอนเซอร์</button>
+    </div>
+
+    <!-- ===== เมนูย่อย 1: Data ===== -->
+    <div id="influ-data" class="influ-inner-section">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap">
+        <div style="font-size:1.1rem;font-weight:800;color:#16a34a">👥 ข้อมูลอินฟลูเอนเซอร์</div>
+        <div style="display:flex;gap:8px;align-items:center;margin-left:auto;flex-wrap:wrap">
+          <select id="influYearSel" onchange="_influYear=parseInt(this.value);_influMo='';renderInfluencer()" style="padding:5px 10px;border-radius:8px;border:1.5px solid #16a34a;background:#fff;font-size:12px;font-weight:700;cursor:pointer;color:#16a34a"><option value="2567">ปี 2567</option><option value="2568">ปี 2568</option><option value="2569" selected>ปี 2569</option></select>
+          <select id="influMonthSel" onchange="_influMo=this.value;renderInfluencer()" style="padding:5px 10px;border-radius:8px;border:1.5px solid #16a34a;background:#fff;font-size:12px;font-weight:700;cursor:pointer;color:#16a34a"><option value="">ทั้งหมด</option><option value="ม.ค.">ม.ค.</option><option value="ก.พ.">ก.พ.</option><option value="มี.ค.">มี.ค.</option><option value="เม.ย.">เม.ย.</option><option value="พ.ค.">พ.ค.</option><option value="มิ.ย.">มิ.ย.</option><option value="ก.ค.">ก.ค.</option><option value="ส.ค.">ส.ค.</option><option value="ก.ย.">ก.ย.</option><option value="ต.ค.">ต.ค.</option><option value="พ.ย.">พ.ย.</option><option value="ธ.ค.">ธ.ค.</option></select>
+          <button onclick="_influMo='';renderInfluencer()" style="padding:5px 10px;border-radius:8px;border:1.5px solid #16a34a;background:#fff;cursor:pointer;font-size:13px" title="รีเฟรส">🔄</button>
+        </div>
       </div>
-    </div>
-    <div class="kpi-grid" id="influKPI"></div>
-    <!-- Charts row -->
-    <div class="row cols2 mt">
-      <div class="card">
-        <div class="card-title">📱 สัดส่วนแพลตฟอร์ม</div>
-        <div class="chart-wrap h260"><canvas id="influPlatPie"></canvas></div>
+      <div class="kpi-grid" id="influKPI"></div>
+      <!-- Charts row -->
+      <div class="row cols2 mt">
+        <div class="card">
+          <div class="card-title">📱 สัดส่วนแพลตฟอร์ม</div>
+          <div class="chart-wrap h260"><canvas id="influPlatPie"></canvas></div>
+        </div>
+        <div class="card">
+          <div class="card-title">💰 ค่าจ้างรายเดือน (บาท)</div>
+          <div class="chart-wrap h260"><canvas id="influMonthBar"></canvas></div>
+        </div>
       </div>
-      <div class="card">
-        <div class="card-title">💰 ค่าจ้างรายเดือน (บาท)</div>
-        <div class="chart-wrap h260"><canvas id="influMonthBar"></canvas></div>
+      <!-- Year comparison bar -->
+      <div class="card mt">
+        <div class="card-title">📊 เปรียบเทียบค่าใช้จ่ายรายปี</div>
+        <div class="chart-wrap h220"><canvas id="influYearBar"></canvas></div>
       </div>
-    </div>
-    <!-- Year comparison bar -->
-    <div class="card mt">
-      <div class="card-title">📊 เปรียบเทียบค่าใช้จ่ายรายปี</div>
-      <div class="chart-wrap h220"><canvas id="influYearBar"></canvas></div>
-    </div>
-    <!-- Influencer table -->
-    <div class="card mt">
-      <div class="card-title" id="influTableTitle">📋 รายชื่ออินฟลูเอนเซอร์</div>
-      <div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:13px" id="influTable"></table></div>
-    </div>
+      <!-- Influencer table -->
+      <div class="card mt">
+        <div class="card-title" id="influTableTitle">📋 รายชื่ออินฟลูเอนเซอร์</div>
+        <div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:13px" id="influTable"></table></div>
+      </div>
+    </div><!-- end influ-data -->
+
+    <!-- ===== เมนูย่อย 2: กรอกข้อมูลออเดอร์อินฟลูเอนเซอร์ ===== -->
+    <div id="influ-entry" class="influ-inner-section" style="display:none">
+      <div style="font-size:1.1rem;font-weight:800;color:#3b82f6;margin-bottom:12px">📝 ฟอร์มกรอกข้อมูลออเดอร์อินฟลูเอนเซอร์</div>
+      <div id="influOrderSection"></div>
+    </div><!-- end influ-entry -->
+
   </div><!-- end ol-influencer -->
 
   <!-- ===== ค่าขนส่ง ปณ ===== -->
   <div id="ol-shipping" class="ol-sub" style="display:none">
-    <!-- Year filter -->
-    <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap">
-      <div style="font-size:1.1rem;font-weight:800;color:#1e293b">📦 ข้อมูลค่าขนส่ง</div>
-      <div style="display:flex;gap:8px;align-items:center;margin-left:auto;flex-wrap:wrap">
-        <select id="shipYearSel" onchange="_shipYear=parseInt(this.value);_shipMo='';renderShipping()" style="padding:5px 10px;border-radius:8px;border:1.5px solid #16a34a;background:#fff;font-size:12px;font-weight:700;cursor:pointer;color:#16a34a"><option value="2567">ปี 2567</option><option value="2568">ปี 2568</option><option value="2569" selected>ปี 2569</option></select>
-        <select id="shipMonthSel" onchange="_shipMo=this.value;renderShipping()" style="padding:5px 10px;border-radius:8px;border:1.5px solid #16a34a;background:#fff;font-size:12px;font-weight:700;cursor:pointer;color:#16a34a"><option value="">ทั้งหมด</option><option value="ม.ค.">ม.ค.</option><option value="ก.พ.">ก.พ.</option><option value="มี.ค.">มี.ค.</option><option value="เม.ย.">เม.ย.</option><option value="พ.ค.">พ.ค.</option><option value="มิ.ย.">มิ.ย.</option><option value="ก.ค.">ก.ค.</option><option value="ส.ค.">ส.ค.</option><option value="ก.ย.">ก.ย.</option><option value="ต.ค.">ต.ค.</option><option value="พ.ย.">พ.ย.</option><option value="ธ.ค.">ธ.ค.</option></select>
-        <button onclick="_shipMo='';renderShipping()" style="padding:5px 10px;border-radius:8px;border:1.5px solid #16a34a;background:#fff;cursor:pointer;font-size:13px" title="รีเฟรส">🔄</button>
-      </div>
+    <!-- เมนูย่อยภายใน -->
+    <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap">
+      <button onclick="switchShipInner('ship-data',this)" class="ship-inner-tab ship-inner-active" style="padding:8px 20px;border-radius:20px;border:2px solid #16a34a;background:#16a34a;color:#fff;font-weight:700;font-size:13px;cursor:pointer;transition:all .2s">📊 Data</button>
+      <button onclick="switchShipInner('ship-entry',this)" class="ship-inner-tab" style="padding:8px 20px;border-radius:20px;border:2px solid #3b82f6;background:#fff;color:#3b82f6;font-weight:700;font-size:13px;cursor:pointer;transition:all .2s">📝 กรอกข้อมูลค่าขนส่ง</button>
     </div>
-    <div class="kpi-grid" id="shippingKPI"></div>
-    <!-- Charts -->
-    <div class="row cols2 mt">
-      <div class="card">
-        <div class="card-title">📦 จำนวนพัสดุรายเดือน (ชิ้น)</div>
-        <div class="chart-wrap h280"><canvas id="shippingParcelChart"></canvas></div>
-      </div>
-      <div class="card">
-        <div class="card-title">💰 ค่าขนส่งรายเดือน (บาท)</div>
-        <div class="chart-wrap h280"><canvas id="shippingCostChart"></canvas></div>
-      </div>
-    </div>
-    <!-- Monthly table -->
-    <div class="card mt">
-      <div class="card-title" id="shippingTableTitle">📋 สรุปรายเดือน</div>
-      <div style="overflow-x:auto">
-        <table style="width:100%;border-collapse:collapse;font-size:13px">
-          <thead><tr style="background:#f8fafc;font-size:11px;color:#64748b">
-            <th style="padding:8px 12px;text-align:left">เดือน</th>
-            <th style="padding:8px 12px;text-align:right">พัสดุรวม (ชิ้น)</th>
-            <th style="padding:8px 12px;text-align:right">COD (ชิ้น)</th>
-            <th style="padding:8px 12px;text-align:right">ยอด COD (บาท)</th>
-            <th style="padding:8px 12px;text-align:right">ค่าขนส่ง (บาท)</th>
-            <th style="padding:8px 12px;text-align:right">Total Charge (บาท)</th>
-            <th style="padding:8px 12px;text-align:right">ค่าเฉลี่ย/ชิ้น</th>
-          </tr></thead>
-          <tbody id="shippingTableBody"></tbody>
-        </table>
-      </div>
-    </div>
-    <!-- Records detail table -->
-    <div class="card mt">
-      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:10px">
-        <div class="card-title" style="margin:0">📋 รายการส่งของ</div>
-        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-          <select id="shipRecYearSel" onchange="_shipRecYear=+this.value;_shipRecPage=0;renderShipRecords()" style="padding:6px 28px 6px 10px;border-radius:8px;border:1.5px solid #e2e8f0;background:#f8fafc;color:#1e293b;font-size:12px;font-weight:600;cursor:pointer;appearance:none;background-image:url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2212%22 height=%2212%22 viewBox=%220 0 12 12%22><path fill=%22%2364748b%22 d=%22M6 8L1 3h10z%22/></svg>');background-repeat:no-repeat;background-position:right 8px center"></select>
-          <select id="shipRecMonthSel" onchange="_shipRecMo=this.value;_shipRecPage=0;renderShipRecords()" style="padding:6px 28px 6px 10px;border-radius:8px;border:1.5px solid #e2e8f0;background:#f8fafc;color:#1e293b;font-size:12px;font-weight:600;cursor:pointer;appearance:none;background-image:url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2212%22 height=%2212%22 viewBox=%220 0 12 12%22><path fill=%22%2364748b%22 d=%22M6 8L1 3h10z%22/></svg>');background-repeat:no-repeat;background-position:right 8px center"></select>
-          <input id="shipRecSearch" type="text" placeholder="🔍 ชื่อ / Tracking / ขนส่ง" oninput="_shipRecPage=0;renderShipRecords()" style="padding:6px 10px;border-radius:8px;border:1.5px solid #e2e8f0;font-size:12px;width:200px;outline:none;color:#1e293b" />
-          <button onclick="document.getElementById('shipRecSearch').value='';_shipRecPage=0;renderShipRecords()" title="รีเฟรช" style="padding:6px 10px;border-radius:8px;border:1.5px solid #e2e8f0;background:#f8fafc;cursor:pointer;font-size:14px;line-height:1">🔄</button>
+
+    <!-- ===== เมนูย่อย 1: Data ===== -->
+    <div id="ship-data" class="ship-inner-section">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap">
+        <div style="font-size:1.1rem;font-weight:800;color:#16a34a">📦 ข้อมูลค่าขนส่ง</div>
+        <div style="display:flex;gap:8px;align-items:center;margin-left:auto;flex-wrap:wrap">
+          <select id="shipYearSel" onchange="_shipYear=parseInt(this.value);_shipMo='';renderShipping()" style="padding:5px 10px;border-radius:8px;border:1.5px solid #16a34a;background:#fff;font-size:12px;font-weight:700;cursor:pointer;color:#16a34a"><option value="2567">ปี 2567</option><option value="2568">ปี 2568</option><option value="2569" selected>ปี 2569</option></select>
+          <select id="shipMonthSel" onchange="_shipMo=this.value;renderShipping()" style="padding:5px 10px;border-radius:8px;border:1.5px solid #16a34a;background:#fff;font-size:12px;font-weight:700;cursor:pointer;color:#16a34a"><option value="">ทั้งหมด</option><option value="ม.ค.">ม.ค.</option><option value="ก.พ.">ก.พ.</option><option value="มี.ค.">มี.ค.</option><option value="เม.ย.">เม.ย.</option><option value="พ.ค.">พ.ค.</option><option value="มิ.ย.">มิ.ย.</option><option value="ก.ค.">ก.ค.</option><option value="ส.ค.">ส.ค.</option><option value="ก.ย.">ก.ย.</option><option value="ต.ค.">ต.ค.</option><option value="พ.ย.">พ.ย.</option><option value="ธ.ค.">ธ.ค.</option></select>
+          <button onclick="_shipMo='';renderShipping()" style="padding:5px 10px;border-radius:8px;border:1.5px solid #16a34a;background:#fff;cursor:pointer;font-size:13px" title="รีเฟรส">🔄</button>
         </div>
       </div>
-      <div id="shipRecInfo" style="font-size:12px;color:#64748b;margin-bottom:6px"></div>
-      <div style="overflow-x:auto">
-        <table style="width:100%;border-collapse:collapse;font-size:12px;white-space:nowrap">
-          <thead><tr style="background:#0f172a;color:#fff;font-size:11px">
-            <th style="padding:7px 10px;text-align:center">ลำดับ</th>
-            <th style="padding:7px 10px;text-align:center">วันที่</th>
-            <th style="padding:7px 10px;text-align:center">ชื่อผู้รับ</th>
-            <th style="padding:7px 10px;text-align:center">Tracking No.</th>
-            <th style="padding:7px 10px;text-align:center">ขนส่ง</th>
-            <th style="padding:7px 10px;text-align:center">COD (บาท)</th>
-            <th style="padding:7px 10px;text-align:center">ค่าขนส่ง (บาท)</th>
-            <th style="padding:7px 10px;text-align:center">Total Charge</th>
-            <th style="padding:7px 10px;text-align:center">ที่อยู่</th>
-          </tr></thead>
-          <tbody id="shipRecTable"></tbody>
-        </table>
+      <div class="kpi-grid" id="shippingKPI"></div>
+      <div class="row cols2 mt">
+        <div class="card">
+          <div class="card-title">📦 จำนวนพัสดุรายเดือน (ชิ้น)</div>
+          <div class="chart-wrap h280"><canvas id="shippingParcelChart"></canvas></div>
+        </div>
+        <div class="card">
+          <div class="card-title">💰 ค่าขนส่งรายเดือน (บาท)</div>
+          <div class="chart-wrap h280"><canvas id="shippingCostChart"></canvas></div>
+        </div>
       </div>
-      <div id="shipRecPager" style="display:flex;gap:6px;justify-content:center;margin-top:10px;flex-wrap:wrap"></div>
-    </div>
-    <!-- All-years comparison table -->
-    <div class="card mt">
-      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:4px">
-        <div class="card-title" style="margin:0">📊 เปรียบเทียบรายเดือน ทุกปี</div>
-        <div id="shipCmpModeBtns" style="display:flex;gap:6px"></div>
+      <div class="card mt">
+        <div class="card-title" id="shippingTableTitle">📋 สรุปรายเดือน</div>
+        <div style="overflow-x:auto">
+          <table style="width:100%;border-collapse:collapse;font-size:13px">
+            <thead><tr style="background:#f8fafc;font-size:11px;color:#64748b">
+              <th style="padding:8px 12px;text-align:left">เดือน</th>
+              <th style="padding:8px 12px;text-align:right">พัสดุรวม (ชิ้น)</th>
+              <th style="padding:8px 12px;text-align:right">COD (ชิ้น)</th>
+              <th style="padding:8px 12px;text-align:right">ยอด COD (บาท)</th>
+              <th style="padding:8px 12px;text-align:right">ค่าขนส่ง (บาท)</th>
+              <th style="padding:8px 12px;text-align:right">Total Charge (บาท)</th>
+              <th style="padding:8px 12px;text-align:right">ค่าเฉลี่ย/ชิ้น</th>
+            </tr></thead>
+            <tbody id="shippingTableBody"></tbody>
+          </table>
+        </div>
       </div>
-      <div style="overflow-x:auto">
-        <table style="width:100%;border-collapse:collapse;font-size:12px" id="shippingAllTable">
-          <thead id="shippingAllHead"></thead>
-          <tbody id="shippingAllBody"></tbody>
-        </table>
+      <div class="card mt">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:10px">
+          <div class="card-title" style="margin:0">📋 รายการส่งของ</div>
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+            <select id="shipRecYearSel" onchange="_shipRecYear=+this.value;_shipRecPage=0;renderShipRecords()" style="padding:6px 28px 6px 10px;border-radius:8px;border:1.5px solid #e2e8f0;background:#f8fafc;color:#1e293b;font-size:12px;font-weight:600;cursor:pointer;appearance:none;background-image:url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2212%22 height=%2212%22 viewBox=%220 0 12 12%22><path fill=%22%2364748b%22 d=%22M6 8L1 3h10z%22/></svg>');background-repeat:no-repeat;background-position:right 8px center"></select>
+            <select id="shipRecMonthSel" onchange="_shipRecMo=this.value;_shipRecPage=0;renderShipRecords()" style="padding:6px 28px 6px 10px;border-radius:8px;border:1.5px solid #e2e8f0;background:#f8fafc;color:#1e293b;font-size:12px;font-weight:600;cursor:pointer;appearance:none;background-image:url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2212%22 height=%2212%22 viewBox=%220 0 12 12%22><path fill=%22%2364748b%22 d=%22M6 8L1 3h10z%22/></svg>');background-repeat:no-repeat;background-position:right 8px center"></select>
+            <input id="shipRecSearch" type="text" placeholder="🔍 ชื่อ / Tracking / ขนส่ง" oninput="_shipRecPage=0;renderShipRecords()" style="padding:6px 10px;border-radius:8px;border:1.5px solid #e2e8f0;font-size:12px;width:200px;outline:none;color:#1e293b" />
+            <button onclick="document.getElementById('shipRecSearch').value='';_shipRecPage=0;renderShipRecords()" title="รีเฟรช" style="padding:6px 10px;border-radius:8px;border:1.5px solid #e2e8f0;background:#f8fafc;cursor:pointer;font-size:14px;line-height:1">🔄</button>
+          </div>
+        </div>
+        <div id="shipRecInfo" style="font-size:12px;color:#64748b;margin-bottom:6px"></div>
+        <div style="overflow-x:auto">
+          <table style="width:100%;border-collapse:collapse;font-size:12px;white-space:nowrap">
+            <thead><tr style="background:#0f172a;color:#fff;font-size:11px">
+              <th style="padding:7px 10px;text-align:center">ลำดับ</th>
+              <th style="padding:7px 10px;text-align:center">วันที่</th>
+              <th style="padding:7px 10px;text-align:center">ชื่อผู้รับ</th>
+              <th style="padding:7px 10px;text-align:center">Tracking No.</th>
+              <th style="padding:7px 10px;text-align:center">ขนส่ง</th>
+              <th style="padding:7px 10px;text-align:center">COD (บาท)</th>
+              <th style="padding:7px 10px;text-align:center">ค่าขนส่ง (บาท)</th>
+              <th style="padding:7px 10px;text-align:center">Total Charge</th>
+              <th style="padding:7px 10px;text-align:center">ที่อยู่</th>
+            </tr></thead>
+            <tbody id="shipRecTable"></tbody>
+          </table>
+        </div>
+        <div id="shipRecPager" style="display:flex;gap:6px;justify-content:center;margin-top:10px;flex-wrap:wrap"></div>
       </div>
-    </div>
+      <div class="card mt">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:4px">
+          <div class="card-title" style="margin:0">📊 เปรียบเทียบรายเดือน ทุกปี</div>
+          <div id="shipCmpModeBtns" style="display:flex;gap:6px"></div>
+        </div>
+        <div style="overflow-x:auto">
+          <table style="width:100%;border-collapse:collapse;font-size:12px" id="shippingAllTable">
+            <thead id="shippingAllHead"></thead>
+            <tbody id="shippingAllBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div><!-- end ship-data -->
+
+    <!-- ===== เมนูย่อย 2: กรอกข้อมูลค่าขนส่ง ===== -->
+    <div id="ship-entry" class="ship-inner-section" style="display:none">
+      <div style="font-size:1.1rem;font-weight:800;color:#3b82f6;margin-bottom:12px">📝 กรอกข้อมูลค่าขนส่ง</div>
+      <div id="shipDailySection"></div>
+      <div id="shipItemSection"></div>
+    </div><!-- end ship-entry -->
+
   </div><!-- end ol-shipping -->
 
   <!-- COD Panel -->
   <div id="ol-cod" class="ol-sub" style="display:none">
-    <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap">
-      <div style="font-size:1.1rem;font-weight:800;color:#1e293b">💰 ข้อมูลเก็บเงินปลายทาง COD</div>
-      <div style="display:flex;gap:8px;align-items:center;margin-left:auto;flex-wrap:wrap">
-        <select id="codYearSel" onchange="_codYear=parseInt(this.value);renderCOD()" style="padding:5px 10px;border-radius:8px;border:1.5px solid #f97316;background:#fff;font-size:12px;font-weight:700;cursor:pointer;color:#f97316">
-          <option value="2567">ปี 2567</option>
-          <option value="2568">ปี 2568</option>
-          <option value="2569" selected>ปี 2569</option>
-        </select>
-        <select id="codMonthSel" onchange="_codMo=this.value;renderCODDaily()" style="padding:5px 10px;border-radius:8px;border:1.5px solid #f97316;background:#fff;font-size:12px;font-weight:700;cursor:pointer;color:#f97316"><option value="">ทั้งหมด</option><option value="ม.ค.">ม.ค.</option><option value="ก.พ.">ก.พ.</option><option value="มี.ค.">มี.ค.</option><option value="เม.ย.">เม.ย.</option><option value="พ.ค.">พ.ค.</option><option value="มิ.ย.">มิ.ย.</option><option value="ก.ค.">ก.ค.</option><option value="ส.ค.">ส.ค.</option><option value="ก.ย.">ก.ย.</option><option value="ต.ค.">ต.ค.</option><option value="พ.ย.">พ.ย.</option><option value="ธ.ค.">ธ.ค.</option></select>
-        <button onclick="renderCOD()" style="padding:5px 10px;border-radius:8px;border:1.5px solid #f97316;background:#fff;cursor:pointer;font-size:13px" title="รีเฟรส">🔄</button>
-      </div>
-    </div>
-    <div class="kpi-grid" id="codKPI"></div>
-    <!-- Monthly summary chart + table -->
-    <div class="card mt">
-      <div class="card-title" id="codTableTitle">📋 สรุปรายเดือน</div>
-      <div style="height:220px;margin-bottom:12px"><canvas id="codChart"></canvas></div>
-      <div style="overflow-x:auto">
-        <table style="width:100%;border-collapse:collapse;font-size:13px">
-          <thead><tr style="background:#f8fafc;font-size:11px;color:#64748b">
-            <th style="padding:8px 12px;text-align:left">เดือน</th>
-            <th style="padding:8px 12px;text-align:right">จำนวนออเดอร์</th>
-            <th style="padding:8px 12px;text-align:right">ยอด COD (บาท)</th>
-            <th style="padding:8px 12px;text-align:right">Deduct (บาท)</th>
-            <th style="padding:8px 12px;text-align:right">ยอดสุทธิ (บาท)</th>
-            <th style="padding:8px 12px;text-align:right">ยอดลดหนี้ (บาท)</th>
-          </tr></thead>
-          <tbody id="codMonthBody"></tbody>
-        </table>
-      </div>
-    </div>
-    <!-- Daily detail -->
-    <div class="card mt">
-      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:10px">
-        <div class="card-title" style="margin:0">📅 รายละเอียดรายวัน</div>
-        <select id="codDailySel" onchange="_codMo=this.value;renderCODDaily()" style="padding:6px 28px 6px 10px;border-radius:8px;border:1.5px solid #e2e8f0;background:#f8fafc;color:#1e293b;font-size:12px;font-weight:600;cursor:pointer;appearance:none;background-image:url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2212%22 height=%2212%22 viewBox=%220 0 12 12%22><path fill=%22%2364748b%22 d=%22M6 8L1 3h10z%22/></svg>');background-repeat:no-repeat;background-position:right 8px center"></select>
-      </div>
-      <div style="overflow-x:auto">
-        <table style="width:100%;border-collapse:collapse;font-size:13px">
-          <thead><tr style="background:#0f172a;color:#fff;font-size:11px">
-            <th style="padding:7px 12px;text-align:center">วันที่</th>
-            <th style="padding:7px 12px;text-align:center">จำนวนออเดอร์</th>
-            <th style="padding:7px 12px;text-align:center">ยอด COD (บาท)</th>
-            <th style="padding:7px 12px;text-align:center">ยอดสุทธิ (บาท)</th>
-            <th style="padding:7px 12px;text-align:center">ยอดรับเข้า (บาท)</th>
-          </tr></thead>
-          <tbody id="codDailyBody"></tbody>
-        </table>
-      </div>
+    <!-- เมนูย่อยภายใน -->
+    <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap">
+      <button onclick="switchCodInner('cod-data',this)" class="cod-inner-tab cod-inner-active" style="padding:8px 20px;border-radius:20px;border:2px solid #f97316;background:#f97316;color:#fff;font-weight:700;font-size:13px;cursor:pointer;transition:all .2s">📊 Data</button>
+      <button onclick="switchCodInner('cod-entry',this)" class="cod-inner-tab" style="padding:8px 20px;border-radius:20px;border:2px solid #3b82f6;background:#fff;color:#3b82f6;font-weight:700;font-size:13px;cursor:pointer;transition:all .2s">📝 กรอกข้อมูล COD</button>
     </div>
 
-  <div class="card mt">
-    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:10px">
-      <div class="card-title" style="margin:0">📋 รายการ COD</div>
-      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-        <select id="codRecYearSel" onchange="_codRecYear=+this.value;_codRecPage=0;renderCODRecords()" style="padding:5px 10px;border-radius:8px;border:1px solid #e2e8f0;background:#fff;font-size:12px;cursor:pointer"></select>
-        <select id="codRecMonthSel" onchange="_codRecMo=this.value;_codRecPage=0;renderCODRecords()" style="padding:5px 10px;border-radius:8px;border:1px solid #e2e8f0;background:#fff;font-size:12px;cursor:pointer"></select>
-        <span style="font-size:11px;color:#64748b;white-space:nowrap">ตั้งแต่</span>
-        <input id="codDateFrom" type="date" onchange="_codDateFrom=this.value;_codRecPage=0;renderCODRecords()" style="padding:5px 8px;border-radius:8px;border:1px solid #e2e8f0;font-size:12px;cursor:pointer" />
-        <span style="font-size:11px;color:#64748b;white-space:nowrap">ถึง</span>
-        <input id="codDateTo" type="date" onchange="_codDateTo=this.value;_codRecPage=0;renderCODRecords()" style="padding:5px 8px;border-radius:8px;border:1px solid #e2e8f0;font-size:12px;cursor:pointer" />
-        <input id="codRecSearch" type="text" placeholder="🔍 ชื่อ / Tracking / Order No." oninput="_codRecPage=0;renderCODRecords()" style="padding:5px 10px;border-radius:8px;border:1px solid #e2e8f0;font-size:12px;width:190px" />
-        <button onclick="document.getElementById('codRecSearch').value='';document.getElementById('codDateFrom').value='';document.getElementById('codDateTo').value='';_codDateFrom='';_codDateTo='';_codRecPage=0;renderCODRecords()" title="ล้างตัวกรอง" style="padding:5px 10px;border-radius:8px;border:1px solid #e2e8f0;background:#fff;cursor:pointer;font-size:14px">🔄</button>
+    <!-- ===== เมนูย่อย 1: Data ===== -->
+    <div id="cod-data" class="cod-inner-section">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap">
+        <div style="font-size:1.1rem;font-weight:800;color:#f97316">💰 ข้อมูลเก็บเงินปลายทาง COD</div>
+        <div style="display:flex;gap:8px;align-items:center;margin-left:auto;flex-wrap:wrap">
+          <select id="codYearSel" onchange="_codYear=parseInt(this.value);renderCOD()" style="padding:5px 10px;border-radius:8px;border:1.5px solid #f97316;background:#fff;font-size:12px;font-weight:700;cursor:pointer;color:#f97316">
+            <option value="2567">ปี 2567</option>
+            <option value="2568">ปี 2568</option>
+            <option value="2569" selected>ปี 2569</option>
+          </select>
+          <select id="codMonthSel" onchange="_codMo=this.value;renderCODDaily()" style="padding:5px 10px;border-radius:8px;border:1.5px solid #f97316;background:#fff;font-size:12px;font-weight:700;cursor:pointer;color:#f97316"><option value="">ทั้งหมด</option><option value="ม.ค.">ม.ค.</option><option value="ก.พ.">ก.พ.</option><option value="มี.ค.">มี.ค.</option><option value="เม.ย.">เม.ย.</option><option value="พ.ค.">พ.ค.</option><option value="มิ.ย.">มิ.ย.</option><option value="ก.ค.">ก.ค.</option><option value="ส.ค.">ส.ค.</option><option value="ก.ย.">ก.ย.</option><option value="ต.ค.">ต.ค.</option><option value="พ.ย.">พ.ย.</option><option value="ธ.ค.">ธ.ค.</option></select>
+          <button onclick="renderCOD()" style="padding:5px 10px;border-radius:8px;border:1.5px solid #f97316;background:#fff;cursor:pointer;font-size:13px" title="รีเฟรส">🔄</button>
+        </div>
       </div>
+      <div class="kpi-grid" id="codKPI"></div>
+      <div class="card mt">
+        <div class="card-title" id="codTableTitle">📋 สรุปรายเดือน</div>
+        <div style="height:220px;margin-bottom:12px"><canvas id="codChart"></canvas></div>
+        <div style="overflow-x:auto">
+          <table style="width:100%;border-collapse:collapse;font-size:13px">
+            <thead><tr style="background:#f8fafc;font-size:11px;color:#64748b">
+              <th style="padding:8px 12px;text-align:left">เดือน</th>
+              <th style="padding:8px 12px;text-align:right">จำนวนออเดอร์</th>
+              <th style="padding:8px 12px;text-align:right">ยอด COD (บาท)</th>
+              <th style="padding:8px 12px;text-align:right">Deduct (บาท)</th>
+              <th style="padding:8px 12px;text-align:right">ยอดสุทธิ (บาท)</th>
+              <th style="padding:8px 12px;text-align:right">ยอดลดหนี้ (บาท)</th>
+            </tr></thead>
+            <tbody id="codMonthBody"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card mt">
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:10px">
+          <div class="card-title" style="margin:0">📅 รายละเอียดรายวัน</div>
+          <select id="codDailySel" onchange="_codMo=this.value;renderCODDaily()" style="padding:6px 28px 6px 10px;border-radius:8px;border:1.5px solid #e2e8f0;background:#f8fafc;color:#1e293b;font-size:12px;font-weight:600;cursor:pointer;appearance:none;background-image:url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2212%22 height=%2212%22 viewBox=%220 0 12 12%22><path fill=%22%2364748b%22 d=%22M6 8L1 3h10z%22/></svg>');background-repeat:no-repeat;background-position:right 8px center"></select>
+        </div>
+        <div style="overflow-x:auto">
+          <table style="width:100%;border-collapse:collapse;font-size:13px">
+            <thead><tr style="background:#0f172a;color:#fff;font-size:11px">
+              <th style="padding:7px 12px;text-align:center">วันที่</th>
+              <th style="padding:7px 12px;text-align:center">จำนวนออเดอร์</th>
+              <th style="padding:7px 12px;text-align:center">ยอด COD (บาท)</th>
+              <th style="padding:7px 12px;text-align:center">ยอดสุทธิ (บาท)</th>
+              <th style="padding:7px 12px;text-align:center">ยอดรับเข้า (บาท)</th>
+            </tr></thead>
+            <tbody id="codDailyBody"></tbody>
+          </table>
+        </div>
+      </div>
+    <!-- Records table in Data section -->
+    <div class="card mt">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:10px">
+        <div class="card-title" style="margin:0">📋 รายการ COD</div>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+          <select id="codRecYearSel" onchange="_codRecYear=+this.value;_codRecPage=0;renderCODRecords()" style="padding:5px 10px;border-radius:8px;border:1px solid #e2e8f0;background:#fff;font-size:12px;cursor:pointer"></select>
+          <select id="codRecMonthSel" onchange="_codRecMo=this.value;_codRecPage=0;renderCODRecords()" style="padding:5px 10px;border-radius:8px;border:1px solid #e2e8f0;background:#fff;font-size:12px;cursor:pointer"></select>
+          <span style="font-size:11px;color:#64748b;white-space:nowrap">ตั้งแต่</span>
+          <input id="codDateFrom" type="date" onchange="_codDateFrom=this.value;_codRecPage=0;renderCODRecords()" style="padding:5px 8px;border-radius:8px;border:1px solid #e2e8f0;font-size:12px;cursor:pointer" />
+          <span style="font-size:11px;color:#64748b;white-space:nowrap">ถึง</span>
+          <input id="codDateTo" type="date" onchange="_codDateTo=this.value;_codRecPage=0;renderCODRecords()" style="padding:5px 8px;border-radius:8px;border:1px solid #e2e8f0;font-size:12px;cursor:pointer" />
+          <input id="codRecSearch" type="text" placeholder="🔍 ชื่อ / Tracking / Order No." oninput="_codRecPage=0;renderCODRecords()" style="padding:5px 10px;border-radius:8px;border:1px solid #e2e8f0;font-size:12px;width:190px" />
+          <button onclick="document.getElementById('codRecSearch').value='';document.getElementById('codDateFrom').value='';document.getElementById('codDateTo').value='';_codDateFrom='';_codDateTo='';_codRecPage=0;renderCODRecords()" title="ล้างตัวกรอง" style="padding:5px 10px;border-radius:8px;border:1px solid #e2e8f0;background:#fff;cursor:pointer;font-size:14px">🔄</button>
+        </div>
+      </div>
+      <div id="codRecInfo" style="font-size:12px;color:#64748b;margin-bottom:8px"></div>
+      <div style="overflow-x:auto">
+        <table style="width:100%;border-collapse:collapse;font-size:12px">
+          <thead><tr style="background:#0f172a;color:#fff;font-size:11px">
+            <th style="padding:7px 10px;text-align:center">ลำดับ</th>
+            <th style="padding:7px 10px;text-align:center">วันที่</th>
+            <th style="padding:7px 10px;text-align:center">ชื่อลูกค้า</th>
+            <th style="padding:7px 10px;text-align:center">Tracking No.</th>
+            <th style="padding:7px 10px;text-align:center">Order No.</th>
+            <th style="padding:7px 10px;text-align:center">ยอด COD (บาท)</th>
+          </tr></thead>
+          <tbody id="codRecTable"></tbody>
+        </table>
+      </div>
+      <div id="codRecPager" style="display:flex;gap:6px;justify-content:center;margin-top:12px;flex-wrap:wrap"></div>
     </div>
-    <div id="codRecInfo" style="font-size:12px;color:#64748b;margin-bottom:8px"></div>
-    <div style="overflow-x:auto">
-    <table style="width:100%;border-collapse:collapse;font-size:12px">
-      <thead><tr style="background:#0f172a;color:#fff;font-size:11px">
-        <th style="padding:7px 10px;text-align:center">ลำดับ</th>
-        <th style="padding:7px 10px;text-align:center">วันที่</th>
-        <th style="padding:7px 10px;text-align:center">ชื่อลูกค้า</th>
-        <th style="padding:7px 10px;text-align:center">Tracking No.</th>
-        <th style="padding:7px 10px;text-align:center">Order No.</th>
-        <th style="padding:7px 10px;text-align:center">ยอด COD (บาท)</th>
-      </tr></thead>
-      <tbody id="codRecTable"></tbody>
-    </table>
-    </div>
-    <div id="codRecPager" style="display:flex;gap:6px;justify-content:center;margin-top:12px;flex-wrap:wrap"></div>
-  </div>
+    </div><!-- end cod-data -->
+
+    <!-- ===== เมนูย่อย 2: กรอกข้อมูล COD ===== -->
+    <div id="cod-entry" class="cod-inner-section" style="display:none">
+      <div style="font-size:1.1rem;font-weight:800;color:#3b82f6;margin-bottom:12px">📝 กรอกข้อมูลการเก็บเงินปลายทาง COD</div>
+      <div id="codEntrySection"></div>
+      <div id="codOrderSection"></div>
+    </div><!-- end cod-entry -->
+
   </div><!-- end ol-cod -->
 
 <div id="ol-return" class="ol-sub" style="display:none">
@@ -2067,6 +2225,13 @@
 </div><!-- end ol-cancel -->
 
 <div id="ol-supply" class="ol-sub" style="display:none">
+  <!-- เมนูย่อยภายใน -->
+  <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap">
+    <button onclick="switchSupplyInner('supply-data',this)" class="supply-inner-tab supply-inner-active" style="padding:8px 20px;border-radius:20px;border:2px solid #059669;background:#059669;color:#fff;font-weight:700;font-size:13px;cursor:pointer;transition:all .2s">📊 Data</button>
+    <button onclick="switchSupplyInner('supply-entry',this)" class="supply-inner-tab" style="padding:8px 20px;border-radius:20px;border:2px solid #3b82f6;background:#fff;color:#3b82f6;font-weight:700;font-size:13px;cursor:pointer;transition:all .2s">📝 กรอกรายการเบิกวัสดุสิ้นเปลือง</button>
+  </div>
+
+  <div id="supply-data" class="supply-inner-section">
   <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap">
     <div style="font-size:1.1rem;font-weight:800;color:#059669;flex:1;min-width:150px">🧾 ข้อมูลเบิกวัสดุสิ้นเปลือง</div>
     <select id="supplyYearSel" onchange="_supplyYear=parseInt(this.value);renderSupply()" style="padding:5px 10px;border-radius:8px;border:1.5px solid #059669;background:#fff;font-size:12px;font-weight:700;cursor:pointer;color:#059669">
@@ -2102,6 +2267,13 @@
     </table></div>
     <div id="supplyProdPager" style="display:flex;gap:6px;justify-content:center;margin-top:12px;flex-wrap:wrap"></div>
   </div>
+  </div><!-- end supply-data -->
+
+  <div id="supply-entry" class="supply-inner-section" style="display:none">
+    <div style="font-size:1.1rem;font-weight:800;color:#3b82f6;margin-bottom:12px">📝 กรอกรายการเบิกวัสดุสิ้นเปลือง</div>
+    <div id="supplyEntrySection"></div>
+  </div><!-- end supply-entry -->
+
 </div><!-- end ol-supply -->
 <div id="ol-cost" class="ol-sub" style="display:none">
   <!-- Cost header & filter -->
@@ -2297,6 +2469,8 @@
   </div>
   <div id="prPager" style="display:flex;gap:6px;margin-top:10px;flex-wrap:wrap;align-items:center"></div>
 </div><!-- end ol-prodrank -->
+
+<div id="ol-shops" class="ol-sub" style="display:none"></div><!-- end ol-shops -->
 
 <div id="ol-ai" class="ol-sub" style="display:none">
   <div class="kpi-grid" id="olAiKPI"></div>
@@ -4861,12 +5035,16 @@
     <div class="sub-tab" onclick="showSubTab(this,'adm-leave');renderAdminLeave()">📅 วันหยุด</div>
     <div class="sub-tab" onclick="showSubTab(this,'adm-guide')">📖 คู่มือ</div>
     <div class="sub-tab" onclick="showSubTab(this,'adm-complaints');renderAdminComplaints()">📋 ปัญหาจากลูกค้า</div>
+    <div class="sub-tab" onclick="showSubTab(this,'adm-booth');renderAdminBooth()">🏕️ ข้อมูลบูธ</div>
     <div class="sub-tab" onclick="showSubTab(this,'adm-sm-sales');renderAdmSmExpenses('sales')" data-i18n="adm.sm.sales">💼 ค่าใช้จ่ายเซลล์</div>
     <div class="sub-tab" onclick="showSubTab(this,'adm-sm-fda');renderAdmSmExpenses('fda')" data-i18n="adm.sm.fda">🏷️ ค่าจดทะเบียน อ.ย.</div>
     <div class="sub-tab" onclick="showSubTab(this,'adm-sm-sample');renderAdmSmExpenses('sample')" data-i18n="adm.sm.sample">🧪 ค่าสินค้าตัวอย่าง</div>
     <div class="sub-tab" onclick="showSubTab(this,'adm-sm-supply');renderAdmSmExpenses('supply')" data-i18n="adm.sm.supply">📦 ของใช้ในแผนก</div>
     <div class="sub-tab" onclick="showSubTab(this,'adm-target');renderAdminTarget()">🎯 เป้าหมาย 2026</div>
     <div class="sub-tab" onclick="showSubTab(this,'adm-calllog');renderAdminCallLog()">📞 ข้อมูลการโทร</div>
+    <div class="sub-tab" onclick="showSubTab(this,'adm-ads');renderAdminAds()">📢 ข้อมูล ADS</div>
+    <div class="sub-tab" onclick="showSubTab(this,'adm-shipping');renderAdminShipping()">📦 ค่าขนส่งรายวัน</div>
+    <div class="sub-tab" onclick="showSubTab(this,'adm-shipitems');renderAdminShipItems()">📋 รายการส่งของ</div>
   </div>
 
   <div class="admin-banner">⚙️ แผงจัดการข้อมูลหลัก (Master Data) — การแก้ไขจะถูกเก็บเป็น override ใน localStorage แล้ว merge ทับข้อมูลตั้งต้นตอนโหลด ทุกชุดข้อมูลมีปุ่ม "รีเซ็ตกลับค่าเดิม"</div>
@@ -5038,6 +5216,53 @@
   <div id="adm-calllog" class="sub-section" data-min="admin">
   </div>
 
+  <!-- ---- ข้อมูล ADS (Admin) ---- -->
+  <div id="adm-ads" class="sub-section" data-min="admin">
+    <div class="card">
+      <div class="admin-card-head">
+        <div class="card-title">📢 จัดการข้อมูลยิง ADS รายวัน</div>
+        <div class="admin-actions">
+          <button class="admin-btn add" onclick="_adsOpenDailyForm()">➕ เพิ่มข้อมูล ADS</button>
+          <button class="admin-btn" onclick="_adsDailyCSV()" style="background:#2563eb;color:#fff">⬇️ ดาวน์โหลด CSV</button>
+          <button class="admin-btn reset" onclick="if(confirm('ลบข้อมูล ADS ที่กรอกทั้งหมด?')){localStorage.removeItem('adsDailyData');_adsDailyData=null;renderAdminAds();renderAds();}">↺ รีเซ็ตข้อมูล</button>
+        </div>
+      </div>
+      <div id="adminAdsBody"></div>
+    </div>
+  </div>
+
+  <!-- ---- ข้อมูลค่าขนส่ง (Admin) ---- -->
+  <div id="adm-shipping" class="sub-section" data-min="admin">
+    <div class="card">
+      <div class="admin-card-head">
+        <div class="card-title">📦 จัดการข้อมูลค่าขนส่งรายวัน</div>
+        <div class="admin-actions">
+          <button class="admin-btn add" onclick="_shipOpenDailyForm()">➕ เพิ่มข้อมูล</button>
+          <button class="admin-btn" onclick="_shipOpenPasteExcel()" style="background:#16a34a;color:#fff">📋 วางจาก Excel</button>
+          <button class="admin-btn" onclick="_shipDailyCSV()" style="background:#2563eb;color:#fff">⬇️ ดาวน์โหลด CSV</button>
+          <button class="admin-btn reset" onclick="if(confirm('ลบข้อมูลค่าขนส่งที่กรอกทั้งหมด?')){localStorage.removeItem('shipDailyData');_shipDailyCache=null;renderAdminShipping();renderShipping();}">↺ รีเซ็ตข้อมูล</button>
+        </div>
+      </div>
+      <div id="adminShippingBody"></div>
+    </div>
+  </div>
+
+  <!-- ---- รายการส่งของ (Admin) ---- -->
+  <div id="adm-shipitems" class="sub-section" data-min="admin">
+    <div class="card">
+      <div class="admin-card-head">
+        <div class="card-title">📋 จัดการรายการส่งของ</div>
+        <div class="admin-actions">
+          <button class="admin-btn add" onclick="_shipOpenItemForm()">➕ เพิ่มรายการ</button>
+          <button class="admin-btn" onclick="_shipItemOpenPasteExcel()" style="background:#16a34a;color:#fff">📋 วางจาก Excel</button>
+          <button class="admin-btn" onclick="_shipItemCSV()" style="background:#2563eb;color:#fff">⬇️ ดาวน์โหลด CSV</button>
+          <button class="admin-btn reset" onclick="if(confirm('ลบรายการส่งของที่กรอกทั้งหมด?')){localStorage.removeItem('shipItemData');_shipItemCache=null;renderAdminShipItems();}">↺ รีเซ็ตข้อมูล</button>
+        </div>
+      </div>
+      <div id="adminShipItemsBody"></div>
+    </div>
+  </div>
+
   <!-- ---- Target 2026 ---- -->
   <div id="adm-target" class="sub-section" data-min="admin">
     <div class="card">
@@ -5046,6 +5271,47 @@
       </div>
       <div class="admin-note">ข้อมูลจากไฟล์ Target 2026.xlsx — แสดงเป้าหมายรายเดือนทุกช่องทางการขาย</div>
       <div id="adminTargetBody"></div>
+    </div>
+  </div>
+
+  <!-- ---- ข้อมูลบูธ ---- -->
+  <div id="adm-booth" class="sub-section">
+    <div class="card">
+      <div class="admin-card-head">
+        <div class="card-title">🏕️ จัดการข้อมูลบูธ (BOOTH_INFO)</div>
+        <div class="admin-actions">
+          <button class="admin-btn" onclick="toggleAdminBoothForm()" style="background:#16a34a;color:#fff">➕ เพิ่มบูธ</button>
+          <button class="admin-btn" onclick="adminDownloadBooth()" style="background:#2563eb;color:#fff">⬇️ ดาวน์โหลด CSV</button>
+        </div>
+      </div>
+      <!-- ฟอร์มเพิ่ม/แก้ไขบูธ (ซ่อนตั้งต้น) -->
+      <div id="adminBoothFormWrap" style="display:none;padding:16px;background:#fffbeb;border:1px solid #fed7aa;border-radius:8px;margin:12px 16px">
+        <h4 id="adminBoothFormTitle" style="margin:0 0 12px;color:#ea580c">➕ เพิ่มข้อมูลบูธใหม่</h4>
+        <form id="adminBoothForm" onsubmit="return false" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;font-size:13px">
+          <label>รหัสบูธ *<input name="code" required style="width:100%;padding:6px;border:1px solid #d1d5db;border-radius:4px"></label>
+          <label>ชื่อบูธ *<input name="name" required style="width:100%;padding:6px;border:1px solid #d1d5db;border-radius:4px"></label>
+          <label>ประเภท<select name="type" style="width:100%;padding:6px;border:1px solid #d1d5db;border-radius:4px"><option>บูธหลัก</option><option>บูธย่อย</option><option>บูธชั่วคราว</option></select></label>
+          <label>รหัสจังหวัด<input name="recCode" style="width:100%;padding:6px;border:1px solid #d1d5db;border-radius:4px"></label>
+          <label>สถานกรรมสม<input name="zone" style="width:100%;padding:6px;border:1px solid #d1d5db;border-radius:4px"></label>
+          <label>หมวดบูธ<select name="category" style="width:100%;padding:6px;border:1px solid #d1d5db;border-radius:4px"><option>บูธ รายวัน</option><option>บูธ รายเดือน</option><option>บูธ งานอีเวนท์</option></select></label>
+          <label>รหัสพนักงาน<input name="staffCode" style="width:100%;padding:6px;border:1px solid #d1d5db;border-radius:4px"></label>
+          <label>ชื่อ-นามสกุล<input name="staffName" style="width:100%;padding:6px;border:1px solid #d1d5db;border-radius:4px"></label>
+          <label>เบอร์โทรศัพท์<input name="phone" style="width:100%;padding:6px;border:1px solid #d1d5db;border-radius:4px"></label>
+          <label>ค่าเช่า<input name="rent" type="number" style="width:100%;padding:6px;border:1px solid #d1d5db;border-radius:4px"></label>
+          <label>กินทลาน<input name="change" style="width:100%;padding:6px;border:1px solid #d1d5db;border-radius:4px"></label>
+          <label>เบอร์โทรบูธ<input name="boothPhone" style="width:100%;padding:6px;border:1px solid #d1d5db;border-radius:4px"></label>
+          <label>เลขบัญชีธนาคิน<input name="account" style="width:100%;padding:6px;border:1px solid #d1d5db;border-radius:4px"></label>
+          <label style="grid-column:span 2">ที่อยู่บูธ<input name="address" style="width:100%;padding:6px;border:1px solid #d1d5db;border-radius:4px"></label>
+          <label>สถานะบูธ<select name="status" style="width:100%;padding:6px;border:1px solid #d1d5db;border-radius:4px"><option>เปิดกิจการ</option><option>ปิดกิจการ</option><option>พักชั่วคราว</option></select></label>
+          <label style="grid-column:span 2">หมายเหตุ<input name="notes" style="width:100%;padding:6px;border:1px solid #d1d5db;border-radius:4px"></label>
+          <label>รูปภาพ<input name="photo" type="file" accept="image/*" style="width:100%;padding:4px;font-size:12px"></label>
+          <div style="grid-column:span 3;text-align:right;margin-top:8px">
+            <button type="button" onclick="toggleAdminBoothForm()" style="padding:8px 20px;border:1px solid #d1d5db;border-radius:6px;background:#fff;cursor:pointer;margin-right:8px">ยกเลิก</button>
+            <button type="button" onclick="submitAdminBoothForm()" style="padding:8px 20px;border:none;border-radius:6px;background:linear-gradient(135deg,#ea580c,#f97316);color:#fff;font-weight:700;cursor:pointer">💾 บันทึก</button>
+          </div>
+        </form>
+      </div>
+      <div class="table-wrap"><div id="adminBoothTable"></div></div>
     </div>
   </div>
 </div>
@@ -5127,6 +5393,7 @@
   <!-- Level-1: 8 main menus -->
   <div class="sub-tabs" id="smMainTabs">
     <div class="sub-tab active" onclick="smSelectMain(this,'sm-products')" data-i18n="sm.products">📋 รายการสินค้า</div>
+    <div class="sub-tab" onclick="smSelectMain(this,'sm-prod-perf')" data-i18n="sm.prodperf">🏆 ผลงานสินค้า</div>
     <div class="sub-tab" onclick="smSelectMain(this,'sm-quality')" data-i18n="sm.quality">🔍 คุณภาพสินค้า</div>
     <div class="sub-tab" onclick="smSelectMain(this,'sm-workflow')" data-i18n="sm.workflow">🔄 ขั้นตอนการทำงาน</div>
     <div class="sub-tab" onclick="smSelectMain(this,'sm-performance')" data-i18n="sm.performance">📈 ผลงานเซลล์</div>
@@ -5145,6 +5412,9 @@
   <!-- All sub-sections -->
   <!-- 1. รายการสินค้า -->
   <div id="sm-products" class="sub-section active"></div>
+
+  <!-- ผลงานสินค้า (ทุกพอร์ท) -->
+  <div id="sm-prod-perf" class="sub-section"></div>
 
   <!-- 2. คุณภาพสินค้า -->
   <div id="sm-quality" class="sub-section"></div>
@@ -5244,6 +5514,7 @@
 <!-- Shell: Sidebar + TopBar navigation (config-driven + RBAC). โหลดหลัง app.js เพราะ reuse showTab/updateTabBells -->
 <script src="js/kpi-crm.js"></script>
 <script src="js/shell.js?v=20260729h"></script>
+<script src="js/booth-form.js?v=20260730"></script>
 <script src="js/notifications.js?v=20260729h"></script>
 <script src="js/i18n.js?v=20260729h"></script>
 <script>

@@ -2033,6 +2033,77 @@ function _mtBiRenderProductPerf(){
   html+='<div style="position:relative;height:300px"><canvas id="ppTypeChart"></canvas></div></div>';
   html+='</div>';
 
+  // ── Product Category Grouping (Top 20 per group) ──
+  var PP_CATS=[
+    {key:'cake',label:'กลุ่มขนมเค้ก',icon:'🎂',clr:'#e11d48',match:function(n){return(n.indexOf('เค้ก')!==-1||n.indexOf('มูส')!==-1||n.indexOf('เบาหวิว')!==-1||n.indexOf('บราวนี่')!==-1||n.indexOf('ลาวา')!==-1||n.indexOf('คัพเค้ก')!==-1)&&n.indexOf('ชิฟฟ่อน')===-1&&n.indexOf('วุ้น')===-1;}},
+    {key:'bread',label:'กลุ่มขนมปัง',icon:'🍞',clr:'#d97706',match:function(n){return n.indexOf('ขนมปัง')!==-1||n.indexOf('ปังเนย')!==-1||n.indexOf('ปังสังขยา')!==-1||n.indexOf('ปังลาวา')!==-1||n.substring(0,3)==='ปัง';}},
+    {key:'sandwich',label:'กลุ่มแซนวิช',icon:'🥪',clr:'#0891b2',match:function(n){return n.indexOf('แซนวิช')!==-1||n.indexOf('แซนด์วิช')!==-1;}},
+    {key:'jelly',label:'กลุ่มวุ้น',icon:'🍮',clr:'#7c3aed',match:function(n){return n.indexOf('วุ้น')!==-1;}},
+    {key:'chiffon',label:'กลุ่มชิฟฟ่อน',icon:'🧁',clr:'#16a34a',match:function(n){return n.indexOf('ชิฟฟ่อน')!==-1;}}
+  ];
+  function _ppGetCat(name){for(var i=0;i<PP_CATS.length;i++){if(PP_CATS[i].match(name))return PP_CATS[i].key;}return 'other';}
+
+  var catCounts2={};
+  PP_CATS.forEach(function(c){catCounts2[c.key]=[];});
+  catCounts2.other=[];
+  products.forEach(function(p){var cat=_ppGetCat(p.name);catCounts2[cat].push(p);});
+
+  // Category summary cards
+  html+='<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:16px">';
+  PP_CATS.forEach(function(c){
+    var items=catCounts2[c.key];
+    var catTotal=items.reduce(function(s,p){return s+(p.tb||0);},0);
+    html+='<div class="card" style="padding:14px;text-align:center;border-left:4px solid '+c.clr+'">'
+      +'<div style="font-size:18px">'+c.icon+'</div>'
+      +'<div style="font-size:12px;font-weight:700;color:'+c.clr+';margin:4px 0">'+c.label+'</div>'
+      +'<div style="font-size:16px;font-weight:800;color:var(--text)">'+items.length+' SKU</div>'
+      +'<div style="font-size:11px;color:var(--muted)">฿'+fmtB(catTotal)+'</div></div>';
+  });
+  var otherItems=catCounts2.other;
+  var otherTotal=otherItems.reduce(function(s,p){return s+(p.tb||0);},0);
+  html+='<div class="card" style="padding:14px;text-align:center;border-left:4px solid #94a3b8">'
+    +'<div style="font-size:18px">📦</div>'
+    +'<div style="font-size:12px;font-weight:700;color:#94a3b8;margin:4px 0">อื่นๆ</div>'
+    +'<div style="font-size:16px;font-weight:800;color:var(--text)">'+otherItems.length+' SKU</div>'
+    +'<div style="font-size:11px;color:var(--muted)">฿'+fmtB(otherTotal)+'</div></div>';
+  html+='</div>';
+
+  // Top 20 per category
+  PP_CATS.forEach(function(c){
+    var catItems=catCounts2[c.key].slice().sort(function(a,b){return(b.tb||0)-(a.tb||0);}).slice(0,20);
+    if(!catItems.length) return;
+    var catTotal=catItems.reduce(function(s,p){return s+(p.tb||0);},0);
+    var MEDAL3=['🥇','🥈','🥉'];
+    html+='<div class="card" style="margin-bottom:14px;border-left:4px solid '+c.clr+'">';
+    html+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:8px">';
+    html+='<div style="font-size:15px;font-weight:800;color:'+c.clr+'">'+c.icon+' Top 20 '+c.label+' <span style="font-size:11px;color:var(--muted);font-weight:500">('+catCounts2[c.key].length+' SKU)</span></div>';
+    html+='<div style="font-size:13px;font-weight:700;color:'+c.clr+'">รวม ฿'+fmtB(catTotal)+'</div></div>';
+    html+='<div class="table-wrap"><table style="width:100%;border-collapse:collapse"><thead><tr>';
+    html+='<th style="padding:6px 8px;background:'+c.clr+';color:#fff;font-size:11px;text-align:center;border-radius:6px 0 0 0">#</th>';
+    html+='<th style="padding:6px 8px;background:'+c.clr+';color:#fff;font-size:11px;text-align:left">ชื่อสินค้า</th>';
+    html+='<th style="padding:6px 8px;background:'+c.clr+';color:#fff;font-size:11px;text-align:center">TYPE</th>';
+    html+='<th style="padding:6px 8px;background:'+c.clr+';color:#fff;font-size:11px;text-align:center">RANK</th>';
+    html+='<th style="padding:6px 8px;background:'+c.clr+';color:#fff;font-size:11px;text-align:right">จำนวนขาย</th>';
+    html+='<th style="padding:6px 8px;background:'+c.clr+';color:#fff;font-size:11px;text-align:right">ยอดขาย (฿)</th>';
+    html+='<th style="padding:6px 8px;background:'+c.clr+';color:#fff;font-size:11px;text-align:right;border-radius:0 6px 0 0">%</th>';
+    html+='</tr></thead><tbody>';
+    catItems.forEach(function(p,i){
+      var pct=totalBaht>0?((p.tb/totalBaht)*100).toFixed(1):'0';
+      var bg3=i%2?'rgba(0,0,0,.02)':'transparent';
+      var rankClr=p.rank==='A+'?'#dc2626':p.rank==='A'?'#ea580c':p.rank==='B'?'#d97706':'#94a3b8';
+      html+='<tr style="background:'+bg3+'">';
+      html+='<td style="padding:5px 8px;text-align:center;font-size:11px;color:var(--muted)">'+(MEDAL3[i]||(i+1))+'</td>';
+      html+='<td style="padding:5px 8px;font-weight:600;font-size:12px;color:var(--text)">'+_stripBrand(p.name)+'</td>';
+      html+='<td style="padding:5px 8px;text-align:center"><span style="padding:1px 6px;border-radius:8px;font-size:10px;font-weight:700;background:'+(p.type==='Ambient'?'#fff7ed':'#eff6ff')+';color:'+(p.type==='Ambient'?'#ea580c':'#2563eb')+'">'+p.type+'</span></td>';
+      html+='<td style="padding:5px 8px;text-align:center"><span style="padding:1px 6px;border-radius:8px;font-size:10px;font-weight:800;color:#fff;background:'+rankClr+'">'+p.rank+'</span></td>';
+      html+='<td style="padding:5px 8px;text-align:right;font-size:12px;color:var(--text)">'+fmtQ(p.tu)+' ชิ้น</td>';
+      html+='<td style="padding:5px 8px;text-align:right;font-weight:700;color:'+c.clr+'">฿'+fmtB(p.tb)+'</td>';
+      html+='<td style="padding:5px 8px;text-align:right;font-size:12px;color:var(--muted)">'+pct+'%</td>';
+      html+='</tr>';
+    });
+    html+='</tbody></table></div></div>';
+  });
+
   // Filters
   html+='<div class="card" style="margin-bottom:16px">';
   html+='<div class="card-title">📋 ตารางผลงานสินค้า</div>';

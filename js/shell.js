@@ -52,6 +52,7 @@
       { sub: 'ol-supply',     icon: '🧾', label: 'วัสดุสิ้นเปลือง' },
       { sub: 'ol-cost',       icon: '💰', label: 'ต้นทุนขายสินค้า' },
       { sub: 'ol-prodrank',   icon: '📋', label: 'รายการขายสินค้า' },
+      { sub: 'ol-shops',      icon: '🏪', label: 'ข้อมูลร้านค้า' },
       { sub: 'ol-ai',         icon: '🤖', label: 'วิเคราะห์ AI' },
       { sub: 'ol-dataupdate', icon: '🔄', label: 'อัพเดทข้อมูล', rbac: 'rbac-import' }
     ]},
@@ -76,6 +77,7 @@
     ]},
     { id: 'sm-expense', icon: '💼', label: 'ฝ่ายขาย - การตลาด', children: [
       { sub: 'sm-products',    icon: '📋', label: 'รายการสินค้า' },
+      { sub: 'sm-prod-perf',   icon: '🏆', label: 'ผลงานสินค้า' },
       { sub: 'sm-quality',     icon: '🔍', label: 'คุณภาพสินค้า' },
       { sub: 'sm-workflow',    icon: '🔄', label: 'ขั้นตอนการทำงาน' },
       { sub: 'sm-performance', icon: '📈', label: 'ผลงานเซลล์' },
@@ -96,6 +98,7 @@
       { sub: 'adm-leave',      icon: '📅', label: 'วันหยุด' },
       { sub: 'adm-guide',      icon: '📖', label: 'คู่มือ' },
       { sub: 'adm-complaints', icon: '📋', label: 'ปัญหาจากลูกค้า' },
+      { sub: 'adm-booth',       icon: '🏕️', label: 'ข้อมูลบูธ' },
       { sub: 'adm-sm-sales',   icon: '💼', label: 'ค่าใช้จ่ายเซลล์' },
       { sub: 'adm-sm-fda',     icon: '🏷️', label: 'จดทะเบียน อ.ย.' },
       { sub: 'adm-sm-sample',  icon: '🧪', label: 'สินค้าตัวอย่าง' },

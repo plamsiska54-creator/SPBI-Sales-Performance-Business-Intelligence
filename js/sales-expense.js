@@ -6,6 +6,7 @@
 // ---- 2-Level Navigation ----
 var SM_MENU = {
   'sm-products':     { label: '📋 รายการสินค้า', subs: null },
+  'sm-prod-perf':    { label: '🏆 ผลงานสินค้า', subs: null, render: 'renderSmProdPerf' },
   'sm-quality':      { label: '🔍 คุณภาพสินค้า', subs: null },
   'sm-workflow':     { label: '🔄 Work Flow', subs: null },
   'sm-performance':  { label: '📈 Performance Sales', subs: [
@@ -2583,7 +2584,7 @@ function _custOpenModal(title, bodyHtml, onSave, accentColor) {
     + '<button onclick="document.getElementById(\'custFormOverlay\').remove()" style="background:none;border:none;font-size:22px;cursor:pointer;color:#94a3b8;padding:4px">&#10005;</button>'
     + '</div>'
     + '<div id="custFormBody" style="padding:20px 24px"><div style="display:grid;grid-template-columns:1fr 1fr;gap:0 16px">' + bodyHtml + '</div></div>'
-    + '<div style="padding:16px 24px 20px;border-top:1px solid #e5e7eb;display:flex;gap:10px;justify-content:flex-end;position:sticky;bottom:0;background:#fff;border-radius:0 0 12px 12px">'
+    + '<div style="padding:16px 24px 20px;border-top:1px solid #e5e7eb;display:flex;gap:10px;justify-content:flex-end;background:#fff;border-radius:0 0 12px 12px">'
     + '<button onclick="document.getElementById(\'custFormOverlay\').remove()" style="padding:10px 24px;border:1px solid #d1d5db;border-radius:8px;background:#fff;cursor:pointer;font-size:14px;color:#374151">ยกเลิก</button>'
     + '<button id="custSaveBtn" style="padding:10px 24px;border:none;border-radius:8px;background:' + accentColor + ';color:#fff;cursor:pointer;font-size:14px;font-weight:600">💾 บันทึก</button>'
     + '</div></div>';
@@ -3546,4 +3547,189 @@ function _custMarketCSV() {
     return [r.storeId, r.storeName, r.admin, r.username, r.bankAccount, r.billingCycle, r.feePercent, r.note];
   });
   _custExportCSV(rows, headers, 'customer_online_market_' + new Date().toISOString().slice(0, 10) + '.csv');
+}
+
+// ============================================================
+// ผลงานสินค้า — รวมทุกพอร์ท (MT + Amazon/Ordering Center)
+// ============================================================
+var _smProdPerfRendered = false;
+function renderSmProdPerf() {
+  if (_smProdPerfRendered) return;
+  _smProdPerfRendered = true;
+  var el = document.getElementById('sm-prod-perf');
+  if (!el) return;
+
+  // ---- Aggregate products from MT_DATA (all channels) ----
+  var prodMap = {};
+  if (typeof MT_DATA !== 'undefined' && MT_DATA.ch) {
+    var chs = Object.keys(MT_DATA.ch);
+    for (var ci = 0; ci < chs.length; ci++) {
+      var arr = MT_DATA.ch[chs[ci]];
+      for (var pi = 0; pi < arr.length; pi++) {
+        var p = arr[pi];
+        var key = (p.code || p.name).replace(/\s+/g, '');
+        if (!prodMap[key]) {
+          prodMap[key] = { name: p.name, code: p.code || '', type: p.type || '', rank: p.rank || '', tu: 0, tb: 0, src: 'MT' };
+        }
+        prodMap[key].tu += (p.tu || 0);
+        prodMap[key].tb += (p.tb || 0);
+      }
+    }
+  }
+
+  // ---- Aggregate products from AMZ_ORDER_DATA ----
+  if (typeof AMZ_ORDER_DATA !== 'undefined' && AMZ_ORDER_DATA.topProdAll) {
+    var amz = AMZ_ORDER_DATA.topProdAll;
+    for (var ai = 0; ai < amz.length; ai++) {
+      var a = amz[ai];
+      var akey = 'amz_' + a.p.replace(/\s+/g, '');
+      if (!prodMap[akey]) {
+        prodMap[akey] = { name: a.p, code: '', type: '', rank: '', tu: 0, tb: 0, src: 'AMZ' };
+      }
+      prodMap[akey].tu += (a.q || 0);
+      prodMap[akey].tb += (a.n || 0);
+    }
+  }
+
+  var products = [];
+  var keys = Object.keys(prodMap);
+  for (var k = 0; k < keys.length; k++) products.push(prodMap[keys[k]]);
+  products.sort(function(a, b) { return (b.tb || 0) - (a.tb || 0); });
+
+  var totalBaht = products.reduce(function(s, p) { return s + (p.tb || 0); }, 0);
+  var totalQty = products.reduce(function(s, p) { return s + (p.tu || 0); }, 0);
+
+  // ---- 8 Categories ----
+  var PP_CATS = [
+    { key:'cake', label:'กลุ่มขนมเค้ก', icon:'🎂', clr:'#e11d48', match: function(n) {
+      return (n.indexOf('เค้ก')!==-1||n.indexOf('มูส')!==-1||n.indexOf('เบาหวิว')!==-1||n.indexOf('บราวนี่')!==-1||n.indexOf('ลาวา')!==-1||n.indexOf('คัพเค้ก')!==-1||n.indexOf('เค้กโรล')!==-1)
+        && n.indexOf('ชิฟฟ่อน')===-1 && n.indexOf('วุ้น')===-1 && n.indexOf('วันเกิด')===-1 && n.indexOf('birthday')===-1;
+    }},
+    { key:'bread', label:'กลุ่มขนมปัง', icon:'🍞', clr:'#d97706', match: function(n) {
+      return n.indexOf('ขนมปัง')!==-1||n.indexOf('ปังเนย')!==-1||n.indexOf('ปังสังขยา')!==-1||n.indexOf('ปังลาวา')!==-1||(n.substring(0,3)==='ปัง'&&n.indexOf('เปี๊ยะ')===-1);
+    }},
+    { key:'sandwich', label:'กลุ่มแซนวิช', icon:'🥪', clr:'#0891b2', match: function(n) {
+      return n.indexOf('แซนวิช')!==-1||n.indexOf('แซนด์วิช')!==-1;
+    }},
+    { key:'jelly', label:'กลุ่มวุ้น', icon:'🍮', clr:'#7c3aed', match: function(n) {
+      return n.indexOf('วุ้น')!==-1;
+    }},
+    { key:'chiffon', label:'กลุ่มชิฟฟ่อน', icon:'🧁', clr:'#16a34a', match: function(n) {
+      return n.indexOf('ชิฟฟ่อน')!==-1;
+    }},
+    { key:'pia', label:'กลุ่มขนมเปี๊ยะ', icon:'🥮', clr:'#b45309', match: function(n) {
+      return n.indexOf('เปี๊ยะ')!==-1||n.indexOf('โมจิ')!==-1;
+    }},
+    { key:'bday', label:'กลุ่มเค้กวันเกิด', icon:'🎉', clr:'#db2777', match: function(n) {
+      return n.indexOf('วันเกิด')!==-1||n.indexOf('birthday')!==-1||n.indexOf('Birthday')!==-1;
+    }},
+    { key:'dry', label:'กลุ่มขนมแห้ง', icon:'🍪', clr:'#92400e', match: function(n) {
+      return n.indexOf('คุกกี้')!==-1||n.indexOf('พาย')!==-1||n.indexOf('ทาร์ต')!==-1||n.indexOf('บิสกิต')!==-1||n.indexOf('พายสัป')!==-1;
+    }}
+  ];
+
+  function _getCat(name) {
+    var nl = name.toLowerCase();
+    for (var i = 0; i < PP_CATS.length; i++) {
+      if (PP_CATS[i].match(nl.length ? name : name)) return PP_CATS[i].key;
+    }
+    return 'other';
+  }
+
+  var catGroups = {};
+  PP_CATS.forEach(function(c) { catGroups[c.key] = []; });
+  catGroups.other = [];
+  products.forEach(function(p) { var cat = _getCat(p.name); catGroups[cat].push(p); });
+
+  function fmtB(v) {
+    if (v >= 1e6) return (v / 1e6).toFixed(2) + ' M';
+    if (v >= 1e3) return (v / 1e3).toFixed(1) + ' K';
+    return v.toFixed(0);
+  }
+  function fmtQ(v) { return v.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ','); }
+
+  // ---- Build HTML ----
+  var html = '';
+
+  // Header
+  html += '<div style="background:linear-gradient(135deg,#7c3aed 0%,#4f46e5 100%);border-radius:16px;padding:24px 28px;margin-bottom:20px;color:#fff">';
+  html += '<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">';
+  html += '<div><div style="font-size:20px;font-weight:800">🏆 ผลงานสินค้า — ทุกพอร์ท</div>';
+  html += '<div style="font-size:12px;opacity:.85;margin-top:4px">รวมข้อมูลจาก Modern Trade + Amazon & Ordering Center</div></div>';
+  html += '<div style="text-align:right"><div style="font-size:11px;opacity:.7">ข้อมูลปี 2569</div></div></div></div>';
+
+  // KPI cards
+  html += '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:20px">';
+  html += '<div class="card" style="padding:16px;text-align:center"><div style="font-size:11px;color:var(--muted)">จำนวน SKU</div><div style="font-size:28px;font-weight:800;color:var(--text)">' + products.length + '</div></div>';
+  html += '<div class="card" style="padding:16px;text-align:center"><div style="font-size:11px;color:var(--muted)">ยอดขายรวม (บาท)</div><div style="font-size:28px;font-weight:800;color:#7c3aed">฿' + fmtB(totalBaht) + '</div></div>';
+  html += '<div class="card" style="padding:16px;text-align:center"><div style="font-size:11px;color:var(--muted)">ยอดขายรวม (ชิ้น)</div><div style="font-size:28px;font-weight:800;color:var(--text)">' + fmtQ(Math.round(totalQty)) + '</div></div>';
+  html += '<div class="card" style="padding:16px;text-align:center"><div style="font-size:11px;color:var(--muted)">จำนวนกลุ่มสินค้า</div><div style="font-size:28px;font-weight:800;color:#4f46e5">' + PP_CATS.length + ' กลุ่ม</div></div>';
+  html += '</div>';
+
+  // Category summary grid
+  html += '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:20px">';
+  PP_CATS.forEach(function(c) {
+    var items = catGroups[c.key];
+    var catTotal = items.reduce(function(s, p) { return s + (p.tb || 0); }, 0);
+    var pct = totalBaht > 0 ? ((catTotal / totalBaht) * 100).toFixed(1) : '0';
+    html += '<div class="card" style="padding:14px;text-align:center;border-left:4px solid ' + c.clr + ';cursor:pointer" onclick="document.getElementById(\'spp-' + c.key + '\').scrollIntoView({behavior:\'smooth\',block:\'start\'})">';
+    html += '<div style="font-size:22px">' + c.icon + '</div>';
+    html += '<div style="font-size:12px;font-weight:700;color:' + c.clr + ';margin:4px 0">' + c.label + '</div>';
+    html += '<div style="font-size:18px;font-weight:800;color:var(--text)">' + items.length + ' SKU</div>';
+    html += '<div style="font-size:11px;color:var(--muted)">฿' + fmtB(catTotal) + ' (' + pct + '%)</div></div>';
+  });
+  var otherItems = catGroups.other;
+  var otherTotal = otherItems.reduce(function(s, p) { return s + (p.tb || 0); }, 0);
+  var otherPct = totalBaht > 0 ? ((otherTotal / totalBaht) * 100).toFixed(1) : '0';
+  html += '<div class="card" style="padding:14px;text-align:center;border-left:4px solid #94a3b8;cursor:pointer" onclick="document.getElementById(\'spp-other\').scrollIntoView({behavior:\'smooth\',block:\'start\'})">';
+  html += '<div style="font-size:22px">📦</div>';
+  html += '<div style="font-size:12px;font-weight:700;color:#94a3b8;margin:4px 0">อื่นๆ</div>';
+  html += '<div style="font-size:18px;font-weight:800;color:var(--text)">' + otherItems.length + ' SKU</div>';
+  html += '<div style="font-size:11px;color:var(--muted)">฿' + fmtB(otherTotal) + ' (' + otherPct + '%)</div></div>';
+  html += '</div>';
+
+  // Top 20 per category
+  var MEDAL = ['🥇', '🥈', '🥉'];
+
+  function buildTop20(catKey, catLabel, catIcon, catClr, items) {
+    var sorted = items.slice().sort(function(a, b) { return (b.tb || 0) - (a.tb || 0); }).slice(0, 20);
+    if (!sorted.length) return '';
+    var catTotal = sorted.reduce(function(s, p) { return s + (p.tb || 0); }, 0);
+    var h = '<div id="spp-' + catKey + '" class="card" style="margin-bottom:16px;border-left:4px solid ' + catClr + '">';
+    h += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px;padding:16px 16px 0">';
+    h += '<div style="font-size:16px;font-weight:800;color:' + catClr + '">' + catIcon + ' Top 20 ' + catLabel + ' <span style="font-size:11px;color:var(--muted);font-weight:500">(' + items.length + ' SKU)</span></div>';
+    h += '<div style="font-size:13px;font-weight:700;color:' + catClr + '">รวม ฿' + fmtB(catTotal) + '</div></div>';
+    h += '<div class="table-wrap" style="padding:0 16px 16px"><table style="width:100%;border-collapse:collapse"><thead><tr>';
+    h += '<th style="padding:8px;background:' + catClr + ';color:#fff;font-size:11px;text-align:center;border-radius:6px 0 0 0">#</th>';
+    h += '<th style="padding:8px;background:' + catClr + ';color:#fff;font-size:11px;text-align:left">ชื่อสินค้า</th>';
+    h += '<th style="padding:8px;background:' + catClr + ';color:#fff;font-size:11px;text-align:center">แหล่ง</th>';
+    h += '<th style="padding:8px;background:' + catClr + ';color:#fff;font-size:11px;text-align:right">จำนวนขาย</th>';
+    h += '<th style="padding:8px;background:' + catClr + ';color:#fff;font-size:11px;text-align:right">ยอดขาย (฿)</th>';
+    h += '<th style="padding:8px;background:' + catClr + ';color:#fff;font-size:11px;text-align:right;border-radius:0 6px 0 0">%</th>';
+    h += '</tr></thead><tbody>';
+    sorted.forEach(function(p, i) {
+      var pct = totalBaht > 0 ? ((p.tb / totalBaht) * 100).toFixed(2) : '0';
+      var bg = i % 2 ? 'rgba(0,0,0,.02)' : 'transparent';
+      var srcBadge = p.src === 'AMZ'
+        ? '<span style="padding:1px 6px;border-radius:8px;font-size:9px;font-weight:700;background:#fff7ed;color:#ea580c">AMZ</span>'
+        : '<span style="padding:1px 6px;border-radius:8px;font-size:9px;font-weight:700;background:#eff6ff;color:#2563eb">MT</span>';
+      h += '<tr style="background:' + bg + '">';
+      h += '<td style="padding:6px 8px;text-align:center;font-size:12px;color:var(--muted)">' + (MEDAL[i] || (i + 1)) + '</td>';
+      h += '<td style="padding:6px 8px;font-weight:600;font-size:12px;color:var(--text)">' + p.name + '</td>';
+      h += '<td style="padding:6px 8px;text-align:center">' + srcBadge + '</td>';
+      h += '<td style="padding:6px 8px;text-align:right;font-size:12px;color:var(--text)">' + fmtQ(Math.round(p.tu)) + ' ชิ้น</td>';
+      h += '<td style="padding:6px 8px;text-align:right;font-weight:700;color:' + catClr + '">฿' + fmtB(p.tb) + '</td>';
+      h += '<td style="padding:6px 8px;text-align:right;font-size:12px;color:var(--muted)">' + pct + '%</td>';
+      h += '</tr>';
+    });
+    h += '</tbody></table></div></div>';
+    return h;
+  }
+
+  PP_CATS.forEach(function(c) {
+    html += buildTop20(c.key, c.label, c.icon, c.clr, catGroups[c.key]);
+  });
+  html += buildTop20('other', 'อื่นๆ', '📦', '#94a3b8', catGroups.other);
+
+  el.innerHTML = '<div style="padding:8px">' + html + '</div>';
 }
