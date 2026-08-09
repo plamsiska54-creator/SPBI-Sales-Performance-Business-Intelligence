@@ -1,0 +1,588 @@
+{
+  "metadata": {
+    "period": "2026-W01 to 2026-W26",
+    "granularity": "weekly"
+  },
+  "brands": [
+    {
+      "id": "wanwanach",
+      "name": "วรรณวนัช",
+      "logo": "🏭",
+      "color": "#7b2ff7",
+      "description": "ขนมไทยคุณภาพ ส่งตรงจากโรงงาน",
+      "products": 12,
+      "avgPrice": 35,
+      "priceRange": {
+        "min": 15,
+        "max": 89
+      },
+      "marketShare": 8.5,
+      "ratings": {
+        "overall": 4.2,
+        "taste": 4.5,
+        "value": 4,
+        "packaging": 3.8,
+        "freshness": 4.3,
+        "delivery": 3.9
+      },
+      "reviewCount": 2840,
+      "sentiment": {
+        "positive": 68,
+        "neutral": 22,
+        "negative": 10
+      },
+      "platforms": {
+        "shopee": {
+          "products": 8,
+          "avgRating": 4.3,
+          "totalSold": 15200
+        },
+        "lazada": {
+          "products": 6,
+          "avgRating": 4.1,
+          "totalSold": 8900
+        },
+        "amazon": {
+          "products": 3,
+          "avgRating": 4,
+          "totalSold": 1200
+        }
+      },
+      "marketing": {
+        "strategy": "เน้นออนไลน์ + Influencer รีวิว",
+        "channels": [
+          "Facebook",
+          "TikTok",
+          "Shopee Live"
+        ]
+      },
+      "weeklySales": [
+        424200,
+        413502,
+        450801,
+        436761,
+        527329,
+        544768,
+        486380,
+        516738,
+        589475,
+        598724,
+        605896,
+        669322,
+        554780,
+        604251,
+        792480,
+        804675,
+        572904,
+        620526,
+        622928,
+        628012,
+        643100,
+        669554,
+        639491,
+        651845,
+        681970,
+        709927
+      ]
+    },
+    {
+      "id": "taokaenoi",
+      "name": "เถ้าแก่น้อย",
+      "logo": "🍟",
+      "color": "#2ecc71",
+      "description": "ผู้นำตลาดสาหร่ายและขนมทะเล ส่งออกทั่วโลก",
+      "products": 28,
+      "avgPrice": 32,
+      "priceRange": {
+        "min": 12,
+        "max": 120
+      },
+      "marketShare": 22,
+      "ratings": {
+        "overall": 4.4,
+        "taste": 4.6,
+        "value": 4.1,
+        "packaging": 4.3,
+        "freshness": 4.2,
+        "delivery": 4
+      },
+      "reviewCount": 18500,
+      "sentiment": {
+        "positive": 72,
+        "neutral": 20,
+        "negative": 8
+      },
+      "platforms": {
+        "shopee": {
+          "products": 22,
+          "avgRating": 4.5,
+          "totalSold": 89000
+        },
+        "lazada": {
+          "products": 18,
+          "avgRating": 4.3,
+          "totalSold": 52000
+        },
+        "amazon": {
+          "products": 12,
+          "avgRating": 4.2,
+          "totalSold": 8500
+        }
+      },
+      "marketing": {
+        "strategy": "แบรนด์แอมบาสเดอร์ระดับประเทศ + ส่งออก",
+        "channels": [
+          "TV",
+          "YouTube",
+          "Facebook",
+          "TikTok",
+          "LINE"
+        ]
+      },
+      "weeklySales": [
+        1053174,
+        1149723,
+        1145819,
+        1062744,
+        1274048,
+        1203604,
+        1173106,
+        1180970,
+        1368648,
+        1296439,
+        1415282,
+        1297630,
+        1158672,
+        1108891,
+        1583995,
+        1571436,
+        1123298,
+        1154506,
+        1217060,
+        1176349,
+        1178162,
+        1199064,
+        1107654,
+        1117819,
+        1142796,
+        1175500
+      ]
+    },
+    {
+      "id": "manora",
+      "name": "มโนราห์",
+      "logo": "🍪",
+      "color": "#e67e22",
+      "description": "ข้าวเกรียบดั้งเดิม คุณภาพมาตรฐานส่งออก",
+      "products": 15,
+      "avgPrice": 28,
+      "priceRange": {
+        "min": 10,
+        "max": 75
+      },
+      "marketShare": 15,
+      "ratings": {
+        "overall": 4.1,
+        "taste": 4.3,
+        "value": 4.4,
+        "packaging": 3.7,
+        "freshness": 4.1,
+        "delivery": 3.8
+      },
+      "reviewCount": 9200,
+      "sentiment": {
+        "positive": 65,
+        "neutral": 25,
+        "negative": 10
+      },
+      "platforms": {
+        "shopee": {
+          "products": 12,
+          "avgRating": 4.2,
+          "totalSold": 42000
+        },
+        "lazada": {
+          "products": 10,
+          "avgRating": 4,
+          "totalSold": 28000
+        },
+        "amazon": {
+          "products": 5,
+          "avgRating": 3.9,
+          "totalSold": 3200
+        }
+      },
+      "marketing": {
+        "strategy": "เน้นช่องทางค้าปลีกดั้งเดิม + ส่งออก",
+        "channels": [
+          "Facebook",
+          "LINE",
+          "งานแสดงสินค้า"
+        ]
+      },
+      "weeklySales": [
+        786031,
+        772262,
+        723543,
+        764204,
+        841510,
+        864942,
+        793458,
+        731931,
+        920479,
+        942196,
+        945812,
+        949046,
+        755237,
+        754135,
+        1048734,
+        1046008,
+        718455,
+        728732,
+        801850,
+        797215,
+        820861,
+        727445,
+        752614,
+        733746,
+        744634,
+        761793
+      ]
+    },
+    {
+      "id": "hanami",
+      "name": "ฮานามิ",
+      "logo": "🍤",
+      "color": "#e74c3c",
+      "description": "ข้าวเกรียบกุ้งยอดนิยม ครองตลาดมายาวนาน",
+      "products": 10,
+      "avgPrice": 30,
+      "priceRange": {
+        "min": 15,
+        "max": 65
+      },
+      "marketShare": 12,
+      "ratings": {
+        "overall": 4,
+        "taste": 4.2,
+        "value": 3.9,
+        "packaging": 3.8,
+        "freshness": 4,
+        "delivery": 3.7
+      },
+      "reviewCount": 7800,
+      "sentiment": {
+        "positive": 63,
+        "neutral": 26,
+        "negative": 11
+      },
+      "platforms": {
+        "shopee": {
+          "products": 8,
+          "avgRating": 4.1,
+          "totalSold": 35000
+        },
+        "lazada": {
+          "products": 7,
+          "avgRating": 3.9,
+          "totalSold": 22000
+        },
+        "amazon": {
+          "products": 2,
+          "avgRating": 3.8,
+          "totalSold": 1800
+        }
+      },
+      "marketing": {
+        "strategy": "สื่อทีวี + โปรโมชั่นหน้าร้าน",
+        "channels": [
+          "TV",
+          "Facebook",
+          "โปรโมชั่นร้านสะดวกซื้อ"
+        ]
+      },
+      "weeklySales": [
+        579855,
+        599952,
+        603522,
+        594512,
+        694387,
+        675432,
+        628787,
+        593044,
+        704767,
+        737231,
+        704034,
+        705161,
+        637756,
+        630658,
+        828597,
+        867530,
+        547498,
+        559784,
+        612244,
+        601822,
+        604247,
+        569923,
+        611315,
+        622967,
+        578194,
+        613002
+      ]
+    },
+    {
+      "id": "lays",
+      "name": "เลย์ (ไทยแลนด์)",
+      "logo": "🥔",
+      "color": "#f1c40f",
+      "description": "แบรนด์มันฝรั่งทอดอันดับ 1 รสชาติหลากหลาย",
+      "products": 20,
+      "avgPrice": 25,
+      "priceRange": {
+        "min": 13,
+        "max": 59
+      },
+      "marketShare": 25,
+      "ratings": {
+        "overall": 4.3,
+        "taste": 4.5,
+        "value": 4.2,
+        "packaging": 4.1,
+        "freshness": 4,
+        "delivery": 4
+      },
+      "reviewCount": 22000,
+      "sentiment": {
+        "positive": 70,
+        "neutral": 22,
+        "negative": 8
+      },
+      "platforms": {
+        "shopee": {
+          "products": 15,
+          "avgRating": 4.4,
+          "totalSold": 98000
+        },
+        "lazada": {
+          "products": 12,
+          "avgRating": 4.2,
+          "totalSold": 61000
+        },
+        "amazon": {
+          "products": 8,
+          "avgRating": 4.1,
+          "totalSold": 5200
+        }
+      },
+      "marketing": {
+        "strategy": "โฆษณาทีวี + ดาราพรีเซ็นเตอร์ + Limited Edition รสชาติ",
+        "channels": [
+          "TV",
+          "YouTube",
+          "Facebook",
+          "Instagram",
+          "TikTok"
+        ]
+      },
+      "weeklySales": [
+        1259777,
+        1203538,
+        1250416,
+        1310009,
+        1461102,
+        1429337,
+        1311395,
+        1284806,
+        1557437,
+        1500416,
+        1569168,
+        1509211,
+        1279788,
+        1263759,
+        1695161,
+        1898198,
+        1256268,
+        1280431,
+        1305939,
+        1331665,
+        1326050,
+        1351884,
+        1274087,
+        1388012,
+        1401555,
+        1318187
+      ]
+    },
+    {
+      "id": "koikeya",
+      "name": "โคอิเกะยะ",
+      "logo": "🎌",
+      "color": "#9b59b6",
+      "description": "ขนมญี่ปุ่นนำเข้าคุณภาพพรีเมียม",
+      "products": 8,
+      "avgPrice": 55,
+      "priceRange": {
+        "min": 35,
+        "max": 129
+      },
+      "marketShare": 5,
+      "ratings": {
+        "overall": 4.1,
+        "taste": 4.4,
+        "value": 3.5,
+        "packaging": 4.5,
+        "freshness": 4.2,
+        "delivery": 3.8
+      },
+      "reviewCount": 3100,
+      "sentiment": {
+        "positive": 71,
+        "neutral": 19,
+        "negative": 10
+      },
+      "platforms": {
+        "shopee": {
+          "products": 6,
+          "avgRating": 4.3,
+          "totalSold": 9800
+        },
+        "lazada": {
+          "products": 5,
+          "avgRating": 4.1,
+          "totalSold": 6200
+        },
+        "amazon": {
+          "products": 4,
+          "avgRating": 4.2,
+          "totalSold": 2800
+        }
+      },
+      "marketing": {
+        "strategy": "เน้นกลุ่มพรีเมียม + ร้านค้าเฉพาะทาง",
+        "channels": [
+          "Instagram",
+          "Facebook",
+          "ร้านขนมนำเข้า"
+        ]
+      },
+      "weeklySales": [
+        250534,
+        246133,
+        255904,
+        259811,
+        306099,
+        284696,
+        259791,
+        274854,
+        321133,
+        335963,
+        315730,
+        327690,
+        296208,
+        287811,
+        371994,
+        413485,
+        285429,
+        295156,
+        309525,
+        318264,
+        299009,
+        310189,
+        315746,
+        305142,
+        297910,
+        318466
+      ]
+    }
+  ],
+  "priceComparison": [
+    {
+      "product": "ข้าวเกรียบกุ้ง 80g",
+      "prices": {
+        "wanwanach": 29,
+        "manora": 25,
+        "hanami": 35,
+        "lays": null,
+        "taokaenoi": null,
+        "koikeya": null
+      }
+    },
+    {
+      "product": "สาหร่ายอบ 30g",
+      "prices": {
+        "wanwanach": 39,
+        "manora": null,
+        "hanami": null,
+        "lays": null,
+        "taokaenoi": 35,
+        "koikeya": 55
+      }
+    },
+    {
+      "product": "ขนมกรอบรวม 100g",
+      "prices": {
+        "wanwanach": 35,
+        "manora": 30,
+        "hanami": 38,
+        "lays": 32,
+        "taokaenoi": 29,
+        "koikeya": 59
+      }
+    },
+    {
+      "product": "ข้าวเกรียบปลาหมึก 70g",
+      "prices": {
+        "wanwanach": 32,
+        "manora": 28,
+        "hanami": null,
+        "lays": null,
+        "taokaenoi": null,
+        "koikeya": null
+      }
+    },
+    {
+      "product": "มันฝรั่งทอด 75g",
+      "prices": {
+        "wanwanach": null,
+        "manora": null,
+        "hanami": null,
+        "lays": 25,
+        "taokaenoi": null,
+        "koikeya": 49
+      }
+    },
+    {
+      "product": "ถั่วอบรวม 120g",
+      "prices": {
+        "wanwanach": 45,
+        "manora": null,
+        "hanami": null,
+        "lays": null,
+        "taokaenoi": 42,
+        "koikeya": 69
+      }
+    },
+    {
+      "product": "ทองม้วน 150g",
+      "prices": {
+        "wanwanach": 55,
+        "manora": null,
+        "hanami": null,
+        "lays": null,
+        "taokaenoi": null,
+        "koikeya": null
+      }
+    },
+    {
+      "product": "ขนมปังกรอบ 80g",
+      "prices": {
+        "wanwanach": 25,
+        "manora": 22,
+        "hanami": 28,
+        "lays": null,
+        "taokaenoi": null,
+        "koikeya": 45
+      }
+    }
+  ]
+}

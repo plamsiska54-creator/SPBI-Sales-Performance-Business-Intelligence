@@ -1,0 +1,550 @@
+{
+  "metadata": {
+    "period": "2026-W01 to 2026-W26",
+    "granularity": "weekly"
+  },
+  "mentions": {
+    "weekly": [
+      {
+        "week": "2026-W01",
+        "facebook": 1267,
+        "instagram": 912,
+        "x": 439,
+        "tiktok": 2198,
+        "pantip": 176
+      },
+      {
+        "week": "2026-W02",
+        "facebook": 1312,
+        "instagram": 856,
+        "x": 428,
+        "tiktok": 2139,
+        "pantip": 192
+      },
+      {
+        "week": "2026-W03",
+        "facebook": 1328,
+        "instagram": 910,
+        "x": 462,
+        "tiktok": 2204,
+        "pantip": 195
+      },
+      {
+        "week": "2026-W04",
+        "facebook": 1285,
+        "instagram": 917,
+        "x": 466,
+        "tiktok": 2283,
+        "pantip": 181
+      },
+      {
+        "week": "2026-W05",
+        "facebook": 1403,
+        "instagram": 1065,
+        "x": 483,
+        "tiktok": 2603,
+        "pantip": 216
+      },
+      {
+        "week": "2026-W06",
+        "facebook": 1423,
+        "instagram": 1125,
+        "x": 523,
+        "tiktok": 2534,
+        "pantip": 212
+      },
+      {
+        "week": "2026-W07",
+        "facebook": 1372,
+        "instagram": 911,
+        "x": 475,
+        "tiktok": 2294,
+        "pantip": 182
+      },
+      {
+        "week": "2026-W08",
+        "facebook": 1315,
+        "instagram": 990,
+        "x": 483,
+        "tiktok": 2306,
+        "pantip": 191
+      },
+      {
+        "week": "2026-W09",
+        "facebook": 1508,
+        "instagram": 1186,
+        "x": 560,
+        "tiktok": 2856,
+        "pantip": 236
+      },
+      {
+        "week": "2026-W10",
+        "facebook": 1479,
+        "instagram": 1109,
+        "x": 538,
+        "tiktok": 2726,
+        "pantip": 230
+      },
+      {
+        "week": "2026-W11",
+        "facebook": 1598,
+        "instagram": 1252,
+        "x": 583,
+        "tiktok": 2727,
+        "pantip": 248
+      },
+      {
+        "week": "2026-W12",
+        "facebook": 1577,
+        "instagram": 1134,
+        "x": 582,
+        "tiktok": 3058,
+        "pantip": 242
+      },
+      {
+        "week": "2026-W13",
+        "facebook": 1349,
+        "instagram": 977,
+        "x": 478,
+        "tiktok": 2491,
+        "pantip": 198
+      },
+      {
+        "week": "2026-W14",
+        "facebook": 1394,
+        "instagram": 1093,
+        "x": 478,
+        "tiktok": 2600,
+        "pantip": 206
+      },
+      {
+        "week": "2026-W15",
+        "facebook": 1861,
+        "instagram": 1295,
+        "x": 675,
+        "tiktok": 3429,
+        "pantip": 255
+      },
+      {
+        "week": "2026-W16",
+        "facebook": 1739,
+        "instagram": 1432,
+        "x": 712,
+        "tiktok": 3424,
+        "pantip": 293
+      },
+      {
+        "week": "2026-W17",
+        "facebook": 1261,
+        "instagram": 999,
+        "x": 475,
+        "tiktok": 2513,
+        "pantip": 199
+      },
+      {
+        "week": "2026-W18",
+        "facebook": 1381,
+        "instagram": 1073,
+        "x": 476,
+        "tiktok": 2624,
+        "pantip": 193
+      },
+      {
+        "week": "2026-W19",
+        "facebook": 1355,
+        "instagram": 1155,
+        "x": 525,
+        "tiktok": 2647,
+        "pantip": 204
+      },
+      {
+        "week": "2026-W20",
+        "facebook": 1428,
+        "instagram": 1105,
+        "x": 517,
+        "tiktok": 2792,
+        "pantip": 207
+      },
+      {
+        "week": "2026-W21",
+        "facebook": 1424,
+        "instagram": 1161,
+        "x": 510,
+        "tiktok": 2687,
+        "pantip": 229
+      },
+      {
+        "week": "2026-W22",
+        "facebook": 1350,
+        "instagram": 1132,
+        "x": 518,
+        "tiktok": 2571,
+        "pantip": 202
+      },
+      {
+        "week": "2026-W23",
+        "facebook": 1395,
+        "instagram": 1074,
+        "x": 540,
+        "tiktok": 2698,
+        "pantip": 218
+      },
+      {
+        "week": "2026-W24",
+        "facebook": 1407,
+        "instagram": 1062,
+        "x": 538,
+        "tiktok": 2802,
+        "pantip": 226
+      },
+      {
+        "week": "2026-W25",
+        "facebook": 1362,
+        "instagram": 1172,
+        "x": 544,
+        "tiktok": 2857,
+        "pantip": 231
+      },
+      {
+        "week": "2026-W26",
+        "facebook": 1339,
+        "instagram": 1187,
+        "x": 507,
+        "tiktok": 2896,
+        "pantip": 221
+      }
+    ],
+    "totalByPlatform": {
+      "facebook": 36912,
+      "instagram": 28284,
+      "x": 13515,
+      "tiktok": 68959,
+      "pantip": 5583
+    },
+    "totalByBrand": {
+      "wanwanach": 13793,
+      "taokaenoi": 38313,
+      "manora": 19923,
+      "hanami": 16858,
+      "lays": 42911,
+      "koikeya": 9195,
+      "others": 12260
+    }
+  },
+  "sentiment": {
+    "overall": {
+      "positive": 62,
+      "neutral": 25,
+      "negative": 13
+    },
+    "byBrand": {
+      "wanwanach": {
+        "positive": 68,
+        "neutral": 22,
+        "negative": 10
+      },
+      "taokaenoi": {
+        "positive": 72,
+        "neutral": 20,
+        "negative": 8
+      },
+      "manora": {
+        "positive": 65,
+        "neutral": 25,
+        "negative": 10
+      },
+      "hanami": {
+        "positive": 63,
+        "neutral": 26,
+        "negative": 11
+      },
+      "lays": {
+        "positive": 70,
+        "neutral": 22,
+        "negative": 8
+      },
+      "koikeya": {
+        "positive": 71,
+        "neutral": 19,
+        "negative": 10
+      }
+    },
+    "weekly": [
+      {
+        "week": "2026-W01",
+        "positive": 60,
+        "neutral": 27,
+        "negative": 13
+      },
+      {
+        "week": "2026-W02",
+        "positive": 61,
+        "neutral": 26,
+        "negative": 13
+      },
+      {
+        "week": "2026-W03",
+        "positive": 62,
+        "neutral": 24,
+        "negative": 14
+      },
+      {
+        "week": "2026-W04",
+        "positive": 61,
+        "neutral": 27,
+        "negative": 12
+      },
+      {
+        "week": "2026-W05",
+        "positive": 60,
+        "neutral": 27,
+        "negative": 13
+      },
+      {
+        "week": "2026-W06",
+        "positive": 60,
+        "neutral": 27,
+        "negative": 13
+      },
+      {
+        "week": "2026-W07",
+        "positive": 62,
+        "neutral": 25,
+        "negative": 13
+      },
+      {
+        "week": "2026-W08",
+        "positive": 61,
+        "neutral": 27,
+        "negative": 12
+      },
+      {
+        "week": "2026-W09",
+        "positive": 61,
+        "neutral": 27,
+        "negative": 12
+      },
+      {
+        "week": "2026-W10",
+        "positive": 61,
+        "neutral": 27,
+        "negative": 12
+      },
+      {
+        "week": "2026-W11",
+        "positive": 63,
+        "neutral": 25,
+        "negative": 12
+      },
+      {
+        "week": "2026-W12",
+        "positive": 61,
+        "neutral": 27,
+        "negative": 12
+      },
+      {
+        "week": "2026-W13",
+        "positive": 61,
+        "neutral": 28,
+        "negative": 11
+      },
+      {
+        "week": "2026-W14",
+        "positive": 62,
+        "neutral": 26,
+        "negative": 12
+      },
+      {
+        "week": "2026-W15",
+        "positive": 68,
+        "neutral": 22,
+        "negative": 10
+      },
+      {
+        "week": "2026-W16",
+        "positive": 69,
+        "neutral": 20,
+        "negative": 11
+      },
+      {
+        "week": "2026-W17",
+        "positive": 62,
+        "neutral": 22,
+        "negative": 16
+      },
+      {
+        "week": "2026-W18",
+        "positive": 65,
+        "neutral": 24,
+        "negative": 11
+      },
+      {
+        "week": "2026-W19",
+        "positive": 64,
+        "neutral": 25,
+        "negative": 11
+      },
+      {
+        "week": "2026-W20",
+        "positive": 62,
+        "neutral": 27,
+        "negative": 11
+      },
+      {
+        "week": "2026-W21",
+        "positive": 65,
+        "neutral": 24,
+        "negative": 11
+      },
+      {
+        "week": "2026-W22",
+        "positive": 63,
+        "neutral": 25,
+        "negative": 12
+      },
+      {
+        "week": "2026-W23",
+        "positive": 66,
+        "neutral": 23,
+        "negative": 11
+      },
+      {
+        "week": "2026-W24",
+        "positive": 63,
+        "neutral": 27,
+        "negative": 10
+      },
+      {
+        "week": "2026-W25",
+        "positive": 64,
+        "neutral": 26,
+        "negative": 10
+      },
+      {
+        "week": "2026-W26",
+        "positive": 66,
+        "neutral": 24,
+        "negative": 10
+      }
+    ]
+  },
+  "hashtags": [
+    {
+      "tag": "#ขนมไทย",
+      "count": 45200,
+      "trend": "up",
+      "change": 15.2
+    },
+    {
+      "tag": "#SnackReview",
+      "count": 38100,
+      "trend": "up",
+      "change": 22.8
+    },
+    {
+      "tag": "#ขนมออนไลน์",
+      "count": 31500,
+      "trend": "stable",
+      "change": 2.1
+    },
+    {
+      "tag": "#มาม่า",
+      "count": 28900,
+      "trend": "down",
+      "change": -5.3
+    },
+    {
+      "tag": "#ขนมเพื่อสุขภาพ",
+      "count": 25600,
+      "trend": "up",
+      "change": 35.7
+    },
+    {
+      "tag": "#TikTokSnack",
+      "count": 23400,
+      "trend": "up",
+      "change": 41.2
+    },
+    {
+      "tag": "#ขนมกรอบ",
+      "count": 21800,
+      "trend": "up",
+      "change": 12.5
+    },
+    {
+      "tag": "#ShopeeFood",
+      "count": 19200,
+      "trend": "up",
+      "change": 18.3
+    },
+    {
+      "tag": "#ขนมญี่ปุ่น",
+      "count": 16500,
+      "trend": "down",
+      "change": -7.1
+    },
+    {
+      "tag": "#ThaiSnackBox",
+      "count": 14800,
+      "trend": "up",
+      "change": 28.6
+    },
+    {
+      "tag": "#ขนมราคาถูก",
+      "count": 13200,
+      "trend": "stable",
+      "change": 1.5
+    },
+    {
+      "tag": "#วรรณวนัช",
+      "count": 8900,
+      "trend": "up",
+      "change": 19.4
+    },
+    {
+      "tag": "#HealthySnack",
+      "count": 11500,
+      "trend": "up",
+      "change": 33.2
+    },
+    {
+      "tag": "#ขนมงานวัด",
+      "count": 7800,
+      "trend": "stable",
+      "change": -0.8
+    },
+    {
+      "tag": "#สงกรานต์2569",
+      "count": 6200,
+      "trend": "up",
+      "change": 120.5
+    }
+  ],
+  "platforms": {
+    "facebook": {
+      "totalMentions": 36912,
+      "avgEngagement": 342,
+      "topContent": "รีวิวสินค้า + โปรโมชั่น"
+    },
+    "instagram": {
+      "totalMentions": 28284,
+      "avgEngagement": 528,
+      "topContent": "รูปสินค้า + Story รีวิว"
+    },
+    "x": {
+      "totalMentions": 13515,
+      "avgEngagement": 89,
+      "topContent": "ข่าว/แจ้งโปรโมชั่น"
+    },
+    "tiktok": {
+      "totalMentions": 68959,
+      "avgEngagement": 1250,
+      "topContent": "วิดีโอรีวิว + ชาเลนจ์"
+    },
+    "pantip": {
+      "totalMentions": 5583,
+      "avgEngagement": 45,
+      "topContent": "กระทู้ถาม-ตอบ + รีวิวเปรียบเทียบ"
+    }
+  }
+}

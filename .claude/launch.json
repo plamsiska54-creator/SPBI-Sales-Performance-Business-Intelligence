@@ -1,0 +1,18 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "sales-dashboard",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["server.js"],
+      "port": 8080,
+      "autoPort": true
+    },
+    {
+      "name": "trend-dashboard",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["prototype/trend-competitor-social/server.js"],
+      "port": 3500
+    }
+  ]
+}

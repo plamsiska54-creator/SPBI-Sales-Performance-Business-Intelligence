@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trend & Competitor Analysis Dashboard</title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/charts.css">
+
+  <!-- Chart.js 4.4.7 (local) -->
+  <script src="js/lib/chart.umd.js"></script>
+</head>
+<body>
+
+  <!-- Prototype Banner -->
+  <div class="prototype-banner">
+    ข้อมูลจำลอง (Demo Data) เพื่อการทดสอบ
+  </div>
+
+  <!-- Header -->
+  <header class="header">
+    <h1 class="header-title">Trend & Competitor Analysis</h1>
+    <span class="header-subtitle">Product Trends / Competitor Analysis / Social Listening</span>
+  </header>
+
+  <!-- Tab Bar -->
+  <nav class="tab-bar">
+    <button class="tab-btn active" data-tab="trends">Product Trends</button>
+    <button class="tab-btn" data-tab="competitors">Competitor Analysis</button>
+    <button class="tab-btn" data-tab="social">Social Listening</button>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="main-content">
+
+    <!-- Overview Cards - แต่ละ tab จะอัพเดตค่าเมื่อ mount -->
+    <section class="overview-cards">
+      <div class="overview-card" id="top-card-0">
+        <div class="overview-card-label">เทรนด์ที่ติดตาม</div>
+        <div class="overview-card-value">--</div>
+        <div class="overview-card-note">รอโหลดข้อมูล</div>
+      </div>
+      <div class="overview-card" id="top-card-1">
+        <div class="overview-card-label">คู่แข่งที่วิเคราะห์</div>
+        <div class="overview-card-value">--</div>
+        <div class="overview-card-note">รอโหลดข้อมูล</div>
+      </div>
+      <div class="overview-card" id="top-card-2">
+        <div class="overview-card-label">Social Mentions</div>
+        <div class="overview-card-value">--</div>
+        <div class="overview-card-note">รอโหลดข้อมูล</div>
+      </div>
+    </section>
+
+    <!-- App Container (tab content mounts here) -->
+    <div id="app"></div>
+
+  </main>
+
+  <!-- JS Module -->
+  <script type="module" src="js/app.js"></script>
+
+</body>
+</html>

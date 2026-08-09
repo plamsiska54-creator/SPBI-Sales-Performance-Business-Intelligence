@@ -1,0 +1,3950 @@
+{
+  "metadata": {
+    "period": "2026-W01 to 2026-W26",
+    "granularity": "weekly"
+  },
+  "categories": [
+    {
+      "id": "crispy",
+      "name": "ขนมกรอบ/ทอด"
+    },
+    {
+      "id": "baked",
+      "name": "ขนมอบ"
+    },
+    {
+      "id": "healthy",
+      "name": "ขนมเพื่อสุขภาพ"
+    },
+    {
+      "id": "imported",
+      "name": "ขนมนำเข้า"
+    },
+    {
+      "id": "local",
+      "name": "ขนมท้องถิ่น"
+    },
+    {
+      "id": "beverage",
+      "name": "เครื่องดื่ม/ของเหลว"
+    }
+  ],
+  "topProducts": [
+    {
+      "id": "tknoi-seaweed",
+      "name": "สาหร่ายทอดกรอบ",
+      "brand": "เถ้าแก่น้อย",
+      "category": "crispy",
+      "platforms": [
+        "shopee",
+        "lazada",
+        "tiktok",
+        "facebook"
+      ],
+      "weeklyData": [
+        {
+          "week": "2026-W01",
+          "mentions": 2808,
+          "searchVolume": 18424,
+          "salesEstimate": 4051
+        },
+        {
+          "week": "2026-W02",
+          "mentions": 2767,
+          "searchVolume": 17509,
+          "salesEstimate": 4514
+        },
+        {
+          "week": "2026-W03",
+          "mentions": 2822,
+          "searchVolume": 18170,
+          "salesEstimate": 4073
+        },
+        {
+          "week": "2026-W04",
+          "mentions": 2694,
+          "searchVolume": 18746,
+          "salesEstimate": 4495
+        },
+        {
+          "week": "2026-W05",
+          "mentions": 3158,
+          "searchVolume": 19898,
+          "salesEstimate": 4584
+        },
+        {
+          "week": "2026-W06",
+          "mentions": 3067,
+          "searchVolume": 20121,
+          "salesEstimate": 4495
+        },
+        {
+          "week": "2026-W07",
+          "mentions": 2959,
+          "searchVolume": 18409,
+          "salesEstimate": 4502
+        },
+        {
+          "week": "2026-W08",
+          "mentions": 2944,
+          "searchVolume": 17627,
+          "salesEstimate": 4319
+        },
+        {
+          "week": "2026-W09",
+          "mentions": 3239,
+          "searchVolume": 22573,
+          "salesEstimate": 5056
+        },
+        {
+          "week": "2026-W10",
+          "mentions": 3388,
+          "searchVolume": 21742,
+          "salesEstimate": 4895
+        },
+        {
+          "week": "2026-W11",
+          "mentions": 3210,
+          "searchVolume": 20874,
+          "salesEstimate": 5493
+        },
+        {
+          "week": "2026-W12",
+          "mentions": 3591,
+          "searchVolume": 22616,
+          "salesEstimate": 5185
+        },
+        {
+          "week": "2026-W13",
+          "mentions": 3001,
+          "searchVolume": 18922,
+          "salesEstimate": 4259
+        },
+        {
+          "week": "2026-W14",
+          "mentions": 2873,
+          "searchVolume": 18312,
+          "salesEstimate": 4277
+        },
+        {
+          "week": "2026-W15",
+          "mentions": 3867,
+          "searchVolume": 24115,
+          "salesEstimate": 5322
+        },
+        {
+          "week": "2026-W16",
+          "mentions": 3975,
+          "searchVolume": 24595,
+          "salesEstimate": 5901
+        },
+        {
+          "week": "2026-W17",
+          "mentions": 2652,
+          "searchVolume": 16873,
+          "salesEstimate": 3797
+        },
+        {
+          "week": "2026-W18",
+          "mentions": 2968,
+          "searchVolume": 18113,
+          "salesEstimate": 3948
+        },
+        {
+          "week": "2026-W19",
+          "mentions": 3137,
+          "searchVolume": 18911,
+          "salesEstimate": 4576
+        },
+        {
+          "week": "2026-W20",
+          "mentions": 2859,
+          "searchVolume": 19178,
+          "salesEstimate": 4786
+        },
+        {
+          "week": "2026-W21",
+          "mentions": 2868,
+          "searchVolume": 19505,
+          "salesEstimate": 4401
+        },
+        {
+          "week": "2026-W22",
+          "mentions": 2848,
+          "searchVolume": 18897,
+          "salesEstimate": 4095
+        },
+        {
+          "week": "2026-W23",
+          "mentions": 2985,
+          "searchVolume": 19063,
+          "salesEstimate": 4055
+        },
+        {
+          "week": "2026-W24",
+          "mentions": 2723,
+          "searchVolume": 17873,
+          "salesEstimate": 4418
+        },
+        {
+          "week": "2026-W25",
+          "mentions": 2853,
+          "searchVolume": 18141,
+          "salesEstimate": 4346
+        },
+        {
+          "week": "2026-W26",
+          "mentions": 2910,
+          "searchVolume": 17922,
+          "salesEstimate": 4670
+        }
+      ],
+      "score": 92,
+      "trend": "up"
+    },
+    {
+      "id": "lays-original",
+      "name": "มันฝรั่งทอดรสออริจินัล",
+      "brand": "เลย์",
+      "category": "crispy",
+      "platforms": [
+        "shopee",
+        "lazada",
+        "facebook",
+        "instagram"
+      ],
+      "weeklyData": [
+        {
+          "week": "2026-W01",
+          "mentions": 3303,
+          "searchVolume": 21484,
+          "salesEstimate": 5227
+        },
+        {
+          "week": "2026-W02",
+          "mentions": 3378,
+          "searchVolume": 22048,
+          "salesEstimate": 5083
+        },
+        {
+          "week": "2026-W03",
+          "mentions": 3399,
+          "searchVolume": 22172,
+          "salesEstimate": 5526
+        },
+        {
+          "week": "2026-W04",
+          "mentions": 3183,
+          "searchVolume": 23025,
+          "salesEstimate": 5469
+        },
+        {
+          "week": "2026-W05",
+          "mentions": 3770,
+          "searchVolume": 25333,
+          "salesEstimate": 6125
+        },
+        {
+          "week": "2026-W06",
+          "mentions": 3697,
+          "searchVolume": 24837,
+          "salesEstimate": 5733
+        },
+        {
+          "week": "2026-W07",
+          "mentions": 3232,
+          "searchVolume": 22612,
+          "salesEstimate": 5323
+        },
+        {
+          "week": "2026-W08",
+          "mentions": 3385,
+          "searchVolume": 21857,
+          "salesEstimate": 5290
+        },
+        {
+          "week": "2026-W09",
+          "mentions": 3923,
+          "searchVolume": 25785,
+          "salesEstimate": 6475
+        },
+        {
+          "week": "2026-W10",
+          "mentions": 3912,
+          "searchVolume": 27114,
+          "salesEstimate": 6733
+        },
+        {
+          "week": "2026-W11",
+          "mentions": 3807,
+          "searchVolume": 27207,
+          "salesEstimate": 6155
+        },
+        {
+          "week": "2026-W12",
+          "mentions": 3964,
+          "searchVolume": 26842,
+          "salesEstimate": 6257
+        },
+        {
+          "week": "2026-W13",
+          "mentions": 3500,
+          "searchVolume": 24490,
+          "salesEstimate": 5047
+        },
+        {
+          "week": "2026-W14",
+          "mentions": 3422,
+          "searchVolume": 24349,
+          "salesEstimate": 5495
+        },
+        {
+          "week": "2026-W15",
+          "mentions": 4283,
+          "searchVolume": 30519,
+          "salesEstimate": 6748
+        },
+        {
+          "week": "2026-W16",
+          "mentions": 4856,
+          "searchVolume": 31828,
+          "salesEstimate": 6985
+        },
+        {
+          "week": "2026-W17",
+          "mentions": 3243,
+          "searchVolume": 21681,
+          "salesEstimate": 4921
+        },
+        {
+          "week": "2026-W18",
+          "mentions": 3282,
+          "searchVolume": 22450,
+          "salesEstimate": 5396
+        },
+        {
+          "week": "2026-W19",
+          "mentions": 3395,
+          "searchVolume": 23680,
+          "salesEstimate": 6022
+        },
+        {
+          "week": "2026-W20",
+          "mentions": 3409,
+          "searchVolume": 24718,
+          "salesEstimate": 5651
+        },
+        {
+          "week": "2026-W21",
+          "mentions": 3677,
+          "searchVolume": 23535,
+          "salesEstimate": 5547
+        },
+        {
+          "week": "2026-W22",
+          "mentions": 3316,
+          "searchVolume": 23111,
+          "salesEstimate": 5196
+        },
+        {
+          "week": "2026-W23",
+          "mentions": 3637,
+          "searchVolume": 24238,
+          "salesEstimate": 5568
+        },
+        {
+          "week": "2026-W24",
+          "mentions": 3472,
+          "searchVolume": 23795,
+          "salesEstimate": 5411
+        },
+        {
+          "week": "2026-W25",
+          "mentions": 3396,
+          "searchVolume": 23674,
+          "salesEstimate": 5473
+        },
+        {
+          "week": "2026-W26",
+          "mentions": 3469,
+          "searchVolume": 23627,
+          "salesEstimate": 5453
+        }
+      ],
+      "score": 95,
+      "trend": "up"
+    },
+    {
+      "id": "lays-nori",
+      "name": "มันฝรั่งทอดรสสาหร่าย",
+      "brand": "เลย์",
+      "category": "crispy",
+      "platforms": [
+        "shopee",
+        "lazada",
+        "tiktok"
+      ],
+      "weeklyData": [
+        {
+          "week": "2026-W01",
+          "mentions": 2158,
+          "searchVolume": 13873,
+          "salesEstimate": 3521
+        },
+        {
+          "week": "2026-W02",
+          "mentions": 2071,
+          "searchVolume": 14106,
+          "salesEstimate": 3639
+        },
+        {
+          "week": "2026-W03",
+          "mentions": 2211,
+          "searchVolume": 14692,
+          "salesEstimate": 4097
+        },
+        {
+          "week": "2026-W04",
+          "mentions": 2200,
+          "searchVolume": 13787,
+          "salesEstimate": 3850
+        },
+        {
+          "week": "2026-W05",
+          "mentions": 2302,
+          "searchVolume": 16517,
+          "salesEstimate": 4525
+        },
+        {
+          "week": "2026-W06",
+          "mentions": 2538,
+          "searchVolume": 15738,
+          "salesEstimate": 4423
+        },
+        {
+          "week": "2026-W07",
+          "mentions": 2194,
+          "searchVolume": 14892,
+          "salesEstimate": 3669
+        },
+        {
+          "week": "2026-W08",
+          "mentions": 2204,
+          "searchVolume": 15098,
+          "salesEstimate": 4183
+        },
+        {
+          "week": "2026-W09",
+          "mentions": 2442,
+          "searchVolume": 16815,
+          "salesEstimate": 4306
+        },
+        {
+          "week": "2026-W10",
+          "mentions": 2579,
+          "searchVolume": 16547,
+          "salesEstimate": 4646
+        },
+        {
+          "week": "2026-W11",
+          "mentions": 2469,
+          "searchVolume": 17671,
+          "salesEstimate": 4485
+        },
+        {
+          "week": "2026-W12",
+          "mentions": 2497,
+          "searchVolume": 16952,
+          "salesEstimate": 4850
+        },
+        {
+          "week": "2026-W13",
+          "mentions": 2176,
+          "searchVolume": 15329,
+          "salesEstimate": 4024
+        },
+        {
+          "week": "2026-W14",
+          "mentions": 2194,
+          "searchVolume": 14915,
+          "salesEstimate": 4256
+        },
+        {
+          "week": "2026-W15",
+          "mentions": 2877,
+          "searchVolume": 19122,
+          "salesEstimate": 4887
+        },
+        {
+          "week": "2026-W16",
+          "mentions": 3093,
+          "searchVolume": 19313,
+          "salesEstimate": 5490
+        },
+        {
+          "week": "2026-W17",
+          "mentions": 2079,
+          "searchVolume": 13475,
+          "salesEstimate": 3654
+        },
+        {
+          "week": "2026-W18",
+          "mentions": 2057,
+          "searchVolume": 14634,
+          "salesEstimate": 3840
+        },
+        {
+          "week": "2026-W19",
+          "mentions": 2288,
+          "searchVolume": 15001,
+          "salesEstimate": 3798
+        },
+        {
+          "week": "2026-W20",
+          "mentions": 2292,
+          "searchVolume": 15305,
+          "salesEstimate": 3870
+        },
+        {
+          "week": "2026-W21",
+          "mentions": 2347,
+          "searchVolume": 14665,
+          "salesEstimate": 3821
+        },
+        {
+          "week": "2026-W22",
+          "mentions": 2171,
+          "searchVolume": 14893,
+          "salesEstimate": 4223
+        },
+        {
+          "week": "2026-W23",
+          "mentions": 2199,
+          "searchVolume": 13931,
+          "salesEstimate": 4049
+        },
+        {
+          "week": "2026-W24",
+          "mentions": 2166,
+          "searchVolume": 14650,
+          "salesEstimate": 3898
+        },
+        {
+          "week": "2026-W25",
+          "mentions": 2174,
+          "searchVolume": 15213,
+          "salesEstimate": 4198
+        },
+        {
+          "week": "2026-W26",
+          "mentions": 2324,
+          "searchVolume": 14836,
+          "salesEstimate": 3737
+        }
+      ],
+      "score": 88,
+      "trend": "up"
+    },
+    {
+      "id": "hanami-prawn",
+      "name": "ข้าวเกรียบกุ้ง",
+      "brand": "ฮานามิ",
+      "category": "crispy",
+      "platforms": [
+        "shopee",
+        "lazada",
+        "facebook"
+      ],
+      "weeklyData": [
+        {
+          "week": "2026-W01",
+          "mentions": 1554,
+          "searchVolume": 11127,
+          "salesEstimate": 2693
+        },
+        {
+          "week": "2026-W02",
+          "mentions": 1595,
+          "searchVolume": 11156,
+          "salesEstimate": 3067
+        },
+        {
+          "week": "2026-W03",
+          "mentions": 1570,
+          "searchVolume": 11435,
+          "salesEstimate": 3105
+        },
+        {
+          "week": "2026-W04",
+          "mentions": 1593,
+          "searchVolume": 10997,
+          "salesEstimate": 3073
+        },
+        {
+          "week": "2026-W05",
+          "mentions": 1694,
+          "searchVolume": 11776,
+          "salesEstimate": 3246
+        },
+        {
+          "week": "2026-W06",
+          "mentions": 1807,
+          "searchVolume": 12238,
+          "salesEstimate": 3279
+        },
+        {
+          "week": "2026-W07",
+          "mentions": 1637,
+          "searchVolume": 11129,
+          "salesEstimate": 2963
+        },
+        {
+          "week": "2026-W08",
+          "mentions": 1535,
+          "searchVolume": 11346,
+          "salesEstimate": 3045
+        },
+        {
+          "week": "2026-W09",
+          "mentions": 2004,
+          "searchVolume": 12951,
+          "salesEstimate": 3225
+        },
+        {
+          "week": "2026-W10",
+          "mentions": 1884,
+          "searchVolume": 13674,
+          "salesEstimate": 3681
+        },
+        {
+          "week": "2026-W11",
+          "mentions": 1877,
+          "searchVolume": 12832,
+          "salesEstimate": 3694
+        },
+        {
+          "week": "2026-W12",
+          "mentions": 1967,
+          "searchVolume": 12895,
+          "salesEstimate": 3343
+        },
+        {
+          "week": "2026-W13",
+          "mentions": 1528,
+          "searchVolume": 11550,
+          "salesEstimate": 2976
+        },
+        {
+          "week": "2026-W14",
+          "mentions": 1693,
+          "searchVolume": 11350,
+          "salesEstimate": 3075
+        },
+        {
+          "week": "2026-W15",
+          "mentions": 2007,
+          "searchVolume": 14376,
+          "salesEstimate": 3547
+        },
+        {
+          "week": "2026-W16",
+          "mentions": 2125,
+          "searchVolume": 14601,
+          "salesEstimate": 3906
+        },
+        {
+          "week": "2026-W17",
+          "mentions": 1526,
+          "searchVolume": 10437,
+          "salesEstimate": 2588
+        },
+        {
+          "week": "2026-W18",
+          "mentions": 1521,
+          "searchVolume": 10856,
+          "salesEstimate": 2833
+        },
+        {
+          "week": "2026-W19",
+          "mentions": 1615,
+          "searchVolume": 11445,
+          "salesEstimate": 3066
+        },
+        {
+          "week": "2026-W20",
+          "mentions": 1572,
+          "searchVolume": 10800,
+          "salesEstimate": 3000
+        },
+        {
+          "week": "2026-W21",
+          "mentions": 1566,
+          "searchVolume": 10990,
+          "salesEstimate": 2819
+        },
+        {
+          "week": "2026-W22",
+          "mentions": 1577,
+          "searchVolume": 10278,
+          "salesEstimate": 2861
+        },
+        {
+          "week": "2026-W23",
+          "mentions": 1531,
+          "searchVolume": 10289,
+          "salesEstimate": 2833
+        },
+        {
+          "week": "2026-W24",
+          "mentions": 1535,
+          "searchVolume": 10582,
+          "salesEstimate": 3003
+        },
+        {
+          "week": "2026-W25",
+          "mentions": 1468,
+          "searchVolume": 10271,
+          "salesEstimate": 2722
+        },
+        {
+          "week": "2026-W26",
+          "mentions": 1594,
+          "searchVolume": 11078,
+          "salesEstimate": 2834
+        }
+      ],
+      "score": 78,
+      "trend": "stable"
+    },
+    {
+      "id": "manora-squid",
+      "name": "ข้าวเกรียบปลาหมึก",
+      "brand": "มโนราห์",
+      "category": "crispy",
+      "platforms": [
+        "shopee",
+        "lazada"
+      ],
+      "weeklyData": [
+        {
+          "week": "2026-W01",
+          "mentions": 1449,
+          "searchVolume": 9389,
+          "salesEstimate": 2455
+        },
+        {
+          "week": "2026-W02",
+          "mentions": 1341,
+          "searchVolume": 9381,
+          "salesEstimate": 2417
+        },
+        {
+          "week": "2026-W03",
+          "mentions": 1358,
+          "searchVolume": 9652,
+          "salesEstimate": 2477
+        },
+        {
+          "week": "2026-W04",
+          "mentions": 1320,
+          "searchVolume": 9656,
+          "salesEstimate": 2691
+        },
+        {
+          "week": "2026-W05",
+          "mentions": 1485,
+          "searchVolume": 10982,
+          "salesEstimate": 2920
+        },
+        {
+          "week": "2026-W06",
+          "mentions": 1560,
+          "searchVolume": 10860,
+          "salesEstimate": 3106
+        },
+        {
+          "week": "2026-W07",
+          "mentions": 1355,
+          "searchVolume": 9649,
+          "salesEstimate": 2499
+        },
+        {
+          "week": "2026-W08",
+          "mentions": 1393,
+          "searchVolume": 9575,
+          "salesEstimate": 2468
+        },
+        {
+          "week": "2026-W09",
+          "mentions": 1617,
+          "searchVolume": 11197,
+          "salesEstimate": 3085
+        },
+        {
+          "week": "2026-W10",
+          "mentions": 1589,
+          "searchVolume": 11288,
+          "salesEstimate": 2966
+        },
+        {
+          "week": "2026-W11",
+          "mentions": 1630,
+          "searchVolume": 11082,
+          "salesEstimate": 2958
+        },
+        {
+          "week": "2026-W12",
+          "mentions": 1673,
+          "searchVolume": 11368,
+          "salesEstimate": 3199
+        },
+        {
+          "week": "2026-W13",
+          "mentions": 1369,
+          "searchVolume": 9301,
+          "salesEstimate": 2492
+        },
+        {
+          "week": "2026-W14",
+          "mentions": 1319,
+          "searchVolume": 9296,
+          "salesEstimate": 2656
+        },
+        {
+          "week": "2026-W15",
+          "mentions": 1888,
+          "searchVolume": 12541,
+          "salesEstimate": 3387
+        },
+        {
+          "week": "2026-W16",
+          "mentions": 1860,
+          "searchVolume": 11971,
+          "salesEstimate": 3673
+        },
+        {
+          "week": "2026-W17",
+          "mentions": 1271,
+          "searchVolume": 8313,
+          "salesEstimate": 2432
+        },
+        {
+          "week": "2026-W18",
+          "mentions": 1281,
+          "searchVolume": 8794,
+          "salesEstimate": 2292
+        },
+        {
+          "week": "2026-W19",
+          "mentions": 1311,
+          "searchVolume": 9126,
+          "salesEstimate": 2707
+        },
+        {
+          "week": "2026-W20",
+          "mentions": 1409,
+          "searchVolume": 9462,
+          "salesEstimate": 2628
+        },
+        {
+          "week": "2026-W21",
+          "mentions": 1340,
+          "searchVolume": 9236,
+          "salesEstimate": 2565
+        },
+        {
+          "week": "2026-W22",
+          "mentions": 1333,
+          "searchVolume": 8640,
+          "salesEstimate": 2521
+        },
+        {
+          "week": "2026-W23",
+          "mentions": 1334,
+          "searchVolume": 8604,
+          "salesEstimate": 2313
+        },
+        {
+          "week": "2026-W24",
+          "mentions": 1357,
+          "searchVolume": 8741,
+          "salesEstimate": 2554
+        },
+        {
+          "week": "2026-W25",
+          "mentions": 1374,
+          "searchVolume": 9199,
+          "salesEstimate": 2373
+        },
+        {
+          "week": "2026-W26",
+          "mentions": 1277,
+          "searchVolume": 8640,
+          "salesEstimate": 2443
+        }
+      ],
+      "score": 74,
+      "trend": "stable"
+    },
+    {
+      "id": "manora-shrimp",
+      "name": "ข้าวเกรียบกุ้งดั้งเดิม",
+      "brand": "มโนราห์",
+      "category": "crispy",
+      "platforms": [
+        "shopee",
+        "lazada",
+        "facebook"
+      ],
+      "weeklyData": [
+        {
+          "week": "2026-W01",
+          "mentions": 1555,
+          "searchVolume": 10349,
+          "salesEstimate": 2745
+        },
+        {
+          "week": "2026-W02",
+          "mentions": 1423,
+          "searchVolume": 9709,
+          "salesEstimate": 2730
+        },
+        {
+          "week": "2026-W03",
+          "mentions": 1535,
+          "searchVolume": 10305,
+          "salesEstimate": 2856
+        },
+        {
+          "week": "2026-W04",
+          "mentions": 1552,
+          "searchVolume": 9789,
+          "salesEstimate": 2856
+        },
+        {
+          "week": "2026-W05",
+          "mentions": 1749,
+          "searchVolume": 10699,
+          "salesEstimate": 3094
+        },
+        {
+          "week": "2026-W06",
+          "mentions": 1657,
+          "searchVolume": 11665,
+          "salesEstimate": 3188
+        },
+        {
+          "week": "2026-W07",
+          "mentions": 1464,
+          "searchVolume": 9862,
+          "salesEstimate": 3008
+        },
+        {
+          "week": "2026-W08",
+          "mentions": 1549,
+          "searchVolume": 9945,
+          "salesEstimate": 2803
+        },
+        {
+          "week": "2026-W09",
+          "mentions": 1700,
+          "searchVolume": 11351,
+          "salesEstimate": 3173
+        },
+        {
+          "week": "2026-W10",
+          "mentions": 1853,
+          "searchVolume": 12172,
+          "salesEstimate": 3231
+        },
+        {
+          "week": "2026-W11",
+          "mentions": 1677,
+          "searchVolume": 11304,
+          "salesEstimate": 3185
+        },
+        {
+          "week": "2026-W12",
+          "mentions": 1733,
+          "searchVolume": 12018,
+          "salesEstimate": 3533
+        },
+        {
+          "week": "2026-W13",
+          "mentions": 1497,
+          "searchVolume": 10030,
+          "salesEstimate": 2942
+        },
+        {
+          "week": "2026-W14",
+          "mentions": 1435,
+          "searchVolume": 10553,
+          "salesEstimate": 2712
+        },
+        {
+          "week": "2026-W15",
+          "mentions": 2053,
+          "searchVolume": 13210,
+          "salesEstimate": 3509
+        },
+        {
+          "week": "2026-W16",
+          "mentions": 1932,
+          "searchVolume": 13681,
+          "salesEstimate": 3832
+        },
+        {
+          "week": "2026-W17",
+          "mentions": 1394,
+          "searchVolume": 8970,
+          "salesEstimate": 2753
+        },
+        {
+          "week": "2026-W18",
+          "mentions": 1512,
+          "searchVolume": 9855,
+          "salesEstimate": 2809
+        },
+        {
+          "week": "2026-W19",
+          "mentions": 1522,
+          "searchVolume": 9909,
+          "salesEstimate": 2715
+        },
+        {
+          "week": "2026-W20",
+          "mentions": 1441,
+          "searchVolume": 10626,
+          "salesEstimate": 2709
+        },
+        {
+          "week": "2026-W21",
+          "mentions": 1597,
+          "searchVolume": 10520,
+          "salesEstimate": 2865
+        },
+        {
+          "week": "2026-W22",
+          "mentions": 1517,
+          "searchVolume": 9394,
+          "salesEstimate": 2813
+        },
+        {
+          "week": "2026-W23",
+          "mentions": 1422,
+          "searchVolume": 10178,
+          "salesEstimate": 2599
+        },
+        {
+          "week": "2026-W24",
+          "mentions": 1546,
+          "searchVolume": 9333,
+          "salesEstimate": 2915
+        },
+        {
+          "week": "2026-W25",
+          "mentions": 1533,
+          "searchVolume": 10051,
+          "salesEstimate": 2844
+        },
+        {
+          "week": "2026-W26",
+          "mentions": 1548,
+          "searchVolume": 9524,
+          "salesEstimate": 2689
+        }
+      ],
+      "score": 76,
+      "trend": "stable"
+    },
+    {
+      "id": "tknoi-fishsnack",
+      "name": "ปลาเส้นอบกรอบ",
+      "brand": "เถ้าแก่น้อย",
+      "category": "crispy",
+      "platforms": [
+        "shopee",
+        "tiktok"
+      ],
+      "weeklyData": [
+        {
+          "week": "2026-W01",
+          "mentions": 1722,
+          "searchVolume": 11958,
+          "salesEstimate": 3273
+        },
+        {
+          "week": "2026-W02",
+          "mentions": 1865,
+          "searchVolume": 11595,
+          "salesEstimate": 2970
+        },
+        {
+          "week": "2026-W03",
+          "mentions": 1899,
+          "searchVolume": 11796,
+          "salesEstimate": 3068
+        },
+        {
+          "week": "2026-W04",
+          "mentions": 1880,
+          "searchVolume": 11934,
+          "salesEstimate": 3013
+        },
+        {
+          "week": "2026-W05",
+          "mentions": 2053,
+          "searchVolume": 13135,
+          "salesEstimate": 3428
+        },
+        {
+          "week": "2026-W06",
+          "mentions": 2183,
+          "searchVolume": 13690,
+          "salesEstimate": 3399
+        },
+        {
+          "week": "2026-W07",
+          "mentions": 1876,
+          "searchVolume": 12664,
+          "salesEstimate": 3194
+        },
+        {
+          "week": "2026-W08",
+          "mentions": 1896,
+          "searchVolume": 12131,
+          "salesEstimate": 3257
+        },
+        {
+          "week": "2026-W09",
+          "mentions": 2174,
+          "searchVolume": 15237,
+          "salesEstimate": 3843
+        },
+        {
+          "week": "2026-W10",
+          "mentions": 2192,
+          "searchVolume": 15179,
+          "salesEstimate": 3760
+        },
+        {
+          "week": "2026-W11",
+          "mentions": 2341,
+          "searchVolume": 14411,
+          "salesEstimate": 3938
+        },
+        {
+          "week": "2026-W12",
+          "mentions": 2093,
+          "searchVolume": 15290,
+          "salesEstimate": 3688
+        },
+        {
+          "week": "2026-W13",
+          "mentions": 1977,
+          "searchVolume": 12420,
+          "salesEstimate": 3059
+        },
+        {
+          "week": "2026-W14",
+          "mentions": 1877,
+          "searchVolume": 13002,
+          "salesEstimate": 3486
+        },
+        {
+          "week": "2026-W15",
+          "mentions": 2429,
+          "searchVolume": 17142,
+          "salesEstimate": 4119
+        },
+        {
+          "week": "2026-W16",
+          "mentions": 2604,
+          "searchVolume": 17786,
+          "salesEstimate": 4406
+        },
+        {
+          "week": "2026-W17",
+          "mentions": 1824,
+          "searchVolume": 11925,
+          "salesEstimate": 2841
+        },
+        {
+          "week": "2026-W18",
+          "mentions": 1869,
+          "searchVolume": 12637,
+          "salesEstimate": 3272
+        },
+        {
+          "week": "2026-W19",
+          "mentions": 1875,
+          "searchVolume": 13103,
+          "salesEstimate": 3192
+        },
+        {
+          "week": "2026-W20",
+          "mentions": 1983,
+          "searchVolume": 12953,
+          "salesEstimate": 3369
+        },
+        {
+          "week": "2026-W21",
+          "mentions": 2006,
+          "searchVolume": 13639,
+          "salesEstimate": 3219
+        },
+        {
+          "week": "2026-W22",
+          "mentions": 1797,
+          "searchVolume": 12856,
+          "salesEstimate": 3367
+        },
+        {
+          "week": "2026-W23",
+          "mentions": 1875,
+          "searchVolume": 12431,
+          "salesEstimate": 3251
+        },
+        {
+          "week": "2026-W24",
+          "mentions": 1971,
+          "searchVolume": 12984,
+          "salesEstimate": 3505
+        },
+        {
+          "week": "2026-W25",
+          "mentions": 1846,
+          "searchVolume": 12877,
+          "salesEstimate": 3458
+        },
+        {
+          "week": "2026-W26",
+          "mentions": 1833,
+          "searchVolume": 12637,
+          "salesEstimate": 3221
+        }
+      ],
+      "score": 80,
+      "trend": "up"
+    },
+    {
+      "id": "wwn-butter-cookie",
+      "name": "คุกกี้เนยสด",
+      "brand": "วรรณวนัช",
+      "category": "baked",
+      "platforms": [
+        "shopee",
+        "lazada",
+        "facebook",
+        "tiktok"
+      ],
+      "weeklyData": [
+        {
+          "week": "2026-W01",
+          "mentions": 843,
+          "searchVolume": 5339,
+          "salesEstimate": 1126
+        },
+        {
+          "week": "2026-W02",
+          "mentions": 815,
+          "searchVolume": 5733,
+          "salesEstimate": 1039
+        },
+        {
+          "week": "2026-W03",
+          "mentions": 858,
+          "searchVolume": 5671,
+          "salesEstimate": 1168
+        },
+        {
+          "week": "2026-W04",
+          "mentions": 829,
+          "searchVolume": 5533,
+          "salesEstimate": 1048
+        },
+        {
+          "week": "2026-W05",
+          "mentions": 993,
+          "searchVolume": 6068,
+          "salesEstimate": 1180
+        },
+        {
+          "week": "2026-W06",
+          "mentions": 950,
+          "searchVolume": 6152,
+          "salesEstimate": 1337
+        },
+        {
+          "week": "2026-W07",
+          "mentions": 831,
+          "searchVolume": 5430,
+          "salesEstimate": 1117
+        },
+        {
+          "week": "2026-W08",
+          "mentions": 860,
+          "searchVolume": 5857,
+          "salesEstimate": 1123
+        },
+        {
+          "week": "2026-W09",
+          "mentions": 1061,
+          "searchVolume": 6510,
+          "salesEstimate": 1286
+        },
+        {
+          "week": "2026-W10",
+          "mentions": 1102,
+          "searchVolume": 7032,
+          "salesEstimate": 1428
+        },
+        {
+          "week": "2026-W11",
+          "mentions": 1050,
+          "searchVolume": 6911,
+          "salesEstimate": 1349
+        },
+        {
+          "week": "2026-W12",
+          "mentions": 1089,
+          "searchVolume": 6642,
+          "salesEstimate": 1361
+        },
+        {
+          "week": "2026-W13",
+          "mentions": 922,
+          "searchVolume": 5893,
+          "salesEstimate": 1130
+        },
+        {
+          "week": "2026-W14",
+          "mentions": 896,
+          "searchVolume": 5975,
+          "salesEstimate": 1093
+        },
+        {
+          "week": "2026-W15",
+          "mentions": 1186,
+          "searchVolume": 7920,
+          "salesEstimate": 1576
+        },
+        {
+          "week": "2026-W16",
+          "mentions": 1241,
+          "searchVolume": 8318,
+          "salesEstimate": 1657
+        },
+        {
+          "week": "2026-W17",
+          "mentions": 840,
+          "searchVolume": 5319,
+          "salesEstimate": 1110
+        },
+        {
+          "week": "2026-W18",
+          "mentions": 911,
+          "searchVolume": 5410,
+          "salesEstimate": 1095
+        },
+        {
+          "week": "2026-W19",
+          "mentions": 939,
+          "searchVolume": 6150,
+          "salesEstimate": 1181
+        },
+        {
+          "week": "2026-W20",
+          "mentions": 952,
+          "searchVolume": 6201,
+          "salesEstimate": 1297
+        },
+        {
+          "week": "2026-W21",
+          "mentions": 980,
+          "searchVolume": 6301,
+          "salesEstimate": 1199
+        },
+        {
+          "week": "2026-W22",
+          "mentions": 933,
+          "searchVolume": 5740,
+          "salesEstimate": 1208
+        },
+        {
+          "week": "2026-W23",
+          "mentions": 872,
+          "searchVolume": 5607,
+          "salesEstimate": 1205
+        },
+        {
+          "week": "2026-W24",
+          "mentions": 905,
+          "searchVolume": 6196,
+          "salesEstimate": 1150
+        },
+        {
+          "week": "2026-W25",
+          "mentions": 931,
+          "searchVolume": 6134,
+          "salesEstimate": 1197
+        },
+        {
+          "week": "2026-W26",
+          "mentions": 958,
+          "searchVolume": 6103,
+          "salesEstimate": 1197
+        }
+      ],
+      "score": 62,
+      "trend": "up"
+    },
+    {
+      "id": "wwn-pineapple-pie",
+      "name": "พายสับปะรด",
+      "brand": "วรรณวนัช",
+      "category": "baked",
+      "platforms": [
+        "shopee",
+        "facebook"
+      ],
+      "weeklyData": [
+        {
+          "week": "2026-W01",
+          "mentions": 759,
+          "searchVolume": 4784,
+          "salesEstimate": 966
+        },
+        {
+          "week": "2026-W02",
+          "mentions": 742,
+          "searchVolume": 4787,
+          "salesEstimate": 895
+        },
+        {
+          "week": "2026-W03",
+          "mentions": 702,
+          "searchVolume": 5030,
+          "salesEstimate": 1009
+        },
+        {
+          "week": "2026-W04",
+          "mentions": 742,
+          "searchVolume": 4680,
+          "salesEstimate": 891
+        },
+        {
+          "week": "2026-W05",
+          "mentions": 794,
+          "searchVolume": 5591,
+          "salesEstimate": 1009
+        },
+        {
+          "week": "2026-W06",
+          "mentions": 840,
+          "searchVolume": 5588,
+          "salesEstimate": 1084
+        },
+        {
+          "week": "2026-W07",
+          "mentions": 739,
+          "searchVolume": 5020,
+          "salesEstimate": 962
+        },
+        {
+          "week": "2026-W08",
+          "mentions": 750,
+          "searchVolume": 4708,
+          "salesEstimate": 1017
+        },
+        {
+          "week": "2026-W09",
+          "mentions": 922,
+          "searchVolume": 5884,
+          "salesEstimate": 1240
+        },
+        {
+          "week": "2026-W10",
+          "mentions": 901,
+          "searchVolume": 5758,
+          "salesEstimate": 1240
+        },
+        {
+          "week": "2026-W11",
+          "mentions": 864,
+          "searchVolume": 6148,
+          "salesEstimate": 1087
+        },
+        {
+          "week": "2026-W12",
+          "mentions": 851,
+          "searchVolume": 5916,
+          "salesEstimate": 1218
+        },
+        {
+          "week": "2026-W13",
+          "mentions": 790,
+          "searchVolume": 5113,
+          "salesEstimate": 965
+        },
+        {
+          "week": "2026-W14",
+          "mentions": 798,
+          "searchVolume": 5094,
+          "salesEstimate": 926
+        },
+        {
+          "week": "2026-W15",
+          "mentions": 939,
+          "searchVolume": 6261,
+          "salesEstimate": 1207
+        },
+        {
+          "week": "2026-W16",
+          "mentions": 1086,
+          "searchVolume": 6676,
+          "salesEstimate": 1411
+        },
+        {
+          "week": "2026-W17",
+          "mentions": 734,
+          "searchVolume": 4472,
+          "salesEstimate": 869
+        },
+        {
+          "week": "2026-W18",
+          "mentions": 706,
+          "searchVolume": 5055,
+          "salesEstimate": 976
+        },
+        {
+          "week": "2026-W19",
+          "mentions": 748,
+          "searchVolume": 5078,
+          "salesEstimate": 1063
+        },
+        {
+          "week": "2026-W20",
+          "mentions": 783,
+          "searchVolume": 5290,
+          "salesEstimate": 1095
+        },
+        {
+          "week": "2026-W21",
+          "mentions": 740,
+          "searchVolume": 5153,
+          "salesEstimate": 995
+        },
+        {
+          "week": "2026-W22",
+          "mentions": 732,
+          "searchVolume": 4735,
+          "salesEstimate": 925
+        },
+        {
+          "week": "2026-W23",
+          "mentions": 708,
+          "searchVolume": 5069,
+          "salesEstimate": 922
+        },
+        {
+          "week": "2026-W24",
+          "mentions": 778,
+          "searchVolume": 4763,
+          "salesEstimate": 1026
+        },
+        {
+          "week": "2026-W25",
+          "mentions": 757,
+          "searchVolume": 4953,
+          "salesEstimate": 935
+        },
+        {
+          "week": "2026-W26",
+          "mentions": 777,
+          "searchVolume": 4960,
+          "salesEstimate": 949
+        }
+      ],
+      "score": 58,
+      "trend": "up"
+    },
+    {
+      "id": "wwn-tongmuan",
+      "name": "ทองม้วนกรอบ",
+      "brand": "วรรณวนัช",
+      "category": "local",
+      "platforms": [
+        "shopee",
+        "lazada",
+        "facebook",
+        "tiktok"
+      ],
+      "weeklyData": [
+        {
+          "week": "2026-W01",
+          "mentions": 896,
+          "searchVolume": 6183,
+          "salesEstimate": 1212
+        },
+        {
+          "week": "2026-W02",
+          "mentions": 909,
+          "searchVolume": 5999,
+          "salesEstimate": 1201
+        },
+        {
+          "week": "2026-W03",
+          "mentions": 871,
+          "searchVolume": 6423,
+          "salesEstimate": 1232
+        },
+        {
+          "week": "2026-W04",
+          "mentions": 917,
+          "searchVolume": 6410,
+          "salesEstimate": 1274
+        },
+        {
+          "week": "2026-W05",
+          "mentions": 1022,
+          "searchVolume": 7045,
+          "salesEstimate": 1370
+        },
+        {
+          "week": "2026-W06",
+          "mentions": 1049,
+          "searchVolume": 7021,
+          "salesEstimate": 1541
+        },
+        {
+          "week": "2026-W07",
+          "mentions": 944,
+          "searchVolume": 6632,
+          "salesEstimate": 1308
+        },
+        {
+          "week": "2026-W08",
+          "mentions": 990,
+          "searchVolume": 6641,
+          "salesEstimate": 1289
+        },
+        {
+          "week": "2026-W09",
+          "mentions": 1130,
+          "searchVolume": 8178,
+          "salesEstimate": 1556
+        },
+        {
+          "week": "2026-W10",
+          "mentions": 1097,
+          "searchVolume": 8250,
+          "salesEstimate": 1638
+        },
+        {
+          "week": "2026-W11",
+          "mentions": 1180,
+          "searchVolume": 8004,
+          "salesEstimate": 1531
+        },
+        {
+          "week": "2026-W12",
+          "mentions": 1197,
+          "searchVolume": 7706,
+          "salesEstimate": 1698
+        },
+        {
+          "week": "2026-W13",
+          "mentions": 1010,
+          "searchVolume": 6814,
+          "salesEstimate": 1331
+        },
+        {
+          "week": "2026-W14",
+          "mentions": 988,
+          "searchVolume": 7012,
+          "salesEstimate": 1314
+        },
+        {
+          "week": "2026-W15",
+          "mentions": 1360,
+          "searchVolume": 8679,
+          "salesEstimate": 1783
+        },
+        {
+          "week": "2026-W16",
+          "mentions": 1332,
+          "searchVolume": 9558,
+          "salesEstimate": 1930
+        },
+        {
+          "week": "2026-W17",
+          "mentions": 935,
+          "searchVolume": 6589,
+          "salesEstimate": 1261
+        },
+        {
+          "week": "2026-W18",
+          "mentions": 957,
+          "searchVolume": 6866,
+          "salesEstimate": 1374
+        },
+        {
+          "week": "2026-W19",
+          "mentions": 1051,
+          "searchVolume": 7495,
+          "salesEstimate": 1402
+        },
+        {
+          "week": "2026-W20",
+          "mentions": 1113,
+          "searchVolume": 7201,
+          "salesEstimate": 1382
+        },
+        {
+          "week": "2026-W21",
+          "mentions": 1056,
+          "searchVolume": 7384,
+          "salesEstimate": 1557
+        },
+        {
+          "week": "2026-W22",
+          "mentions": 1089,
+          "searchVolume": 7009,
+          "salesEstimate": 1474
+        },
+        {
+          "week": "2026-W23",
+          "mentions": 1036,
+          "searchVolume": 7419,
+          "salesEstimate": 1519
+        },
+        {
+          "week": "2026-W24",
+          "mentions": 1079,
+          "searchVolume": 7200,
+          "salesEstimate": 1412
+        },
+        {
+          "week": "2026-W25",
+          "mentions": 1082,
+          "searchVolume": 7667,
+          "salesEstimate": 1389
+        },
+        {
+          "week": "2026-W26",
+          "mentions": 1110,
+          "searchVolume": 7232,
+          "salesEstimate": 1453
+        }
+      ],
+      "score": 65,
+      "trend": "up"
+    },
+    {
+      "id": "koikeya-caramel",
+      "name": "คาราเมลคอร์น",
+      "brand": "โคอิเกะยะ",
+      "category": "imported",
+      "platforms": [
+        "shopee",
+        "lazada",
+        "amazon"
+      ],
+      "weeklyData": [
+        {
+          "week": "2026-W01",
+          "mentions": 682,
+          "searchVolume": 4076,
+          "salesEstimate": 845
+        },
+        {
+          "week": "2026-W02",
+          "mentions": 690,
+          "searchVolume": 4352,
+          "salesEstimate": 801
+        },
+        {
+          "week": "2026-W03",
+          "mentions": 655,
+          "searchVolume": 4017,
+          "salesEstimate": 799
+        },
+        {
+          "week": "2026-W04",
+          "mentions": 702,
+          "searchVolume": 4396,
+          "salesEstimate": 784
+        },
+        {
+          "week": "2026-W05",
+          "mentions": 778,
+          "searchVolume": 4733,
+          "salesEstimate": 943
+        },
+        {
+          "week": "2026-W06",
+          "mentions": 751,
+          "searchVolume": 4540,
+          "salesEstimate": 865
+        },
+        {
+          "week": "2026-W07",
+          "mentions": 682,
+          "searchVolume": 4287,
+          "salesEstimate": 807
+        },
+        {
+          "week": "2026-W08",
+          "mentions": 682,
+          "searchVolume": 4440,
+          "salesEstimate": 789
+        },
+        {
+          "week": "2026-W09",
+          "mentions": 854,
+          "searchVolume": 4855,
+          "salesEstimate": 931
+        },
+        {
+          "week": "2026-W10",
+          "mentions": 851,
+          "searchVolume": 4784,
+          "salesEstimate": 1025
+        },
+        {
+          "week": "2026-W11",
+          "mentions": 852,
+          "searchVolume": 4806,
+          "salesEstimate": 1018
+        },
+        {
+          "week": "2026-W12",
+          "mentions": 838,
+          "searchVolume": 5018,
+          "salesEstimate": 913
+        },
+        {
+          "week": "2026-W13",
+          "mentions": 675,
+          "searchVolume": 4310,
+          "salesEstimate": 787
+        },
+        {
+          "week": "2026-W14",
+          "mentions": 721,
+          "searchVolume": 4179,
+          "salesEstimate": 854
+        },
+        {
+          "week": "2026-W15",
+          "mentions": 914,
+          "searchVolume": 5761,
+          "salesEstimate": 1071
+        },
+        {
+          "week": "2026-W16",
+          "mentions": 961,
+          "searchVolume": 5966,
+          "salesEstimate": 1052
+        },
+        {
+          "week": "2026-W17",
+          "mentions": 665,
+          "searchVolume": 3779,
+          "salesEstimate": 736
+        },
+        {
+          "week": "2026-W18",
+          "mentions": 620,
+          "searchVolume": 3885,
+          "salesEstimate": 824
+        },
+        {
+          "week": "2026-W19",
+          "mentions": 735,
+          "searchVolume": 4248,
+          "salesEstimate": 897
+        },
+        {
+          "week": "2026-W20",
+          "mentions": 686,
+          "searchVolume": 4333,
+          "salesEstimate": 795
+        },
+        {
+          "week": "2026-W21",
+          "mentions": 671,
+          "searchVolume": 4113,
+          "salesEstimate": 820
+        },
+        {
+          "week": "2026-W22",
+          "mentions": 629,
+          "searchVolume": 3953,
+          "salesEstimate": 858
+        },
+        {
+          "week": "2026-W23",
+          "mentions": 654,
+          "searchVolume": 4306,
+          "salesEstimate": 865
+        },
+        {
+          "week": "2026-W24",
+          "mentions": 638,
+          "searchVolume": 4000,
+          "salesEstimate": 819
+        },
+        {
+          "week": "2026-W25",
+          "mentions": 641,
+          "searchVolume": 4186,
+          "salesEstimate": 792
+        },
+        {
+          "week": "2026-W26",
+          "mentions": 698,
+          "searchVolume": 3993,
+          "salesEstimate": 749
+        }
+      ],
+      "score": 55,
+      "trend": "stable"
+    },
+    {
+      "id": "pocky-choc",
+      "name": "ป็อกกี้ช็อกโกแลต",
+      "brand": "กูลิโกะ",
+      "category": "imported",
+      "platforms": [
+        "shopee",
+        "lazada",
+        "instagram"
+      ],
+      "weeklyData": [
+        {
+          "week": "2026-W01",
+          "mentions": 1129,
+          "searchVolume": 8052,
+          "salesEstimate": 1783
+        },
+        {
+          "week": "2026-W02",
+          "mentions": 1163,
+          "searchVolume": 7988,
+          "salesEstimate": 1713
+        },
+        {
+          "week": "2026-W03",
+          "mentions": 1198,
+          "searchVolume": 8279,
+          "salesEstimate": 1713
+        },
+        {
+          "week": "2026-W04",
+          "mentions": 1194,
+          "searchVolume": 7834,
+          "salesEstimate": 1720
+        },
+        {
+          "week": "2026-W05",
+          "mentions": 1269,
+          "searchVolume": 8949,
+          "salesEstimate": 1909
+        },
+        {
+          "week": "2026-W06",
+          "mentions": 1393,
+          "searchVolume": 9012,
+          "salesEstimate": 2140
+        },
+        {
+          "week": "2026-W07",
+          "mentions": 1224,
+          "searchVolume": 8129,
+          "salesEstimate": 1751
+        },
+        {
+          "week": "2026-W08",
+          "mentions": 1230,
+          "searchVolume": 8114,
+          "salesEstimate": 1704
+        },
+        {
+          "week": "2026-W09",
+          "mentions": 1472,
+          "searchVolume": 9331,
+          "salesEstimate": 1990
+        },
+        {
+          "week": "2026-W10",
+          "mentions": 1425,
+          "searchVolume": 10003,
+          "salesEstimate": 1970
+        },
+        {
+          "week": "2026-W11",
+          "mentions": 1390,
+          "searchVolume": 9221,
+          "salesEstimate": 2004
+        },
+        {
+          "week": "2026-W12",
+          "mentions": 1344,
+          "searchVolume": 9416,
+          "salesEstimate": 1965
+        },
+        {
+          "week": "2026-W13",
+          "mentions": 1253,
+          "searchVolume": 7957,
+          "salesEstimate": 1677
+        },
+        {
+          "week": "2026-W14",
+          "mentions": 1169,
+          "searchVolume": 7970,
+          "salesEstimate": 1844
+        },
+        {
+          "week": "2026-W15",
+          "mentions": 1472,
+          "searchVolume": 10849,
+          "salesEstimate": 2325
+        },
+        {
+          "week": "2026-W16",
+          "mentions": 1538,
+          "searchVolume": 10743,
+          "salesEstimate": 2249
+        },
+        {
+          "week": "2026-W17",
+          "mentions": 1065,
+          "searchVolume": 7645,
+          "salesEstimate": 1540
+        },
+        {
+          "week": "2026-W18",
+          "mentions": 1102,
+          "searchVolume": 8028,
+          "salesEstimate": 1718
+        },
+        {
+          "week": "2026-W19",
+          "mentions": 1233,
+          "searchVolume": 8568,
+          "salesEstimate": 1792
+        },
+        {
+          "week": "2026-W20",
+          "mentions": 1181,
+          "searchVolume": 8229,
+          "salesEstimate": 1694
+        },
+        {
+          "week": "2026-W21",
+          "mentions": 1190,
+          "searchVolume": 8152,
+          "salesEstimate": 1826
+        },
+        {
+          "week": "2026-W22",
+          "mentions": 1108,
+          "searchVolume": 7747,
+          "salesEstimate": 1786
+        },
+        {
+          "week": "2026-W23",
+          "mentions": 1153,
+          "searchVolume": 7993,
+          "salesEstimate": 1620
+        },
+        {
+          "week": "2026-W24",
+          "mentions": 1094,
+          "searchVolume": 7853,
+          "salesEstimate": 1796
+        },
+        {
+          "week": "2026-W25",
+          "mentions": 1207,
+          "searchVolume": 8043,
+          "salesEstimate": 1661
+        },
+        {
+          "week": "2026-W26",
+          "mentions": 1122,
+          "searchVolume": 7935,
+          "salesEstimate": 1598
+        }
+      ],
+      "score": 72,
+      "trend": "stable"
+    },
+    {
+      "id": "granola-bar",
+      "name": "กราโนล่าบาร์ธัญพืช",
+      "brand": "เนเจอร์วัลเลย์",
+      "category": "healthy",
+      "platforms": [
+        "shopee",
+        "lazada",
+        "instagram"
+      ],
+      "weeklyData": [
+        {
+          "week": "2026-W01",
+          "mentions": 979,
+          "searchVolume": 6800,
+          "salesEstimate": 1389
+        },
+        {
+          "week": "2026-W02",
+          "mentions": 940,
+          "searchVolume": 6947,
+          "salesEstimate": 1310
+        },
+        {
+          "week": "2026-W03",
+          "mentions": 915,
+          "searchVolume": 6991,
+          "salesEstimate": 1314
+        },
+        {
+          "week": "2026-W04",
+          "mentions": 955,
+          "searchVolume": 6757,
+          "salesEstimate": 1421
+        },
+        {
+          "week": "2026-W05",
+          "mentions": 1070,
+          "searchVolume": 8106,
+          "salesEstimate": 1479
+        },
+        {
+          "week": "2026-W06",
+          "mentions": 1078,
+          "searchVolume": 7924,
+          "salesEstimate": 1544
+        },
+        {
+          "week": "2026-W07",
+          "mentions": 1012,
+          "searchVolume": 7137,
+          "salesEstimate": 1370
+        },
+        {
+          "week": "2026-W08",
+          "mentions": 999,
+          "searchVolume": 7358,
+          "salesEstimate": 1492
+        },
+        {
+          "week": "2026-W09",
+          "mentions": 1127,
+          "searchVolume": 8581,
+          "salesEstimate": 1627
+        },
+        {
+          "week": "2026-W10",
+          "mentions": 1107,
+          "searchVolume": 8551,
+          "salesEstimate": 1770
+        },
+        {
+          "week": "2026-W11",
+          "mentions": 1105,
+          "searchVolume": 8561,
+          "salesEstimate": 1722
+        },
+        {
+          "week": "2026-W12",
+          "mentions": 1236,
+          "searchVolume": 8519,
+          "salesEstimate": 1741
+        },
+        {
+          "week": "2026-W13",
+          "mentions": 1014,
+          "searchVolume": 7231,
+          "salesEstimate": 1507
+        },
+        {
+          "week": "2026-W14",
+          "mentions": 1067,
+          "searchVolume": 7531,
+          "salesEstimate": 1481
+        },
+        {
+          "week": "2026-W15",
+          "mentions": 1259,
+          "searchVolume": 9365,
+          "salesEstimate": 2083
+        },
+        {
+          "week": "2026-W16",
+          "mentions": 1309,
+          "searchVolume": 9851,
+          "salesEstimate": 1984
+        },
+        {
+          "week": "2026-W17",
+          "mentions": 891,
+          "searchVolume": 6967,
+          "salesEstimate": 1328
+        },
+        {
+          "week": "2026-W18",
+          "mentions": 981,
+          "searchVolume": 6681,
+          "salesEstimate": 1394
+        },
+        {
+          "week": "2026-W19",
+          "mentions": 1016,
+          "searchVolume": 7197,
+          "salesEstimate": 1462
+        },
+        {
+          "week": "2026-W20",
+          "mentions": 1079,
+          "searchVolume": 7132,
+          "salesEstimate": 1482
+        },
+        {
+          "week": "2026-W21",
+          "mentions": 1001,
+          "searchVolume": 7247,
+          "salesEstimate": 1467
+        },
+        {
+          "week": "2026-W22",
+          "mentions": 997,
+          "searchVolume": 7254,
+          "salesEstimate": 1375
+        },
+        {
+          "week": "2026-W23",
+          "mentions": 1051,
+          "searchVolume": 6858,
+          "salesEstimate": 1462
+        },
+        {
+          "week": "2026-W24",
+          "mentions": 1001,
+          "searchVolume": 6952,
+          "salesEstimate": 1408
+        },
+        {
+          "week": "2026-W25",
+          "mentions": 999,
+          "searchVolume": 7468,
+          "salesEstimate": 1592
+        },
+        {
+          "week": "2026-W26",
+          "mentions": 1031,
+          "searchVolume": 7516,
+          "salesEstimate": 1440
+        }
+      ],
+      "score": 68,
+      "trend": "up"
+    },
+    {
+      "id": "wwn-mixed-nuts",
+      "name": "ถั่วอบรวมสมุนไพร",
+      "brand": "วรรณวนัช",
+      "category": "healthy",
+      "platforms": [
+        "shopee",
+        "lazada",
+        "facebook"
+      ],
+      "weeklyData": [
+        {
+          "week": "2026-W01",
+          "mentions": 603,
+          "searchVolume": 3993,
+          "salesEstimate": 791
+        },
+        {
+          "week": "2026-W02",
+          "mentions": 617,
+          "searchVolume": 4066,
+          "salesEstimate": 807
+        },
+        {
+          "week": "2026-W03",
+          "mentions": 642,
+          "searchVolume": 4132,
+          "salesEstimate": 777
+        },
+        {
+          "week": "2026-W04",
+          "mentions": 596,
+          "searchVolume": 3964,
+          "salesEstimate": 845
+        },
+        {
+          "week": "2026-W05",
+          "mentions": 723,
+          "searchVolume": 4373,
+          "salesEstimate": 954
+        },
+        {
+          "week": "2026-W06",
+          "mentions": 721,
+          "searchVolume": 4394,
+          "salesEstimate": 895
+        },
+        {
+          "week": "2026-W07",
+          "mentions": 667,
+          "searchVolume": 3960,
+          "salesEstimate": 755
+        },
+        {
+          "week": "2026-W08",
+          "mentions": 613,
+          "searchVolume": 4017,
+          "salesEstimate": 802
+        },
+        {
+          "week": "2026-W09",
+          "mentions": 725,
+          "searchVolume": 4671,
+          "salesEstimate": 940
+        },
+        {
+          "week": "2026-W10",
+          "mentions": 810,
+          "searchVolume": 4693,
+          "salesEstimate": 950
+        },
+        {
+          "week": "2026-W11",
+          "mentions": 822,
+          "searchVolume": 4706,
+          "salesEstimate": 1020
+        },
+        {
+          "week": "2026-W12",
+          "mentions": 778,
+          "searchVolume": 5009,
+          "salesEstimate": 926
+        },
+        {
+          "week": "2026-W13",
+          "mentions": 674,
+          "searchVolume": 4093,
+          "salesEstimate": 794
+        },
+        {
+          "week": "2026-W14",
+          "mentions": 712,
+          "searchVolume": 4422,
+          "salesEstimate": 796
+        },
+        {
+          "week": "2026-W15",
+          "mentions": 899,
+          "searchVolume": 5404,
+          "salesEstimate": 1100
+        },
+        {
+          "week": "2026-W16",
+          "mentions": 966,
+          "searchVolume": 5625,
+          "salesEstimate": 1104
+        },
+        {
+          "week": "2026-W17",
+          "mentions": 638,
+          "searchVolume": 3862,
+          "salesEstimate": 789
+        },
+        {
+          "week": "2026-W18",
+          "mentions": 668,
+          "searchVolume": 4313,
+          "salesEstimate": 817
+        },
+        {
+          "week": "2026-W19",
+          "mentions": 728,
+          "searchVolume": 4223,
+          "salesEstimate": 907
+        },
+        {
+          "week": "2026-W20",
+          "mentions": 675,
+          "searchVolume": 4612,
+          "salesEstimate": 866
+        },
+        {
+          "week": "2026-W21",
+          "mentions": 724,
+          "searchVolume": 4469,
+          "salesEstimate": 854
+        },
+        {
+          "week": "2026-W22",
+          "mentions": 647,
+          "searchVolume": 4228,
+          "salesEstimate": 816
+        },
+        {
+          "week": "2026-W23",
+          "mentions": 642,
+          "searchVolume": 4183,
+          "salesEstimate": 838
+        },
+        {
+          "week": "2026-W24",
+          "mentions": 675,
+          "searchVolume": 4264,
+          "salesEstimate": 850
+        },
+        {
+          "week": "2026-W25",
+          "mentions": 653,
+          "searchVolume": 4245,
+          "salesEstimate": 891
+        },
+        {
+          "week": "2026-W26",
+          "mentions": 725,
+          "searchVolume": 4205,
+          "salesEstimate": 827
+        }
+      ],
+      "score": 52,
+      "trend": "up"
+    },
+    {
+      "id": "protein-bar",
+      "name": "โปรตีนบาร์ไม่มีน้ำตาล",
+      "brand": "ฟิตเนสไฟร์สท์",
+      "category": "healthy",
+      "platforms": [
+        "shopee",
+        "lazada",
+        "instagram",
+        "tiktok"
+      ],
+      "weeklyData": [
+        {
+          "week": "2026-W01",
+          "mentions": 1044,
+          "searchVolume": 7835,
+          "salesEstimate": 1602
+        },
+        {
+          "week": "2026-W02",
+          "mentions": 1058,
+          "searchVolume": 7856,
+          "salesEstimate": 1695
+        },
+        {
+          "week": "2026-W03",
+          "mentions": 1110,
+          "searchVolume": 7946,
+          "salesEstimate": 1552
+        },
+        {
+          "week": "2026-W04",
+          "mentions": 1105,
+          "searchVolume": 7276,
+          "salesEstimate": 1617
+        },
+        {
+          "week": "2026-W05",
+          "mentions": 1214,
+          "searchVolume": 8382,
+          "salesEstimate": 1779
+        },
+        {
+          "week": "2026-W06",
+          "mentions": 1317,
+          "searchVolume": 9069,
+          "salesEstimate": 1946
+        },
+        {
+          "week": "2026-W07",
+          "mentions": 1206,
+          "searchVolume": 7956,
+          "salesEstimate": 1781
+        },
+        {
+          "week": "2026-W08",
+          "mentions": 1090,
+          "searchVolume": 8122,
+          "salesEstimate": 1588
+        },
+        {
+          "week": "2026-W09",
+          "mentions": 1436,
+          "searchVolume": 8929,
+          "salesEstimate": 1922
+        },
+        {
+          "week": "2026-W10",
+          "mentions": 1416,
+          "searchVolume": 9071,
+          "salesEstimate": 1936
+        },
+        {
+          "week": "2026-W11",
+          "mentions": 1419,
+          "searchVolume": 9297,
+          "salesEstimate": 2094
+        },
+        {
+          "week": "2026-W12",
+          "mentions": 1398,
+          "searchVolume": 9425,
+          "salesEstimate": 2020
+        },
+        {
+          "week": "2026-W13",
+          "mentions": 1117,
+          "searchVolume": 7660,
+          "salesEstimate": 1821
+        },
+        {
+          "week": "2026-W14",
+          "mentions": 1220,
+          "searchVolume": 8003,
+          "salesEstimate": 1851
+        },
+        {
+          "week": "2026-W15",
+          "mentions": 1554,
+          "searchVolume": 10732,
+          "salesEstimate": 2397
+        },
+        {
+          "week": "2026-W16",
+          "mentions": 1689,
+          "searchVolume": 10968,
+          "salesEstimate": 2326
+        },
+        {
+          "week": "2026-W17",
+          "mentions": 1117,
+          "searchVolume": 7340,
+          "salesEstimate": 1682
+        },
+        {
+          "week": "2026-W18",
+          "mentions": 1135,
+          "searchVolume": 7470,
+          "salesEstimate": 1701
+        },
+        {
+          "week": "2026-W19",
+          "mentions": 1212,
+          "searchVolume": 8486,
+          "salesEstimate": 1726
+        },
+        {
+          "week": "2026-W20",
+          "mentions": 1297,
+          "searchVolume": 8170,
+          "salesEstimate": 1861
+        },
+        {
+          "week": "2026-W21",
+          "mentions": 1255,
+          "searchVolume": 8667,
+          "salesEstimate": 1818
+        },
+        {
+          "week": "2026-W22",
+          "mentions": 1159,
+          "searchVolume": 7917,
+          "salesEstimate": 1758
+        },
+        {
+          "week": "2026-W23",
+          "mentions": 1210,
+          "searchVolume": 8211,
+          "salesEstimate": 1791
+        },
+        {
+          "week": "2026-W24",
+          "mentions": 1257,
+          "searchVolume": 7952,
+          "salesEstimate": 1761
+        },
+        {
+          "week": "2026-W25",
+          "mentions": 1176,
+          "searchVolume": 8389,
+          "salesEstimate": 1782
+        },
+        {
+          "week": "2026-W26",
+          "mentions": 1286,
+          "searchVolume": 8102,
+          "salesEstimate": 1770
+        }
+      ],
+      "score": 71,
+      "trend": "up"
+    },
+    {
+      "id": "kimpian",
+      "name": "ขนมเปี๊ยะไส้ถั่ว",
+      "brand": "แม่กิมหลั่น",
+      "category": "local",
+      "platforms": [
+        "shopee",
+        "facebook"
+      ],
+      "weeklyData": [
+        {
+          "week": "2026-W01",
+          "mentions": 613,
+          "searchVolume": 3421,
+          "salesEstimate": 676
+        },
+        {
+          "week": "2026-W02",
+          "mentions": 605,
+          "searchVolume": 3429,
+          "salesEstimate": 703
+        },
+        {
+          "week": "2026-W03",
+          "mentions": 574,
+          "searchVolume": 3633,
+          "salesEstimate": 671
+        },
+        {
+          "week": "2026-W04",
+          "mentions": 549,
+          "searchVolume": 3670,
+          "salesEstimate": 696
+        },
+        {
+          "week": "2026-W05",
+          "mentions": 682,
+          "searchVolume": 3933,
+          "salesEstimate": 802
+        },
+        {
+          "week": "2026-W06",
+          "mentions": 683,
+          "searchVolume": 3979,
+          "salesEstimate": 768
+        },
+        {
+          "week": "2026-W07",
+          "mentions": 599,
+          "searchVolume": 3384,
+          "salesEstimate": 682
+        },
+        {
+          "week": "2026-W08",
+          "mentions": 563,
+          "searchVolume": 3476,
+          "salesEstimate": 641
+        },
+        {
+          "week": "2026-W09",
+          "mentions": 674,
+          "searchVolume": 4064,
+          "salesEstimate": 807
+        },
+        {
+          "week": "2026-W10",
+          "mentions": 720,
+          "searchVolume": 4098,
+          "salesEstimate": 765
+        },
+        {
+          "week": "2026-W11",
+          "mentions": 647,
+          "searchVolume": 3927,
+          "salesEstimate": 756
+        },
+        {
+          "week": "2026-W12",
+          "mentions": 707,
+          "searchVolume": 4068,
+          "salesEstimate": 811
+        },
+        {
+          "week": "2026-W13",
+          "mentions": 550,
+          "searchVolume": 3610,
+          "salesEstimate": 651
+        },
+        {
+          "week": "2026-W14",
+          "mentions": 558,
+          "searchVolume": 3657,
+          "salesEstimate": 687
+        },
+        {
+          "week": "2026-W15",
+          "mentions": 783,
+          "searchVolume": 4370,
+          "salesEstimate": 864
+        },
+        {
+          "week": "2026-W16",
+          "mentions": 793,
+          "searchVolume": 4934,
+          "salesEstimate": 878
+        },
+        {
+          "week": "2026-W17",
+          "mentions": 532,
+          "searchVolume": 3082,
+          "salesEstimate": 662
+        },
+        {
+          "week": "2026-W18",
+          "mentions": 524,
+          "searchVolume": 3313,
+          "salesEstimate": 668
+        },
+        {
+          "week": "2026-W19",
+          "mentions": 614,
+          "searchVolume": 3514,
+          "salesEstimate": 714
+        },
+        {
+          "week": "2026-W20",
+          "mentions": 550,
+          "searchVolume": 3630,
+          "salesEstimate": 710
+        },
+        {
+          "week": "2026-W21",
+          "mentions": 588,
+          "searchVolume": 3604,
+          "salesEstimate": 661
+        },
+        {
+          "week": "2026-W22",
+          "mentions": 540,
+          "searchVolume": 3338,
+          "salesEstimate": 627
+        },
+        {
+          "week": "2026-W23",
+          "mentions": 540,
+          "searchVolume": 3385,
+          "salesEstimate": 639
+        },
+        {
+          "week": "2026-W24",
+          "mentions": 547,
+          "searchVolume": 3455,
+          "salesEstimate": 678
+        },
+        {
+          "week": "2026-W25",
+          "mentions": 534,
+          "searchVolume": 3367,
+          "salesEstimate": 631
+        },
+        {
+          "week": "2026-W26",
+          "mentions": 581,
+          "searchVolume": 3521,
+          "salesEstimate": 619
+        }
+      ],
+      "score": 48,
+      "trend": "stable"
+    },
+    {
+      "id": "kitkat-matcha",
+      "name": "คิทแคท ชาเขียว",
+      "brand": "เนสท์เล่",
+      "category": "imported",
+      "platforms": [
+        "shopee",
+        "lazada",
+        "amazon",
+        "instagram"
+      ],
+      "weeklyData": [
+        {
+          "week": "2026-W01",
+          "mentions": 1071,
+          "searchVolume": 6935,
+          "salesEstimate": 1635
+        },
+        {
+          "week": "2026-W02",
+          "mentions": 993,
+          "searchVolume": 7254,
+          "salesEstimate": 1634
+        },
+        {
+          "week": "2026-W03",
+          "mentions": 1070,
+          "searchVolume": 7178,
+          "salesEstimate": 1597
+        },
+        {
+          "week": "2026-W04",
+          "mentions": 1023,
+          "searchVolume": 7277,
+          "salesEstimate": 1472
+        },
+        {
+          "week": "2026-W05",
+          "mentions": 1215,
+          "searchVolume": 8083,
+          "salesEstimate": 1624
+        },
+        {
+          "week": "2026-W06",
+          "mentions": 1090,
+          "searchVolume": 7725,
+          "salesEstimate": 1762
+        },
+        {
+          "week": "2026-W07",
+          "mentions": 970,
+          "searchVolume": 6752,
+          "salesEstimate": 1516
+        },
+        {
+          "week": "2026-W08",
+          "mentions": 972,
+          "searchVolume": 6725,
+          "salesEstimate": 1605
+        },
+        {
+          "week": "2026-W09",
+          "mentions": 1168,
+          "searchVolume": 7957,
+          "salesEstimate": 1781
+        },
+        {
+          "week": "2026-W10",
+          "mentions": 1192,
+          "searchVolume": 7735,
+          "salesEstimate": 1716
+        },
+        {
+          "week": "2026-W11",
+          "mentions": 1187,
+          "searchVolume": 8349,
+          "salesEstimate": 1787
+        },
+        {
+          "week": "2026-W12",
+          "mentions": 1138,
+          "searchVolume": 7954,
+          "salesEstimate": 1612
+        },
+        {
+          "week": "2026-W13",
+          "mentions": 1025,
+          "searchVolume": 6968,
+          "salesEstimate": 1407
+        },
+        {
+          "week": "2026-W14",
+          "mentions": 991,
+          "searchVolume": 6658,
+          "salesEstimate": 1386
+        },
+        {
+          "week": "2026-W15",
+          "mentions": 1221,
+          "searchVolume": 8548,
+          "salesEstimate": 1853
+        },
+        {
+          "week": "2026-W16",
+          "mentions": 1395,
+          "searchVolume": 9443,
+          "salesEstimate": 1840
+        },
+        {
+          "week": "2026-W17",
+          "mentions": 913,
+          "searchVolume": 6093,
+          "salesEstimate": 1289
+        },
+        {
+          "week": "2026-W18",
+          "mentions": 887,
+          "searchVolume": 6474,
+          "salesEstimate": 1368
+        },
+        {
+          "week": "2026-W19",
+          "mentions": 956,
+          "searchVolume": 6370,
+          "salesEstimate": 1434
+        },
+        {
+          "week": "2026-W20",
+          "mentions": 944,
+          "searchVolume": 6573,
+          "salesEstimate": 1423
+        },
+        {
+          "week": "2026-W21",
+          "mentions": 954,
+          "searchVolume": 6385,
+          "salesEstimate": 1331
+        },
+        {
+          "week": "2026-W22",
+          "mentions": 907,
+          "searchVolume": 6531,
+          "salesEstimate": 1308
+        },
+        {
+          "week": "2026-W23",
+          "mentions": 849,
+          "searchVolume": 5906,
+          "salesEstimate": 1333
+        },
+        {
+          "week": "2026-W24",
+          "mentions": 942,
+          "searchVolume": 6140,
+          "salesEstimate": 1385
+        },
+        {
+          "week": "2026-W25",
+          "mentions": 941,
+          "searchVolume": 5882,
+          "salesEstimate": 1269
+        },
+        {
+          "week": "2026-W26",
+          "mentions": 920,
+          "searchVolume": 6343,
+          "salesEstimate": 1325
+        }
+      ],
+      "score": 70,
+      "trend": "down"
+    },
+    {
+      "id": "chatramue-tea",
+      "name": "ชาไทยพร้อมดื่ม",
+      "brand": "ชาตรามือ",
+      "category": "beverage",
+      "platforms": [
+        "shopee",
+        "lazada",
+        "facebook",
+        "tiktok"
+      ],
+      "weeklyData": [
+        {
+          "week": "2026-W01",
+          "mentions": 1958,
+          "searchVolume": 13402,
+          "salesEstimate": 3680
+        },
+        {
+          "week": "2026-W02",
+          "mentions": 1976,
+          "searchVolume": 13421,
+          "salesEstimate": 3607
+        },
+        {
+          "week": "2026-W03",
+          "mentions": 1822,
+          "searchVolume": 13045,
+          "salesEstimate": 3281
+        },
+        {
+          "week": "2026-W04",
+          "mentions": 1861,
+          "searchVolume": 13411,
+          "salesEstimate": 3718
+        },
+        {
+          "week": "2026-W05",
+          "mentions": 2272,
+          "searchVolume": 15138,
+          "salesEstimate": 4130
+        },
+        {
+          "week": "2026-W06",
+          "mentions": 2148,
+          "searchVolume": 15410,
+          "salesEstimate": 4110
+        },
+        {
+          "week": "2026-W07",
+          "mentions": 1960,
+          "searchVolume": 13509,
+          "salesEstimate": 3698
+        },
+        {
+          "week": "2026-W08",
+          "mentions": 2010,
+          "searchVolume": 13869,
+          "salesEstimate": 3735
+        },
+        {
+          "week": "2026-W09",
+          "mentions": 2373,
+          "searchVolume": 15748,
+          "salesEstimate": 4588
+        },
+        {
+          "week": "2026-W10",
+          "mentions": 2360,
+          "searchVolume": 16838,
+          "salesEstimate": 4414
+        },
+        {
+          "week": "2026-W11",
+          "mentions": 2413,
+          "searchVolume": 15495,
+          "salesEstimate": 4254
+        },
+        {
+          "week": "2026-W12",
+          "mentions": 2332,
+          "searchVolume": 16988,
+          "salesEstimate": 4372
+        },
+        {
+          "week": "2026-W13",
+          "mentions": 2071,
+          "searchVolume": 13925,
+          "salesEstimate": 3706
+        },
+        {
+          "week": "2026-W14",
+          "mentions": 1926,
+          "searchVolume": 14450,
+          "salesEstimate": 3506
+        },
+        {
+          "week": "2026-W15",
+          "mentions": 2569,
+          "searchVolume": 18270,
+          "salesEstimate": 5257
+        },
+        {
+          "week": "2026-W16",
+          "mentions": 2908,
+          "searchVolume": 19103,
+          "salesEstimate": 5397
+        },
+        {
+          "week": "2026-W17",
+          "mentions": 1836,
+          "searchVolume": 13251,
+          "salesEstimate": 3682
+        },
+        {
+          "week": "2026-W18",
+          "mentions": 2067,
+          "searchVolume": 13984,
+          "salesEstimate": 3422
+        },
+        {
+          "week": "2026-W19",
+          "mentions": 2159,
+          "searchVolume": 14475,
+          "salesEstimate": 4060
+        },
+        {
+          "week": "2026-W20",
+          "mentions": 2191,
+          "searchVolume": 14487,
+          "salesEstimate": 4067
+        },
+        {
+          "week": "2026-W21",
+          "mentions": 2064,
+          "searchVolume": 13830,
+          "salesEstimate": 3810
+        },
+        {
+          "week": "2026-W22",
+          "mentions": 1994,
+          "searchVolume": 13433,
+          "salesEstimate": 3961
+        },
+        {
+          "week": "2026-W23",
+          "mentions": 1968,
+          "searchVolume": 13631,
+          "salesEstimate": 3653
+        },
+        {
+          "week": "2026-W24",
+          "mentions": 2102,
+          "searchVolume": 13603,
+          "salesEstimate": 3540
+        },
+        {
+          "week": "2026-W25",
+          "mentions": 2161,
+          "searchVolume": 14362,
+          "salesEstimate": 4062
+        },
+        {
+          "week": "2026-W26",
+          "mentions": 1988,
+          "searchVolume": 14042,
+          "salesEstimate": 3807
+        }
+      ],
+      "score": 82,
+      "trend": "up"
+    }
+  ],
+  "keywords": [
+    {
+      "keyword": "ขนมกรอบ",
+      "volume": 45000,
+      "trend": "up",
+      "change": 12.5
+    },
+    {
+      "keyword": "snack review",
+      "volume": 38000,
+      "trend": "up",
+      "change": 8.3
+    },
+    {
+      "keyword": "ขนมเพื่อสุขภาพ",
+      "volume": 32000,
+      "trend": "up",
+      "change": 25.1
+    },
+    {
+      "keyword": "ขนมไทยโบราณ",
+      "volume": 18500,
+      "trend": "up",
+      "change": 14.2
+    },
+    {
+      "keyword": "สาหร่ายทอด",
+      "volume": 28000,
+      "trend": "stable",
+      "change": 1.8
+    },
+    {
+      "keyword": "มันฝรั่งทอด",
+      "volume": 41000,
+      "trend": "up",
+      "change": 6.7
+    },
+    {
+      "keyword": "ขนมนำเข้า",
+      "volume": 22000,
+      "trend": "down",
+      "change": -3.2
+    },
+    {
+      "keyword": "ข้าวเกรียบกุ้ง",
+      "volume": 15500,
+      "trend": "stable",
+      "change": 0.9
+    },
+    {
+      "keyword": "healthy snack thailand",
+      "volume": 19800,
+      "trend": "up",
+      "change": 31.4
+    },
+    {
+      "keyword": "ขนมออนไลน์",
+      "volume": 35000,
+      "trend": "up",
+      "change": 18.6
+    },
+    {
+      "keyword": "protein bar",
+      "volume": 16200,
+      "trend": "up",
+      "change": 28.3
+    },
+    {
+      "keyword": "ขนมแคลอรีต่ำ",
+      "volume": 14800,
+      "trend": "up",
+      "change": 42.1
+    },
+    {
+      "keyword": "thai snack box",
+      "volume": 12300,
+      "trend": "up",
+      "change": 19.5
+    },
+    {
+      "keyword": "ขนมสงกรานต์",
+      "volume": 9800,
+      "trend": "up",
+      "change": 55
+    },
+    {
+      "keyword": "tiktok snack review",
+      "volume": 26500,
+      "trend": "up",
+      "change": 35.8
+    },
+    {
+      "keyword": "ขนมญี่ปุ่น",
+      "volume": 20100,
+      "trend": "down",
+      "change": -4.5
+    },
+    {
+      "keyword": "granola bar",
+      "volume": 11500,
+      "trend": "up",
+      "change": 22
+    },
+    {
+      "keyword": "ขนมเด็ก",
+      "volume": 17800,
+      "trend": "stable",
+      "change": 2.3
+    },
+    {
+      "keyword": "snack haul",
+      "volume": 21000,
+      "trend": "up",
+      "change": 16.9
+    },
+    {
+      "keyword": "ขนมราคาถูก",
+      "volume": 29500,
+      "trend": "up",
+      "change": 11.2
+    },
+    {
+      "keyword": "ขนมงานวัด",
+      "volume": 8900,
+      "trend": "stable",
+      "change": -1.1
+    },
+    {
+      "keyword": "keto snack",
+      "volume": 13200,
+      "trend": "up",
+      "change": 38.6
+    },
+    {
+      "keyword": "ขนมทานเล่น",
+      "volume": 24000,
+      "trend": "stable",
+      "change": 3.4
+    },
+    {
+      "keyword": "เลย์รสใหม่",
+      "volume": 15000,
+      "trend": "up",
+      "change": 45.2
+    },
+    {
+      "keyword": "ขนมกล่องสุ่ม",
+      "volume": 11800,
+      "trend": "up",
+      "change": 52.3
+    },
+    {
+      "keyword": "ขนมโปรโมชั่น shopee",
+      "volume": 19200,
+      "trend": "up",
+      "change": 14.7
+    },
+    {
+      "keyword": "organic snack",
+      "volume": 8500,
+      "trend": "up",
+      "change": 29.8
+    },
+    {
+      "keyword": "ทองม้วน",
+      "volume": 7200,
+      "trend": "up",
+      "change": 10.5
+    }
+  ],
+  "categoryTrends": [
+    {
+      "categoryId": "crispy",
+      "data": [
+        {
+          "week": "2026-W01",
+          "volume": 51244
+        },
+        {
+          "week": "2026-W02",
+          "volume": 50375
+        },
+        {
+          "week": "2026-W03",
+          "volume": 51635
+        },
+        {
+          "week": "2026-W04",
+          "volume": 53525
+        },
+        {
+          "week": "2026-W05",
+          "volume": 59439
+        },
+        {
+          "week": "2026-W06",
+          "volume": 59782
+        },
+        {
+          "week": "2026-W07",
+          "volume": 52972
+        },
+        {
+          "week": "2026-W08",
+          "volume": 55105
+        },
+        {
+          "week": "2026-W09",
+          "volume": 63354
+        },
+        {
+          "week": "2026-W10",
+          "volume": 64259
+        },
+        {
+          "week": "2026-W11",
+          "volume": 61994
+        },
+        {
+          "week": "2026-W12",
+          "volume": 63115
+        },
+        {
+          "week": "2026-W13",
+          "volume": 54434
+        },
+        {
+          "week": "2026-W14",
+          "volume": 52422
+        },
+        {
+          "week": "2026-W15",
+          "volume": 72344
+        },
+        {
+          "week": "2026-W16",
+          "volume": 74225
+        },
+        {
+          "week": "2026-W17",
+          "volume": 49094
+        },
+        {
+          "week": "2026-W18",
+          "volume": 53040
+        },
+        {
+          "week": "2026-W19",
+          "volume": 57217
+        },
+        {
+          "week": "2026-W20",
+          "volume": 55781
+        },
+        {
+          "week": "2026-W21",
+          "volume": 54133
+        },
+        {
+          "week": "2026-W22",
+          "volume": 53838
+        },
+        {
+          "week": "2026-W23",
+          "volume": 53641
+        },
+        {
+          "week": "2026-W24",
+          "volume": 53078
+        },
+        {
+          "week": "2026-W25",
+          "volume": 51914
+        },
+        {
+          "week": "2026-W26",
+          "volume": 53206
+        }
+      ]
+    },
+    {
+      "categoryId": "baked",
+      "data": [
+        {
+          "week": "2026-W01",
+          "volume": 17596
+        },
+        {
+          "week": "2026-W02",
+          "volume": 17724
+        },
+        {
+          "week": "2026-W03",
+          "volume": 18029
+        },
+        {
+          "week": "2026-W04",
+          "volume": 19081
+        },
+        {
+          "week": "2026-W05",
+          "volume": 20281
+        },
+        {
+          "week": "2026-W06",
+          "volume": 20759
+        },
+        {
+          "week": "2026-W07",
+          "volume": 18279
+        },
+        {
+          "week": "2026-W08",
+          "volume": 18595
+        },
+        {
+          "week": "2026-W09",
+          "volume": 22353
+        },
+        {
+          "week": "2026-W10",
+          "volume": 21711
+        },
+        {
+          "week": "2026-W11",
+          "volume": 23224
+        },
+        {
+          "week": "2026-W12",
+          "volume": 23053
+        },
+        {
+          "week": "2026-W13",
+          "volume": 20151
+        },
+        {
+          "week": "2026-W14",
+          "volume": 19158
+        },
+        {
+          "week": "2026-W15",
+          "volume": 25675
+        },
+        {
+          "week": "2026-W16",
+          "volume": 27752
+        },
+        {
+          "week": "2026-W17",
+          "volume": 18741
+        },
+        {
+          "week": "2026-W18",
+          "volume": 19214
+        },
+        {
+          "week": "2026-W19",
+          "volume": 19677
+        },
+        {
+          "week": "2026-W20",
+          "volume": 20537
+        },
+        {
+          "week": "2026-W21",
+          "volume": 19734
+        },
+        {
+          "week": "2026-W22",
+          "volume": 19540
+        },
+        {
+          "week": "2026-W23",
+          "volume": 19701
+        },
+        {
+          "week": "2026-W24",
+          "volume": 19953
+        },
+        {
+          "week": "2026-W25",
+          "volume": 20565
+        },
+        {
+          "week": "2026-W26",
+          "volume": 19775
+        }
+      ]
+    },
+    {
+      "categoryId": "healthy",
+      "data": [
+        {
+          "week": "2026-W01",
+          "volume": 14296
+        },
+        {
+          "week": "2026-W02",
+          "volume": 14573
+        },
+        {
+          "week": "2026-W03",
+          "volume": 14032
+        },
+        {
+          "week": "2026-W04",
+          "volume": 14371
+        },
+        {
+          "week": "2026-W05",
+          "volume": 16357
+        },
+        {
+          "week": "2026-W06",
+          "volume": 17723
+        },
+        {
+          "week": "2026-W07",
+          "volume": 16251
+        },
+        {
+          "week": "2026-W08",
+          "volume": 16406
+        },
+        {
+          "week": "2026-W09",
+          "volume": 18582
+        },
+        {
+          "week": "2026-W10",
+          "volume": 20164
+        },
+        {
+          "week": "2026-W11",
+          "volume": 20250
+        },
+        {
+          "week": "2026-W12",
+          "volume": 20603
+        },
+        {
+          "week": "2026-W13",
+          "volume": 16760
+        },
+        {
+          "week": "2026-W14",
+          "volume": 17082
+        },
+        {
+          "week": "2026-W15",
+          "volume": 23757
+        },
+        {
+          "week": "2026-W16",
+          "volume": 24526
+        },
+        {
+          "week": "2026-W17",
+          "volume": 17332
+        },
+        {
+          "week": "2026-W18",
+          "volume": 17278
+        },
+        {
+          "week": "2026-W19",
+          "volume": 18878
+        },
+        {
+          "week": "2026-W20",
+          "volume": 19818
+        },
+        {
+          "week": "2026-W21",
+          "volume": 20199
+        },
+        {
+          "week": "2026-W22",
+          "volume": 18597
+        },
+        {
+          "week": "2026-W23",
+          "volume": 19059
+        },
+        {
+          "week": "2026-W24",
+          "volume": 18878
+        },
+        {
+          "week": "2026-W25",
+          "volume": 20261
+        },
+        {
+          "week": "2026-W26",
+          "volume": 19980
+        }
+      ]
+    },
+    {
+      "categoryId": "imported",
+      "data": [
+        {
+          "week": "2026-W01",
+          "volume": 12375
+        },
+        {
+          "week": "2026-W02",
+          "volume": 11491
+        },
+        {
+          "week": "2026-W03",
+          "volume": 12381
+        },
+        {
+          "week": "2026-W04",
+          "volume": 12243
+        },
+        {
+          "week": "2026-W05",
+          "volume": 13622
+        },
+        {
+          "week": "2026-W06",
+          "volume": 13248
+        },
+        {
+          "week": "2026-W07",
+          "volume": 12176
+        },
+        {
+          "week": "2026-W08",
+          "volume": 12130
+        },
+        {
+          "week": "2026-W09",
+          "volume": 13559
+        },
+        {
+          "week": "2026-W10",
+          "volume": 13826
+        },
+        {
+          "week": "2026-W11",
+          "volume": 13222
+        },
+        {
+          "week": "2026-W12",
+          "volume": 13406
+        },
+        {
+          "week": "2026-W13",
+          "volume": 11842
+        },
+        {
+          "week": "2026-W14",
+          "volume": 11597
+        },
+        {
+          "week": "2026-W15",
+          "volume": 14385
+        },
+        {
+          "week": "2026-W16",
+          "volume": 15531
+        },
+        {
+          "week": "2026-W17",
+          "volume": 10411
+        },
+        {
+          "week": "2026-W18",
+          "volume": 10893
+        },
+        {
+          "week": "2026-W19",
+          "volume": 11437
+        },
+        {
+          "week": "2026-W20",
+          "volume": 10853
+        },
+        {
+          "week": "2026-W21",
+          "volume": 11516
+        },
+        {
+          "week": "2026-W22",
+          "volume": 10488
+        },
+        {
+          "week": "2026-W23",
+          "volume": 10566
+        },
+        {
+          "week": "2026-W24",
+          "volume": 10323
+        },
+        {
+          "week": "2026-W25",
+          "volume": 10742
+        },
+        {
+          "week": "2026-W26",
+          "volume": 10938
+        }
+      ]
+    },
+    {
+      "categoryId": "local",
+      "data": [
+        {
+          "week": "2026-W01",
+          "volume": 8426
+        },
+        {
+          "week": "2026-W02",
+          "volume": 8827
+        },
+        {
+          "week": "2026-W03",
+          "volume": 8799
+        },
+        {
+          "week": "2026-W04",
+          "volume": 8583
+        },
+        {
+          "week": "2026-W05",
+          "volume": 10166
+        },
+        {
+          "week": "2026-W06",
+          "volume": 9664
+        },
+        {
+          "week": "2026-W07",
+          "volume": 8691
+        },
+        {
+          "week": "2026-W08",
+          "volume": 9057
+        },
+        {
+          "week": "2026-W09",
+          "volume": 10491
+        },
+        {
+          "week": "2026-W10",
+          "volume": 10417
+        },
+        {
+          "week": "2026-W11",
+          "volume": 11055
+        },
+        {
+          "week": "2026-W12",
+          "volume": 10435
+        },
+        {
+          "week": "2026-W13",
+          "volume": 8893
+        },
+        {
+          "week": "2026-W14",
+          "volume": 9480
+        },
+        {
+          "week": "2026-W15",
+          "volume": 11811
+        },
+        {
+          "week": "2026-W16",
+          "volume": 12608
+        },
+        {
+          "week": "2026-W17",
+          "volume": 8932
+        },
+        {
+          "week": "2026-W18",
+          "volume": 9322
+        },
+        {
+          "week": "2026-W19",
+          "volume": 9842
+        },
+        {
+          "week": "2026-W20",
+          "volume": 9954
+        },
+        {
+          "week": "2026-W21",
+          "volume": 9953
+        },
+        {
+          "week": "2026-W22",
+          "volume": 9691
+        },
+        {
+          "week": "2026-W23",
+          "volume": 9785
+        },
+        {
+          "week": "2026-W24",
+          "volume": 9676
+        },
+        {
+          "week": "2026-W25",
+          "volume": 9603
+        },
+        {
+          "week": "2026-W26",
+          "volume": 9456
+        }
+      ]
+    },
+    {
+      "categoryId": "beverage",
+      "data": [
+        {
+          "week": "2026-W01",
+          "volume": 22276
+        },
+        {
+          "week": "2026-W02",
+          "volume": 21592
+        },
+        {
+          "week": "2026-W03",
+          "volume": 21411
+        },
+        {
+          "week": "2026-W04",
+          "volume": 23258
+        },
+        {
+          "week": "2026-W05",
+          "volume": 25271
+        },
+        {
+          "week": "2026-W06",
+          "volume": 25080
+        },
+        {
+          "week": "2026-W07",
+          "volume": 23155
+        },
+        {
+          "week": "2026-W08",
+          "volume": 22610
+        },
+        {
+          "week": "2026-W09",
+          "volume": 26590
+        },
+        {
+          "week": "2026-W10",
+          "volume": 26673
+        },
+        {
+          "week": "2026-W11",
+          "volume": 28213
+        },
+        {
+          "week": "2026-W12",
+          "volume": 27302
+        },
+        {
+          "week": "2026-W13",
+          "volume": 23655
+        },
+        {
+          "week": "2026-W14",
+          "volume": 24844
+        },
+        {
+          "week": "2026-W15",
+          "volume": 32207
+        },
+        {
+          "week": "2026-W16",
+          "volume": 33754
+        },
+        {
+          "week": "2026-W17",
+          "volume": 22092
+        },
+        {
+          "week": "2026-W18",
+          "volume": 24188
+        },
+        {
+          "week": "2026-W19",
+          "volume": 25614
+        },
+        {
+          "week": "2026-W20",
+          "volume": 24132
+        },
+        {
+          "week": "2026-W21",
+          "volume": 25070
+        },
+        {
+          "week": "2026-W22",
+          "volume": 23870
+        },
+        {
+          "week": "2026-W23",
+          "volume": 24821
+        },
+        {
+          "week": "2026-W24",
+          "volume": 24957
+        },
+        {
+          "week": "2026-W25",
+          "volume": 25020
+        },
+        {
+          "week": "2026-W26",
+          "volume": 23953
+        }
+      ]
+    }
+  ],
+  "platforms": [
+    "facebook",
+    "instagram",
+    "x",
+    "tiktok",
+    "shopee",
+    "lazada",
+    "amazon"
+  ]
+}

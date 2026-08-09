@@ -1,0 +1,22 @@
+{
+  "name": "trend-competitor-social",
+  "version": "1.0.0",
+  "description": "Product Trends, Competitor Analysis & Social Listening Dashboard",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": [
+    "trends",
+    "competitor-analysis",
+    "social-listening",
+    "dashboard"
+  ],
+  "author": "Wanwanach AI Team",
+  "license": "UNLICENSED",
+  "private": true,
+  "dependencies": {
+    "chart.js": "^4.4.7"
+  }
+}
