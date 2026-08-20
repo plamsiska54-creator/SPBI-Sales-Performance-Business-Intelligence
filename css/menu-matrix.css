@@ -1,0 +1,79 @@
+/* Menu Engineering Matrix — สไตล์เฉพาะของตัวเอง (ขึ้นต้นด้วย mx- ทุกคลาส)
+   ใช้ได้ทั้ง catalog.html และ sales_dashboard.html โดยไม่ไปทับสไตล์ของหน้าไหน
+   อ้างอิงตัวแปรสีที่ทั้งสองหน้ามีเหมือนกัน (--surface, --border, --text ฯลฯ)
+   พร้อมค่าสำรองเผื่อหน้าที่ไม่ได้ประกาศไว้ */
+.mx-root{
+  --mx-surface:var(--surface,#fff);
+  --mx-surface2:var(--surface2,#f7faff);
+  --mx-border:var(--border,#d4e0f0);
+  --mx-text:var(--text,#0f172a);
+  --mx-text2:var(--text2,#475569);
+  --mx-muted:var(--muted,#94a3b8);
+  --mx-accent:var(--accent,#f56e00);
+  --mx-accent2:var(--accent2,#0891b2);
+  --mx-green:var(--green,#10b981);
+  --mx-red:var(--red,#ef4444);
+  font-size:14px;
+  color:var(--mx-text);
+}
+
+/* ── แถบตัวกรอง ─────────────────────────────────────── */
+.mx-bar{background:var(--mx-surface);border:1px solid var(--mx-border);border-radius:14px;padding:12px 16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:16px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.mx-bar-label{font-size:12px;font-weight:700;color:var(--mx-accent);white-space:nowrap}
+.mx-sel{padding:8px 11px;border:1.5px solid var(--mx-border);border-radius:10px;font-size:12.5px;font-family:inherit;background:var(--mx-surface2);color:var(--mx-text);cursor:pointer;font-weight:500}
+.mx-sel:focus{outline:none;border-color:var(--mx-accent)}
+.mx-sep{width:1px;height:22px;background:var(--mx-border);flex-shrink:0}
+.mx-count{font-size:12px;color:var(--mx-muted);font-weight:600;margin-left:auto;white-space:nowrap}
+.mx-count b{color:var(--mx-accent)}
+
+.mx-note{background:var(--blue-bg,#eff6ff);border:1px solid #bfdbfe;border-radius:11px;padding:11px 15px;font-size:12.5px;color:#1e40af;margin-bottom:16px;display:flex;gap:9px;align-items:flex-start;line-height:1.65}
+
+/* ── การ์ดสรุป 4 กลุ่ม ───────────────────────────────── */
+.mx-legend{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:11px;margin-bottom:16px}
+.mx-cat{background:var(--mx-surface);border:1px solid var(--mx-border);border-left:4px solid;border-radius:13px;padding:13px 15px;text-align:left;cursor:pointer;transition:all .18s;display:grid;grid-template-columns:auto 1fr;gap:3px 9px;align-items:center;font-family:inherit;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.mx-cat:hover{box-shadow:0 6px 18px rgba(0,0,0,.12);transform:translateY(-2px)}
+.mx-cat.on{background:var(--mx-surface2);box-shadow:0 0 0 2px var(--mx-accent) inset}
+.mx-dotlg{width:12px;height:12px;border-radius:50%;grid-row:1}
+.mx-cat-name{font-size:13px;font-weight:700;color:var(--mx-text)}
+.mx-cat-num{grid-column:2;font-size:18px;font-weight:800;color:var(--mx-text)}
+.mx-cat-rev{grid-column:2;font-size:12px;font-weight:700;color:var(--mx-accent2)}
+.mx-cat-tip{grid-column:1/-1;font-size:11px;color:var(--mx-muted);line-height:1.5;margin-top:4px}
+
+/* ── กราฟกระจาย ─────────────────────────────────────── */
+.mx-chart-box{position:relative;background:var(--mx-surface);border:1px solid var(--mx-border);border-radius:14px;padding:14px;margin-bottom:18px;box-shadow:0 2px 8px rgba(0,0,0,.06);max-width:800px;margin-left:auto;margin-right:auto}
+.mx-chart{width:100%;height:auto;display:block;max-height:70vh}
+.mx-dot{cursor:pointer;transition:r .12s,fill-opacity .12s}
+.mx-dot:hover{r:9;fill-opacity:1}
+.mx-dot.mx-hit{stroke:var(--mx-text);stroke-width:2.5}
+.mx-tip{display:none;position:absolute;background:var(--mx-surface);border:1px solid var(--mx-border);border-radius:12px;padding:11px 14px;box-shadow:0 10px 30px rgba(0,0,0,.18);font-size:12px;min-width:236px;pointer-events:none;z-index:5}
+.mx-tip-name{font-weight:800;font-size:13px;margin-bottom:7px;color:var(--mx-accent2);line-height:1.4}
+.mx-tip-row{display:flex;justify-content:space-between;gap:16px;padding:2.5px 0;color:var(--mx-text2)}
+.mx-tip-row b{color:var(--mx-text)}
+
+/* ── ตาราง ──────────────────────────────────────────── */
+.mx-title{font-size:13.5px;font-weight:700;margin:18px 0 11px;display:flex;align-items:center;gap:8px;color:var(--mx-text)}
+.mx-title::before{content:'';width:4px;height:15px;background:var(--mx-accent);border-radius:2px}
+.mx-tbl-wrap{overflow-x:auto;border:1px solid var(--mx-border);border-radius:12px;background:var(--mx-surface)}
+.mx-tbl{width:100%;border-collapse:collapse;font-size:12.5px;background:var(--mx-surface)}
+.mx-tbl thead th{background:var(--mx-surface2);padding:10px 12px;text-align:left;font-weight:700;color:var(--mx-text2);font-size:11.5px;white-space:nowrap;border-bottom:1.5px solid var(--mx-border)}
+.mx-tbl tbody td{padding:9px 12px;border-bottom:1px solid rgba(148,163,184,.18);vertical-align:middle;color:var(--mx-text)}
+.mx-tbl tbody tr:last-child td{border-bottom:0}
+.mx-tbl tbody tr:hover{background:var(--mx-surface2)}
+.mx-tbl tbody tr.mx-hit{background:#fff7ed;box-shadow:inset 3px 0 0 var(--mx-accent)}
+.mx-tbl .mx-num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.mx-tbl .mx-name{font-weight:600;min-width:190px}
+.mx-tbl .mx-code{font-family:'Consolas',monospace;font-size:11.5px;color:var(--mx-text2)}
+.mx-dash{color:#cbd5e1}
+.mx-tag{font-size:10.5px;font-weight:700;padding:2.5px 9px;border-radius:11px;white-space:nowrap;display:inline-block}
+.mx-zoom{width:28px;height:28px;border-radius:8px;border:1.5px solid var(--mx-border);background:var(--mx-surface);color:var(--mx-accent2);font-size:13px;cursor:pointer;padding:0;line-height:1}
+.mx-zoom:hover{border-color:var(--mx-accent2);background:var(--cyan-bg,#ecfeff)}
+
+.mx-empty{text-align:center;padding:60px 20px;color:var(--mx-muted)}
+.mx-empty .mx-big{font-size:44px;margin-bottom:12px;opacity:.55}
+.mx-empty h3{font-size:16px;color:var(--mx-text2);margin-bottom:6px}
+.mx-empty p{font-size:13px;line-height:1.7}
+
+@media print{
+  .mx-bar,.mx-zoom{display:none!important}
+  .mx-chart-box,.mx-cat,.mx-tbl-wrap{box-shadow:none;break-inside:avoid}
+}

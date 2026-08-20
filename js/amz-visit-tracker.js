@@ -204,7 +204,77 @@ var AMZ_VISIT_DATA = [
   ['2026-07-25','SD5485','สาขา บจ.ทีซีเอ็น เจ็ดหนึ่งหนึ่ง','เปิดร้านใหม่','เอแคลร์นมสด (8 ชิ้น)','สนใจ','โทรแล้ว','ปิดการขายแล้ว','ลูกค้าส่งขนมเข้ามาในระบบแล้ว','ชี'],
   ['2026-07-25','SD4735','สาขาสุขสวัสร์ 14','เปิดร้านใหม่','เอแคลร์นมสด (8 ชิ้น)','สนใจ','โทรแล้ว','ปิดการขายแล้ว','ลูกค้าสั่งขนมเข้ามาในระบบแล้ว','ชี'],
   ['2026-07-25','SD3818','สาขาศาลธนบุรี','เปิดร้านใหม่','เอแคลร์นมสด (8 ชิ้น)','สนใจ','โทรแล้ว','ปิดการขายแล้ว','ลูกค้าสั่งขนมเข้ามาในระบบแล้ว','ชี'],
-  ['2026-07-25','RM1060','PTT นครปฐม-ปิ่นเกล้า กม.26','ติดตามยอดขาย','','','','','','ชี']
+  ['2026-07-25','RM1060','PTT นครปฐม-ปิ่นเกล้า กม.26','ติดตามยอดขาย','','','','','','ชี'],
+  ['2026-07-27','SD2754','สาขาท่าน้ำนนท์','เปิดร้านใหม่','เอแคลร์นมสด (8 ชิ้น)','สนใจ','โทรแล้ว','ติดตามต่อ','รอติดตามยอดสั่ง','ชี'],
+  ['2026-07-27','SD1155','สาขาริเวอร์พลาซ่า','เปิดร้านใหม่','เอแคลร์นมสด (8 ชิ้น)','สนใจ','โทรแล้ว','ติดตามต่อ','รอติดตามยอดสั่ง','ชี'],
+  ['2026-07-27','SD2669','สาขาตลาดศรีสมบัติ','เปิดร้านใหม่','เอแคลร์นมสด (8 ชิ้น)','สนใจ','โทรแล้ว','ติดตามต่อ','รอติดตามยอดสั่ง','ชี'],
+  ['2026-07-27','SD4587','สาขา BIG C ติวานนท์','เปิดร้านใหม่','เอแคลร์นมสด (8 ชิ้น)','สนใจ','โทรแล้ว','ติดตามต่อ','รอติดตามยอดสั่ง','ชี'],
+  ['2026-07-27','SD5091','สาขา Littlk Walk รัตนาธิเบศร์','เปิดร้านใหม่','เอแคลร์นมสด (8 ชิ้น)','สนใจ','โทรแล้ว','ติดตามต่อ','รอติดตามยอดสั่ง','ชี'],
+  ['2026-07-27','DD2377','PTT สน. บจก. เกียรติชัยวัฒนาออยล์','เปิดร้านใหม่','เอแคลร์นมสด (8 ชิ้น)','สนใจ','โทรแล้ว','ติดตามต่อ','รอติดตามยอดสั่ง','ชี'],
+  ['2026-07-27','SD4515','สาขาตลาดฐานเพชรนนท์','เปิดร้านใหม่','เอแคลร์นมสด (8 ชิ้น)','สนใจ','โทรแล้ว','ติดตามต่อ','รอติดตามยอดสั่ง','ชี'],
+  ['2026-07-29','DD4446','PTT เวสต์วิลเลจ บางไหญ่','ติดตามยอดขาย','','','','','','ชี'],
+  ['2026-07-29','SD3571','สาขาตลาดนัดแสงจันทร์ถาวร','เปิดร้านใหม่','เอแคลร์นมสด (8 ชิ้น)','สนใจ','โทรแล้ว','ติดตามต่อ','นัดเอาของชิมไปไห้ลูกค้าวันที่ 1/8/69','ชี'],
+  ['2026-07-29','SD4533','สาขาตลาดน้ำบางคูลัด','เปิดร้านใหม่','เอแคลร์นมสด (8 ชิ้น)','สนใจ','โทรแล้ว','ติดตามต่อ','นัดเอาของชิมไปไห้ลูกค้าวันที่ 1/8/69','ชี'],
+  ['2026-07-29','SD5248','สาขาสามแยกวัดต้นเชือก','เปิดร้านใหม่','เอแคลร์นมสด (8 ชิ้น)','สนใจ','โทรแล้ว','ติดตามต่อ','นัดเอาของชิมไปไห้ลูกค้าวันที่ 1/8/69','ชี'],
+  ['2026-07-29','SD4921','สาขาหมู่บ้านเดอะเรสบางไหญ่','เปิดร้านใหม่','เอแคลร์นมสด (8 ชิ้น)','สนใจ','โทรแล้ว','ติดตามต่อ','นัดเอาของชิมไปไห้ลูกค้าวันที่ 1/8/69','ชี'],
+  ['2026-07-29','DD3274','สาขาซอยคลองถนน','ติดตามยอดขาย','','','','','','ชี'],
+  ['2026-07-29','SD4606','สาขาบางรักมาร์เก็ต','เปิดร้านใหม่','ขนมปังเนยนิ่ม','สนใจ','โทรแล้ว','ติดตามต่อ','นัดเอาของชิมไปไห้ลูกค้าวันที่ 1/8/69','ชี'],
+  ['2026-07-29','DD0200','PTT บจก.มานะชัยบริการ','ติดตามยอดขาย','','','','','','ชี'],
+  ['2026-07-30','SD2419','สาขาสนามบินน้ำมาร์เก็ต','เปิดร้านใหม่','ครีมฮอร์น วนิลา','สนใจ','โทรแล้ว','ติดตามต่อ','นัดเอาของชิมไปไห้ลูกค้าวันที่ 1/8/69','ชี'],
+  ['2026-07-30','SD2991','สาขาแยกสนามบินน้ำ','เปิดร้านใหม่','','ไม่สนใจ','โทรแล้ว','','ที่สาขาจะปิดตัวลงในอีก 2 เดือนลูกค้าจึงไม่สั่งขนม','ชี'],
+  ['2026-07-30','SD4890','สาขาซอยทานสัมฤทธิ์','เปิดร้านใหม่','เอแคลร์นมสด (8 ชิ้น)','สนใจ','โทรแล้ว','','นัดเอาของชิมไปไห้ลูกค้าวันที่ 1/8/69','ชี'],
+  ['2026-07-30','SD2443','สาขาเทสโก้โลตัส รัตนาธิเบศร์','เปิดร้านใหม่','เอแคลร์นมสด (8 ชิ้น)','สนใจ','โทรแล้ว','ติดตามต่อ','นัดเอาของชิมไปไห้ลูกค้าวันที่ 1/8/69','ชี'],
+  ['2026-07-30','SD3003','สาขาสถาบันโรคทรวงอก','เปิดร้านใหม่','เอแคลร์นมสด (8 ชิ้น)','สนใจ','โทรแล้ว','ติดตามต่อ','นัดเอาของชิมไปไห้ลูกค้าวันที่ 1/8/69','ชี'],
+  ['2026-07-30','DD5430','PTT ราชพฤกษ์ สเตชั่น','เปิดร้านใหม่','เอแคลร์นมสด (8 ชิ้น)','สนใจ','โทรแล้ว','ติดตามต่อ','นัดเอาของชิมไปไห้ลูกค้าวันที่ 1/8/69','ชี'],
+  ['2026-07-30','RM041','PTT จีฟฟี่ สาขานนทบุรี-วงแหวนบางไหญ่','ติดตามยอดขาย','','','','','','ชี'],
+  ['2026-07-30','DD3368','PTT เอนเนอร์ยี่ พาร์ค','ติดตามยอดขาย','','','','','','ชี'],
+  ['2026-08-01','SD4712','สาขา Join บรมราชชนนี','เปิดร้านใหม่','','สนใจ','โทรแล้ว','ติดตามต่อ','นัดเอาขนมของชิมไปไห้ลูกค้า8/8/69','ชี'],
+  ['2026-08-01','SD5230','สาขา LDC ศาลายา','เปิดร้านใหม่','','สนใจ','โทรแล้ว','ติดตามต่อ','นัดเอาขนมของชิมไปไห้ลูกค้า8/8/69','ชี'],
+  ['2026-08-01','SD4448','สาขาชุมชนศาลาธรรมสพน์','เปิดร้านใหม่','','สนใจ','โทรแล้ว','ติดตามต่อ','นัดเอาขนมของชิมไปไห้ลูกค้า8/8/69','ชี'],
+  ['2026-08-01','CD3468','PTT วงแหวนกาญจนาภิเษก','เปิดร้านใหม่','','สนใจ','โทรแล้ว','ติดตามต่อ','นัดเอาขนมของชิมไปไห้ลูกค้า8/8/69','ชี'],
+  ['2026-08-01','SD5050','สาขาบุญถาวรดีไซน์วิลเลจ','เปิดร้านใหม่','','สนใจ','โทรแล้ว','ติดตามต่อ','นัดเอาขนมของชิมไปไห้ลูกค้า8/8/69','ชี'],
+  ['2026-08-01','RM1060','PTTนครปฐม-ปิ่นเกล้า','ติดตามยอดขาย','','นัดติดตามต่อ','โทรแล้ว','ติดตามต่อ','','ชี'],
+  ['2026-08-01','DD1070','PTT หจก.สำรวยบริการ 2','ติดตามยอดขาย','','นัดติดตามต่อ','โทรแล้ว','ติดตามต่อ','','ชี'],
+  ['2026-08-03','SD2914','สาขาร้านอาหารลิ้มเหล่าโหงว','เปิดร้านใหม่','','สนใจ','โทรแล้ว','ติดตามต่อ','','ชี'],
+  ['2026-08-03','SD4568','สาขาตลาดนัดวัดสายประดู่สาย 1','เปิดร้านใหม่','','สนใจ','โทรแล้ว','ติดตามต่อ','','ชี'],
+  ['2026-08-03','SD4442','สาขาตลาดน้ำตลิ่งชัน','ติดตามยอดขาย','','สั่งซื้อแล้ว','โทรแล้ว','ติดตามต่อ','','ชี'],
+  ['2026-08-03','DD2185','PTT สน.บจ.เหลียญทองราชพฤกษ์','ติดตามยอดขาย','','สั่งซื้อแล้ว','โทรแล้ว','ติดตามต่อ','','ชี'],
+  ['2026-08-03','DD3368','PTT เอนเนอร์ยี่ พาร์ค','ติดตามยอดขาย','','สั่งซื้อแล้ว','โทรแล้ว','ติดตามต่อ','','ชี'],
+  ['2026-08-03','RM619','PTT กรุงเทพ-วงแหวน บางแค2','ติดตามยอดขาย','','สั่งซื้อแล้ว','โทรแล้ว','ติดตามต่อ','','ชี'],
+  ['2026-08-03','DD0200','PTT บจก. มานะชัยบริการ','ติดตามยอดขาย','','สั่งซื้อแล้ว','โทรแล้ว','ติดตามต่อ','','ชี'],
+  ['2026-08-04','SD4921','สาขาท์หมู่บ้านเดอะเรสบางไหญ่','เปิดร้านใหม่','','สนใจ','โทรแล้ว','ติดตามต่อ','','ชี'],
+  ['2026-08-04','SD4606','สาขาบางรักมาร์เก็ต','เปิดร้านใหม่','','สนใจ','โทรแล้ว','ติดตามต่อ','','ชี'],
+  ['2026-08-04','SD5248','สาขาสามแยกวัดต้นเชือก','เปิดร้านใหม่','','สนใจ','โทรแล้ว','ติดตามต่อ','','ชี'],
+  ['2026-08-04','SD4533','สาขาตลาดน้ำบางคูลัด','เปิดร้านใหม่','','สนใจ','โทรแล้ว','ติดตามต่อ','','ชี'],
+  ['2026-08-04','SD3871','','เปิดร้านใหม่','','สนใจ','โทรแล้ว','ติดตามต่อ','','ชี'],
+  ['2026-08-04','SD2419','สาขาสนามบินน้ำมาร์เก็ต','เปิดร้านใหม่','','สนใจ','โทรแล้ว','ติดตามต่อ','','ชี'],
+  ['2026-08-04','SD4890','สาขาซอยทานสัมฤทธิ์','เปิดร้านใหม่','','สนใจ','โทรแล้ว','ติดตามต่อ','','ชี'],
+  ['2026-08-04','SD3003','สาขาสถาบันโรคทรวงอก','เปิดร้านใหม่','','สนใจ','โทรแล้ว','ติดตามต่อ','','ชี'],
+  ['2026-08-04','SD2443','สาขาเทสโก้โลตัส รัตนาธิเบศร์','เปิดร้านใหม่','','สนใจ','ยังไม่โทร','ติดตามต่อ','','ชี'],
+  ['2026-08-04','DD5430','PTT ราชพฤกษ์ สเตชั่น','เปิดร้านใหม่','','สนใจ','ยังไม่โทร','ติดตามต่อ','','ชี'],
+  ['2026-08-08','SD4712','สาขา Join บรมราชชนนี','เปิดร้านใหม่','','สนใจ','โทรแล้ว','ติดตามต่อ','','ชี'],
+  ['2026-08-08','SD3230','สาขาเสนีย์ ฟู้ด มาร์เก็ต','เปิดร้านใหม่','','สนใจ','โทรแล้ว','ติดตามต่อ','','ชี'],
+  ['2026-08-08','SD4448','สาขาชุมชนศาลาธรรมสพน์','เปิดร้านใหม่','','สนใจ','โทรแล้ว','ติดตามต่อ','','ชี'],
+  ['2026-08-08','CD3468','PTT วงแหวนกาญจนาภิเษก','เปิดร้านใหม่','','สนใจ','โทรแล้ว','ติดตามต่อ','','ชี'],
+  ['2026-08-08','SD5050','สาขาบุญถาวรดีไซน์วิลเลจ','เปิดร้านใหม่','','สนใจ','โทรแล้ว','ติดตามต่อ','','ชี'],
+  ['2026-08-08','RM1060','PTTนครปฐม-ปิ่นเกล้า','ติดตามยอดขาย','','สั่งซื้อแล้ว','โทรแล้ว','ติดตามต่อ','','ชี'],
+  ['2026-08-08','DD0200','PTT บจก. มานะชัยบริการ','ติดตามยอดขาย','','สั่งซื้อแล้ว','โทรแล้ว','ติดตามต่อ','','ชี'],
+  ['2026-08-10','SD5094','สาขาลุมพินีพาร์ค เพรชเกษม98','ติดตามยอดขาย','','สั่งซื้อแล้ว','โทรแล้ว','ปิดการขายแล้ว','','ชี'],
+  ['2026-08-10','SD3637','สาขาโรงพยาบาลเกษมราษฎร์ บางแค','ติดตามยอดขาย','','สั่งซื้อแล้ว','โทรแล้ว','ปิดการขายแล้ว','','ชี'],
+  ['2026-08-10','SD3182','สาขาโครงการเจ้าสัว69','เปิดร้านใหม่','','นัดติดตามต่อ','โทรแล้ว','ติดตามต่อ','','ชี'],
+  ['2026-08-10','DD5343','PTT สาขาอัศวรรณ หนองแขม','ติดตามยอดขาย','','สั่งซื้อแล้ว','โทรแล้ว','ปิดการขายแล้ว','','ชี'],
+  ['2026-08-10','RM3253','PTT กรุงเทพ-วงแหวน บางแค2 จุด 2','เปิดร้านใหม่','','นัดติดตามต่อ','โทรแล้ว','ปิดการขายแล้ว','','ชี'],
+  ['2026-08-10','JM0473','PTT กรุงเทพ-วงแหวน บางแค','ติดตามยอดขาย','','สั่งซื้อแล้ว','โทรแล้ว','ปิดการขายแล้ว','','ชี'],
+  ['2026-08-10','RM1060','PTTนครปฐม-ปิ่นเกล้า','ติดตามยอดขาย','','นัดติดตามต่อ','โทรแล้ว','ติดตามต่อ','','ชี'],
+  ['2026-08-10','DD1073','PTT หจก.7 ปิโตเลียม','ติดตามยอดขาย','','นัดติดตามต่อ','โทรแล้ว','ติดตามต่อ','','ชี'],
+  ['2026-08-11','RM1282','PTT นนทบุรี-วงแหวน กม.40','','','','','','','ชี'],
+  ['2026-08-11','DD4051','PTT กาญจนาภิเษก-บางบัวทอง','','','','','','','ชี'],
+  ['2026-08-11','SD3572','สาขาไทวัสดุ บางบัวทอง','','','','','','','ชี'],
+  ['2026-08-11','SD4826','สาขาหมู่บ่านบัวทองธานี','','','','','','','ชี'],
+  ['2026-08-11','DD605','PTT บีบีทีคอฟฟี่/เยี้องวัดเล่งเน่ยยี่2','','','','','','','ชี'],
+  ['2026-08-11','RM1016','PTT บางบัวทอง-สุพรรณบุรี กม.28','','','','','','','ชี'],
+  ['2026-08-11','RM2487','PTT สน. นนทบุรี-สุพรรณ กม.30','','','','','','','ชี'],
+  ['2026-08-11','DD0831','PTT หจก.สุรชา','','','','','','','ชี']
 ];
 
 // ---------- Dropdown options ----------
@@ -232,7 +302,7 @@ var AMZ_VISIT_DROPDOWNS = {
 
 var AMZ_VISIT_SALES = [
   {key:'all',   label:'👥 รวมทั้งหมด', name:null},
-  {key:'yu',    label:'ณัฏฐวรรณ (ยู)',  name:'ยู',    area:'Amazon – BKK 1'},
+  {key:'yu',    label:'ว่าง (BKK 1)',    name:'ยู',    area:'Amazon – BKK 1'},
   {key:'chi',   label:'ภาณุวัฒน์ (ชี)', name:'ชี',    area:'Amazon – BKK 2'},
   {key:'kant',  label:'วีระ (กานต์)',   name:'กานต์', area:'Amazon – BKK 3'}
 ];
@@ -546,30 +616,21 @@ function renderAmzVisitTracker() {
   html += '</div>';
 
   // ===== Period Filter =====
-  var _pBtn = function(key, label) {
-    var isAct = _avtPeriod === key;
-    return '<div onclick="_avtSetPeriod(\'' + key + '\',this)" style="padding:6px 16px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;background:' + (isAct ? '#ea580c' : '#fff') + ';color:' + (isAct ? '#fff' : '#64748b') + ';border:1px solid ' + (isAct ? '#ea580c' : '#e2e8f0') + ';transition:all .15s;white-space:nowrap">' + label + '</div>';
-  };
-  var isQtr = ['q1','q2','q3','q4'].indexOf(_avtPeriod) >= 0;
-  html += '<div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-bottom:16px;padding:10px 16px;background:#fff7ed;border-radius:10px;border:1px solid #fed7aa">';
-  html += '<span style="font-size:13px;font-weight:600;color:#9a3412;margin-right:4px">📅 ช่วงเวลา:</span>';
-  html += _pBtn('all', 'ทั้งหมด');
-  html += _pBtn('thismonth', 'เดือนนี้');
-  html += _pBtn('lastmonth', 'เดือนที่แล้ว');
-  // Quarter dropdown
-  html += '<div style="position:relative">';
-  html += '<div onclick="_avtToggleQtr(this)" style="padding:6px 16px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;background:' + (isQtr ? '#ea580c' : '#fff') + ';color:' + (isQtr ? '#fff' : '#64748b') + ';border:1px solid ' + (isQtr ? '#ea580c' : '#e2e8f0') + ';white-space:nowrap">📆 รายไตรมาส ▾</div>';
-  html += '<div id="avtQtrMenu" style="display:' + (_avtQtrOpen ? 'block' : 'none') + ';position:absolute;top:100%;left:0;margin-top:4px;background:#fff;border:1px solid #e2e8f0;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,0.1);z-index:50;min-width:160px">';
-  ['q1','q2','q3','q4'].forEach(function(q, i) {
-    var qLabels = ['Q1 ม.ค.–มี.ค.','Q2 เม.ย.–มิ.ย.','Q3 ก.ค.–ก.ย.','Q4 ต.ค.–ธ.ค.'];
-    var isQAct = _avtPeriod === q;
-    html += '<div onclick="_avtPickQtr(\'' + q + '\',this)" style="padding:8px 16px;cursor:pointer;font-size:13px;color:' + (isQAct ? '#ea580c' : '#334155') + ';font-weight:' + (isQAct ? '700' : '400') + ';background:' + (isQAct ? '#fff7ed' : '#fff') + ';border-radius:' + (i === 0 ? '8px 8px 0 0' : i === 3 ? '0 0 8px 8px' : '0') + '">' + qLabels[i] + '</div>';
+  html += '<div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:16px">';
+  html += '<span style="font-size:13px;font-weight:600;color:#64748b">📅 ช่วงเวลา:</span>';
+  var periods = [
+    {key:'all', label:'ทั้งปี'},
+    {key:'thismonth', label:'เดือนนี้'},
+    {key:'lastmonth', label:'เดือนที่แล้ว'},
+    {key:'q1', label:'Q1'},
+    {key:'q2', label:'Q2'},
+    {key:'q3', label:'Q3'},
+    {key:'q4', label:'Q4'}
+  ];
+  periods.forEach(function(p) {
+    var isActive = p.key === _avtPeriod;
+    html += '<div onclick="_avtSetPeriod(\'' + p.key + '\')" style="padding:6px 14px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:600;border:1px solid ' + (isActive ? '#7c3aed' : '#e2e8f0') + ';background:' + (isActive ? '#f5f3ff' : '#fff') + ';color:' + (isActive ? '#7c3aed' : '#64748b') + ';transition:all .15s">' + p.label + '</div>';
   });
-  html += '</div></div>';
-  // Year badge (fixed 2569)
-  html += '<div style="padding:6px 16px;border-radius:8px;font-size:13px;font-weight:600;background:#ea580c;color:#fff;border:1px solid #ea580c">📅 ปี 2569</div>';
-  // Period label
-  html += '<span style="font-size:12px;color:#9a3412;margin-left:auto;font-style:italic">กำลังแสดง: ' + _avtPeriodLabel() + '</span>';
   html += '</div>';
 
   // ===== KPI Cards =====
@@ -634,10 +695,18 @@ function renderAmzVisitTracker() {
   html += '<tbody id="avtTbody"></tbody>';
   html += '</table></div></div>';
 
+  // ===== Sales Performance from Supabase =====
+  html += '<div class="card" style="padding:16px;margin-top:18px">';
+  html += '<div class="card-title">🏆 ผลงานการปิดสาขา — เซลล์แต่ละคน</div>';
+  html += '<div id="avtSalesPerfContainer"><div style="color:#94a3b8;font-size:13px;padding:12px 0">⏳ กำลังโหลดข้อมูลจาก Supabase...</div></div>';
+  html += '</div>';
+
   // ===== Modal =====
   html += _avt_modalHTML();
 
   container.innerHTML = html;
+
+  _avtFetchSalesPerf();
 
   // Render table rows
   _avt_filterTable();
@@ -851,4 +920,110 @@ function _avt_submitForm() {
 
   _avt_closeModal();
   renderAmzVisitTracker();
+}
+
+// ---------- Sales Performance (from Supabase) ----------
+var _AVT_SALES_MAP = {
+  'BKK1 ปทุมธานี': 'ว่าง',
+  'BKK2 นนทบุรี': 'ภาณุวัฒน์ ปานเผือก',
+  'BKK3 สมุทรปราการ': 'วีระ พรมมี'
+};
+
+function _avtFetchSalesPerf() {
+  var container = document.getElementById('avtSalesPerfContainer');
+  if (!container) return;
+  if (typeof _supaFetch !== 'function') {
+    container.innerHTML = '<div style="color:#ef4444;font-size:13px">ไม่พบฟังก์ชัน Supabase</div>';
+    return;
+  }
+  _supaFetch('location_monthly', 'select=year_month,area,province,branch_code,branch_name,revenue,qty&order=revenue.desc')
+    .then(function(data) { _avtRenderSalesPerf(data); })
+    .catch(function(err) {
+      container.innerHTML = '<div style="color:#ef4444;font-size:13px">โหลดข้อมูลไม่สำเร็จ: ' + err.message + '</div>';
+    });
+}
+
+function _avtRenderSalesPerf(locData) {
+  var container = document.getElementById('avtSalesPerfContainer');
+  if (!container) return;
+
+  var salesAreas = Object.keys(_AVT_SALES_MAP);
+  var perfData = {};
+  salesAreas.forEach(function(area) {
+    perfData[area] = { salesperson: _AVT_SALES_MAP[area], area: area, branches: {}, totalRev: 0, totalQty: 0 };
+  });
+
+  locData.forEach(function(r) {
+    var area = r.area || '';
+    if (!perfData[area]) return;
+    var bc = r.branch_code || '';
+    if (!bc) return;
+    var name = r.branch_name || bc;
+    if (!perfData[area].branches[bc]) {
+      perfData[area].branches[bc] = { name: name, visits: [], totalRev: 0, totalQty: 0 };
+    }
+    perfData[area].branches[bc].visits.push({ month: r.year_month, revenue: r.revenue || 0, qty: r.qty || 0 });
+    perfData[area].branches[bc].totalRev += r.revenue || 0;
+    perfData[area].branches[bc].totalQty += r.qty || 0;
+    perfData[area].totalRev += r.revenue || 0;
+    perfData[area].totalQty += r.qty || 0;
+  });
+
+  var fmtBaht = function(v) {
+    if (v >= 1e6) return (v / 1e6).toFixed(2) + ' M';
+    if (v >= 1e3) return (v / 1e3).toFixed(1) + ' K';
+    return v.toFixed(0);
+  };
+  var fmtNum = function(v) { return v.toLocaleString('th-TH'); };
+
+  var html = '';
+  salesAreas.forEach(function(area) {
+    var p = perfData[area];
+    var branchKeys = Object.keys(p.branches);
+    var uniqueCount = branchKeys.length;
+
+    html += '<div style="margin-bottom:24px">';
+    html += '<div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;flex-wrap:wrap">';
+    html += '<span style="font-size:16px;font-weight:800;color:#ea580c">' + p.salesperson + '</span>';
+    html += '<span style="font-size:13px;color:#64748b;background:#f1f5f9;padding:3px 10px;border-radius:6px">' + area + '</span>';
+    html += '<span style="font-size:13px;font-weight:700;color:#10b981">สาขาที่ปิดได้: ' + uniqueCount + ' สาขา</span>';
+    html += '<span style="font-size:13px;color:#3b82f6;font-weight:600">Revenue: ฿' + fmtBaht(p.totalRev) + '</span>';
+    html += '<span style="font-size:13px;color:#8b5cf6;font-weight:600">Qty: ' + fmtNum(p.totalQty) + '</span>';
+    html += '</div>';
+
+    if (uniqueCount === 0) {
+      html += '<div style="color:#94a3b8;font-size:13px;padding:8px 0">ไม่มีข้อมูลในช่วงเวลาที่เลือก</div>';
+    } else {
+      html += '<table class="data-table" style="width:100%;font-size:12px">';
+      html += '<thead><tr>';
+      html += '<th style="width:50px">#</th>';
+      html += '<th>รหัสสาขา</th>';
+      html += '<th>ชื่อสาขา</th>';
+      html += '<th style="text-align:center">ครั้งที่เข้า</th>';
+      html += '<th style="text-align:right">REVENUE</th>';
+      html += '<th style="text-align:right">QTY</th>';
+      html += '</tr></thead><tbody>';
+
+      var sortedBranches = branchKeys.map(function(bc) { return p.branches[bc]; })
+        .sort(function(a, b) { return b.totalRev - a.totalRev; });
+
+      sortedBranches.forEach(function(br, idx) {
+        var visitCount = br.visits.length;
+        var visitLabel = visitCount === 1 ? '1 ครั้ง' : visitCount + ' ครั้ง';
+        var visitBadge = visitCount >= 3 ? '#10b981' : visitCount >= 2 ? '#3b82f6' : '#94a3b8';
+        html += '<tr>';
+        html += '<td style="text-align:center;font-weight:700;color:#ea580c">' + (idx + 1) + '</td>';
+        html += '<td>' + br.name.split(' ')[0] + '</td>';
+        html += '<td>' + (br.name.length > 35 ? br.name.substring(0, 33) + '…' : br.name) + '</td>';
+        html += '<td style="text-align:center"><span style="background:' + visitBadge + ';color:#fff;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600">' + visitLabel + '</span></td>';
+        html += '<td style="text-align:right">฿' + fmtNum(Math.round(br.totalRev)) + '</td>';
+        html += '<td style="text-align:right">' + fmtNum(Math.round(br.totalQty)) + '</td>';
+        html += '</tr>';
+      });
+      html += '</tbody></table>';
+    }
+    html += '</div>';
+  });
+
+  container.innerHTML = html;
 }

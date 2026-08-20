@@ -4,17 +4,66 @@
  * Chart.js loaded as UMD via <script> tag -> use window.Chart
  */
 
+// --- Global plugin: show % labels on doughnut/pie ---
+const doughnutPercentPlugin = {
+  id: 'doughnutPercent',
+  afterDraw(chart) {
+    if (chart.config.type !== 'doughnut' && chart.config.type !== 'pie') return;
+    const meta = chart.getDatasetMeta(0);
+    if (!meta || !meta.data || meta.data.length === 0) return;
+    const dataset = chart.data.datasets[0];
+    if (!dataset || !dataset.data) return;
+    const total = dataset.data.reduce((a, b) => a + (b || 0), 0);
+    if (total === 0) return;
+
+    const { ctx, chartArea } = chart;
+    const chartSize = Math.min(chartArea.width, chartArea.height);
+    const fontSize = Math.max(13, Math.round(chartSize / 22));
+
+    ctx.save();
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.font = `bold ${fontSize}px "Segoe UI", Tahoma, sans-serif`;
+
+    meta.data.forEach((arc, i) => {
+      const value = dataset.data[i];
+      if (!value) return;
+      const pct = (value / total) * 100;
+      if (pct < 4) return;
+
+      const { startAngle, endAngle, innerRadius, outerRadius } = arc.getProps(
+        ['startAngle', 'endAngle', 'innerRadius', 'outerRadius']
+      );
+      const midAngle = (startAngle + endAngle) / 2;
+      const midRadius = (innerRadius + outerRadius) / 2;
+      const x = arc.x + Math.cos(midAngle) * midRadius;
+      const y = arc.y + Math.sin(midAngle) * midRadius;
+      const label = pct >= 10 ? Math.round(pct) + '%' : pct.toFixed(1) + '%';
+
+      ctx.strokeStyle = 'rgba(0,0,0,0.45)';
+      ctx.lineWidth = 3;
+      ctx.strokeText(label, x, y);
+      ctx.fillStyle = '#ffffff';
+      ctx.fillText(label, x, y);
+    });
+
+    ctx.restore();
+  }
+};
+
+window.Chart.register(doughnutPercentPlugin);
+
 // canvasId -> Chart instance
 const registry = new Map();
 
 // Brand colors for competitor charts
 export const BRAND_COLORS = {
   wanwanach: '#7b2ff7',
-  taokaenoi: '#2ecc71',
-  manora: '#e74c3c',
-  hanami: '#f39c12',
-  lays: '#3498db',
-  koikeya: '#e91e63'
+  snp: '#2ecc71',
+  afteryou: '#e74c3c',
+  farmhouse: '#f39c12',
+  yamazaki: '#3498db',
+  lepain: '#e91e63'
 };
 
 // General palette for charts
@@ -68,7 +117,6 @@ export function createChart(canvasId, config) {
     return null;
   }
 
-  // Default options matching dark theme
   const defaultOptions = {
     responsive: true,
     maintainAspectRatio: false,
@@ -76,15 +124,19 @@ export function createChart(canvasId, config) {
       legend: {
         labels: {
           font: { family: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif", size: 12 },
-          color: '#ccc'
+          color: '#4a5568'
         }
       },
       tooltip: {
         titleFont: { family: "'Segoe UI'", size: 13 },
         bodyFont: { family: "'Segoe UI'", size: 12 },
-        backgroundColor: 'rgba(30, 30, 60, 0.95)',
-        borderColor: 'rgba(123, 47, 247, 0.3)',
-        borderWidth: 1
+        backgroundColor: 'rgba(26, 32, 44, 0.92)',
+        titleColor: '#fff',
+        bodyColor: '#e2e8f0',
+        borderColor: 'rgba(124, 77, 255, 0.4)',
+        borderWidth: 1,
+        cornerRadius: 8,
+        padding: 10
       }
     },
     scales: {}

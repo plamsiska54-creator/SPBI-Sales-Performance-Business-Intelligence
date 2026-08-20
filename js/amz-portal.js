@@ -15,15 +15,15 @@
   function _amzGetFilteredMonths() {
     var now = new Date();
     var mo = now.getMonth(); // 0-based
+    var maxIdx = AMZ_MONTHS_ALL.length - 1;
     if (_amzPeriod === 'thismonth') {
-      var idx = mo; // Jul=6
-      if (idx >= 0 && idx < AMZ_MONTHS_ALL.length) return { months: [AMZ_MONTHS_ALL[idx]], labels: [AMZ_MONTH_TH_ALL[idx]] };
-      return { months: AMZ_MONTHS_ALL, labels: AMZ_MONTH_TH_ALL };
+      var idx = Math.min(mo, maxIdx);
+      return { months: [AMZ_MONTHS_ALL[idx]], labels: [AMZ_MONTH_TH_ALL[idx]] };
     }
     if (_amzPeriod === 'lastmonth') {
-      var idx = mo - 1;
-      if (idx >= 0 && idx < AMZ_MONTHS_ALL.length) return { months: [AMZ_MONTHS_ALL[idx]], labels: [AMZ_MONTH_TH_ALL[idx]] };
-      return { months: AMZ_MONTHS_ALL, labels: AMZ_MONTH_TH_ALL };
+      var idx = Math.min(mo - 1, maxIdx);
+      if (idx < 0) idx = 0;
+      return { months: [AMZ_MONTHS_ALL[idx]], labels: [AMZ_MONTH_TH_ALL[idx]] };
     }
     if (_amzPeriod === 'q1') return { months: ['Jan','Feb','Mar'], labels: ['ม.ค.','ก.พ.','มี.ค.'] };
     if (_amzPeriod === 'q2') return { months: ['Apr','May','Jun'], labels: ['เม.ย.','พ.ค.','มิ.ย.'] };
@@ -63,7 +63,9 @@
     if (!months.length) return '';
     if (_amzYear === 'all') return 'กำลังแสดง: ทั้งหมด (' + _amzYmLabel(months[0]) + ' – ' + _amzYmLabel(months[months.length-1]) + ')';
     var be = parseInt(_amzYear) + 543;
-    var infoMap = { all: _amzYmLabel(months[0]) + ' – ' + _amzYmLabel(months[months.length-1]), thismonth:'ก.ค. '+be, lastmonth:'มิ.ย. '+be, q1:'Q1 ม.ค.–มี.ค. '+be, q2:'Q2 เม.ย.–มิ.ย. '+be, q3:'Q3 ก.ค.–ก.ย. '+be, q4:'Q4 ต.ค.–ธ.ค. '+be };
+    var f = _amzGetFilteredMonths();
+    var thisLabel = f.labels.length === 1 ? f.labels[0] + ' ' + be : f.labels[0] + '–' + f.labels[f.labels.length-1] + ' ' + be;
+    var infoMap = { all: _amzYmLabel(months[0]) + ' – ' + _amzYmLabel(months[months.length-1]), thismonth: thisLabel, lastmonth: thisLabel, q1:'Q1 ม.ค.–มี.ค. '+be, q2:'Q2 เม.ย.–มิ.ย. '+be, q3:'Q3 ก.ค.–ก.ย. '+be, q4:'Q4 ต.ค.–ธ.ค. '+be };
     return 'กำลังแสดง: ' + (infoMap[_amzPeriod] || 'ทั้งหมด');
   }
 
@@ -106,7 +108,7 @@
     document.querySelectorAll('#amzYearMenu .qmenu-item').forEach(function(b){ b.classList.remove('active'); });
     if(btn) btn.classList.add('active');
     var label = document.getElementById('amzYearLabel');
-    if(label) label.textContent = y === 'all' ? '📅 ทั้งหมด (3 ปี)' : '📅 ปี ' + (parseInt(y) + 543);
+    if(label) label.textContent = y === 'all' ? '📅 ทั้งหมด (5 ปี)' : '📅 ปี ' + (parseInt(y) + 543);
     var m = document.getElementById('amzYearMenu'); if(m) m.style.display='none';
     _amzApplyPeriod();
   };
@@ -141,7 +143,20 @@
     var info = document.getElementById('amzPeriodInfo');
     if(info) info.textContent = _amzPeriodInfoText();
     _dashboardRendered = false;
-    window.renderAmzDashboard();
+    _sovBranchRendered = false;
+    _sovExploreRendered = false;
+    _salesPageRendered = false;
+    _targetPageRendered = false;
+    _orderRendered = false;
+    _amzComplaintRendered = false;
+    if (_sovExploreMap) { _sovExploreMap.remove(); _sovExploreMap = null; }
+    // re-render the currently active page
+    var nav = _amzFindNav(_amzBiCurrent);
+    if (nav && nav.render && typeof window[nav.render] === 'function') {
+      window[nav.render]();
+    } else {
+      window.renderAmzDashboard();
+    }
   }
   var AMZ_CHANNELS = ['OR','ร้านของฝาก','RM','Amazon','ลูกค้าทั่วไป','Black Canyon'];
 
@@ -229,10 +244,13 @@
       {key:'prod-list', label:'ผลงานสินค้า', sub:'amz-products', render:'renderAmzProducts'},
       {key:'prod-analysis', label:'วิเคราะห์สินค้า', sub:'amz-product-analysis', render:'renderAmzProdAnalysis'}
     ]},
-    {key:'supply', icon:'📦', label:'ซัพพลายเชน', items:[
+    {key:'souvenir', icon:'📦', label:'ซัพพลายเชน', items:[
       {key:'order', label:'คำสั่งซื้อ', sub:'amz-order', render:'renderAmzOrder'},
+      {key:'sov-order', label:'คำสั่งซื้อ', sub:'amz-order', render:'renderSovOrder'},
       {key:'map', label:'Map Wanwanach', sub:'amz-map', render:'renderMapTierKPI'},
-      {key:'branches', label:'สาขา', sub:'amz-branches', render:'renderAmzBranches'}
+      {key:'branches', label:'สาขาคาเฟ่ อเมซอน', sub:'amz-branches', render:'renderAmzBranchesReset'},
+      {key:'sov-branches', label:'สาขาร้านของฝาก', sub:'amz-branches', render:'renderSovBranches'},
+      {key:'sov-explore', label:'สำรวจร้านของฝากทั่วประเทศ', sub:'amz-sov-explore', render:'renderSovExplore'}
     ]},
     {key:'report', icon:'📈', label:'ตัวชี้วัด & รายงาน', items:[
       {key:'kpi', label:'ตัวชี้วัด', sub:'amz-kpi', render:'renderAmzKPI'},
@@ -254,6 +272,7 @@
   }
 
   window.amzClickVisit = function (el) {
+    if (typeof _amzApiHide === 'function') _amzApiHide();
     document.querySelectorAll('#amzChannelTabs .sub-tab').forEach(function (t) { t.classList.remove('active'); });
     if (el) el.classList.add('active');
     _amzCh = 'All';
@@ -267,22 +286,33 @@
     section.querySelectorAll('.sub-section').forEach(function (s) { s.classList.remove('active'); });
     var target = document.getElementById(subId);
     if (target) target.classList.add('active');
-    // Hide portal sidebar, show content full width
+    // Hide portal sidebar + period filter, show content full width
     var sidebar = document.getElementById('amzBiSidebar');
     var content = document.getElementById('amzBiContent');
+    var periodBar = document.getElementById('amzPeriodBar');
     if (sidebar) sidebar.style.display = 'none';
     if (content) content.style.gridColumn = '1 / -1';
+    if (periodBar) periodBar.style.display = 'none';
     if (renderFn && typeof window[renderFn] === 'function') window[renderFn]();
   }
 
   function _amzRestoreLayout() {
     var sidebar = document.getElementById('amzBiSidebar');
     var content = document.getElementById('amzBiContent');
+    var periodBar = document.getElementById('amzPeriodBar');
     if (sidebar) sidebar.style.display = '';
     if (content) content.style.gridColumn = '';
+    if (periodBar) periodBar.style.display = '';
+  }
+
+  var _origBranchHTML = null;
+  function _restoreBranchHTML() {
+    var el = document.getElementById('amz-branches');
+    if (el && _origBranchHTML) el.innerHTML = _origBranchHTML;
   }
 
   window.amzClickTeam = function (el) {
+    if (typeof _amzApiHide === 'function') _amzApiHide();
     document.querySelectorAll('#amzChannelTabs .sub-tab').forEach(function (t) { t.classList.remove('active'); });
     _amzCh = 'All';
     _amzBiCurrent = 'team-info';
@@ -291,6 +321,7 @@
   };
 
   window.amzClickComplaint = function (el) {
+    if (typeof _amzApiHide === 'function') _amzApiHide();
     document.querySelectorAll('#amzChannelTabs .sub-tab').forEach(function (t) { t.classList.remove('active'); });
     _amzCh = 'All';
     _amzBiCurrent = 'complaint';
@@ -298,24 +329,34 @@
   };
 
   window.amzClickChannel = function (el, ch) {
+    if (typeof _amzApiHide === 'function') _amzApiHide();
     document.querySelectorAll('#amzChannelTabs .sub-tab').forEach(function (t) { t.classList.remove('active'); });
     el.classList.add('active');
     _amzCh = ch;
     _dashboardRendered = false;
     _branchRendered = false;
+    _sovBranchRendered = false;
+    _sovExploreRendered = false;
     _amzRestoreLayout();
+    _restoreBranchHTML();
+    if (_sovExploreMap) { _sovExploreMap.remove(); _sovExploreMap = null; }
     if (_amzBranchMap) { _amzBranchMap.remove(); _amzBranchMap = null; }
     amzBiSelectMenu('dashboard');
   };
 
   function _amzItemVisible(itemKey) {
+    var isSov = _amzCh === 'Souvenir';
+    var isBC = _amzCh === 'BlackCanyon';
+    if (itemKey === 'order' || itemKey === 'map' || itemKey === 'branches') {
+      if (isSov) return false;
+    }
+    if (itemKey === 'sov-order' || itemKey === 'sov-branches' || itemKey === 'sov-explore') {
+      if (!isSov) return false;
+    }
     if (itemKey === 'map') {
-      if (_amzCh === 'BlackCanyon' || _amzCh === 'Souvenir') return false;
+      if (isBC) return false;
     }
-    if (itemKey === 'branches') {
-      if (_amzCh === 'Souvenir') return false;
-    }
-    if (_amzCh === 'BlackCanyon') {
+    if (isBC) {
       if (itemKey === 'cust-new' || itemKey === 'cust-analysis' || itemKey === 'prod-analysis') return false;
     }
     return true;
@@ -397,10 +438,474 @@
   window.amzGetChannel = function () { return _amzCh; };
   window.amzGetChannelFilter = function () { return AMZ_CH_MAP[_amzCh] || null; };
 
+  // ---- RENDER: ร้านของฝาก wrappers ----
+  function _sovSwitchChannel() {
+    _amzCh = 'Souvenir';
+    _dashboardRendered = false;
+    var tabs = document.querySelectorAll('#amzChannelTabs .sub-tab');
+    tabs.forEach(function (t, i) {
+      t.classList.remove('active');
+      if (i === 2) t.classList.add('active');
+    });
+  }
+  // คำนวณยอดขาย SOV ตามช่วงเวลาที่เลือก
+  function _sovFilteredTotal(c) {
+    if (!c.s || !c.s.length) return c.t || 0;
+    var filtered = _amzGetFilteredMonths();
+    if (filtered.months.length === AMZ_MONTHS_ALL.length) return c.t || 0;
+    var total = 0;
+    filtered.months.forEach(function (m) {
+      var idx = AMZ_MONTHS_ALL.indexOf(m);
+      if (idx >= 0 && idx < c.s.length) total += (c.s[idx] || 0);
+    });
+    return total;
+  }
+
+  function _sovPeriodLabel() {
+    var f = _amzGetFilteredMonths();
+    if (f.labels.length === AMZ_MONTHS_ALL.length) return 'ม.ค. – ก.ค. 69';
+    if (f.labels.length === 1) return f.labels[0] + ' 69';
+    return f.labels[0] + ' – ' + f.labels[f.labels.length - 1] + ' 69';
+  }
+
+  window.renderSovOrder = function () {
+    _sovSwitchChannel();
+    renderAmzOrder();
+  };
+  window.renderAmzBranchesReset = function () {
+    _restoreBranchHTML();
+    _branchRendered = false;
+    _sovBranchRendered = false;
+    if (_amzBranchMap) { _amzBranchMap.remove(); _amzBranchMap = null; }
+    renderAmzBranches();
+  };
+  var _sovBranchRendered = false;
+  window.renderSovBranches = function () {
+    _sovSwitchChannel();
+    if (_sovBranchRendered) return;
+    _sovBranchRendered = true;
+    _branchRendered = false;
+    if (_amzBranchMap) { _amzBranchMap.remove(); _amzBranchMap = null; }
+
+    var sovData = (typeof AMZ_CUST_DATA !== 'undefined' && AMZ_CUST_DATA.SOV) ? AMZ_CUST_DATA.SOV : [];
+    var months = (typeof AMZ_CUST_DATA !== 'undefined' && AMZ_CUST_DATA.MONTHS) ? AMZ_CUST_DATA.MONTHS : [];
+    var customers = sovData.filter(function (c) { return c.c !== 'Grand Total'; });
+    if (!customers.length) return;
+
+    var container = document.getElementById('amz-branches');
+    if (!container) return;
+    if (!_origBranchHTML) _origBranchHTML = container.innerHTML;
+
+    // --- KPI ---
+    var total = customers.length;
+    var provCount = {};
+    customers.forEach(function (c) {
+      var p = c.p || 'ไม่ระบุ';
+      provCount[p] = (provCount[p] || 0) + 1;
+    });
+    var provList = Object.keys(provCount);
+    var totalProv = provList.length;
+    var topProv = provList.sort(function (a, b) { return provCount[b] - provCount[a]; })[0] || '-';
+
+    var totalSales = 0;
+    customers.forEach(function (c) { totalSales += _sovFilteredTotal(c); });
+    var periodLabel = _sovPeriodLabel();
+
+    // --- Build HTML ---
+    var html = '<div class="kpi-grid" id="sovBranchKPI">'
+      + kpiCard('🎁', 'ร้านของฝากทั้งหมด', total + ' ร้าน', 'ลูกค้าช่องทางร้านของฝาก', '#ea580c')
+      + kpiCard('🗺️', 'จำนวนจังหวัด', totalProv + ' จังหวัด', 'พื้นที่กระจายสินค้า', '#2563eb')
+      + kpiCard('🏆', 'จังหวัดร้านสูงสุด', topProv, (provCount[topProv] || 0) + ' ร้าน', '#16a34a')
+      + kpiCard('💰', 'ยอดขายรวม', (totalSales / 1e6).toFixed(2) + ' ล้าน', periodLabel, '#7c3aed')
+      + '</div>';
+
+    // Filter
+    html += '<div id="sovBranchFilter" style="display:flex;gap:10px;margin:12px 0;flex-wrap:wrap;align-items:center">'
+      + '<label style="font-size:13px;font-weight:600;color:var(--text)">🔍 กรอง:</label>'
+      + '<select id="sovFilterProv" onchange="sovFilterBranches()" style="border:1.5px solid var(--border);border-radius:8px;padding:6px 12px;font-size:12px;background:var(--bg);color:var(--text);outline:none;min-width:160px">'
+      + '<option value="">ทุกจังหวัด</option>' + provList.map(function (p) { return '<option value="' + p + '">' + p + ' (' + provCount[p] + ')</option>'; }).join('') + '</select>'
+      + '<input id="sovBranchSearch" type="text" placeholder="ค้นหาร้าน..." oninput="sovFilterBranches()" style="border:1.5px solid var(--border);border-radius:8px;padding:6px 12px;font-size:12px;width:200px;background:var(--bg);outline:none;color:var(--text)" onfocus="this.style.borderColor=\'var(--accent)\'" onblur="this.style.borderColor=\'var(--border)\'">'
+      + '<button onclick="document.getElementById(\'sovFilterProv\').value=\'\';document.getElementById(\'sovBranchSearch\').value=\'\';sovFilterBranches()" style="border:1.5px solid var(--border);border-radius:8px;padding:6px 14px;font-size:12px;background:var(--bg);color:var(--accent);cursor:pointer;font-weight:600">↺ รีเซ็ต</button>'
+      + '<span id="sovFilterCount" style="font-size:12px;color:#64748b;margin-left:auto"></span>'
+      + '</div>';
+
+    // Charts
+    html += '<div class="row cols2"><div class="card"><div class="card-title">จำนวนร้านแยกจังหวัด</div><div class="chart-wrap h260"><canvas id="sovBranchProvChart"></canvas></div></div>'
+      + '<div class="card"><div class="card-title">ยอดขายแยกจังหวัด (บาท)</div><div class="chart-wrap h260"><canvas id="sovBranchSalesChart"></canvas></div></div></div>';
+
+    // Table
+    html += '<div class="card" style="margin-top:16px"><div style="display:flex;align-items:center;gap:10px;margin-bottom:10px"><div class="card-title" style="margin:0">รายชื่อร้านของฝาก</div></div>'
+      + '<div class="table-wrap"><table style="width:100%;border-collapse:collapse;font-size:13px"><thead><tr style="background:#eff6ff;font-size:12px;color:#1e40af">'
+      + '<th style="padding:8px 10px;text-align:left">No.</th>'
+      + '<th style="padding:8px 10px;text-align:left">รหัส</th>'
+      + '<th style="padding:8px 10px;text-align:left">ชื่อร้าน</th>'
+      + '<th style="padding:8px 10px;text-align:left">จังหวัด</th>'
+      + '<th style="padding:8px 10px;text-align:left">อำเภอ</th>'
+      + '<th style="padding:8px 10px;text-align:right">ยอดขายรวม</th>'
+      + '<th style="padding:8px 10px;text-align:center">สถานะ</th>'
+      + '</tr></thead><tbody id="sovBranchTableBody"></tbody></table></div></div>';
+
+    container.innerHTML = html;
+
+    // Store data for filtering
+    window._sovCustomers = customers;
+
+    // Province bar chart
+    var provSorted = Object.keys(provCount).sort(function (a, b) { return provCount[b] - provCount[a]; });
+    var provColors = provSorted.map(function (_, i) { return 'hsl(' + (20 + i * 25) + ',75%,55%)'; });
+    mkChart('sovBranchProvChart', {
+      type: 'bar',
+      data: {
+        labels: provSorted,
+        datasets: [{ label: 'จำนวนร้าน', data: provSorted.map(function (p) { return provCount[p]; }), backgroundColor: provColors, borderRadius: 5 }]
+      },
+      options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { ticks: { stepSize: 1 } } } }
+    });
+
+    // Sales by province chart
+    var salesByProv = {};
+    customers.forEach(function (c) { var p = c.p || 'ไม่ระบุ'; salesByProv[p] = (salesByProv[p] || 0) + _sovFilteredTotal(c); });
+    var salesProvSorted = Object.keys(salesByProv).sort(function (a, b) { return salesByProv[b] - salesByProv[a]; });
+    mkChart('sovBranchSalesChart', {
+      type: 'bar',
+      data: {
+        labels: salesProvSorted,
+        datasets: [{ label: 'ยอดขาย (บาท)', data: salesProvSorted.map(function (p) { return salesByProv[p]; }), backgroundColor: '#7c3aed', borderRadius: 5 }]
+      },
+      options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { ticks: { callback: function (v) { return (v / 1000).toFixed(0) + 'k'; } } } } }
+    });
+
+    // Render table
+    sovFilterBranches();
+  };
+
+  window.sovFilterBranches = function () {
+    var customers = window._sovCustomers || [];
+    var provVal = (document.getElementById('sovFilterProv') || {}).value || '';
+    var searchVal = ((document.getElementById('sovBranchSearch') || {}).value || '').toLowerCase();
+
+    var filtered = customers.filter(function (c) {
+      if (provVal && c.p !== provVal) return false;
+      if (searchVal && (c.n || '').toLowerCase().indexOf(searchVal) === -1 && (c.c || '').toLowerCase().indexOf(searchVal) === -1) return false;
+      return true;
+    });
+
+    var countEl = document.getElementById('sovFilterCount');
+    if (countEl) {
+      if (provVal || searchVal) countEl.textContent = 'แสดง ' + filtered.length + ' / ' + customers.length + ' ร้าน';
+      else countEl.textContent = '';
+    }
+
+    var tbody = document.getElementById('sovBranchTableBody');
+    if (!tbody) return;
+    var rows = '';
+    filtered.forEach(function (c, i) {
+      var status = '';
+      if (c.nf) status = '<span style="color:#16a34a;font-size:11px">🟢 ' + c.nf + '</span>';
+      if (c.lf) status += (status ? '<br>' : '') + '<span style="color:#ef4444;font-size:11px">🔴 ' + c.lf + '</span>';
+      if (!status) status = '<span style="color:#64748b;font-size:11px">ปกติ</span>';
+      rows += '<tr style="border-bottom:1px solid var(--border)">'
+        + '<td style="padding:7px 10px">' + (i + 1) + '</td>'
+        + '<td style="padding:7px 10px;font-family:monospace;font-size:12px">' + (c.c || '') + '</td>'
+        + '<td style="padding:7px 10px">' + (c.n || '') + '</td>'
+        + '<td style="padding:7px 10px">' + (c.p || '') + '</td>'
+        + '<td style="padding:7px 10px">' + (c.d || '') + '</td>'
+        + '<td style="padding:7px 10px;text-align:right;font-weight:600">' + _sovFilteredTotal(c).toLocaleString() + '</td>'
+        + '<td style="padding:7px 10px;text-align:center">' + status + '</td>'
+        + '</tr>';
+    });
+    tbody.innerHTML = rows;
+  };
+
+  // ---- RENDER: สำรวจร้านของฝากทั่วประเทศ ----
+  var _sovExploreRendered = false;
+  var _sovExploreMap = null;
+
+  var THAI_PROV_COORDS = {
+    'กรุงเทพมหานคร':[13.7563,100.5018],'กระบี่':[8.0863,98.9063],'กาญจนบุรี':[14.0043,99.5483],
+    'กาฬสินธุ์':[16.4322,103.5061],'กำแพงเพชร':[16.4832,99.5226],'ขอนแก่น':[16.4322,102.8236],
+    'จันทบุรี':[12.6113,102.1043],'ฉะเชิงเทรา':[13.6904,101.0780],'ชลบุรี':[13.3611,100.9847],
+    'ชัยนาท':[15.1851,100.1251],'ชัยภูมิ':[15.8069,102.0316],'ชุมพร':[10.4931,99.1800],
+    'เชียงราย':[19.9105,99.8406],'เชียงใหม่':[18.7883,98.9853],'ตรัง':[7.5563,99.6114],
+    'ตราด':[12.2428,102.5175],'ตาก':[16.8840,99.1259],'นครนายก':[14.2069,101.2133],
+    'นครปฐม':[13.8196,100.0641],'นครพนม':[17.3927,104.7695],'นครราชสีมา':[14.9799,102.0978],
+    'นครศรีธรรมราช':[8.4325,99.9599],'นครสวรรค์':[15.7030,100.1371],'นนทบุรี':[13.8621,100.5144],
+    'นราธิวาส':[6.4318,101.8237],'น่าน':[18.7756,100.7730],'บึงกาฬ':[18.3609,103.6466],
+    'บุรีรัมย์':[14.9951,103.1029],'ปทุมธานี':[14.0208,100.5253],'ประจวบคีรีขันธ์':[11.8126,99.7957],
+    'ปราจีนบุรี':[14.0508,101.3710],'ปัตตานี':[6.8714,101.2510],'พระนครศรีอยุธยา':[14.3532,100.5685],
+    'พะเยา':[19.1664,99.9019],'พังงา':[8.4509,98.5225],'พัทลุง':[7.6167,100.0740],
+    'พิจิตร':[16.4419,100.3488],'พิษณุโลก':[16.8211,100.2659],'เพชรบุรี':[13.1112,99.9390],
+    'เพชรบูรณ์':[16.4190,101.1600],'แพร่':[18.1445,100.1403],'ภูเก็ต':[7.8804,98.3923],
+    'มหาสารคาม':[16.1851,103.3028],'มุกดาหาร':[16.5424,104.7235],'แม่ฮ่องสอน':[19.3020,97.9654],
+    'ยโสธร':[15.7944,104.1451],'ยะลา':[6.5414,101.2803],'ร้อยเอ็ด':[16.0538,103.6530],
+    'ระนอง':[9.9528,98.6085],'ระยอง':[12.6834,101.2370],'ราชบุรี':[13.5283,99.8134],
+    'ลพบุรี':[14.7995,100.6534],'ลำปาง':[18.2888,99.4909],'ลำพูน':[18.5744,99.0087],
+    'เลย':[17.4860,101.7223],'ศรีสะเกษ':[15.1186,104.3220],'สกลนคร':[17.1545,104.1348],
+    'สงขลา':[7.1894,100.5953],'สตูล':[6.6238,100.0674],'สมุทรปราการ':[13.5990,100.5998],
+    'สมุทรสงคราม':[13.4098,100.0024],'สมุทรสาคร':[13.5475,100.2744],'สระแก้ว':[13.8240,102.0645],
+    'สระบุรี':[14.5289,100.9103],'สิงห์บุรี':[14.8936,100.3967],'สุโขทัย':[17.0100,99.8265],
+    'สุพรรณบุรี':[14.4744,100.1177],'สุราษฎร์ธานี':[9.1382,99.3217],'สุรินทร์':[14.8827,103.4937],
+    'หนองคาย':[17.8783,102.7413],'หนองบัวลำภู':[17.2218,102.4260],'อ่างทอง':[14.5896,100.4550],
+    'อำนาจเจริญ':[15.8656,104.6257],'อุดรธานี':[17.4156,102.7872],'อุตรดิตถ์':[17.6200,100.0993],
+    'อุทัยธานี':[15.3835,100.0246],'อุบลราชธานี':[15.2287,104.8564]
+  };
+
+  var THAI_PROV_REGION = {
+    'กรุงเทพมหานคร':'กรุงเทพและปริมณฑล','นนทบุรี':'กรุงเทพและปริมณฑล','ปทุมธานี':'กรุงเทพและปริมณฑล',
+    'สมุทรปราการ':'กรุงเทพและปริมณฑล','สมุทรสาคร':'กรุงเทพและปริมณฑล','นครปฐม':'กรุงเทพและปริมณฑล',
+    'พระนครศรีอยุธยา':'ภาคกลาง','ลพบุรี':'ภาคกลาง','สระบุรี':'ภาคกลาง','สิงห์บุรี':'ภาคกลาง',
+    'อ่างทอง':'ภาคกลาง','ชัยนาท':'ภาคกลาง','นครนายก':'ภาคกลาง','สุพรรณบุรี':'ภาคกลาง',
+    'กาญจนบุรี':'ภาคกลาง','ราชบุรี':'ภาคกลาง','สมุทรสงคราม':'ภาคกลาง','เพชรบุรี':'ภาคกลาง',
+    'ประจวบคีรีขันธ์':'ภาคกลาง','นครสวรรค์':'ภาคกลาง','อุทัยธานี':'ภาคกลาง','กำแพงเพชร':'ภาคกลาง',
+    'พิจิตร':'ภาคกลาง','พิษณุโลก':'ภาคกลาง','สุโขทัย':'ภาคกลาง','ปราจีนบุรี':'ภาคกลาง',
+    'สระแก้ว':'ภาคกลาง',
+    'ชลบุรี':'ภาคตะวันออก','ระยอง':'ภาคตะวันออก','จันทบุรี':'ภาคตะวันออก','ตราด':'ภาคตะวันออก',
+    'ฉะเชิงเทรา':'ภาคตะวันออก',
+    'เชียงใหม่':'ภาคเหนือ','เชียงราย':'ภาคเหนือ','ลำปาง':'ภาคเหนือ','ลำพูน':'ภาคเหนือ',
+    'แพร่':'ภาคเหนือ','น่าน':'ภาคเหนือ','พะเยา':'ภาคเหนือ','แม่ฮ่องสอน':'ภาคเหนือ',
+    'อุตรดิตถ์':'ภาคเหนือ','ตาก':'ภาคเหนือ','เพชรบูรณ์':'ภาคเหนือ',
+    'นครราชสีมา':'ภาคอีสาน','ขอนแก่น':'ภาคอีสาน','อุดรธานี':'ภาคอีสาน','อุบลราชธานี':'ภาคอีสาน',
+    'บุรีรัมย์':'ภาคอีสาน','สุรินทร์':'ภาคอีสาน','ชัยภูมิ':'ภาคอีสาน','มหาสารคาม':'ภาคอีสาน',
+    'ร้อยเอ็ด':'ภาคอีสาน','กาฬสินธุ์':'ภาคอีสาน','สกลนคร':'ภาคอีสาน','นครพนม':'ภาคอีสาน',
+    'หนองคาย':'ภาคอีสาน','เลย':'ภาคอีสาน','หนองบัวลำภู':'ภาคอีสาน','มุกดาหาร':'ภาคอีสาน',
+    'ยโสธร':'ภาคอีสาน','อำนาจเจริญ':'ภาคอีสาน','บึงกาฬ':'ภาคอีสาน','ศรีสะเกษ':'ภาคอีสาน',
+    'สุราษฎร์ธานี':'ภาคใต้','นครศรีธรรมราช':'ภาคใต้','สงขลา':'ภาคใต้','ภูเก็ต':'ภาคใต้',
+    'กระบี่':'ภาคใต้','พังงา':'ภาคใต้','ตรัง':'ภาคใต้','พัทลุง':'ภาคใต้','ชุมพร':'ภาคใต้',
+    'ระนอง':'ภาคใต้','สตูล':'ภาคใต้','ยะลา':'ภาคใต้','ปัตตานี':'ภาคใต้','นราธิวาส':'ภาคใต้'
+  };
+
+  window.renderSovExplore = function () {
+    _sovSwitchChannel();
+    if (_sovExploreRendered) return;
+    _sovExploreRendered = true;
+
+    var sovData = (typeof AMZ_CUST_DATA !== 'undefined' && AMZ_CUST_DATA.SOV) ? AMZ_CUST_DATA.SOV : [];
+    var customers = sovData.filter(function (c) { return c.c !== 'Grand Total'; });
+    if (!customers.length) return;
+
+    // เพิ่ม region ให้แต่ละร้าน
+    customers.forEach(function (c) {
+      c._region = THAI_PROV_REGION[c.p] || 'อื่นๆ';
+      var coords = THAI_PROV_COORDS[c.p];
+      if (coords) {
+        c._lat = coords[0] + (Math.random() - 0.5) * 0.08;
+        c._lng = coords[1] + (Math.random() - 0.5) * 0.08;
+      }
+    });
+
+    window._sovExploreData = customers;
+
+    // --- KPI ---
+    var total = customers.length;
+    var regionCount = {}, provCount = {};
+    var totalSales = 0;
+    customers.forEach(function (c) {
+      regionCount[c._region] = (regionCount[c._region] || 0) + 1;
+      provCount[c.p] = (provCount[c.p] || 0) + 1;
+      totalSales += _sovFilteredTotal(c);
+    });
+    var totalRegion = Object.keys(regionCount).length;
+    var totalProv = Object.keys(provCount).length;
+    var activeCount = customers.filter(function (c) { return !c.lf; }).length;
+    var periodLabel = _sovPeriodLabel();
+
+    var kpiEl = document.getElementById('sovExploreKPI');
+    if (kpiEl) {
+      kpiEl.innerHTML =
+        kpiCard('🎁', 'ร้านของฝากทั้งหมด', total + ' ร้าน', 'สำรวจทั่วประเทศ', '#ea580c')
+        + kpiCard('🗺️', 'ครอบคลุม', totalRegion + ' ภูมิภาค / ' + totalProv + ' จังหวัด', 'กระจายทั่วประเทศ', '#2563eb')
+        + kpiCard('💰', 'ยอดขายรวม', (totalSales / 1e6).toFixed(2) + ' ล้าน', periodLabel, '#16a34a')
+        + kpiCard('✅', 'ร้านที่ยังซื้ออยู่', activeCount + ' ร้าน', Math.round(activeCount / total * 100) + '% ของทั้งหมด', '#7c3aed');
+    }
+
+    // --- Populate filter dropdowns ---
+    var regionSel = document.getElementById('sovExploreRegion');
+    var provSel = document.getElementById('sovExploreProv');
+    if (regionSel) {
+      while (regionSel.options.length > 1) regionSel.remove(1);
+      Object.keys(regionCount).sort().forEach(function (r) {
+        var opt = document.createElement('option');
+        opt.value = r; opt.textContent = r + ' (' + regionCount[r] + ')';
+        regionSel.appendChild(opt);
+      });
+    }
+    if (provSel) {
+      while (provSel.options.length > 1) provSel.remove(1);
+      Object.keys(provCount).sort().forEach(function (p) {
+        var opt = document.createElement('option');
+        opt.value = p; opt.textContent = p + ' (' + provCount[p] + ')';
+        provSel.appendChild(opt);
+      });
+    }
+
+    // --- Map ---
+    var mapEl = document.getElementById('sovExploreMap');
+    if (mapEl && typeof L !== 'undefined' && L.map) {
+      try {
+        _sovExploreMap = L.map(mapEl, { scrollWheelZoom: false }).setView([13.2, 101.0], 6);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: '&copy; OpenStreetMap', maxZoom: 18
+        }).addTo(_sovExploreMap);
+
+        var giftIcon = L.icon({
+          iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
+          shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
+          iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41]
+        });
+
+        customers.forEach(function (c) {
+          if (c._lat && c._lng) {
+            var status = c.lf ? '🔴 ' + c.lf : '🟢 ปกติ';
+            L.marker([c._lat, c._lng], { icon: giftIcon })
+              .addTo(_sovExploreMap)
+              .bindPopup('<b>' + (c.n || '') + '</b><br>📍 ' + (c.p || '') + ' / ' + (c.d || '') + '<br>💰 ยอดขาย: ' + _sovFilteredTotal(c).toLocaleString() + ' บาท<br>' + status);
+          }
+        });
+
+        setTimeout(function () { _sovExploreMap.invalidateSize(); }, 300);
+      } catch (e) {
+        mapEl.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#94a3b8;font-size:13px">ไม่สามารถโหลดแผนที่ได้</div>';
+      }
+    }
+
+    // --- Region doughnut chart ---
+    var regionKeys = Object.keys(regionCount).sort(function (a, b) { return regionCount[b] - regionCount[a]; });
+    var regionColors = ['#ea580c', '#2563eb', '#16a34a', '#7c3aed', '#0891b2', '#d97706', '#e11d48'];
+    mkChart('sovExploreRegionChart', {
+      type: 'doughnut',
+      data: {
+        labels: regionKeys,
+        datasets: [{ data: regionKeys.map(function (r) { return regionCount[r]; }), backgroundColor: regionColors.slice(0, regionKeys.length), borderWidth: 2 }]
+      },
+      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { font: { size: 11 } } } } }
+    });
+
+    // --- Province bar chart ---
+    var provSorted = Object.keys(provCount).sort(function (a, b) { return provCount[b] - provCount[a]; });
+    var provColors = provSorted.map(function (_, i) { return 'hsl(' + (20 + i * 12) + ',70%,55%)'; });
+    mkChart('sovExploreProvChart', {
+      type: 'bar',
+      data: {
+        labels: provSorted,
+        datasets: [{ label: 'จำนวนร้าน', data: provSorted.map(function (p) { return provCount[p]; }), backgroundColor: provColors, borderRadius: 5 }]
+      },
+      options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { ticks: { stepSize: 1 } } } }
+    });
+
+    // --- Sales by region bar chart ---
+    var salesByRegion = {};
+    customers.forEach(function (c) { salesByRegion[c._region] = (salesByRegion[c._region] || 0) + _sovFilteredTotal(c); });
+    var salesRegionSorted = Object.keys(salesByRegion).sort(function (a, b) { return salesByRegion[b] - salesByRegion[a]; });
+    mkChart('sovExploreSalesChart', {
+      type: 'bar',
+      data: {
+        labels: salesRegionSorted,
+        datasets: [{ label: 'ยอดขาย (บาท)', data: salesRegionSorted.map(function (r) { return salesByRegion[r]; }), backgroundColor: regionColors.slice(0, salesRegionSorted.length), borderRadius: 5 }]
+      },
+      options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { ticks: { callback: function (v) { return (v / 1e6).toFixed(1) + 'M'; } } } } }
+    });
+
+    // --- Table ---
+    sovExploreFilter();
+  };
+
+  window.sovExploreFilter = function (level) {
+    var customers = window._sovExploreData || [];
+    var regionVal = (document.getElementById('sovExploreRegion') || {}).value || '';
+    var provVal = (document.getElementById('sovExploreProv') || {}).value || '';
+    var searchVal = ((document.getElementById('sovExploreSearch') || {}).value || '').toLowerCase();
+
+    if (level === 'region') {
+      var provSel = document.getElementById('sovExploreProv');
+      if (provSel) {
+        provSel.innerHTML = '<option value="">ทุกจังหวัด</option>';
+        var provs = {};
+        customers.forEach(function (c) {
+          if (!regionVal || c._region === regionVal) provs[c.p] = (provs[c.p] || 0) + 1;
+        });
+        Object.keys(provs).sort().forEach(function (p) {
+          var opt = document.createElement('option');
+          opt.value = p; opt.textContent = p + ' (' + provs[p] + ')';
+          provSel.appendChild(opt);
+        });
+      }
+    }
+
+    var filtered = customers.filter(function (c) {
+      if (regionVal && c._region !== regionVal) return false;
+      if (provVal && c.p !== provVal) return false;
+      if (searchVal && (c.n || '').toLowerCase().indexOf(searchVal) === -1 && (c.c || '').toLowerCase().indexOf(searchVal) === -1 && (c.p || '').toLowerCase().indexOf(searchVal) === -1) return false;
+      return true;
+    });
+
+    var countEl = document.getElementById('sovExploreCount');
+    if (countEl) {
+      if (regionVal || provVal || searchVal) countEl.textContent = 'แสดง ' + filtered.length + ' / ' + customers.length + ' ร้าน';
+      else countEl.textContent = '';
+    }
+
+    // Update map markers
+    if (_sovExploreMap && typeof L !== 'undefined') {
+      _sovExploreMap.eachLayer(function (layer) {
+        if (layer instanceof L.Marker) _sovExploreMap.removeLayer(layer);
+      });
+      var giftIcon = L.icon({
+        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
+        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
+        iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41]
+      });
+      var bounds = [];
+      filtered.forEach(function (c) {
+        if (c._lat && c._lng) {
+          var status = c.lf ? '🔴 ' + c.lf : '🟢 ปกติ';
+          L.marker([c._lat, c._lng], { icon: giftIcon })
+            .addTo(_sovExploreMap)
+            .bindPopup('<b>' + (c.n || '') + '</b><br>📍 ' + (c.p || '') + ' / ' + (c.d || '') + '<br>💰 ยอดขาย: ' + _sovFilteredTotal(c).toLocaleString() + ' บาท<br>' + status);
+          bounds.push([c._lat, c._lng]);
+        }
+      });
+      if (bounds.length > 0) _sovExploreMap.fitBounds(bounds, { padding: [20, 20] });
+    }
+
+    var tbody = document.getElementById('sovExploreTableBody');
+    if (!tbody) return;
+    var rows = '';
+    filtered.forEach(function (c, i) {
+      var status = '';
+      if (c.nf) status = '<span style="color:#16a34a;font-size:11px">🟢 ' + c.nf + '</span>';
+      if (c.lf) status += (status ? '<br>' : '') + '<span style="color:#ef4444;font-size:11px">🔴 ' + c.lf + '</span>';
+      if (!status) status = '<span style="color:#64748b;font-size:11px">ปกติ</span>';
+      var mapLink = (c._lat && c._lng) ? '<a href="https://maps.google.com/maps?q=' + c._lat + ',' + c._lng + '" target="_blank" style="text-decoration:none" title="ดูแผนที่">📍</a>' : '-';
+      rows += '<tr style="border-bottom:1px solid var(--border)">'
+        + '<td style="padding:7px 10px">' + (i + 1) + '</td>'
+        + '<td style="padding:7px 10px;font-family:monospace;font-size:12px">' + (c.c || '') + '</td>'
+        + '<td style="padding:7px 10px">' + (c.n || '') + '</td>'
+        + '<td style="padding:7px 10px;font-size:12px;color:#7c3aed">' + (c._region || '') + '</td>'
+        + '<td style="padding:7px 10px">' + (c.p || '') + '</td>'
+        + '<td style="padding:7px 10px">' + (c.d || '') + '</td>'
+        + '<td style="padding:7px 10px;text-align:right;font-weight:600">' + _sovFilteredTotal(c).toLocaleString() + '</td>'
+        + '<td style="padding:7px 10px;text-align:center">' + status + '</td>'
+        + '<td style="padding:7px 10px;text-align:center">' + mapLink + '</td>'
+        + '</tr>';
+    });
+    tbody.innerHTML = rows;
+  };
+
+  window.sovExploreReset = function () {
+    var r = document.getElementById('sovExploreRegion');
+    var p = document.getElementById('sovExploreProv');
+    var s = document.getElementById('sovExploreSearch');
+    if (r) r.value = '';
+    if (p) p.value = '';
+    if (s) s.value = '';
+    sovExploreFilter('region');
+  };
+
   // ---- RENDER: แดชบอร์ด (amz-dashboard) — MT style ----
   var _dashboardRendered = false;
 
   window.renderAmzDashboard = function () {
+    if (window._amzForceRerender) { _dashboardRendered = false; window._amzForceRerender = false; }
     if (_dashboardRendered) return;
     if (typeof AMZ_ORDER_DATA === 'undefined') return;
     _dashboardRendered = true;
@@ -426,7 +931,7 @@
     var grandA = 0; chData.forEach(function(d) { grandA += d.a; });
     var avgMth = months.length > 0 ? grandA / months.length : 0;
     var topCh = chData.slice().sort(function (a, b) { return b.a - a.a; })[0] || { ch: '—', a: 0 };
-    var yearLabel = _amzYear === 'all' ? '3 ปี (2024–2026)' : 'ปี ' + (parseInt(_amzYear)+543);
+    var yearLabel = _amzYear === 'all' ? '5 ปี (2022–2026)' : 'ปี ' + (parseInt(_amzYear)+543);
 
     var kpiEl = document.getElementById('amazonKPI');
     if (kpiEl) {
@@ -685,7 +1190,7 @@
     document.querySelectorAll('#amzSalesYearMenu .qmenu-item').forEach(function(b){ b.classList.remove('active'); });
     if(btn) btn.classList.add('active');
     var label = document.getElementById('amzSalesYearLabel');
-    if(label) label.textContent = y === 'all' ? '📅 ทั้งหมด (3 ปี)' : '📅 ปี ' + (parseInt(y) + 543);
+    if(label) label.textContent = y === 'all' ? '📅 ทั้งหมด (5 ปี)' : '📅 ปี ' + (parseInt(y) + 543);
     var m = document.getElementById('amzSalesYearMenu'); if(m) m.style.display='none';
     _amzSalesRefresh();
   };
@@ -744,7 +1249,7 @@
       });
     });
     var avgMth = months.length > 0 ? grandA / months.length : 0;
-    var yearLabel = _amzSalesYear === 'all' ? '3 ปี (2024–2026)' : 'ปี ' + (parseInt(_amzSalesYear)+543);
+    var yearLabel = _amzSalesYear === 'all' ? '5 ปี (2022–2026)' : 'ปี ' + (parseInt(_amzSalesYear)+543);
 
     var kpiEl = document.getElementById('amzSalesKPI');
     if (kpiEl) {
@@ -762,35 +1267,6 @@
         + '<div class="kpi-value sm">' + grandQty.toLocaleString() + '</div>'
         + '<div class="kpi-sub">ทั้งหมด</div></div>';
     }
-
-    var mthLabels = months.map(function(ym) { return _amzYmLabel(ym); });
-    var mthVals = months.map(function(ym) {
-      var sum = 0;
-      channels.forEach(function(ch) { if (D.monthlyByCh[ch] && D.monthlyByCh[ch][ym]) sum += D.monthlyByCh[ch][ym].net; });
-      return sum / 1e6;
-    });
-    mkChart('amzSalesMthBar', {
-      type: 'bar',
-      data: { labels: mthLabels, datasets: [{ label: 'Revenue (M฿)', data: mthVals, backgroundColor: chIdx >= 0 ? palette[chIdx] + 'cc' : 'rgba(234,88,12,.8)', borderRadius: 5 }] },
-      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { ticks: { callback: function (v) { return v.toFixed(1) + ' M'; } } }, x: { ticks: { maxRotation: 60, font: { size: 9 } } } } }
-    });
-
-    // Top channels bar (replaces top customers when multi-year)
-    var chBarData = channels.map(function(ch) {
-      var total = 0;
-      months.forEach(function(ym) { if (D.monthlyByCh[ch] && D.monthlyByCh[ch][ym]) total += D.monthlyByCh[ch][ym].net; });
-      return { ch: ch, n: total };
-    }).sort(function(a,b){ return b.n - a.n; }).slice(0, 10);
-    mkChart('amzSalesTopBar', {
-      type: 'bar',
-      data: {
-        labels: chBarData.map(function(d){ return d.ch.length > 20 ? d.ch.slice(0,18) + '…' : d.ch; }),
-        datasets: [{ label: 'Revenue (฿)', data: chBarData.map(function(d){ return d.n; }),
-          backgroundColor: chBarData.map(function(d) { var i = AMZ_CHANNELS.indexOf(d.ch); return palette[i >= 0 ? i : 0]; }), borderRadius: 5 }]
-      },
-      options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } },
-        scales: { x: { ticks: { callback: function (v) { return (v / 1e6).toFixed(2) + ' M'; } } } } }
-    });
 
     window.renderAmzSalesTable();
   };
@@ -823,8 +1299,8 @@
       });
       grandA += moA;
       var barW = topVal > 0 ? Math.round((moA / topVal) * 100) : 0;
-      rows += '<tr>';
-      rows += '<td style="padding:8px 10px;font-weight:600">' + _amzYmLabel(ym) + '</td>';
+      rows += '<tr style="cursor:pointer" onclick="showAmzMonthDetail(\'' + ym + '\',\'' + (_amzSalesCh || 'All') + '\')" title="คลิกเพื่อดูรายการสินค้า">';
+      rows += '<td style="padding:8px 10px;font-weight:600">' + _amzYmLabel(ym) + ' <span style="font-size:10px;color:#ea580c">🔍</span></td>';
       rows += '<td style="padding:8px 10px;text-align:right;font-weight:700">' + fmt(moA) + '</td>';
       rows += '<td style="padding:8px 10px;text-align:right">' + moQty.toLocaleString() + '</td>';
       rows += '<td style="padding:8px 10px;text-align:right">' + moBills.toLocaleString() + '</td>';
@@ -940,7 +1416,7 @@
     document.querySelectorAll('#amzTargetYearMenu .qmenu-item').forEach(function(b){ b.classList.remove('active'); });
     if(btn) btn.classList.add('active');
     var label = document.getElementById('amzTargetYearLabel');
-    if(label) label.textContent = y === 'all' ? '📅 ทั้งหมด (3 ปี)' : '📅 ปี ' + (parseInt(y) + 543);
+    if(label) label.textContent = y === 'all' ? '📅 ทั้งหมด (5 ปี)' : '📅 ปี ' + (parseInt(y) + 543);
     var m = document.getElementById('amzTargetYearMenu'); if(m) m.style.display='none';
     _amzTargetRefresh();
   };
@@ -990,7 +1466,7 @@
     });
     var achPct = pct(grandA, grandT);
     var gap = grandA - grandT;
-    var yearLabel = _amzTargetYear === 'all' ? '3 ปี (2024–2026)' : 'ปี ' + (parseInt(_amzTargetYear)+543);
+    var yearLabel = _amzTargetYear === 'all' ? '5 ปี (2022–2026)' : 'ปี ' + (parseInt(_amzTargetYear)+543);
     var hasTarget = grandT > 0;
 
     var kpiEl = document.getElementById('amzTargetKPI');
@@ -1011,18 +1487,6 @@
     }
 
     var mthLabels = months.map(function(ym) { return _amzYmLabel(ym); });
-    var tgtVals = months.map(function(ym) { var s = 0; filteredChs.forEach(function(ch){ s += _amzGetTarget(ym, ch); }); return s / 1e6; });
-    var actVals = months.map(function(ym) { var s = 0; filteredChs.forEach(function(ch){ if (D.monthlyByCh[ch] && D.monthlyByCh[ch][ym]) s += D.monthlyByCh[ch][ym].net; }); return s / 1e6; });
-
-    var datasets = [{ label: 'Actual', data: actVals, backgroundColor: 'rgba(234,88,12,.65)', borderColor: '#ea580c', borderWidth: 2, borderRadius: 6 }];
-    if (hasTarget) datasets.unshift({ label: 'Target', data: tgtVals, backgroundColor: 'rgba(79,70,229,.25)', borderColor: '#4f46e5', borderWidth: 2, borderRadius: 6 });
-    mkChart('amzTargetVsActualBar', {
-      type: 'bar',
-      data: { labels: mthLabels, datasets: datasets },
-      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top' } },
-        scales: { y: { ticks: { callback: function (v) { return v.toFixed(1) + ' M'; } } }, x: { ticks: { maxRotation: 60, font: { size: 9 } } } } }
-    });
-
     var achVals = months.map(function(ym) {
       var t = 0, a = 0;
       filteredChs.forEach(function(ch) { t += _amzGetTarget(ym, ch); if (D.monthlyByCh[ch] && D.monthlyByCh[ch][ym]) a += D.monthlyByCh[ch][ym].net; });
@@ -1160,6 +1624,33 @@
     html += '</tbody></table></div></div>';
     el.innerHTML = html;
   };
+
+  // ---- Helper: build monthly data for SKU Performance chart ----
+  function _amzBuildSkuMonthly(pName) {
+    if (typeof AMZ_ORDER_DATA === 'undefined') return {};
+    var D = AMZ_ORDER_DATA;
+    var MO_MAP = {'01':'Jan','02':'Feb','03':'Mar','04':'Apr','05':'May','06':'Jun','07':'Jul','08':'Aug','09':'Sep','10':'Oct','11':'Nov','12':'Dec'};
+    var result = {};
+    var chFilter = AMZ_CH_MAP[_amzCh];
+    var channels = chFilter ? AMZ_CHANNELS.filter(function(c){ return chFilter.indexOf(c) >= 0; }) : null;
+    if (!channels && D.prodMonthly && D.prodMonthly[pName]) {
+      var pm = D.prodMonthly[pName];
+      Object.keys(pm).forEach(function(ym) {
+        var mo = MO_MAP[ym.split('-')[1]];
+        if (mo) { if (!result[mo]) result[mo] = {b:0,u:0}; result[mo].b += pm[ym].n||0; result[mo].u += pm[ym].q||0; }
+      });
+    } else if (channels && D.prodMonthlyByCh) {
+      channels.forEach(function(ch) {
+        if (!D.prodMonthlyByCh[ch] || !D.prodMonthlyByCh[ch][pName]) return;
+        var pm = D.prodMonthlyByCh[ch][pName];
+        Object.keys(pm).forEach(function(ym) {
+          var mo = MO_MAP[ym.split('-')[1]];
+          if (mo) { if (!result[mo]) result[mo] = {b:0,u:0}; result[mo].b += pm[ym].n||0; result[mo].u += pm[ym].q||0; }
+        });
+      });
+    }
+    return result;
+  }
 
   // ---- RENDER: ผลงานสินค้า (amz-products) — from AMZ_ORDER_DATA ----
   function _amzClassifyType(name) {
@@ -1330,6 +1821,9 @@
     }
     _amzComputeRank(prods);
 
+    // Build monthly data for each product
+    prods.forEach(function(d){ d._m = _amzBuildSkuMonthly(d.p); });
+
     var filtered = prods;
     if (_amzProdView === 'ambient') filtered = prods.filter(function(d){ return d.type === 'Ambient'; });
     else if (_amzProdView === 'chill') filtered = prods.filter(function(d){ return d.type === 'Chill'; });
@@ -1348,81 +1842,278 @@
     var el = document.getElementById('amz-products');
     if (!el) return;
 
-    var totalRev = 0, totalQty = 0, ambientCount = 0, chillCount = 0;
-    prods.forEach(function(d){ totalRev += d.n; totalQty += d.q; if(d.type==='Ambient') ambientCount++; else chillCount++; });
+    var totalRev = 0, totalQty = 0, ambientB = 0, chillB = 0, ambientCount = 0, chillCount = 0;
+    prods.forEach(function(d){ totalRev += d.n; totalQty += d.q; if(d.type==='Ambient'){ambientB+=d.n;ambientCount++;} else {chillB+=d.n;chillCount++;} });
     var rankCounts = { 'A+':0, 'A':0, 'B':0, 'C':0 };
     prods.forEach(function(d){ rankCounts[d.rank]++; });
 
-    // Period filter bar (dropdown style)
-    var isQtr = ['q1','q2','q3','q4'].indexOf(_amzProdPeriod) >= 0;
-    var isYear = _amzProdYear !== 'all';
-    var html = '<div class="filter-bar" id="amzProdPeriodBar" style="gap:6px;flex-wrap:wrap;margin-bottom:12px;display:flex;align-items:center;padding:8px 12px;background:var(--card);border-radius:10px;border:1px solid var(--border)">';
-    html += '<span style="font-size:12px;font-weight:700;color:var(--text2)">📅 ช่วงเวลา:</span>';
-    html += '<div style="display:flex;gap:4px;flex-wrap:wrap" id="amzProdPeriodBtns">';
-    html += '<div class="period-type-btn' + (_amzProdPeriod==='all'&&_amzProdYear==='all'?' active':'') + '" onclick="_amzProdSetPeriod(\'all\',this)">ทั้งหมด</div>';
-    html += '<div class="period-type-btn' + (_amzProdPeriod==='thismonth'?' active':'') + '" onclick="_amzProdSetPeriod(\'thismonth\',this)">เดือนนี้</div>';
-    html += '<div class="period-type-btn' + (_amzProdPeriod==='lastmonth'?' active':'') + '" onclick="_amzProdSetPeriod(\'lastmonth\',this)">เดือนที่แล้ว</div>';
-    // Year dropdown
-    html += '<div id="amzProdYearDropdown" style="position:relative;display:inline-block">';
-    html += '<div class="period-type-btn' + (isYear?' active':'') + '" onclick="_amzProdToggleYMenu()" style="padding-right:22px;cursor:pointer"><span id="amzProdYearLabel">📅 รายปี</span><span style="position:absolute;right:7px;top:50%;transform:translateY(-50%);font-size:10px;pointer-events:none">▾</span></div>';
-    html += '<div id="amzProdYearMenu" style="display:none;position:absolute;top:calc(100% + 4px);left:0;background:#fff;border:1px solid #e2e8f0;border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,.1);min-width:150px;z-index:200;padding:4px 0">';
-    html += '<div class="qmenu-item' + (_amzProdYear==='all'&&!isQtr?' active':'') + '" onclick="_amzProdPickYear(\'all\',this)">📅 ทั้งหมด</div>';
-    html += '<div class="qmenu-item' + (_amzProdYear==='2024'?' active':'') + '" onclick="_amzProdPickYear(\'2024\',this)">📅 ปี 2567 (2024)</div>';
-    html += '<div class="qmenu-item' + (_amzProdYear==='2025'?' active':'') + '" onclick="_amzProdPickYear(\'2025\',this)">📅 ปี 2568 (2025)</div>';
-    html += '<div class="qmenu-item' + (_amzProdYear==='2026'?' active':'') + '" onclick="_amzProdPickYear(\'2026\',this)">📅 ปี 2569 (2026)</div>';
-    html += '</div></div>';
-    html += '</div>';
-    html += '<span style="font-size:11px;color:#64748b;margin-left:auto">' + periodInfoText + '</span>';
-    html += '</div>';
+    var MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    var MONTH_TH = ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+    var fmtB = function(n){if(n>=1e6)return(n/1e6).toFixed(2)+' M';if(n>=1e3)return(n/1e3).toFixed(1)+' K';return Math.round(n).toLocaleString();};
+    var fmtQ = function(n){return Math.round(n).toLocaleString('th-TH');};
+    var chLabel = _amzCh === 'all' ? 'ทุกช่องทาง' : (_amzCh === 'amazon' ? 'Amazon' : _amzCh === 'telesale' ? 'Telesale' : _amzCh);
+    var _amzSrc = 'อเมซอน & ของฝาก' + (_amzCh !== 'all' ? ' — ' + chLabel : '');
 
-    html += '<div class="card" style="background:linear-gradient(135deg,#ea580c,#fb923c);color:#fff;padding:20px 24px;border-radius:14px;margin-bottom:16px">';
-    html += '<div style="font-size:18px;font-weight:800">🍞 ผลงานสินค้า</div>';
-    html += '<div style="font-size:13px;opacity:.85;margin-top:4px">' + prods.length + ' รายการ — ยอดขาย: ' + fmt(periodNet) + ' (' + periodLabel + ')</div>';
-    html += '<div style="display:flex;gap:16px;margin-top:10px;flex-wrap:wrap;font-size:12px;opacity:.9">';
-    html += '<span>Ambient: ' + ambientCount + '</span><span>Chill: ' + chillCount + '</span>';
-    html += '<span>A+: ' + rankCounts['A+'] + '</span><span>A: ' + rankCounts['A'] + '</span><span>B: ' + rankCounts['B'] + '</span><span>C: ' + rankCounts['C'] + '</span>';
+    // Collect active months from product data
+    var activeMonths = [];
+    prods.forEach(function(d){ if(d._m){Object.keys(d._m).forEach(function(mk){if(activeMonths.indexOf(mk)===-1)activeMonths.push(mk);});} });
+    activeMonths.sort(function(a,b){return MONTHS.indexOf(a)-MONTHS.indexOf(b);});
+
+    var html = '';
+
+    // ── 1. Gradient header ──
+    html += '<div class="card" style="background:linear-gradient(135deg,#ea580c,#fb923c);color:#fff;padding:24px 28px;margin-bottom:18px;border-radius:14px">';
+    html += '<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px">';
+    html += '<div><div style="font-size:20px;font-weight:800">🍞 ผลงานสินค้า</div>';
+    html += '<div style="font-size:13px;opacity:.85;margin-top:4px">' + chLabel + ' — วิเคราะห์ผลงานสินค้าทุก SKU (' + periodLabel + ')</div></div>';
+    html += '<div style="background:rgba(255,255,255,.2);padding:6px 16px;border-radius:20px;font-size:12px;font-weight:700">' + chLabel + '</div>';
     html += '</div></div>';
 
-    html += '<div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:12px" id="amzProdViewTabs">';
-    html += '<button class="fmtab' + (_amzProdView==='all'?' active':'') + '" onclick="_amzProdViewSwitch(\'all\',this)">ทั้งหมด (' + prods.length + ')</button>';
-    html += '<button class="fmtab' + (_amzProdView==='chill'?' active':'') + '" onclick="_amzProdViewSwitch(\'chill\',this)">❄️ Chill (' + chillCount + ')</button>';
-    html += '<button class="fmtab' + (_amzProdView==='ambient'?' active':'') + '" onclick="_amzProdViewSwitch(\'ambient\',this)">☀️ Ambient (' + ambientCount + ')</button>';
+    // ── 2. KPI cards (4 cards) ──
+    html += '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px">';
+    html += '<div class="card" style="text-align:center;padding:16px"><div style="font-size:11px;color:var(--muted)">จำนวน SKU</div><div style="font-size:22px;font-weight:800;color:#4f46e5">' + prods.length + '</div></div>';
+    html += '<div class="card" style="text-align:center;padding:16px"><div style="font-size:11px;color:var(--muted)">ยอดขายรวม (บาท)</div><div style="font-size:22px;font-weight:800;color:#16a34a">' + fmtB(totalRev) + '</div></div>';
+    html += '<div class="card" style="text-align:center;padding:16px"><div style="font-size:11px;color:var(--muted)">ยอดขายรวม (ชิ้น)</div><div style="font-size:22px;font-weight:800;color:#0891b2">' + fmtQ(totalQty) + '</div></div>';
+    html += '<div class="card" style="text-align:center;padding:16px"><div style="font-size:11px;color:var(--muted)">Ambient / Chill</div><div style="font-size:22px;font-weight:800;color:#d97706">' + ambientCount + ' / ' + chillCount + '</div></div>';
     html += '</div>';
 
-    var rankStyle = { 'A+':'background:#dc2626;color:#fff', 'A':'background:#ea580c;color:#fff', 'B':'background:#f59e0b;color:#fff', 'C':'background:#94a3b8;color:#fff' };
+    // ── 3. Charts: Top 10 bar + Ambient vs Chill pie ──
+    html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">';
+    html += '<div class="card"><div class="card-title">📊 Top 10 สินค้าขายดี (บาท)</div>';
+    html += '<div style="position:relative;height:300px"><canvas id="amzPPTop10Chart"></canvas></div></div>';
+    html += '<div class="card"><div class="card-title">📊 Ambient vs Chill</div>';
+    html += '<div style="position:relative;height:300px"><canvas id="amzPPTypeChart"></canvas></div></div>';
+    html += '</div>';
 
-    html += '<div class="card" style="padding:0;overflow:hidden"><div style="overflow-x:auto">';
-    html += '<table style="width:100%;border-collapse:collapse;font-size:12px"><thead><tr style="background:#fff7ed;color:#9a3412">';
-    html += '<th style="padding:8px 10px;text-align:left">#</th>';
-    html += '<th style="padding:8px 10px;text-align:left">สินค้า</th>';
-    html += '<th style="padding:8px 10px;text-align:center">TYPE</th>';
-    html += '<th style="padding:8px 10px;text-align:center">RANK</th>';
-    html += '<th style="padding:8px 10px;text-align:right">฿/ชิ้น</th>';
-    html += '<th style="padding:8px 10px;text-align:right">ยอดขาย (฿)</th>';
-    html += '<th style="padding:8px 10px;text-align:right">จำนวน (ชิ้น)</th>';
-    html += '<th style="padding:8px 10px;text-align:right">% สัดส่วน</th>';
-    html += '<th style="padding:8px 10px;min-width:100px">กราฟ</th>';
+    // ── 4. Category summary cards ──
+    var PP_CATS = [
+      {key:'cake',label:'กลุ่มขนมเค้ก',icon:'🎂',clr:'#e11d48',match:function(n){return(n.indexOf('เค้ก')!==-1||n.indexOf('มูส')!==-1||n.indexOf('เบาหวิว')!==-1||n.indexOf('บราวนี่')!==-1||n.indexOf('ลาวา')!==-1||n.indexOf('คัพเค้ก')!==-1)&&n.indexOf('ชิฟฟ่อน')===-1&&n.indexOf('วุ้น')===-1;}},
+      {key:'bread',label:'กลุ่มขนมปัง',icon:'🍞',clr:'#d97706',match:function(n){return n.indexOf('ขนมปัง')!==-1||n.indexOf('ปังเนย')!==-1||n.indexOf('ปังสังขยา')!==-1||n.indexOf('ปังลาวา')!==-1||n.substring(0,3)==='ปัง';}},
+      {key:'sandwich',label:'กลุ่มแซนวิช',icon:'🥪',clr:'#0891b2',match:function(n){return n.indexOf('แซนวิช')!==-1||n.indexOf('แซนด์วิช')!==-1;}},
+      {key:'jelly',label:'กลุ่มวุ้น',icon:'🍮',clr:'#7c3aed',match:function(n){return n.indexOf('วุ้น')!==-1;}},
+      {key:'chiffon',label:'กลุ่มชิฟฟ่อน',icon:'🧁',clr:'#16a34a',match:function(n){return n.indexOf('ชิฟฟ่อน')!==-1;}}
+    ];
+    function _amzGetCat(name){for(var i=0;i<PP_CATS.length;i++){if(PP_CATS[i].match(name))return PP_CATS[i].key;}return 'other';}
+    var catCounts = {};
+    PP_CATS.forEach(function(c){catCounts[c.key]=[];});
+    catCounts.other = [];
+    prods.forEach(function(d){var cat=_amzGetCat(d.p);catCounts[cat].push(d);});
+
+    html += '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:16px">';
+    PP_CATS.forEach(function(c){
+      var items = catCounts[c.key];
+      var catTotal = items.reduce(function(s,d){return s+(d.n||0);},0);
+      html += '<div class="card" style="padding:14px;text-align:center;border-left:4px solid '+c.clr+'">'
+        +'<div style="font-size:18px">'+c.icon+'</div>'
+        +'<div style="font-size:12px;font-weight:700;color:'+c.clr+';margin:4px 0">'+c.label+'</div>'
+        +'<div style="font-size:16px;font-weight:800;color:var(--text)">'+items.length+' SKU</div>'
+        +'<div style="font-size:11px;color:var(--muted)">฿'+fmtB(catTotal)+'</div></div>';
+    });
+    var otherItems = catCounts.other;
+    var otherTotal = otherItems.reduce(function(s,d){return s+(d.n||0);},0);
+    html += '<div class="card" style="padding:14px;text-align:center;border-left:4px solid #94a3b8">'
+      +'<div style="font-size:18px">📦</div>'
+      +'<div style="font-size:12px;font-weight:700;color:#94a3b8;margin:4px 0">อื่นๆ</div>'
+      +'<div style="font-size:16px;font-weight:800;color:var(--text)">'+otherItems.length+' SKU</div>'
+      +'<div style="font-size:11px;color:var(--muted)">฿'+fmtB(otherTotal)+'</div></div>';
+    html += '</div>';
+
+    // ── 5. Top 20 per category tables ──
+    var MEDAL3 = ['🥇','🥈','🥉'];
+    PP_CATS.forEach(function(c){
+      var catItems = catCounts[c.key].slice().sort(function(a,b){return(b.n||0)-(a.n||0);}).slice(0,20);
+      if(!catItems.length) return;
+      var catTotal = catItems.reduce(function(s,d){return s+(d.n||0);},0);
+      html += '<div class="card" style="margin-bottom:14px;border-left:4px solid '+c.clr+'">';
+      html += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:8px">';
+      html += '<div style="font-size:15px;font-weight:800;color:'+c.clr+'">'+c.icon+' Top 20 '+c.label+' <span style="font-size:11px;color:var(--muted);font-weight:500">('+catCounts[c.key].length+' SKU)</span></div>';
+      html += '<div style="font-size:13px;font-weight:700;color:'+c.clr+'">รวม ฿'+fmtB(catTotal)+'</div></div>';
+      html += '<div class="table-wrap"><table style="width:100%;border-collapse:collapse"><thead><tr>';
+      html += '<th style="padding:6px 8px;background:'+c.clr+';color:#fff;font-size:11px;text-align:center;border-radius:6px 0 0 0">#</th>';
+      html += '<th style="padding:6px 8px;background:'+c.clr+';color:#fff;font-size:11px;text-align:left">ชื่อสินค้า</th>';
+      html += '<th style="padding:6px 8px;background:'+c.clr+';color:#fff;font-size:11px;text-align:center">TYPE</th>';
+      html += '<th style="padding:6px 8px;background:'+c.clr+';color:#fff;font-size:11px;text-align:center">RANK</th>';
+      html += '<th style="padding:6px 8px;background:'+c.clr+';color:#fff;font-size:11px;text-align:right">จำนวนขาย</th>';
+      html += '<th style="padding:6px 8px;background:'+c.clr+';color:#fff;font-size:11px;text-align:right">ยอดขาย (฿)</th>';
+      html += '<th style="padding:6px 8px;background:'+c.clr+';color:#fff;font-size:11px;text-align:right;border-radius:0 6px 0 0">%</th>';
+      html += '</tr></thead><tbody>';
+      catItems.forEach(function(d,i){
+        var pct = totalRev>0?((d.n/totalRev)*100).toFixed(1):'0';
+        var bg3 = i%2?'rgba(0,0,0,.02)':'transparent';
+        var rankClr = d.rank==='A+'?'#dc2626':d.rank==='A'?'#ea580c':d.rank==='B'?'#d97706':'#94a3b8';
+        var _cmJson = JSON.stringify(d._m||{}).replace(/'/g,"\\'").replace(/"/g,'&quot;');
+        var _cpName = d.p.replace(/'/g,"\\'");
+        html += '<tr style="background:'+bg3+'">';
+        html += '<td style="padding:5px 8px;text-align:center;font-size:11px;color:var(--muted)">'+(MEDAL3[i]||(i+1))+'</td>';
+        html += '<td style="padding:5px 8px;font-weight:600;font-size:12px">'+d.p+'</td>';
+        html += '<td style="padding:5px 8px;text-align:center"><span style="padding:1px 6px;border-radius:8px;font-size:10px;font-weight:700;background:'+(d.type==='Ambient'?'#fff7ed':'#eff6ff')+';color:'+(d.type==='Ambient'?'#ea580c':'#2563eb')+'">'+d.type+'</span></td>';
+        html += '<td style="padding:5px 8px;text-align:center"><span style="padding:1px 6px;border-radius:8px;font-size:10px;font-weight:800;color:#fff;background:'+rankClr+'">'+d.rank+'</span></td>';
+        html += '<td style="padding:5px 8px;text-align:right;font-size:12px;color:var(--text)">'+fmtQ(d.q)+' ชิ้น</td>';
+        html += '<td style="padding:5px 8px;text-align:right;font-weight:700;color:'+c.clr+'">฿'+fmtB(d.n)+'</td>';
+        html += '<td style="padding:5px 8px;text-align:right;font-size:12px;color:var(--muted)">'+pct+'%</td>';
+        html += '</tr>';
+      });
+      html += '</tbody></table></div></div>';
+    });
+
+    // ── 6. View tabs + Full product table with filters ──
+    html += '<div class="card" style="margin-bottom:16px">';
+    html += '<div class="card-title">📋 ตารางผลงานสินค้า</div>';
+    html += '<div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;align-items:center">';
+    html += '<select id="amzPPFilterType" onchange="_amzPPFilterTable()" style="padding:6px 12px;border-radius:8px;border:1px solid var(--border);font-size:13px;background:var(--card);color:var(--text)">';
+    html += '<option value="all">ประเภท: ทั้งหมด</option><option value="Ambient">Ambient</option><option value="Chill">Chill</option></select>';
+    html += '<select id="amzPPFilterRank" onchange="_amzPPFilterTable()" style="padding:6px 12px;border-radius:8px;border:1px solid var(--border);font-size:13px;background:var(--card);color:var(--text)">';
+    html += '<option value="all">Rank: ทั้งหมด</option><option value="A+">A+</option><option value="A">A</option><option value="B">B</option><option value="C">C</option></select>';
+    html += '<input id="amzPPSearch" oninput="_amzPPFilterTable()" placeholder="🔍 ค้นหาสินค้า..." style="padding:6px 12px;border-radius:8px;border:1px solid var(--border);font-size:13px;flex:1;min-width:180px;background:var(--card);color:var(--text)">';
+    html += '</div>';
+
+    html += '<div class="table-wrap"><table id="amzPPProdTable"><thead><tr>';
+    html += '<th>NO</th><th style="text-align:left">ชื่อสินค้า</th><th>TYPE</th><th>RANK</th><th style="text-align:right">฿/ชิ้น</th><th style="text-align:right">รวมชิ้น</th><th style="text-align:right">รวมบาท</th><th style="text-align:right">%REVENUE</th><th>Performance</th><th style="width:40px"></th>';
     html += '</tr></thead><tbody>';
-    var topNet = filtered.length > 0 ? filtered[0].n : 1;
-    filtered.forEach(function(d, i) {
-      var barW = Math.round((d.n / topNet) * 100);
-      var share = totalRev > 0 ? ((d.n / totalRev) * 100).toFixed(1) : '0.0';
-      var typeColor = d.type === 'Chill' ? '#0891b2' : '#d97706';
-      var typeIcon = d.type === 'Chill' ? '❄️' : '☀️';
-      html += '<tr style="border-bottom:1px solid #f1f5f9">';
-      html += '<td style="padding:6px 10px;font-weight:700;color:#ea580c">' + (i+1) + '</td>';
-      html += '<td style="padding:6px 10px;font-weight:600;max-width:220px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="' + d.p + '">' + d.p + '</td>';
-      html += '<td style="padding:6px 10px;text-align:center"><span style="font-size:10px;padding:2px 6px;border-radius:4px;color:' + typeColor + ';background:' + typeColor + '18;font-weight:700">' + typeIcon + ' ' + d.type + '</span></td>';
-      html += '<td style="padding:6px 10px;text-align:center"><span style="font-size:10px;padding:2px 8px;border-radius:4px;font-weight:800;' + rankStyle[d.rank] + '">' + d.rank + '</span></td>';
-      html += '<td style="padding:6px 10px;text-align:right;font-weight:600;color:#0891b2">' + d.ppc.toFixed(2) + '</td>';
-      html += '<td style="padding:6px 10px;text-align:right;font-weight:700">' + d.n.toLocaleString() + '</td>';
-      html += '<td style="padding:6px 10px;text-align:right">' + d.q.toLocaleString() + '</td>';
-      html += '<td style="padding:6px 10px;text-align:right;font-weight:600">' + share + '%</td>';
-      html += '<td style="padding:6px 10px"><div style="background:#f1f5f9;border-radius:4px;height:12px;overflow:hidden"><div style="width:' + barW + '%;height:100%;background:rgba(234,88,12,.6);border-radius:4px"></div></div></td>';
+    prods.forEach(function(d,i){
+      var pct = totalRev>0?((d.n/totalRev)*100):0;
+      var rankColor = d.rank==='A+'?'#dc2626':d.rank==='A'?'#ea580c':d.rank==='B'?'#d97706':'#94a3b8';
+      var _mv=activeMonths.map(function(mk){return d._m&&d._m[mk]?d._m[mk].b||0:0;});
+      var _pf=window.calcPerf(_mv);
+      html += '<tr data-type="'+d.type+'" data-rank="'+d.rank+'" data-name="'+(d.p||'').toLowerCase()+'">';
+      html += '<td style="text-align:center">'+(i+1)+'</td>';
+      var _cmJson2 = JSON.stringify(d._m||{}).replace(/'/g,"\\'").replace(/"/g,'&quot;');
+      var _cpName2 = d.p.replace(/'/g,"\\'");
+      html += '<td style="text-align:left;max-width:240px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="'+d.p+'">'+d.p+'</td>';
+      html += '<td style="text-align:center"><span style="display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:700;background:'+(d.type==='Ambient'?'#fff7ed':'#eff6ff')+';color:'+(d.type==='Ambient'?'#ea580c':'#2563eb')+'">'+d.type+'</span></td>';
+      html += '<td style="text-align:center"><span style="display:inline-block;padding:2px 10px;border-radius:10px;font-size:11px;font-weight:800;color:#fff;background:'+rankColor+'">'+d.rank+'</span></td>';
+      html += '<td style="text-align:right;font-weight:600">'+d.ppc.toFixed(2)+'</td>';
+      html += '<td style="text-align:right;font-weight:600">'+fmtQ(d.q)+'</td>';
+      html += '<td style="text-align:right;font-weight:600">'+fmtB(d.n)+'</td>';
+      html += '<td style="text-align:right">'+pct.toFixed(1)+'%</td>';
+      html += '<td style="text-align:center">'+window.perfBadgeHTML(_pf)+'</td>';
+      html += '<td style="text-align:center" onclick="showSkuPerf(\''+_cpName2+'\',JSON.parse(this.getAttribute(\'data-m\')),\''+_amzSrc.replace(/'/g,"\\'")+'\')" data-m="'+_cmJson2+'">'+window.perfSearchIcon()+'</td>';
       html += '</tr>';
     });
     html += '</tbody></table></div></div>';
+
+    // ── 7. Monthly sales breakdown table ──
+    if(activeMonths.length>0){
+      html += '<div class="card" style="margin-bottom:16px">';
+      html += '<div class="card-title">📅 ยอดขายรายเดือน</div>';
+      html += '<div style="display:flex;gap:8px;margin-bottom:10px">';
+      html += '<button id="amzPPMonthUnit" onclick="_amzPPToggleMonthUnit()" style="padding:4px 14px;border-radius:8px;border:1px solid var(--border);font-size:12px;cursor:pointer;background:var(--card);color:var(--text)">แสดง: บาท</button>';
+      html += '</div>';
+      html += '<div class="table-wrap"><table id="amzPPMonthTable"><thead><tr>';
+      html += '<th style="text-align:left;position:sticky;left:0;background:var(--card);z-index:2">ชื่อสินค้า</th>';
+      activeMonths.forEach(function(mk){
+        var idx = MONTHS.indexOf(mk);
+        html += '<th style="text-align:right">'+(idx>=0?MONTH_TH[idx]:mk)+'</th>';
+      });
+      html += '<th style="text-align:right;font-weight:800">ยอดรวม</th>';
+      html += '<th>Performance</th><th style="width:40px"></th>';
+      html += '</tr></thead><tbody>';
+      prods.forEach(function(d){
+        var _mJson = JSON.stringify(d._m||{}).replace(/'/g,"\\'").replace(/"/g,'&quot;');
+        var _pName = d.p.replace(/'/g,"\\'");
+        var _mv2=activeMonths.map(function(mk){return d._m&&d._m[mk]?d._m[mk].b||0:0;});
+        var _pf2=window.calcPerf(_mv2);
+        html += '<tr data-mtype="'+d.type+'" data-mrank="'+d.rank+'">';
+        html += '<td style="text-align:left;position:sticky;left:0;background:var(--card);z-index:1;max-width:220px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:12px" title="'+d.p+'">'+d.p+'</td>';
+        activeMonths.forEach(function(mk){
+          var md = d._m&&d._m[mk]?d._m[mk]:null;
+          html += '<td style="text-align:right;font-size:12px" data-b="'+(md?md.b:0)+'" data-q="'+(md?md.u:0)+'">'+(md?fmtB(md.b):'—')+'</td>';
+        });
+        html += '<td style="text-align:right;font-weight:700;font-size:12px">'+fmtB(d.n)+'</td>';
+        html += '<td style="text-align:center">'+window.perfBadgeHTML(_pf2)+'</td>';
+        html += '<td style="text-align:center" onclick="showSkuPerf(\''+_pName+'\',JSON.parse(this.getAttribute(\'data-m\')),\''+_amzSrc.replace(/'/g,"\\'")+'\')" data-m="'+_mJson+'">'+window.perfSearchIcon()+'</td>';
+        html += '</tr>';
+      });
+      html += '<tr style="font-weight:800;background:var(--hover)">';
+      html += '<td style="text-align:left;position:sticky;left:0;background:var(--hover);z-index:1">รวมทั้งหมด</td>';
+      activeMonths.forEach(function(mk){
+        var sumB = 0;
+        prods.forEach(function(d){if(d._m&&d._m[mk])sumB+=d._m[mk].b||0;});
+        html += '<td style="text-align:right;font-size:12px">'+fmtB(sumB)+'</td>';
+      });
+      html += '<td style="text-align:right;font-size:12px">'+fmtB(totalRev)+'</td>';
+      html += '<td></td><td></td>';
+      html += '</tr>';
+      html += '</tbody></table></div></div>';
+    }
+
+    html += '<div style="text-align:center;padding:12px;color:var(--muted);font-size:11px">';
+    html += '📄 ข้อมูลจาก Amazon & ของฝาก — '+chLabel+'</div>';
+
     el.innerHTML = html;
+
+    // Delayed chart init
+    setTimeout(function(){_amzPPInitCharts(prods, ambientB, chillB);},100);
+  };
+
+  // ── Chart init for AMZ product performance ──
+  var _amzPPChart1 = null, _amzPPChart2 = null;
+  function _amzPPInitCharts(products, ambientB, chillB){
+    if(_amzPPChart1){try{_amzPPChart1.destroy();}catch(e){}} _amzPPChart1=null;
+    if(_amzPPChart2){try{_amzPPChart2.destroy();}catch(e){}} _amzPPChart2=null;
+    var top10 = products.slice().sort(function(a,b){return(b.n||0)-(a.n||0);}).slice(0,10);
+    var barColors = ['#4f46e5','#2563eb','#0891b2','#0d9488','#16a34a','#65a30d','#d97706','#ea580c','#dc2626','#7c3aed'];
+    var ctx1 = document.getElementById('amzPPTop10Chart');
+    if(ctx1){
+      _amzPPChart1 = new Chart(ctx1.getContext('2d'),{
+        type:'bar',
+        data:{
+          labels:top10.map(function(d){var n=d.p;return n.length>25?n.substring(0,25)+'…':n;}),
+          datasets:[{data:top10.map(function(d){return d.n||0;}),backgroundColor:barColors.slice(0,top10.length),borderRadius:4,barThickness:20}]
+        },
+        options:{
+          indexAxis:'y',responsive:true,maintainAspectRatio:false,
+          plugins:{legend:{display:false},tooltip:{callbacks:{label:function(ctx){return Math.round(ctx.raw).toLocaleString('th-TH')+' บาท';}}}},
+          scales:{x:{ticks:{callback:function(v){return(v/1e6).toFixed(1)+'M';}},beginAtZero:true,grid:{color:'rgba(0,0,0,0.05)'}},y:{grid:{display:false},ticks:{font:{size:11}}}}
+        }
+      });
+    }
+    var ctx2 = document.getElementById('amzPPTypeChart');
+    if(ctx2){
+      _amzPPChart2 = new Chart(ctx2.getContext('2d'),{
+        type:'doughnut',
+        data:{labels:['Ambient','Chill'],datasets:[{data:[ambientB,chillB],backgroundColor:['#f97316','#3b82f6'],borderWidth:2}]},
+        options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom'},tooltip:{callbacks:{label:function(ctx){var v=ctx.raw;var t=ambientB+chillB;return ctx.label+': '+(v/1e6).toFixed(2)+'M ('+(t>0?(v/t*100).toFixed(1):0)+'%)';}}}}}
+      });
+    }
+  }
+
+  // ── Filter table for AMZ product performance ──
+  window._amzPPFilterTable = function(){
+    var typeF = document.getElementById('amzPPFilterType');
+    var rankF = document.getElementById('amzPPFilterRank');
+    var searchF = document.getElementById('amzPPSearch');
+    var tv = typeF?typeF.value:'all';
+    var rv = rankF?rankF.value:'all';
+    var sv = searchF?(searchF.value||'').toLowerCase():'';
+    var tbl = document.getElementById('amzPPProdTable');
+    if(!tbl) return;
+    var rows = tbl.querySelectorAll('tbody tr');
+    rows.forEach(function(row){
+      var t = row.getAttribute('data-type')||'';
+      var r = row.getAttribute('data-rank')||'';
+      var n = row.getAttribute('data-name')||'';
+      var show = (tv==='all'||t===tv) && (rv==='all'||r===rv) && (!sv||n.indexOf(sv)!==-1);
+      row.style.display = show?'':'none';
+    });
+  };
+
+  // ── Toggle month unit for AMZ product performance ──
+  window._amzPPToggleMonthUnit = function(){
+    var btn = document.getElementById('amzPPMonthUnit');
+    var tbl = document.getElementById('amzPPMonthTable');
+    if(!btn||!tbl) return;
+    var showQty = btn.textContent.indexOf('บาท')!==-1;
+    btn.textContent = showQty?'แสดง: ชิ้น':'แสดง: บาท';
+    var fmtB2 = function(n){if(n>=1e6)return(n/1e6).toFixed(2)+' M';if(n>=1e3)return(n/1e3).toFixed(1)+' K';return Math.round(n).toLocaleString();};
+    var fmtQ2 = function(n){return Math.round(n).toLocaleString('th-TH');};
+    var cells = tbl.querySelectorAll('tbody td[data-b]');
+    cells.forEach(function(td){
+      var b = parseFloat(td.getAttribute('data-b'))||0;
+      var q = parseFloat(td.getAttribute('data-q'))||0;
+      if(b===0&&q===0){td.textContent='—';return;}
+      td.textContent = showQty?fmtQ2(q):fmtB2(b);
+    });
   };
 
   // ---- RENDER: คำสั่งซื้อ (amz-order) — from Excel data ----
@@ -1509,151 +2200,188 @@
     var D = AMZ_ORDER_DATA;
     var chFilter = AMZ_CH_MAP[_amzCh];
     var channels = chFilter ? AMZ_CHANNELS.filter(function(c){ return chFilter.indexOf(c) >= 0; }) : AMZ_CHANNELS;
-
-    // Filter months by period
     var allMonths = D.months || [];
     var months = _amzOrderFilterMonths(allMonths);
 
-    // Render period filter bar (dropdown style)
-    var periodBar = document.getElementById('amzOrderPeriodBar');
-    if (periodBar) {
-      var isQtr = ['q1','q2','q3','q4'].indexOf(_amzOrderPeriod) >= 0;
-      var isYear = _amzOrderYear !== 'all';
-      var periodInfoText = months.length ? 'กำลังแสดง: ' + _amzYmLabel(months[0]) + ' – ' + _amzYmLabel(months[months.length-1]) : '';
-      var bh = '<span style="font-size:12px;font-weight:700;color:var(--text2)">📅 ช่วงเวลา:</span>';
-      bh += '<div style="display:flex;gap:4px;flex-wrap:wrap" id="amzOrderPeriodBtns">';
-      bh += '<div class="period-type-btn' + (_amzOrderPeriod==='all'&&_amzOrderYear==='all'?' active':'') + '" onclick="_amzOrderSetPeriod(\'all\',this)">ทั้งหมด</div>';
-      bh += '<div class="period-type-btn' + (_amzOrderPeriod==='thismonth'?' active':'') + '" onclick="_amzOrderSetPeriod(\'thismonth\',this)">เดือนนี้</div>';
-      bh += '<div class="period-type-btn' + (_amzOrderPeriod==='lastmonth'?' active':'') + '" onclick="_amzOrderSetPeriod(\'lastmonth\',this)">เดือนที่แล้ว</div>';
-      bh += '<div id="amzOrderQtrDropdown" style="position:relative;display:inline-block">';
-      bh += '<div class="period-type-btn' + (isQtr?' active':'') + '" onclick="_amzOrderToggleQMenu()" style="padding-right:22px;cursor:pointer"><span id="amzOrderQtrLabel">📆 รายไตรมาส</span><span style="position:absolute;right:7px;top:50%;transform:translateY(-50%);font-size:10px;pointer-events:none">▾</span></div>';
-      bh += '<div id="amzOrderQtrMenu" style="display:none;position:absolute;top:calc(100% + 4px);left:0;background:#fff;border:1px solid #e2e8f0;border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,.1);min-width:190px;z-index:200;padding:4px 0">';
-      var _oqKey = _amzOrderPeriod + (_amzOrderYear !== 'all' ? '-' + _amzOrderYear : '');
-      [2026,2025,2024].forEach(function(yr, yi) {
-        if (yi > 0) bh += '<div style="border-top:1px solid #e2e8f0;margin:4px 0"></div>';
-        bh += '<div class="qmenu-item' + (_oqKey==='q1-'+yr?' active':'') + '" onclick="_amzOrderPickQtr(\''+yr+'-Q1\',this)">Q1/'+yr+' ม.ค.–มี.ค.</div>';
-        bh += '<div class="qmenu-item' + (_oqKey==='q2-'+yr?' active':'') + '" onclick="_amzOrderPickQtr(\''+yr+'-Q2\',this)">Q2/'+yr+' เม.ย.–มิ.ย.</div>';
-        bh += '<div class="qmenu-item' + (_oqKey==='q3-'+yr?' active':'') + '" onclick="_amzOrderPickQtr(\''+yr+'-Q3\',this)">Q3/'+yr+' ก.ค.–ก.ย.</div>';
-        bh += '<div class="qmenu-item' + (_oqKey==='q4-'+yr?' active':'') + '" onclick="_amzOrderPickQtr(\''+yr+'-Q4\',this)">Q4/'+yr+' ต.ค.–ธ.ค.</div>';
-      });
-      bh += '</div></div>';
-      bh += '<div id="amzOrderYearDropdown" style="position:relative;display:inline-block">';
-      bh += '<div class="period-type-btn' + (isYear?' active':'') + '" onclick="_amzOrderToggleYMenu()" style="padding-right:22px;cursor:pointer"><span id="amzOrderYearLabel">📅 รายปี</span><span style="position:absolute;right:7px;top:50%;transform:translateY(-50%);font-size:10px;pointer-events:none">▾</span></div>';
-      bh += '<div id="amzOrderYearMenu" style="display:none;position:absolute;top:calc(100% + 4px);left:0;background:#fff;border:1px solid #e2e8f0;border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,.1);min-width:150px;z-index:200;padding:4px 0">';
-      bh += '<div class="qmenu-item' + (_amzOrderYear==='all'&&!isQtr?' active':'') + '" onclick="_amzOrderPickYear(\'all\',this)">📅 ทั้งหมด</div>';
-      bh += '<div class="qmenu-item' + (_amzOrderYear==='2024'?' active':'') + '" onclick="_amzOrderPickYear(\'2024\',this)">📅 ปี 2567 (2024)</div>';
-      bh += '<div class="qmenu-item' + (_amzOrderYear==='2025'?' active':'') + '" onclick="_amzOrderPickYear(\'2025\',this)">📅 ปี 2568 (2025)</div>';
-      bh += '<div class="qmenu-item' + (_amzOrderYear==='2026'?' active':'') + '" onclick="_amzOrderPickYear(\'2026\',this)">📅 ปี 2569 (2026)</div>';
-      bh += '</div></div>';
-      bh += '</div>';
-      bh += '<span style="font-size:11px;color:#64748b;margin-left:auto">' + periodInfoText + '</span>';
-      periodBar.innerHTML = bh;
-    }
-
-    // Compute KPI from filtered months
+    // Compute KPI
     var filtNet = 0, filtQty = 0, filtBills = 0;
     months.forEach(function(ym) {
       if (chFilter) {
         channels.forEach(function(ch) {
-          if (D.monthlyByCh[ch] && D.monthlyByCh[ch][ym]) {
-            filtNet += D.monthlyByCh[ch][ym].net;
-            filtQty += D.monthlyByCh[ch][ym].qty;
-            filtBills += D.monthlyByCh[ch][ym].bills;
-          }
+          if (D.monthlyByCh[ch] && D.monthlyByCh[ch][ym]) { filtNet += D.monthlyByCh[ch][ym].net; filtQty += D.monthlyByCh[ch][ym].qty; filtBills += D.monthlyByCh[ch][ym].bills; }
         });
       } else {
-        if (D.monthlyAll[ym]) {
-          filtNet += D.monthlyAll[ym].net;
-          filtQty += D.monthlyAll[ym].qty;
-          filtBills += D.monthlyAll[ym].bills;
-        }
+        if (D.monthlyAll[ym]) { filtNet += D.monthlyAll[ym].net; filtQty += D.monthlyAll[ym].qty; filtBills += D.monthlyAll[ym].bills; }
       }
     });
     var avgOrder = filtBills > 0 ? filtNet / filtBills : 0;
-
     var periodLabel = months.length ? _amzYmLabel(months[0]) + ' – ' + _amzYmLabel(months[months.length-1]) : '-';
+    var periodInfoText = months.length ? 'กำลังแสดง: ' + periodLabel : '';
+    var chLabel = _amzCh === 'all' ? 'ทุกช่องทาง' : (_amzCh === 'amazon' ? 'Amazon' : _amzCh === 'telesale' ? 'Telesale' : _amzCh);
+    var _ordSrc = 'อเมซอน & ของฝาก — คำสั่งซื้อ' + (_amzCh !== 'all' ? ' (' + chLabel + ')' : '');
+    var fmtB = function(n){if(n>=1e6)return(n/1e6).toFixed(2)+' M';if(n>=1e3)return(n/1e3).toFixed(1)+' K';return Math.round(n).toLocaleString();};
+    var fmtQ = function(n){return Math.round(n).toLocaleString('th-TH');};
 
-    var kpiEl = document.getElementById('amzOrderKPI');
-    if (kpiEl) {
-      kpiEl.innerHTML =
-        '<div class="kpi-card blue"><div class="kpi-label">💰 ยอดขายรวม</div><div class="kpi-value sm">' + fmt(filtNet) + '</div><div class="kpi-sub">' + periodLabel + '</div></div>'
-        + '<div class="kpi-card blue"><div class="kpi-label">📋 จำนวนบิล</div><div class="kpi-value sm">' + filtBills.toLocaleString() + '</div><div class="kpi-sub">' + channels.length + ' ช่องทาง</div></div>'
-        + '<div class="kpi-card blue"><div class="kpi-label">📦 จำนวนชิ้น</div><div class="kpi-value sm">' + filtQty.toLocaleString() + '</div><div class="kpi-sub">ทั้งหมด</div></div>'
-        + '<div class="kpi-card blue"><div class="kpi-label">📊 เฉลี่ย/บิล</div><div class="kpi-value sm">' + fmt(avgOrder) + '</div><div class="kpi-sub">บาท/บิล</div></div>';
-    }
-
-    // Monthly bar chart
-    var mthLabels = months.map(function(ym) {
-      var parts = ym.split('-'); var m = parseInt(parts[1]);
-      var thM = ['','ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
-      return thM[m] + ' ' + (parseInt(parts[0]) + 543 - 2500);
-    });
-    var mthVals = months.map(function(ym) {
-      if (chFilter) {
-        var sum = 0;
-        channels.forEach(function(ch) { if (D.monthlyByCh[ch] && D.monthlyByCh[ch][ym]) sum += D.monthlyByCh[ch][ym].net; });
-        return sum / 1e6;
-      }
-      return D.monthlyAll[ym] ? D.monthlyAll[ym].net / 1e6 : 0;
-    });
-    mkChart('amzOrderMonthlyBar', {
-      type: 'bar',
-      data: { labels: mthLabels, datasets: [{ label: 'Revenue (M฿)', data: mthVals, backgroundColor: 'rgba(234,88,12,.75)', borderRadius: 4 }] },
-      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { ticks: { callback: function(v) { return v.toFixed(1) + ' M'; } } }, x: { ticks: { maxRotation: 60, font: { size: 9 } } } } }
-    });
-
-    // Channel pie — sum from filtered months
-    var chData = channels.map(function(ch) {
-      if (_amzOrderPeriod === 'all' && D.channels[ch]) return D.channels[ch].net;
-      var sum = 0;
-      months.forEach(function(ym){ if(D.monthlyByCh[ch] && D.monthlyByCh[ch][ym]) sum += D.monthlyByCh[ch][ym].net; });
-      return sum;
-    });
-    var chColors = channels.map(function(ch) { var i = AMZ_CHANNELS.indexOf(ch); return palette[i >= 0 ? i : 0]; });
-    mkChart('amzOrderChPie', {
-      type: 'doughnut',
-      data: { labels: channels, datasets: [{ data: chData, backgroundColor: chColors, borderWidth: 2 }] },
-      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { font: { size: 11 } } } } }
-    });
-
-    // Products table
-    var prodEl = document.getElementById('amzOrderProdTable');
-    if (prodEl) {
-      var prods = chFilter ? [] : (D.topProdAll || []);
-      if (chFilter) {
-        var prodMap = {};
-        channels.forEach(function(ch) {
-          (D.topProdByCh[ch] || []).forEach(function(d) {
-            if (!prodMap[d.p]) prodMap[d.p] = { p: d.p, n: 0, q: 0 };
-            prodMap[d.p].n += d.n; prodMap[d.p].q += d.q;
-          });
-        });
-        prods = Object.values(prodMap).sort(function(a,b){ return b.n - a.n; }).slice(0, 20);
-      }
-      var html = '<table style="width:100%;border-collapse:collapse;font-size:12px"><thead><tr style="background:#fff7ed;color:#9a3412"><th style="padding:8px;text-align:left">#</th><th style="padding:8px;text-align:left">สินค้า</th><th style="padding:8px;text-align:right">ยอดขาย (฿)</th><th style="padding:8px;text-align:right">จำนวน</th></tr></thead><tbody>';
-      prods.forEach(function(d, i) {
-        html += '<tr style="border-bottom:1px solid #f1f5f9"><td style="padding:6px 8px">' + (i+1) + '</td><td style="padding:6px 8px">' + d.p + '</td><td style="padding:6px 8px;text-align:right;font-weight:600">' + d.n.toLocaleString() + '</td><td style="padding:6px 8px;text-align:right">' + d.q.toLocaleString() + '</td></tr>';
-      });
-      html += '</tbody></table>';
-      prodEl.innerHTML = html;
-    }
-
-    // Branch/customer table
-    var brEl = document.getElementById('amzOrderBranchTable');
-    if (brEl) {
-      var branches = [];
+    // Product data
+    var prods = chFilter ? [] : (D.topProdAll || []).map(function(d){return{p:d.p,n:d.n,q:d.q};});
+    if (chFilter) {
+      var prodMap = {};
       channels.forEach(function(ch) {
-        (D.topBranchByCh[ch] || []).forEach(function(d) { branches.push({ b: d.b, n: d.n, q: d.q, bi: d.bi, ch: ch }); });
+        (D.topProdByCh[ch] || []).forEach(function(d) {
+          if (!prodMap[d.p]) prodMap[d.p] = { p: d.p, n: 0, q: 0 };
+          prodMap[d.p].n += d.n; prodMap[d.p].q += d.q;
+        });
       });
-      branches.sort(function(a,b){ return b.n - a.n; });
-      branches = branches.slice(0, 20);
-      var html = '<table style="width:100%;border-collapse:collapse;font-size:12px"><thead><tr style="background:#fff7ed;color:#9a3412"><th style="padding:8px;text-align:left">#</th><th style="padding:8px;text-align:left">สาขา</th><th style="padding:8px;text-align:left">ช่องทาง</th><th style="padding:8px;text-align:right">ยอดขาย (฿)</th><th style="padding:8px;text-align:right">บิล</th></tr></thead><tbody>';
-      branches.forEach(function(d, i) {
-        html += '<tr style="border-bottom:1px solid #f1f5f9"><td style="padding:6px 8px">' + (i+1) + '</td><td style="padding:6px 8px">' + d.b + '</td><td style="padding:6px 8px">' + d.ch + '</td><td style="padding:6px 8px;text-align:right;font-weight:600">' + d.n.toLocaleString() + '</td><td style="padding:6px 8px;text-align:right">' + d.bi.toLocaleString() + '</td></tr>';
-      });
-      html += '</tbody></table>';
-      brEl.innerHTML = html;
+      prods = Object.values(prodMap).sort(function(a,b){ return b.n - a.n; });
     }
+    _amzComputeRank(prods);
+    prods.forEach(function(d){ d._m = _amzBuildSkuMonthly(d.p); });
+
+    var totalRev = 0, totalQty = 0, ambientB = 0, chillB = 0, ambientC = 0, chillC = 0;
+    prods.forEach(function(d){ totalRev += d.n; totalQty += d.q; if(d.type==='Ambient'){ambientB+=d.n;ambientC++;} else {chillB+=d.n;chillC++;} });
+
+    var el = document.getElementById('amzOrderContent');
+    if (!el) return;
+
+    var html = '';
+
+    // ── 1. Gradient header ──
+    html += '<div class="card" style="background:linear-gradient(135deg,#2563eb,#60a5fa);color:#fff;padding:24px 28px;margin-bottom:18px;border-radius:14px">';
+    html += '<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px">';
+    html += '<div><div style="font-size:20px;font-weight:800">📋 คำสั่งซื้อ</div>';
+    html += '<div style="font-size:13px;opacity:.85;margin-top:4px">' + chLabel + ' — วิเคราะห์คำสั่งซื้อและสินค้า (' + periodLabel + ')</div></div>';
+    html += '<div style="background:rgba(255,255,255,.2);padding:6px 16px;border-radius:20px;font-size:12px;font-weight:700">' + chLabel + '</div>';
+    html += '</div></div>';
+
+    // ── 2. KPI cards ──
+    html += '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px">';
+    html += '<div class="card" style="text-align:center;padding:16px"><div style="font-size:11px;color:var(--muted)">💰 ยอดขายรวม</div><div style="font-size:22px;font-weight:800;color:#16a34a">' + fmtB(filtNet) + '</div><div style="font-size:10px;color:var(--muted)">' + periodLabel + '</div></div>';
+    html += '<div class="card" style="text-align:center;padding:16px"><div style="font-size:11px;color:var(--muted)">📋 จำนวนบิล</div><div style="font-size:22px;font-weight:800;color:#4f46e5">' + fmtQ(filtBills) + '</div><div style="font-size:10px;color:var(--muted)">' + channels.length + ' ช่องทาง</div></div>';
+    html += '<div class="card" style="text-align:center;padding:16px"><div style="font-size:11px;color:var(--muted)">📦 จำนวนชิ้น</div><div style="font-size:22px;font-weight:800;color:#0891b2">' + fmtQ(filtQty) + '</div><div style="font-size:10px;color:var(--muted)">ทั้งหมด</div></div>';
+    html += '<div class="card" style="text-align:center;padding:16px"><div style="font-size:11px;color:var(--muted)">📊 เฉลี่ย/บิล</div><div style="font-size:22px;font-weight:800;color:#d97706">' + fmtB(avgOrder) + '</div><div style="font-size:10px;color:var(--muted)">บาท/บิล</div></div>';
+    html += '</div>';
+
+    // ── 3. Charts: Top 10 bar + Ambient/Chill doughnut ──
+    html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">';
+    html += '<div class="card"><div class="card-title">📊 Top 10 สินค้าขายดี (บาท)</div>';
+    html += '<div style="position:relative;height:300px"><canvas id="amzOrdTop10Chart"></canvas></div></div>';
+    html += '<div class="card"><div class="card-title">📊 Ambient vs Chill</div>';
+    html += '<div style="position:relative;height:300px"><canvas id="amzOrdTypeChart"></canvas></div></div>';
+    html += '</div>';
+
+    // ── 4. Full product table with filters ──
+    html += '<div class="card" style="margin-bottom:16px">';
+    html += '<div class="card-title">📦 ตารางสินค้า</div>';
+    html += '<div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;align-items:center">';
+    html += '<select id="amzOrdFilterType" onchange="_amzOrdFilterTable()" style="padding:6px 12px;border-radius:8px;border:1px solid var(--border);font-size:13px;background:var(--card);color:var(--text)">';
+    html += '<option value="all">ประเภท: ทั้งหมด</option><option value="Ambient">Ambient</option><option value="Chill">Chill</option></select>';
+    html += '<select id="amzOrdFilterRank" onchange="_amzOrdFilterTable()" style="padding:6px 12px;border-radius:8px;border:1px solid var(--border);font-size:13px;background:var(--card);color:var(--text)">';
+    html += '<option value="all">Rank: ทั้งหมด</option><option value="A+">A+</option><option value="A">A</option><option value="B">B</option><option value="C">C</option></select>';
+    html += '<input id="amzOrdSearch" oninput="_amzOrdFilterTable()" placeholder="🔍 ค้นหาสินค้า..." style="padding:6px 12px;border-radius:8px;border:1px solid var(--border);font-size:13px;flex:1;min-width:180px;background:var(--card);color:var(--text)">';
+    html += '</div>';
+    html += '<div class="table-wrap"><table id="amzOrdProdTable"><thead><tr>';
+    html += '<th>NO</th><th style="text-align:left">ชื่อสินค้า</th><th>TYPE</th><th>RANK</th><th style="text-align:right">฿/ชิ้น</th><th style="text-align:right">รวมชิ้น</th><th style="text-align:right">รวมบาท</th><th style="text-align:right">%REVENUE</th><th style="min-width:80px">กราฟ</th><th>Performance</th><th style="width:40px"></th>';
+    html += '</tr></thead><tbody>';
+    var topNet = prods.length > 0 ? prods[0].n : 1;
+    prods.forEach(function(d, i) {
+      var pct = totalRev>0?((d.n/totalRev)*100):0;
+      var barW = Math.round((d.n / topNet) * 100);
+      var rankColor = d.rank==='A+'?'#dc2626':d.rank==='A'?'#ea580c':d.rank==='B'?'#d97706':'#94a3b8';
+      var _mJ = JSON.stringify(d._m||{}).replace(/'/g,"\\'").replace(/"/g,'&quot;');
+      var _pN = d.p.replace(/'/g,"\\'");
+      var _oMks=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+      var _omv=_oMks.map(function(mk){return d._m&&d._m[mk]?d._m[mk].b||0:0;});
+      var _opf=window.calcPerf(_omv);
+      html += '<tr data-type="'+d.type+'" data-rank="'+d.rank+'" data-name="'+(d.p||'').toLowerCase()+'">';
+      html += '<td style="text-align:center">'+(i+1)+'</td>';
+      html += '<td style="text-align:left;max-width:240px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="'+d.p+'">'+d.p+'</td>';
+      html += '<td style="text-align:center"><span style="display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:700;background:'+(d.type==='Ambient'?'#fff7ed':'#eff6ff')+';color:'+(d.type==='Ambient'?'#ea580c':'#2563eb')+'">'+d.type+'</span></td>';
+      html += '<td style="text-align:center"><span style="display:inline-block;padding:2px 10px;border-radius:10px;font-size:11px;font-weight:800;color:#fff;background:'+rankColor+'">'+d.rank+'</span></td>';
+      html += '<td style="text-align:right;font-weight:600">'+d.ppc.toFixed(2)+'</td>';
+      html += '<td style="text-align:right;font-weight:600">'+fmtQ(d.q)+'</td>';
+      html += '<td style="text-align:right;font-weight:600">'+fmtB(d.n)+'</td>';
+      html += '<td style="text-align:right">'+pct.toFixed(1)+'%</td>';
+      html += '<td><div style="background:#f1f5f9;border-radius:4px;height:12px;overflow:hidden"><div style="width:'+barW+'%;height:100%;background:rgba(37,99,235,.6);border-radius:4px"></div></div></td>';
+      html += '<td style="text-align:center">'+window.perfBadgeHTML(_opf)+'</td>';
+      html += '<td style="text-align:center" onclick="showSkuPerf(\''+_pN+'\',JSON.parse(this.getAttribute(\'data-m\')),\''+_ordSrc.replace(/'/g,"\\'")+'\')" data-m="'+_mJ+'">'+window.perfSearchIcon()+'</td>';
+      html += '</tr>';
+    });
+    html += '</tbody></table></div></div>';
+
+    // ── 5. Branch/customer table ──
+    var branches = [];
+    channels.forEach(function(ch) {
+      (D.topBranchByCh[ch] || []).forEach(function(d) { branches.push({ b: d.b, n: d.n, q: d.q, bi: d.bi, ch: ch }); });
+    });
+    branches.sort(function(a,b){ return b.n - a.n; });
+    branches = branches.slice(0, 20);
+
+    html += '<div class="card" style="margin-bottom:16px">';
+    html += '<div class="card-title">🏪 ลูกค้า/สาขา Top 20</div>';
+    html += '<div class="table-wrap"><table><thead><tr>';
+    html += '<th>#</th><th style="text-align:left">สาขา</th><th style="text-align:left">ช่องทาง</th><th style="text-align:right">ยอดขาย (฿)</th><th style="text-align:right">จำนวนชิ้น</th><th style="text-align:right">บิล</th>';
+    html += '</tr></thead><tbody>';
+    branches.forEach(function(d, i) {
+      html += '<tr>';
+      html += '<td style="text-align:center">'+(i+1)+'</td>';
+      html += '<td style="text-align:left">'+d.b+'</td>';
+      html += '<td style="text-align:left">'+d.ch+'</td>';
+      html += '<td style="text-align:right;font-weight:600">'+fmtB(d.n)+'</td>';
+      html += '<td style="text-align:right">'+fmtQ(d.q)+'</td>';
+      html += '<td style="text-align:right">'+d.bi.toLocaleString()+'</td>';
+      html += '</tr>';
+    });
+    html += '</tbody></table></div></div>';
+
+    html += '<div style="text-align:center;padding:12px;color:var(--muted);font-size:11px">📄 ข้อมูลจาก Amazon & ของฝาก — คำสั่งซื้อ — '+chLabel+'</div>';
+
+    el.innerHTML = html;
+    setTimeout(function(){_amzOrdInitCharts(prods, ambientB, chillB);},100);
+  };
+
+  // ── Chart init for AMZ order ──
+  var _amzOrdChart1 = null, _amzOrdChart2 = null;
+  function _amzOrdInitCharts(products, ambientB, chillB){
+    if(_amzOrdChart1){try{_amzOrdChart1.destroy();}catch(e){}} _amzOrdChart1=null;
+    if(_amzOrdChart2){try{_amzOrdChart2.destroy();}catch(e){}} _amzOrdChart2=null;
+    var top10 = products.slice().sort(function(a,b){return(b.n||0)-(a.n||0);}).slice(0,10);
+    var barColors = ['#2563eb','#3b82f6','#0891b2','#0d9488','#16a34a','#65a30d','#d97706','#ea580c','#dc2626','#7c3aed'];
+    var ctx1 = document.getElementById('amzOrdTop10Chart');
+    if(ctx1){
+      _amzOrdChart1 = new Chart(ctx1.getContext('2d'),{
+        type:'bar',
+        data:{labels:top10.map(function(d){var n=d.p;return n.length>25?n.substring(0,25)+'…':n;}),datasets:[{data:top10.map(function(d){return d.n||0;}),backgroundColor:barColors.slice(0,top10.length),borderRadius:4,barThickness:20}]},
+        options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:function(ctx){return Math.round(ctx.raw).toLocaleString('th-TH')+' บาท';}}}},scales:{x:{ticks:{callback:function(v){return(v/1e6).toFixed(1)+'M';}},beginAtZero:true,grid:{color:'rgba(0,0,0,0.05)'}},y:{grid:{display:false},ticks:{font:{size:11}}}}}
+      });
+    }
+    var ctx2 = document.getElementById('amzOrdTypeChart');
+    if(ctx2){
+      _amzOrdChart2 = new Chart(ctx2.getContext('2d'),{
+        type:'doughnut',
+        data:{labels:['Ambient','Chill'],datasets:[{data:[ambientB,chillB],backgroundColor:['#f97316','#3b82f6'],borderWidth:2}]},
+        options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom'},tooltip:{callbacks:{label:function(ctx){var v=ctx.raw;var t=ambientB+chillB;return ctx.label+': '+(v/1e6).toFixed(2)+'M ('+(t>0?(v/t*100).toFixed(1):0)+'%)';}}}}}
+      });
+    }
+  }
+
+  // ── Filter table for AMZ order ──
+  window._amzOrdFilterTable = function(){
+    var typeF = document.getElementById('amzOrdFilterType');
+    var rankF = document.getElementById('amzOrdFilterRank');
+    var searchF = document.getElementById('amzOrdSearch');
+    var tv = typeF?typeF.value:'all';
+    var rv = rankF?rankF.value:'all';
+    var sv = searchF?(searchF.value||'').toLowerCase():'';
+    var tbl = document.getElementById('amzOrdProdTable');
+    if(!tbl) return;
+    var rows = tbl.querySelectorAll('tbody tr');
+    rows.forEach(function(row){
+      var t = row.getAttribute('data-type')||'';
+      var r = row.getAttribute('data-rank')||'';
+      var n = row.getAttribute('data-name')||'';
+      var show = (tv==='all'||t===tv) && (rv==='all'||r===rv) && (!sv||n.indexOf(sv)!==-1);
+      row.style.display = show?'':'none';
+    });
   };
 
   window._amzUploadStaffPhoto = function(input, empId) {
@@ -1696,7 +2424,7 @@
     }
     if (team.length === 0) {
       team = [
-        { nick: 'ยู', name: 'ณัฏฐวรรณ ธัญรัตนศรีสกุล', positionTh: 'เซลล์อเมซอน', phone: '', emailCo: '', birthday: '', startDate: '', empId: '', branch: 'BKK 01 (ปทุมธานี)' },
+        { nick: '-', name: 'ว่าง', positionTh: 'เซลล์อเมซอน (ว่าง)', phone: '', emailCo: '', birthday: '', startDate: '', empId: '', branch: 'BKK 01 (ปทุมธานี)' },
         { nick: 'ซี', name: 'ภาณุวัฒน์ ปานเผือก', positionTh: 'เซลล์อเมซอน', phone: '', emailCo: '', birthday: '', startDate: '', empId: '', branch: 'BKK 02 (นนทบุรี)' },
         { nick: 'กานต์', name: 'วีระ พรมมี', positionTh: 'เซลล์อเมซอน', phone: '', emailCo: '', birthday: '', startDate: '', empId: '', branch: 'BKK 03 (สมุทรปราการ)' }
       ];
@@ -1862,36 +2590,6 @@
     var isCmpYear = _amzCmpYear !== 'all';
 
     var html = '';
-    // Period filter bar (dropdown style)
-    html += '<div class="filter-bar" id="amzCmpPeriodBar" style="gap:6px;flex-wrap:wrap;margin-bottom:12px;display:flex;align-items:center;padding:8px 12px;background:var(--card);border-radius:10px;border:1px solid var(--border)">';
-    html += '<span style="font-size:12px;font-weight:700;color:var(--text2)">📅 ช่วงเวลา:</span>';
-    html += '<div style="display:flex;gap:4px;flex-wrap:wrap" id="amzCmpPeriodBtns">';
-    html += '<div class="period-type-btn' + (_amzCmpPeriod==='all'&&_amzCmpYear==='all'?' active':'') + '" onclick="_amzCmpSetPeriod(\'all\',this)">ทั้งหมด</div>';
-    html += '<div class="period-type-btn' + (_amzCmpPeriod==='thismonth'?' active':'') + '" onclick="_amzCmpSetPeriod(\'thismonth\',this)">เดือนนี้</div>';
-    html += '<div class="period-type-btn' + (_amzCmpPeriod==='lastmonth'?' active':'') + '" onclick="_amzCmpSetPeriod(\'lastmonth\',this)">เดือนที่แล้ว</div>';
-    html += '<div id="amzCmpQtrDropdown" style="position:relative;display:inline-block">';
-    html += '<div class="period-type-btn' + (isQtr?' active':'') + '" onclick="_amzCmpToggleQMenu()" style="padding-right:22px;cursor:pointer"><span id="amzCmpQtrLabel">📆 รายไตรมาส</span><span style="position:absolute;right:7px;top:50%;transform:translateY(-50%);font-size:10px;pointer-events:none">▾</span></div>';
-    html += '<div id="amzCmpQtrMenu" style="display:none;position:absolute;top:calc(100% + 4px);left:0;background:#fff;border:1px solid #e2e8f0;border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,.1);min-width:190px;z-index:200;padding:4px 0">';
-    var _cqKey = _amzCmpPeriod + (_amzCmpYear !== 'all' ? '-' + _amzCmpYear : '');
-    [2026,2025,2024].forEach(function(yr, yi) {
-      if (yi > 0) html += '<div style="border-top:1px solid #e2e8f0;margin:4px 0"></div>';
-      html += '<div class="qmenu-item' + (_cqKey==='q1-'+yr?' active':'') + '" onclick="_amzCmpPickQtr(\''+yr+'-Q1\',this)">Q1/'+yr+' ม.ค.–มี.ค.</div>';
-      html += '<div class="qmenu-item' + (_cqKey==='q2-'+yr?' active':'') + '" onclick="_amzCmpPickQtr(\''+yr+'-Q2\',this)">Q2/'+yr+' เม.ย.–มิ.ย.</div>';
-      html += '<div class="qmenu-item' + (_cqKey==='q3-'+yr?' active':'') + '" onclick="_amzCmpPickQtr(\''+yr+'-Q3\',this)">Q3/'+yr+' ก.ค.–ก.ย.</div>';
-      html += '<div class="qmenu-item' + (_cqKey==='q4-'+yr?' active':'') + '" onclick="_amzCmpPickQtr(\''+yr+'-Q4\',this)">Q4/'+yr+' ต.ค.–ธ.ค.</div>';
-    });
-    html += '</div></div>';
-    html += '<div id="amzCmpYearDropdown" style="position:relative;display:inline-block">';
-    html += '<div class="period-type-btn' + (isCmpYear?' active':'') + '" onclick="_amzCmpToggleYMenu()" style="padding-right:22px;cursor:pointer"><span id="amzCmpYearLabel">📅 รายปี</span><span style="position:absolute;right:7px;top:50%;transform:translateY(-50%);font-size:10px;pointer-events:none">▾</span></div>';
-    html += '<div id="amzCmpYearMenu" style="display:none;position:absolute;top:calc(100% + 4px);left:0;background:#fff;border:1px solid #e2e8f0;border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,.1);min-width:150px;z-index:200;padding:4px 0">';
-    html += '<div class="qmenu-item' + (_amzCmpYear==='all'&&!isQtr?' active':'') + '" onclick="_amzCmpPickYear(\'all\',this)">📅 ทั้งหมด</div>';
-    html += '<div class="qmenu-item' + (_amzCmpYear==='2024'?' active':'') + '" onclick="_amzCmpPickYear(\'2024\',this)">📅 ปี 2567 (2024)</div>';
-    html += '<div class="qmenu-item' + (_amzCmpYear==='2025'?' active':'') + '" onclick="_amzCmpPickYear(\'2025\',this)">📅 ปี 2568 (2025)</div>';
-    html += '<div class="qmenu-item' + (_amzCmpYear==='2026'?' active':'') + '" onclick="_amzCmpPickYear(\'2026\',this)">📅 ปี 2569 (2026)</div>';
-    html += '</div></div>';
-    html += '</div>';
-    html += '<span style="font-size:11px;color:#64748b;margin-left:auto">' + periodInfoText + '</span>';
-    html += '</div>';
 
     html += '<div style="margin-bottom:18px">';
     html += '<h3 style="margin:0 0 4px;font-size:18px;color:#ea580c">📢 คุณภาพสินค้า / Complaint</h3>';

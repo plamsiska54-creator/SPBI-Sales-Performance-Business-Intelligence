@@ -72,7 +72,7 @@
 
   // ถ้ามี session อยู่แล้ว ให้ข้ามหน้า login ไป dashboard ทันที
   if (Auth.getSession()) {
-    window.location.replace('sales_dashboard.html');
+    window.location.replace('spbi.html');
     return;
   }
 
@@ -115,7 +115,7 @@
         return;
       }
       Auth.saveSession(res.user);
-      window.location.replace('sales_dashboard.html');
+      window.location.replace('spbi.html');
     }).catch(function (err) {
       showError('เกิดข้อผิดพลาด กรุณาลองใหม่');
       btnEl.disabled = false;

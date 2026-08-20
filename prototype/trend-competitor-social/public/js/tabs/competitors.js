@@ -113,11 +113,11 @@ function renderPriceBar(brands) {
         tooltip: { callbacks: { label: ctx => `${ctx.parsed.y} บาท` } }
       },
       scales: {
-        x: { ticks: { color: '#ccc' }, grid: { color: 'rgba(255,255,255,0.05)' } },
+        x: { ticks: { color: '#4a5568' }, grid: { color: 'rgba(0,0,0,0.06)' } },
         y: {
           beginAtZero: true,
-          ticks: { color: '#ccc', callback: v => `${v} ฿` },
-          grid: { color: 'rgba(255,255,255,0.05)' }
+          ticks: { color: '#4a5568', callback: v => `${v} ฿` },
+          grid: { color: 'rgba(0,0,0,0.06)' }
         }
       }
     }
@@ -146,16 +146,16 @@ function renderRadar(brands) {
         r: {
           min: 0,
           max: 5,
-          ticks: { stepSize: 1, color: '#999', backdropColor: 'transparent' },
-          grid: { color: 'rgba(255,255,255,0.1)' },
-          pointLabels: { color: '#ccc', font: { size: 12 } },
-          angleLines: { color: 'rgba(255,255,255,0.1)' }
+          ticks: { stepSize: 1, color: '#718096', backdropColor: 'transparent' },
+          grid: { color: 'rgba(0,0,0,0.08)' },
+          pointLabels: { color: '#4a5568', font: { size: 12 } },
+          angleLines: { color: 'rgba(0,0,0,0.08)' }
         }
       },
       plugins: {
         legend: {
           position: 'bottom',
-          labels: { color: '#ccc', usePointStyle: true, padding: 12 }
+          labels: { color: '#4a5568', usePointStyle: true, padding: 12 }
         }
       }
     }
@@ -182,7 +182,7 @@ function renderSalesLine(brands, labels, start, end) {
       plugins: {
         legend: {
           position: 'bottom',
-          labels: { color: '#ccc', usePointStyle: true, padding: 12 }
+          labels: { color: '#4a5568', usePointStyle: true, padding: 12 }
         },
         tooltip: {
           callbacks: {
@@ -191,13 +191,13 @@ function renderSalesLine(brands, labels, start, end) {
         }
       },
       scales: {
-        x: { ticks: { color: '#ccc' }, grid: { color: 'rgba(255,255,255,0.05)' } },
+        x: { ticks: { color: '#4a5568' }, grid: { color: 'rgba(0,0,0,0.06)' } },
         y: {
           ticks: {
-            color: '#ccc',
+            color: '#4a5568',
             callback: v => (v / 1e6).toFixed(1) + 'M'
           },
-          grid: { color: 'rgba(255,255,255,0.05)' }
+          grid: { color: 'rgba(0,0,0,0.06)' }
         }
       }
     }
@@ -219,7 +219,7 @@ function renderDoughnut(brands) {
       datasets: [{
         data: vals,
         backgroundColor: colors,
-        borderColor: 'rgba(15, 12, 41, 0.8)',
+        borderColor: '#ffffff',
         borderWidth: 2
       }]
     },
@@ -228,7 +228,7 @@ function renderDoughnut(brands) {
       plugins: {
         legend: {
           position: 'bottom',
-          labels: { color: '#ccc', padding: 10, usePointStyle: true }
+          labels: { color: '#4a5568', padding: 10, usePointStyle: true }
         },
         tooltip: {
           callbacks: { label: ctx => `${ctx.label}: ${ctx.parsed}%` }

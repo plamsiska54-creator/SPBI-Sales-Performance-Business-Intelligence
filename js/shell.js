@@ -15,7 +15,9 @@
       { sub: 'ov-daily',    icon: '📅', label: 'รายวัน' },
       { sub: 'ov-customer', icon: '🏪', label: 'ลูกค้า' },
       { sub: 'ov-sales',    icon: '👤', label: 'พนักงานขาย' },
+      { sub: 'ov-target',   icon: '🎯', label: 'เป้าหมาย' },
       { sub: 'ov-ai',       icon: '🤖', label: 'วิเคราะห์ AI' },
+      { sub: 'ov-manual',   icon: '📖', label: 'คู่มือการใช้งาน' },
       { sub: 'ov-update',   icon: '🔄', label: 'อัพเดทข้อมูล', rbac: 'rbac-import' }
     ]},
     { id: 'mt', icon: '🏪', label: 'ห้างค้าปลีก', children: [
@@ -26,7 +28,8 @@
       { sub: 'Makro',   icon: '📦', label: 'Makro' },
       { sub: 'MM',      icon: '🏬', label: 'MM' },
       { sub: 'Aeon',    icon: '🛍', label: 'Aeon' },
-      { sub: 'TheMall', icon: '🏢', label: 'The Mall' }
+      { sub: 'TheMall', icon: '🏢', label: 'The Mall' },
+      { sub: 'StickerCancel', icon: '🏷️', label: 'สต็อกสติ๊กเกอร์ยกเลิกขาย' }
     ]},
     { id: 'booth', icon: '🏕️', label: 'บูธ', children: [
       { sub: 'bth-info',    icon: '📋', label: 'ข้อมูลบูธ' },
@@ -38,7 +41,8 @@
       { sub: 'bth-promo',   icon: '🎁', label: 'โปรโมชั่น' },
       { sub: 'bth-perf',    icon: '📈', label: 'ผลงานรายสาขา' },
       { sub: 'bth-ai',      icon: '🤖', label: 'วิเคราะห์ AI' },
-      { sub: 'bth-update',  icon: '🔄', label: 'อัพเดทข้อมูล', rbac: 'rbac-import' }
+      { sub: 'bth-update',  icon: '🔄', label: 'อัพเดทข้อมูล', rbac: 'rbac-import' },
+      { sub: 'bth-manual', icon: '📖', label: 'คู่มือการใช้งาน' }
     ]},
     { id: 'online', icon: '🛒', label: 'ออนไลน์', children: [
       { sub: 'ol-sales',      icon: '📊', label: 'ยอดขาย' },
@@ -54,7 +58,8 @@
       { sub: 'ol-prodrank',   icon: '📋', label: 'รายการขายสินค้า' },
       { sub: 'ol-shops',      icon: '🏪', label: 'ข้อมูลร้านค้า' },
       { sub: 'ol-ai',         icon: '🤖', label: 'วิเคราะห์ AI' },
-      { sub: 'ol-dataupdate', icon: '🔄', label: 'อัพเดทข้อมูล', rbac: 'rbac-import' }
+      { sub: 'ol-dataupdate', icon: '🔄', label: 'อัพเดทข้อมูล', rbac: 'rbac-import' },
+      { sub: 'ol-manual', icon: '📖', label: 'คู่มือการใช้งาน' }
     ]},
     { id: 'amazon', icon: '📦', label: 'อเมซอน & ของฝาก', children: [
       { sub: 'All',         icon: '📊', label: 'ทุกช่องทาง' },
@@ -63,7 +68,9 @@
       { sub: 'BlackCanyon', icon: '☕', label: 'Black Canyon' },
       { sub: 'TeamSales',   icon: '👨‍💼', label: 'ทีมขาย' },
       { sub: 'SalesVisit',  icon: '📍', label: 'Sales Visit Tracker' },
-      { sub: 'Complaint',   icon: '📢', label: 'Complaint' }
+      { sub: 'Complaint',   icon: '📢', label: 'Complaint' },
+      { sub: 'amz-area-monitor', icon: '📍', label: 'Sales Monitoring by Area' },
+      { sub: 'ApiDash', icon: '📡', label: 'แดชบอร์ด API' }
     ]},
     { id: 'ordering', icon: '📝', label: 'ธุรการขาย', children: [
       { sub: 'ord-staff',     icon: '👥', label: 'พนักงาน & เขต' },
@@ -88,7 +95,30 @@
       { sub: 'sm-delist',     icon: '⚠️', label: 'สินค้าเสี่ยงถอด' },
       { sub: 'sm-jd',         icon: '📋', label: 'รายละเอียดงาน' },
       { sub: 'sm-docs',       icon: '📂', label: 'ศูนย์เอกสาร' },
+      { sub: 'sm-customer',   icon: '📇', label: 'ฐานข้อมูลลูกค้า' },
       { sub: 'sm-ai',         icon: '🤖', label: 'วิเคราะห์ AI' }
+    ]},
+    { id: 'visit-plan', icon: '📍', label: 'แผนเข้าพบลูกค้า', children: [
+      { sub: 'vp-dashboard', icon: '📊', label: 'ภาพรวมผู้บริหาร' },
+      { sub: 'vp-summary',   icon: '📌', label: 'สรุปการเข้าพบ' },
+      { sub: 'vp-calendar',  icon: '📅', label: 'ปฏิทินวางแผน' },
+      { sub: 'vp-form',      icon: '📝', label: 'เพิ่มแผนเข้าพบ' },
+      { sub: 'vp-today',     icon: '📋', label: 'ตารางวันนี้' },
+      { sub: 'vp-ai',        icon: '🤖', label: 'AI สรุปแผน' }
+    ]},
+    { id: 'supatest', icon: '🔌', label: 'ทดสอบ Supabase', children: [
+      { sub: 'supa-dash', icon: '📊', label: 'แดชบอร์ด API' }
+    ]},
+    { id: 'marketing', icon: '📣', label: 'Marketing', children: [
+      { sub: 'mkt-plan',      icon: '📋', label: 'แผนการตลาด' },
+      { sub: 'mkt-promo',     icon: '🎁', label: 'โปรโมชัน/แคมเปญ' },
+      { sub: 'mkt-social',    icon: '📱', label: 'Social Media' },
+      { sub: 'mkt-content',   icon: '📝', label: 'Content Calendar' },
+      { sub: 'mkt-influencer', icon: '🌟', label: 'Influencer' },
+      { sub: 'mkt-budget',    icon: '💰', label: 'งบการตลาด' },
+      { sub: 'mkt-roi',       icon: '📈', label: 'วิเคราะห์ ROI' },
+      { sub: 'mkt-events',    icon: '🎪', label: 'กิจกรรม/Event' },
+      { sub: 'mkt-evt-dash',  icon: '📊', label: 'Event Dashboard' }
     ]},
     { id: 'admin', icon: '⚙️', label: 'แผงแอดมิน', minRole: 'admin', children: [
       { sub: 'adm-staff',      icon: '👥', label: 'พนักงาน' },
@@ -231,7 +261,7 @@
     }
 
     // Find the matching sub-tab in the content area and click it
-    _triggerSubTab(tabId, sub);
+    setTimeout(function () { _triggerSubTab(tabId, sub); }, 50);
   };
 
   // ---- Trigger the real sub-tab element by matching onclick string ----

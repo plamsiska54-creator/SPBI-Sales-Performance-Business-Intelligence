@@ -3,60 +3,51 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Trend & Competitor Analysis Dashboard</title>
+  <title>Bakery Analytics — Trend & Competitor Analysis</title>
 
   <!-- CSS -->
   <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/sidebar.css">
   <link rel="stylesheet" href="css/charts.css">
+  <link rel="stylesheet" href="css/auth.css">
 
   <!-- Chart.js 4.4.7 (local) -->
   <script src="js/lib/chart.umd.js"></script>
 </head>
 <body>
 
-  <!-- Prototype Banner -->
-  <div class="prototype-banner">
-    ข้อมูลจำลอง (Demo Data) เพื่อการทดสอบ
-  </div>
-
   <!-- Header -->
   <header class="header">
-    <h1 class="header-title">Trend & Competitor Analysis</h1>
-    <span class="header-subtitle">Product Trends / Competitor Analysis / Social Listening</span>
+    <button class="mobile-menu-btn" id="header-mobile-menu" aria-label="เปิดเมนู">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+    </button>
+    <h1 class="header-title" data-i18n="header.title">Bakery Analytics</h1>
+    <span class="header-subtitle" data-i18n="header.subtitle">Trend & Competitor Analysis Dashboard</span>
+    <div class="header-actions">
+      <span class="last-updated" id="last-updated">อัปเดตล่าสุด: กำลังโหลด...</span>
+      <button class="refresh-btn" id="refresh-btn" title="รีเฟรชข้อมูล">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+        <span data-i18n="header.refresh">รีเฟรช</span>
+      </button>
+      <div class="header-toggle-group">
+        <button class="toggle-btn" id="theme-toggle" title="เปลี่ยนเป็นโหมดกลางคืน">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </button>
+        <button class="toggle-btn" id="lang-toggle" title="Switch to English">EN</button>
+      </div>
+      <div class="user-info" id="user-info"></div>
+    </div>
   </header>
 
-  <!-- Tab Bar -->
-  <nav class="tab-bar">
-    <button class="tab-btn active" data-tab="trends">Product Trends</button>
-    <button class="tab-btn" data-tab="competitors">Competitor Analysis</button>
-    <button class="tab-btn" data-tab="social">Social Listening</button>
-  </nav>
+  <!-- Sidebar (rendered by sidebar.js) -->
+  <div id="sidebar-root"></div>
 
   <!-- Main Content -->
-  <main class="main-content">
-
-    <!-- Overview Cards - แต่ละ tab จะอัพเดตค่าเมื่อ mount -->
-    <section class="overview-cards">
-      <div class="overview-card" id="top-card-0">
-        <div class="overview-card-label">เทรนด์ที่ติดตาม</div>
-        <div class="overview-card-value">--</div>
-        <div class="overview-card-note">รอโหลดข้อมูล</div>
-      </div>
-      <div class="overview-card" id="top-card-1">
-        <div class="overview-card-label">คู่แข่งที่วิเคราะห์</div>
-        <div class="overview-card-value">--</div>
-        <div class="overview-card-note">รอโหลดข้อมูล</div>
-      </div>
-      <div class="overview-card" id="top-card-2">
-        <div class="overview-card-label">Social Mentions</div>
-        <div class="overview-card-value">--</div>
-        <div class="overview-card-note">รอโหลดข้อมูล</div>
-      </div>
-    </section>
-
-    <!-- App Container (tab content mounts here) -->
-    <div id="app"></div>
-
+  <main class="main-content" id="main-content">
+    <div id="app">
+      <div id="sub-tab-bar"></div>
+      <div id="tab-content"></div>
+    </div>
   </main>
 
   <!-- JS Module -->

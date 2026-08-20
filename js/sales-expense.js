@@ -6,7 +6,10 @@
 // ---- 2-Level Navigation ----
 var SM_MENU = {
   'sm-products':     { label: '📋 รายการสินค้า', subs: null },
-  'sm-prod-perf':    { label: '🏆 ผลงานสินค้า', subs: null, render: 'renderSmProdPerf' },
+  'sm-prod-perf':    { label: '🏆 ผลงานสินค้า', subs: [
+    { id: 'sm-pp-perf',   label: '🏆 ผลงานสินค้า',      render: 'renderSmProdPerf' },
+    { id: 'sm-pp-matrix', label: '🎯 Menu Engineering', render: 'renderSmProdMatrix' }
+  ]},
   'sm-quality':      { label: '🔍 คุณภาพสินค้า', subs: null },
   'sm-workflow':     { label: '🔄 Work Flow', subs: null },
   'sm-performance':  { label: '📈 Performance Sales', subs: [
@@ -42,8 +45,12 @@ var SM_MENU = {
   'sm-docs':         { label: '📂 ศูนย์เอกสาร', subs: [
     { id: 'sm-docs-profile',   label: '🏢 Company Profile',   render: 'renderDocsProfile' },
     { id: 'sm-docs-products',  label: '📦 Product Catalog',   render: 'renderDocsCatalog' },
-    { id: 'sm-docs-certs',     label: '🛡️ Certifications',    render: 'renderDocsCerts' }
+    { id: 'sm-docs-certs',     label: '🛡️ Certifications',    render: 'renderDocsCerts' },
+    { id: 'sm-docs-apology',   label: '💌 การ์ดขอโทษลูกค้า', render: 'renderDocsApology' },
+    { id: 'sm-docs-contracts', label: '📑 เอกสารสัญญา',       render: 'renderDocsContracts' },
+    { id: 'sm-docs-company',   label: '📜 หนังสือสำคัญบริษัท', render: 'renderDocsCompany' }
   ]},
+  'sm-customer':     { label: '📇 ฐานข้อมูลลูกค้า', subs: null, render: 'renderCustomerDB' },
   'sm-ai':           { label: '🤖 วิเคราะห์ AI', subs: null, render: 'renderSmAI' }
 };
 
@@ -430,7 +437,7 @@ function _smPerfContent(chName) {
     'Modern Trade': ['ระวีวรรณ (แอลลี่)', 'Vacancy (ว่าง)'],
     'Booth': ['Booth (ว่าง)'],
     'Online': ['Online (นนท์)'],
-    'Amazon': ['ณัฏฐวรรณ (ยู)', 'ภาณุวัฒน์ (ซี)', 'วีระ (กานต์)'],
+    'Amazon': ['ว่าง (BKK 1)', 'ภาณุวัฒน์ (ซี)', 'วีระ (กานต์)'],
     'Ordering Center': []
   };
   var staff = chStaffMap[chName] || [];
@@ -711,7 +718,7 @@ function smInitTab() {
 var SM_STAFF = [
   'นางสาววนัสนันท์ อินต๊ะเสน (คุณวี)',
   'นางสาวระวีวรรณ ไพรสงบ (แอลลี่)',
-  'นางสาวณัฏฐวรรณ ธัญรัตนศรีสกุล (ยู)',
+  'ว่าง (BKK 1)',
   'นายภาณุวัฒน์ ปานเผือก (ซี)',
   'นายวีระ พรมมี (กานต์)',
   'นางสาวธัญรัตน์ พุ่มนิล (ต้นปาล์ม)',
@@ -1514,7 +1521,7 @@ var SM_STAFF_DB = [
   { empId:'68030039', name:'นางสาววนัสนันท์ อินต๊ะเสน', nick:'คุณวี', positionTh:'ผู้จัดการฝ่ายขาย - การตลาด', positionEn:'Sales & Marketing Manager', level:'ผู้จัดการ', dept:'Modern Trade', deptTh:'ขายรายเดือน', branch:'ดูแลบริหารงานฝ่ายขายและการตลาด', phone:'096-2616598, 092-9526666', birthday:'01/06/1980', startDate:'16/03/2025', age:'45', emailCo:'sales.manager@wanwanach.com', emailPersonal:'sales.manager@wanwanach.com' },
   { empId:'66100584', name:'นางสาวธัญรัตน์ พุ่มนิล', nick:'ต้นปาล์ม', positionTh:'นักวิเคราะห์ยอดขาย', positionEn:'Sales Analysis', level:'เจ้าหน้าที่', dept:'Modern Trade', deptTh:'ขายรายเดือน', branch:'ประสานงาน ซัพพอตข้อมูลฝ่ายขายและการตลาด', phone:'082-6672575', birthday:'01/03/1993', startDate:'25/10/2023', age:'32', emailCo:'sale.analysis@wanwanach.com', emailPersonal:'plamwanwanuch25102566@gmail.com' },
   { empId:'65040204', name:'นางสาวระวีวรรณ ไพรสงบ', nick:'แอล', positionTh:'เซลล์โมเดิร์นเทรด', positionEn:'Sales Modern Trade', level:'เจ้าหน้าที่', dept:'Modern Trade', deptTh:'ขายรายเดือน', branch:'CJ, Aeon, Top, Big C, The Mall, Makro', phone:'093-4569749', birthday:'07/02/2001', startDate:'20/04/2022', age:'24', emailCo:'moderntrde_sales@wanwanach.com', emailPersonal:'raweewan070244@gmail.com' },
-  { empId:'68110501', name:'นางสาวณัฏฐวรรณ ธัญรัตนศรีสกุล', nick:'ยู', positionTh:'เซลล์อเมซอน', positionEn:'Sale Amazon', level:'เจ้าหน้าที่', dept:'Amazon', deptTh:'ขายรายเดือน', branch:'BKK 01 (ปทุมธานี)', phone:'063-9835692', birthday:'', startDate:'04/02/2026', age:'29', emailCo:'amazon.sales@wanwanach.com', emailPersonal:'Nattawanhh1412@gmail.com' },
+  { empId:'68110501', name:'นางสาวณัฏฐวรรณ ธัญรัตนศรีสกุล', nick:'ยู', positionTh:'เซลล์อเมซอน (ลาออก)', positionEn:'Sale Amazon (Resigned)', level:'เจ้าหน้าที่', dept:'Amazon', deptTh:'ขายรายเดือน', branch:'BKK 01 (ปทุมธานี)', phone:'063-9835692', birthday:'', startDate:'04/02/2026', age:'29', emailCo:'amazon.sales@wanwanach.com', emailPersonal:'Nattawanhh1412@gmail.com', resigned:true },
   { empId:'69020177', name:'นายภาณุวัฒน์ ปานเผือก', nick:'ซี', positionTh:'เซลล์อเมซอน', positionEn:'Sale Amazon', level:'เจ้าหน้าที่', dept:'Amazon', deptTh:'ขายรายเดือน', branch:'BKK 02 (นนทบุรี)', phone:'080-6623863', birthday:'', startDate:'', age:'43', emailCo:'amazon.sales@wanwanach.com', emailPersonal:'zeenew650@gmail.com' },
   { empId:'67050052', name:'นายวีระ พรมมี', nick:'กานต์', positionTh:'เซลล์อเมซอน', positionEn:'Sale Amazon', level:'เจ้าหน้าที่', dept:'Amazon', deptTh:'ขายรายเดือน', branch:'BKK 03 (สมุทรปราการ)', phone:'091-0030257', birthday:'05/02/1994', startDate:'23/05/2024', age:'31', emailCo:'amazon.sales@wanwanach.com', emailPersonal:'Weeraprommee@gmail.com' },
   { empId:'67110178', name:'นางสาววันเพ็ญ สินธุ์เจริญ', nick:'นกหวีด', positionTh:'เจ้าหน้าที่สนับสนุนฝ่ายขาย', positionEn:'Support Sales', level:'เจ้าหน้าที่', dept:'Modern Trade', deptTh:'ขายรายเดือน', branch:'ฝ่ายขาย - การตลาด', phone:'098-9136804', birthday:'21/06/1999', startDate:'17/11/2024', age:'26', emailCo:'support.sale@wanwanach.com', emailPersonal:'wanpensinchareon@gmail.com' },
@@ -3556,7 +3563,7 @@ var _smProdPerfRendered = false;
 function renderSmProdPerf() {
   if (_smProdPerfRendered) return;
   _smProdPerfRendered = true;
-  var el = document.getElementById('sm-prod-perf');
+  var el = document.getElementById('sm-pp-perf');
   if (!el) return;
 
   // ---- Aggregate products from MT_DATA (all channels) ----
@@ -3569,10 +3576,11 @@ function renderSmProdPerf() {
         var p = arr[pi];
         var key = (p.code || p.name).replace(/\s+/g, '');
         if (!prodMap[key]) {
-          prodMap[key] = { name: p.name, code: p.code || '', type: p.type || '', rank: p.rank || '', tu: 0, tb: 0, src: 'MT' };
+          prodMap[key] = { name: p.name, code: p.code || '', type: p.type || '', rank: p.rank || '', tu: 0, tb: 0, src: 'MT', m: {} };
         }
         prodMap[key].tu += (p.tu || 0);
         prodMap[key].tb += (p.tb || 0);
+        if (p.m) { var mks = Object.keys(p.m); for (var mi = 0; mi < mks.length; mi++) { var mk = mks[mi]; if (!prodMap[key].m[mk]) prodMap[key].m[mk] = {b:0,u:0}; prodMap[key].m[mk].b += ((p.m[mk]||{}).b||0); prodMap[key].m[mk].u += ((p.m[mk]||{}).u||0); } }
       }
     }
   }
@@ -3715,7 +3723,9 @@ function renderSmProdPerf() {
         : '<span style="padding:1px 6px;border-radius:8px;font-size:9px;font-weight:700;background:#eff6ff;color:#2563eb">MT</span>';
       h += '<tr style="background:' + bg + '">';
       h += '<td style="padding:6px 8px;text-align:center;font-size:12px;color:var(--muted)">' + (MEDAL[i] || (i + 1)) + '</td>';
-      h += '<td style="padding:6px 8px;font-weight:600;font-size:12px;color:var(--text)">' + p.name + '</td>';
+      var _spMJson = JSON.stringify(p.m||{}).replace(/'/g,"\\'").replace(/"/g,'&quot;');
+      var _spName = p.name.replace(/'/g,"\\'");
+      h += '<td style="padding:6px 8px;font-weight:600;font-size:12px;cursor:pointer;color:var(--primary,#3b82f6)" title="คลิกดู Performance" onclick="showSkuPerf(\'' + _spName + '\',JSON.parse(this.getAttribute(\'data-m\')),\'ผลงานสินค้า — ทุกพอร์ท\')" data-m="' + _spMJson + '">' + p.name + ' <span style="font-size:9px;opacity:.4">📈</span></td>';
       h += '<td style="padding:6px 8px;text-align:center">' + srcBadge + '</td>';
       h += '<td style="padding:6px 8px;text-align:right;font-size:12px;color:var(--text)">' + fmtQ(Math.round(p.tu)) + ' ชิ้น</td>';
       h += '<td style="padding:6px 8px;text-align:right;font-weight:700;color:' + catClr + '">฿' + fmtB(p.tb) + '</td>';
@@ -3732,4 +3742,38 @@ function renderSmProdPerf() {
   html += buildTop20('other', 'อื่นๆ', '📦', '#94a3b8', catGroups.other);
 
   el.innerHTML = '<div style="padding:8px">' + html + '</div>';
+}
+
+// ============================================================
+// Menu Engineering — เมนูย่อยที่ 2 ของหน้าผลงานสินค้า
+// ใช้โมดูลร่วมกับ catalog.html (js/catalog-matrix.js)
+// โหลดข้อมูลยอดขายเองแบบ lazy จึงไม่ถ่วงตอนเปิดหน้า
+// ============================================================
+var _smProdMatrixRendered = false;
+function renderSmProdMatrix() {
+  var el = document.getElementById('sm-pp-matrix');
+  if (!el) return;
+
+  if (!_smProdMatrixRendered) {
+    _smProdMatrixRendered = true;
+    el.innerHTML =
+      '<div style="padding:8px">' +
+        '<div style="font-size:17px;font-weight:800;color:var(--text);margin-bottom:4px">' +
+          '🎯 Menu Engineering — จัดกลุ่มสินค้า 4 กลุ่ม</div>' +
+        '<div style="font-size:12.5px;color:var(--muted);margin-bottom:16px">' +
+          'ดาวเด่น / ปริศนา / ม้างาน / ตัวถ่วง — คำนวณจากยอดขายจริงในบิล</div>' +
+        '<div id="smProdMatrix"></div>' +
+      '</div>';
+  }
+
+  if (window.CatalogMatrix) {
+    window.CatalogMatrix.mount('smProdMatrix');
+  } else {
+    document.getElementById('smProdMatrix').innerHTML =
+      '<div style="text-align:center;padding:40px 20px;color:#64748b">' +
+        '<div style="font-size:38px;opacity:.5;margin-bottom:10px">⚠️</div>' +
+        '<h3 style="font-size:15px;color:#475569;margin-bottom:6px">โหลดโมดูล Menu Engineering ไม่สำเร็จ</h3>' +
+        '<p style="font-size:13px;line-height:1.7">เบราว์เซอร์อาจยังใช้ไฟล์เวอร์ชันเก่าที่เก็บไว้<br>' +
+        'กด <b>Ctrl + Shift + R</b> เพื่อโหลดใหม่ทั้งหมด</p></div>';
+  }
 }

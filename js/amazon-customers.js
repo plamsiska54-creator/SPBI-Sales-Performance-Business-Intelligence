@@ -159,6 +159,7 @@ function amzCustFilterChannel(ch) {
   if (sel) sel.value = '';
   _amzCustRenderKPI();
   _amzCustRenderChart();
+
   _amzCustRenderPills();
   _amzCustPopulateProvinces();
   _amzCustRenderTable();
@@ -167,6 +168,7 @@ function amzCustFilterChannel(ch) {
 function amzCustFilterMonth(m) {
   _amzCustState.month = m;
   _amzCustState.page = 1;
+
   _amzCustRenderPills();
   _amzCustRenderTable();
 }
@@ -420,6 +422,7 @@ function renderAmzCustomers() {
 
   _amzCustRenderKPI();
   _amzCustRenderChart();
+
   _amzCustRenderPills();
   _amzCustPopulateProvinces();
   _amzCustRenderTable();

@@ -10,7 +10,7 @@ var COLORS = {
   S05:'#bbf7d0', S06:'#fef3c7', S07:'#ddd6fe',
   holiday:'#ef4444'
 };
-var NAMES = {S01:'แตงกวา',S02:'บิวตี้',S03:'อ้อ',S04:'ว่าง',S05:'โบว์',S06:'อัพ',S07:'อุ้ม'};
+var NAMES = {S01:'แตงกวา',S02:'อ้อ',S03:'อ้อ',S04:'ว่าง',S05:'โบว์',S06:'โบว์',S07:'ว่าง'};
 var DAYS  = ['อาทิตย์','จันทร์','อังคาร','พุธ','พฤหัสบดี','ศุกร์','เสาร์'];
 
 // ---------- Tab definitions ----------
@@ -30,53 +30,53 @@ var TABS = [
 // ====================================================================
 var ORDER_DATA = [
   [{route:'กำแพงเพชร-ตาก',code:'S03'},{route:'เชียงใหม่',code:'S03'},{route:'ราชบุรี / นครนายก',code:'S07'},{route:'เพชรบุรี',code:'S07'},{route:'เพชรบูรณ์',code:'S03'},{route:'หยุด',code:'S03',off:true},{route:'เชียงราย',code:'S03'}],
-  [{route:'หยุด',code:'S02',off:true},{route:'กระทุ่มแบน',code:'S02'},{route:'สระบุรี 1-2',code:'S02'},{route:'สุพรรณบุรี',code:'S02'},{route:'กาญจนบุรี',code:'S02'},{route:'โคราช 1-2',code:'S02'},{route:'ชลบุรี 1-2',code:'S02'}],
+  [{route:'หยุด',code:'S02',off:true},{route:'กระทุ่มแบน',code:'S02'},{route:'สระบุรี 1-2',code:'S02'},{route:'สุพรรณบุรี',code:'S02'},{route:'กาญจนบุรี',code:'S07'},{route:'โคราช 1-2',code:'S02'},{route:'ชลบุรี 1-2',code:'S02'}],
   [{route:'ระยอง',code:'S07'},{route:'อุบล - บุรีรัมย์',code:'S05'},{route:'ขอนแก่น + ร.พ.',code:'S05'},{route:'นครสวรรค์ 1',code:'S05'},{route:'อำนาจเจริญ',code:'S05'},{route:'หยุด',code:'S05',off:true},{route:'ขอนแก่น + ร.พ. + มิตรภาพ',code:'S05'}],
   [{route:'C/F1/F2',code:'S01'},{route:'D/E/G -ราชพฤกษ์',code:'S01'},{route:'A/B',code:'S01'},{route:'C/F1/F2',code:'S01'},{route:'D/E/G/B',code:'S01'},{route:'A/B/G',code:'S01'},{route:'หยุด',code:'S01',off:true}],
   [{route:'ใต้ - ภูเก็ต',code:'S03'},{route:'บูธรายวัน/VIP',code:'S06'},{route:'สงขลา - นคร',code:'S03'},{route:'บ่อพลอย (ลุงอู๊ด)',code:'S03'},{route:'บูธรายวัน/VIP/บูธ หลัก',code:'S06'},{route:'บูธรายวัน/VIP',code:'S06'},{route:'หยุด',code:'S06',off:true}],
-  [{route:'บูธรายวัน/VIP/บูธ หลัก',code:'S06'},{route:'บูธรายวัน/VIP',code:'S06'},{route:'บูธรายวัน/VIP/บูธ หลัก',code:'S06'},{route:'บูธรายวัน/VIP',code:'S06'},{route:'นครสวรรค์ 2',code:'S05'},{route:'',code:''},{route:'',code:''}]
+  [{route:'บูธรายวัน/VIP/บูธ หลัก',code:'S06'},{route:'',code:''},{route:'บูธรายวัน/VIP/บูธ หลัก',code:'S06'},{route:'บูธรายวัน/VIP',code:'S06'},{route:'นครสวรรค์ 2',code:'S05'},{route:'',code:''},{route:'',code:''}]
 ];
 
 var PROD_DATA = [
-  [{route:'เชียงราย',code:'S03'},{route:'กำแพงเพชร-ตาก',code:'S03'},{route:'เชียงใหม่',code:'S03'},{route:'ราชบุรี / นครนายก',code:'S07'},{route:'เพชรบุรี',code:'S07'},{route:'เพชรบูรณ์',code:'S03'},{route:'',code:''}],
+  [{route:'เชียงราย',code:'S03'},{route:'กำแพงเพชร-ตาก',code:'S03'},{route:'เชียงใหม่',code:'S03'},{route:'ราชบุรี / นครนายก',code:'S07'},{route:'เพชรบุรี',code:'S07'},{route:'เพชรบูรณ์',code:'S03'},{route:'หยุด',code:'',off:true}],
   [{route:'โคราช 1-2',code:'S02'},{route:'ชลบุรี 1-2',code:'S02'},{route:'อุบล - บุรีรัมย์',code:'S05'},{route:'สระบุรี 1-2',code:'S02'},{route:'สุพรรณบุรี',code:'S02'},{route:'กาญจนบุรี',code:'S07'},{route:'',code:''}],
-  [{route:'ขอนแก่น + ร.พ. + มิตรภาพ',code:'S05'},{route:'ระยอง',code:'S07'},{route:'D/E/G -ราชพฤกษ์',code:'S01'},{route:'ขอนแก่น + ร.พ.',code:'S05'},{route:'นครสวรรค์ 1',code:'S05'},{route:'นครสวรรค์ 2',code:'S05'},{route:'หยุด',code:'',off:true}],
+  [{route:'ขอนแก่น + ร.พ. + มิตรภาพ',code:'S05'},{route:'ระยอง',code:'S07'},{route:'D/E/G -ราชพฤกษ์',code:'S01'},{route:'ขอนแก่น + ร.พ.',code:'S05'},{route:'นครสวรรค์ 1',code:'S05'},{route:'นครสวรรค์ 2',code:'S05'},{route:'',code:''}],
   [{route:'A/B/G',code:'S01'},{route:'C/F1/F2',code:'S01'},{route:'กระทุ่มแบน',code:'S02'},{route:'A/B',code:'S01'},{route:'C/F1/F2',code:'S01'},{route:'D/E/G/B',code:'S01'},{route:'',code:''}],
   [{route:'บูธรายวัน/VIP',code:'S06'},{route:'ใต้ - ภูเก็ต',code:'S03'},{route:'บูธรายวัน/VIP',code:'S06'},{route:'สงขลา - นคร',code:'S03'},{route:'บ่อพลอย (ลุงอู๊ด)',code:'S03'},{route:'บูธรายวัน/VIP/บูธ หลัก',code:'S06'},{route:'',code:''}],
-  [{route:'บูธรายวัน/VIP/บูธ หลัก',code:'S06'},{route:'',code:''},{route:'บูธรายวัน/VIP/บูธ หลัก',code:'S06'},{route:'บูธรายวัน/VIP',code:'S06'},{route:'บูธรายวัน/VIP',code:'S06'},{route:'อำนาจเจริญ',code:'S05'},{route:'',code:''}]
+  [{route:'',code:''},{route:'บูธรายวัน/VIP/บูธ หลัก',code:'S06'},{route:'',code:''},{route:'บูธรายวัน/VIP/บูธ หลัก',code:'S06'},{route:'บูธรายวัน/VIP',code:'S06'},{route:'อำนาจเจริญ',code:'S05'},{route:'',code:''}]
 ];
 
 var SHIP_DATA = [
-  [{route:'',code:''},{route:'เชียงราย',code:'S03'},{route:'ตาก',code:'S03'},{route:'เชียงใหม่',code:'S03'},{route:'ราชบุรี',code:'S03'},{route:'เพชรบุรี',code:'S03'},{route:'เพชรบูรณ์',code:'S03'}],
+  [{route:'หยุด',code:'',off:true},{route:'เชียงราย',code:'S03'},{route:'ตาก',code:'S03'},{route:'เชียงใหม่',code:'S03'},{route:'ราชบุรี',code:'S03'},{route:'เพชรบุรี',code:'S03'},{route:'เพชรบูรณ์',code:'S03'}],
   [{route:'',code:''},{route:'โคราช',code:'S02'},{route:'ชลบุรี 1-2',code:'S02'},{route:'ราชพฤกษ์',code:'S02'},{route:'สระบุรี 1-2',code:'S02'},{route:'สุพรรณบุรี',code:'S02'},{route:'กาญจนบุรี',code:'S02'}],
   [{route:'',code:''},{route:'ขอนแก่น + ร.พ. + มิตรภาพ',code:'S05'},{route:'ระยอง',code:'S05'},{route:'อุบล - บุรีรัมย์',code:'S05'},{route:'ขอนแก่น + ร.พ.',code:'S05'},{route:'นครสวรรค์ 1',code:'S05'},{route:'นครสวรรค์ 2',code:'S05'}],
-  [{route:'หยุด',code:'',off:true},{route:'A/B/G',code:'S01'},{route:'C/F1/F2',code:'S01'},{route:'D/E/G',code:'S01'},{route:'A/B',code:'S01'},{route:'C/F1/F2',code:'S01'},{route:'D/E/G/B',code:'S01'}],
+  [{route:'',code:''},{route:'A/B/G',code:'S01'},{route:'C/F1/F2',code:'S01'},{route:'D/E/G',code:'S01'},{route:'A/B',code:'S01'},{route:'C/F1/F2',code:'S01'},{route:'D/E/G/B',code:'S01'}],
   [{route:'',code:''},{route:'',code:''},{route:'ใต้ - ภูเก็ต',code:'S04'},{route:'',code:''},{route:'สงขลา - นคร',code:'S04'},{route:'ลุงอู๊ด',code:''},{route:'',code:''}],
-  [{route:'',code:''},{route:'บูธ บ้านแห้ว',code:'S06'},{route:'บูธ หลัก',code:'S06'},{route:'กระทุ่มแบน',code:'S06'},{route:'บูธ หลัก',code:'S06'},{route:'',code:''},{route:'บูธหลัก',code:'S06'}],
-  [{route:'',code:''},{route:'',code:''},{route:'',code:''},{route:'',code:''},{route:'นครนายก',code:''},{route:'',code:''},{route:'อำนาจเจริญ',code:'S05'}]
+  [{route:'',code:''},{route:'บูธ บ้านแพ้ว',code:'S06'},{route:'บูธ หลัก',code:'S06'},{route:'กระทุ่มแบน',code:'S06'},{route:'บูธ หลัก',code:'S06'},{route:'',code:''},{route:'บูธหลัก',code:'S06'}],
+  [{route:'',code:''},{route:'',code:''},{route:'',code:''},{route:'',code:''},{route:'นครนายก',code:'S03'},{route:'',code:''},{route:'อำนาจเจริญ',code:'S04'}]
 ];
 
 var STAFF_INFO = [
   {code:'S01',name:'แตงกวา',area:'COCO/ปริมณฑล (กทม./ปริมณฑล/ราชพฤกษ์)'},
-  {code:'S02',name:'บิวตี้',area:'กลาง 2 (สระบุรี1-2/ชลบุรี1-2/โคราช1-2/กระทุ่มแบน/กาญจนบุรี/สุพรรณบุรี)'},
+  {code:'S02',name:'อ้อ',area:'กลาง 2 (สระบุรี1-2/ชลบุรี1-2/โคราช1-2/กระทุ่มแบน/กาญจนบุรี/สุพรรณบุรี)'},
   {code:'S03',name:'อ้อ',area:'เหนือ/ใต้ (เชียงราย/กำแพงเพชร-ตาก/ใต้-ภูเก็ต/เชียงใหม่/สงขลา-นคร/บ่อพลอย/เพชรบูรณ์)'},
   {code:'S04',name:'ว่าง',area:'ว่าง'},
-  {code:'S05',name:'โบว์',area:'อีสาน (ขอนแก่น+รพ+มิตรภาพ/อุบล-บุรีรัมย์/นครสวรรค์1-2/อำนาจเจริญ)'},
-  {code:'S06',name:'อัพ',area:'กลาง 3/รายวัน (รายวัน/ระยอง/ราชบุรี/นครนายก/เพชรบุรี)'},
-  {code:'S07',name:'อุ้ม',area:'ว่าง'}
+  {code:'S05',name:'โบว์',area:'อีสาน (ขอนแก่นจ.อ.พ+รพ+มิตรภาพ/อุบล-บุรีรัมย์/นครสวรรค์1-2/อำนาจเจริญ/ขอนแก่นพฤ.ศ.ส+รพ+มิตรภาพ)'},
+  {code:'S06',name:'โบว์',area:'กลาง 3/รายวัน (รายวัน/ระยอง/ราชบุรี/นครนายก/เพชรบุรี)'},
+  {code:'S07',name:'ว่าง',area:'ว่าง'}
 ];
 
 // ====================================================================
 // Sheet 1: การรวมเส้น
 // ====================================================================
 var MERGE_SCHEDULE = [
-  {day:'อาทิตย์',morning:'ไม่ต้องทำ',noon:'12.00 น. รอบส่งจันทร์',evening:'16.00 น. รอบส่งวันอังคาร',note:''},
-  {day:'จันทร์',morning:'9.30 น. รอบส่งอังคาร',noon:'12.00 น. รอบส่งอังคาร',evening:'16.00 น. รอบส่งวันพุธ',note:''},
-  {day:'อังคาร',morning:'9.30 น. รอบส่งวันพุธ',noon:'12.00 น. รอบส่งวันพุธ',evening:'16.00 น. รอบส่งวันพฤหัสบดี',note:''},
-  {day:'พุธ',morning:'9.30 น. รอบส่งวันพฤหัสบดี',noon:'12.00 น. รอบส่งวันพฤหัสบดี',evening:'16.00 น. รอบส่งวันศุกร์',note:''},
-  {day:'พฤหัสบดี',morning:'9.30 น. รอบส่งวันศุกร์',noon:'12.00 น. รอบส่งวันศุกร์',evening:'14.00 น. รอบส่งเสาร์',note:''},
-  {day:'ศุกร์',morning:'วันหยุด',noon:'วันหยุด',evening:'วันหยุด',note:''},
-  {day:'เสาร์',morning:'วันหยุด',noon:'วันหยุด',evening:'วันหยุด',note:''}
+  {day:'อาทิตย์',noon:'12.00 น. รอบส่งจันทร์',evening:'16.00 น. รอบส่งวันอังคาร'},
+  {day:'จันทร์',noon:'12.00 น. รอบส่งอังคาร',evening:'16.00 น. รอบส่งวันพุธ'},
+  {day:'อังคาร',noon:'12.00 น. รอบส่งวันพุธ',evening:'16.00 น. รอบส่งวันพฤหัสบดี'},
+  {day:'พุธ',noon:'12.00 น. รอบส่งวันพฤหัสบดี',evening:'16.00 น. รอบส่งวันศุกร์'},
+  {day:'พฤหัสบดี',noon:'12.00 น. รอบส่งวันศุกร์',evening:'14.00 น. รอบส่งเสาร์'},
+  {day:'ศุกร์',noon:'วันหยุด',evening:''},
+  {day:'เสาร์',noon:'วันหยุด',evening:''}
 ];
 
 var MERGE_NOTES = [
@@ -85,7 +85,7 @@ var MERGE_NOTES = [
   'การส่งไฟล์เข้ากลุ่ม ตจว. ส่งทุกเส้นที่ทำในวันนั้นๆ (เฉพาะที่รวมในยอดใหญ่)',
   'รวมยอดห้องแพ็ค เอาช่องแถบสีออก แล้วแทรกคอลัมน์ในช่อง C แล้วก็อปปี้วาง',
   'ยอดวันพฤหัส บ่าย 14.30 น. ให้ทำเหมือนตอนเที่ยง ที่มีการส่งสมุด ส่งทั้ง 4 ห้องด้วย',
-  'การส่งเอกสาร : 5 ห้อง: 1.ห้อง QC, 2.ห้อง FG, 3.ห้องจัดของ, 4.ห้องหัวหน้า FG, 5.ห้องแพ็ค (ให้รวมยอดของบูธรายวัน / บูธบริษัท เข้าไปด้วย)',
+  'การส่งเอกสาร : 5 ห้อง: 1.ห้อง QC, 2.ห้อง FG, 3.ห้องจัดของ, 4.ห้องหัวหน้า FG เอาไฟล์รวมยอดทั้งหมด ปริ้นปะหน้ารวมเอกสารแต่ละเส้น, 5.ห้องแพ็ค (ให้รวมยอดของบูธรายวัน / บูธบริษัท เข้าไปด้วย)',
   'ยอดรวมใหญ่ เมื่อบวกกับ บูธรายวัน / บูธบริษัท เข้าไปแล้ว จะต้องเท่ากับยอดห้องแพ็ค',
   'ดูเส้นไหนมีราคา ให้เอาในจากคนที่ดูแลเส้นนั้น เอาแยกไปด้วย แล้วสำเนาใบห้องแพ็คด้วย',
   'การเขียนสมุดส่งสีน้ำเงิน ให้เอาจำนวนเส้นทั้งหมด และนับใบห้องแพ็ครวม นับเพิ่มไปด้วย ตัวอย่าง เช่น วันนั้นมีเส้น 5 เส้น และมีใบห้องแพ็ค 1 ต้องเขียน 6 (ไม่ต้องนับ บูธรายวัน - และบูธบริษัทเข้าไป)',
@@ -137,7 +137,7 @@ var ZONE_ASSIGNMENTS = [
   {route:'กำแพงเพชร-ตาก',orderDay:'จันทร์',region:'เหนือตอนล่าง',staffCode:'S03',staffName:'พี่อ้อ'},
   {route:'เชียงราย',orderDay:'อาทิตย์',region:'เหนือ',staffCode:'S03',staffName:'พี่อ้อ'},
   {route:'เชียงใหม่',orderDay:'อังคาร',region:'เหนือ',staffCode:'S03',staffName:'พี่อ้อ'},
-  {route:'นครนายก',orderDay:'พุธ',region:'กลาง',staffCode:'S03',staffName:'อุ้ม'},
+  {route:'นครนายก',orderDay:'พุธ',region:'กลาง',staffCode:'S03',staffName:'พี่อ้อ'},
   {route:'เพชรบูรณ์',orderDay:'ศุกร์',region:'เหนือตอนล่าง',staffCode:'S03',staffName:'พี่อ้อ'},
   {route:'ใต้-ภูเก็ต',orderDay:'จันทร์',region:'ใต้',staffCode:'S04',staffName:'พี่อ้อ'},
   {route:'สงขลา-นครฯ',orderDay:'พุธ',region:'ใต้',staffCode:'S04',staffName:'พี่อ้อ'},
@@ -148,10 +148,20 @@ var ZONE_ASSIGNMENTS = [
   {route:'นครสวรรค์ 2',orderDay:'ศุกร์',region:'เหนือตอนล่าง',staffCode:'S05',staffName:'โบว์'},
   {route:'อำนาจเจริญ',orderDay:'ศุกร์',region:'ตะวันออกเฉียงเหนือตอนล่าง',staffCode:'S05',staffName:'โบว์'},
   {route:'อุบล-บุรีรัมย์',orderDay:'อังคาร',region:'ภาคตะวันออกเฉียงเหนือ',staffCode:'S05',staffName:'โบว์'},
-  {route:'บูธหลัก',orderDay:'จันทร์/พุธ/ศุกร์',region:'',staffCode:'S06',staffName:'อัพ'},
-  {route:'บูธรายวัน',orderDay:'ทุกวัน',region:'',staffCode:'S06',staffName:'อัพ'},
-  {route:'พนักงาน - บิลของชิม',orderDay:'ทุกวัน',region:'',staffCode:'S06',staffName:'อัพ'},
-  {route:'กาญจนบุรี',orderDay:'ศุกร์',region:'ตะวันตก',staffCode:'S07',staffName:'อุ้ม'}
+  {route:'บูธหลัก',orderDay:'จันทร์/พุธ/ศุกร์',region:'',staffCode:'S06',staffName:'โบว์'},
+  {route:'บูธรายวัน',orderDay:'ทุกวัน',region:'',staffCode:'S06',staffName:'โบว์'},
+  {route:'พนักงาน - บิลของชิม',orderDay:'ทุกวัน',region:'',staffCode:'S06',staffName:'โบว์'},
+  {route:'กาญจนบุรี',orderDay:'ศุกร์',region:'ตะวันตก',staffCode:'S07',staffName:'พี่อ้อ'},
+  {route:'เพชรบุรี',orderDay:'พฤหัสบดี',region:'กลางตอนล่าง',staffCode:'S07',staffName:'พี่อ้อ'},
+  {route:'ระยอง',orderDay:'จันทร์',region:'ตะวันออก',staffCode:'S07',staffName:'พี่อ้อ'},
+  {route:'ราชบุรี',orderDay:'พุธ',region:'กลาง',staffCode:'S07',staffName:'พี่อ้อ'},
+  {route:'Makro',orderDay:'วันจันทร์/พุธ',region:'MDT',staffCode:'S01',staffName:'ฟิวส์ดึง (แตงกวาคีย์)'},
+  {route:'Aeon',orderDay:'จันทร์/ศุกร์',region:'MDT',staffCode:'S03',staffName:'ฟิวส์ดึง (แตงกวาคีย์)'},
+  {route:'TOPS',orderDay:'ศุกร์',region:'MDT',staffCode:'S03',staffName:'ฟิวส์ดึง (แตงกวาคีย์)'},
+  {route:'Big C',orderDay:'ทุกวันเว้นวันเสาร์',region:'MDT',staffCode:'S03',staffName:'ฟิวส์ดึง (แตงกวาคีย์)'},
+  {route:'The Mall',orderDay:'พุธ',region:'MDT',staffCode:'S03',staffName:'ฟิวส์ดึง (แตงกวาคีย์)'},
+  {route:'CJ',orderDay:'ทุกวันเว้นวันอาทิตย์',region:'MDT',staffCode:'S04',staffName:'ฟิวส์ดึง (แตงกวาคีย์)'},
+  {route:'วัตถุดิบ OEM',orderDay:'',region:'',staffCode:'',staffName:'โบว์'}
 ];
 
 // ====================================================================
@@ -160,18 +170,19 @@ var ZONE_ASSIGNMENTS = [
 var BOOTH_MAIN_AREAS = [
   'กรุงเทพมหานคร',
   'จ.นครปฐม อ.เมืองนครปฐม อ.สามพราน อ.พุทธมณฑล',
-  'จ.สมุทรสาคร, อ.กระทุ่มแบน สมุทรสาคร',
-  'จ.นนทบุรี, อ.บางบัวทอง'
+  'จ.สมุทรสาคร',
+  'อ.กระทุ่มแบน สมุทรสาคร',
+  'จ.นนทบุรี',
+  'อ.บางบัวทอง'
 ];
 var BOOTH_DAILY_AREAS = [
   'อ.กำแพงแสน', 'อ.บางเลน', 'อ.นครชัยศรี', 'อ.ดอนตูม'
 ];
 var BUDDY_PAIRS = [
-  {pair:1,person1:'อัพ',off1:'เสาร์',person2:'คนใหม่',off2:'ศุกร์'},
-  {pair:2,person1:'อ้อ',off1:'เสาร์',person2:'โบว์',off2:'ศุกร์'},
-  {pair:3,person1:'แตงกวา',off1:'เสาร์',person2:'ต้นปาล์ม',off2:'เสาร์'},
-  {pair:4,person1:'กาฟิวส์',off1:'เสาร์',person2:'คนใหม่',off2:'ศุกร์'},
-  {pair:5,person1:'เบล',off1:'เสาร์',person2:'ต้นปาล์ม',off2:'เสาร์'}
+  {pair:1,person1:'อัพ',off1:'เสาร์',person2:'บิวตี้',off2:'อาทิตย์'},
+  {pair:2,person1:'อ้อ',off1:'ศุกร์',person2:'โบว์',off2:'ศุกร์'},
+  {pair:3,person1:'แตงกวา',off1:'เสาร์',person2:'',off2:''},
+  {pair:4,person1:'กาฟิวส์',off1:'เสาร์',person2:'',off2:''}
 ];
 
 // ====================================================================
@@ -194,18 +205,20 @@ var MDT_PROD = [
   {name:"Lotus's",days:[false,true,true,true,true,false,false]},
   {name:'Makro',days:[true,false,true,false,false,false,false]},
   {name:'Aeon',days:[true,false,false,false,true,false,false]},
-  {name:'the Mall',days:[false,false,true,false,false,true,false]},
-  {name:'TOPS',days:[false,false,false,false,true,false,false]}
+  {name:'TOPS',days:[false,false,false,false,true,false,false]},
+  {name:'The Mall',days:[false,false,false,false,false,true,false]}
 ];
 
 var MDT_SHIP = [
-  {name:'CJ โพธาราม 21.00',days:[false,true,true,true,true,true,true]},
-  {name:'CJ บางประกง 19.30',days:[false,true,true,true,true,true,true]},
-  {name:'Big C G2 9.00',days:[false,true,true,true,true,true,true]},
-  {name:'Big C G1 16.00',days:[true,true,true,true,true,true,true]},
+  {name:'CJ โพธาราม 21.00',days:[true,true,true,true,true,true,false]},
+  {name:'CJ บางประกง 19.30',days:[true,true,true,true,true,true,false]},
+  {name:'Big C G2 9.00 น.',days:[false,true,true,true,true,true,true]},
+  {name:'Big C G1 16.00 น.',days:[true,true,true,true,true,true,false]},
   {name:"Lotus's",days:[false,false,true,true,true,true,false]},
   {name:'Makro',days:[false,true,false,true,false,false,false]},
-  {name:'Aeon',days:[false,true,false,false,false,true,false]}
+  {name:'Aeon',days:[false,true,false,false,false,true,false]},
+  {name:'TOPS',days:[false,false,false,false,false,true,false]},
+  {name:'The Mall',days:[false,false,false,false,false,false,true]}
 ];
 
 // ====================================================================
@@ -218,34 +231,36 @@ var MASTER_DATA = [
   {no:4,routeCode:'S01',routeName:'COCO D E G',staff:'แตงกวา',empCode:'68080282',empName:'นางสาวกาญจนา ศรีเหรา',orderDays:'จันทร์',prodDays:'อังคาร',shipDays:'พุธ'},
   {no:5,routeCode:'S01',routeName:'COCO A B',staff:'แตงกวา',empCode:'68080282',empName:'นางสาวกาญจนา ศรีเหรา',orderDays:'อังคาร',prodDays:'พุธ',shipDays:'พฤหัสบดี'},
   {no:6,routeCode:'S01',routeName:'COCO A B G',staff:'แตงกวา',empCode:'68080282',empName:'นางสาวกาญจนา ศรีเหรา',orderDays:'ศุกร์',prodDays:'เสาร์',shipDays:'อาทิตย์'},
-  {no:7,routeCode:'S02',routeName:'สระบุรี 1',staff:'บิวตี้',empCode:'69050031',empName:'นายพีรพัฒน์ เพราะเจริญ',orderDays:'อังคาร',prodDays:'พุธ',shipDays:'พฤหัสบดี'},
-  {no:8,routeCode:'S02',routeName:'สระบุรี 2',staff:'บิวตี้',empCode:'69050031',empName:'นายพีรพัฒน์ เพราะเจริญ',orderDays:'อังคาร',prodDays:'พุธ',shipDays:'พฤหัสบดี'},
-  {no:9,routeCode:'S02',routeName:'โคราช',staff:'บิวตี้',empCode:'69050031',empName:'นายพีรพัฒน์ เพราะเจริญ',orderDays:'อาทิตย์',prodDays:'จันทร์',shipDays:'อังคาร'},
-  {no:10,routeCode:'S02',routeName:'สุพรณบุรี',staff:'บิวตี้',empCode:'69050031',empName:'นายพีรพัฒน์ เพราะเจริญ',orderDays:'พุธ',prodDays:'พฤหัสบดี',shipDays:'ศุกร์'},
-  {no:11,routeCode:'S02',routeName:'ชลบุรี 1',staff:'บิวตี้',empCode:'69050031',empName:'นายพีรพัฒน์ เพราะเจริญ',orderDays:'จันทร์',prodDays:'อังคาร',shipDays:'พุธ'},
-  {no:12,routeCode:'S02',routeName:'ชลบุรี 2',staff:'บิวตี้',empCode:'69050031',empName:'นายพีรพัฒน์ เพราะเจริญ',orderDays:'จันทร์',prodDays:'อังคาร',shipDays:'พุธ'},
-  {no:13,routeCode:'S02',routeName:'กาญจนบุรี',staff:'บิวตี้',empCode:'69050031',empName:'นายพีรพัฒน์ เพราะเจริญ',orderDays:'พฤหัสบดี',prodDays:'ศุกร์',shipDays:'เสาร์'},
-  {no:14,routeCode:'S02',routeName:'อำนาญเจริญ',staff:'บิวตี้',empCode:'69050031',empName:'นายพีรพัฒน์ เพราะเจริญ',orderDays:'พฤหัสบดี',prodDays:'ศุกร์',shipDays:'เสาร์'},
-  {no:15,routeCode:'S02',routeName:'โคราช 2',staff:'บิวตี้',empCode:'69050031',empName:'นายพีรพัฒน์ เพราะเจริญ',orderDays:'ศุกร์',prodDays:'เสาร์',shipDays:'อาทิตย์'},
-  {no:16,routeCode:'S02',routeName:'โคราช 1',staff:'บิวตี้',empCode:'69050031',empName:'นายพีรพัฒน์ เพราะเจริญ',orderDays:'ศุกร์',prodDays:'เสาร์',shipDays:'อาทิตย์'},
-  {no:17,routeCode:'S02',routeName:'บ่อพลอย-หลุมรัง (ลุงฮู้ด)',staff:'บิวตี้',empCode:'69050031',empName:'นายพีรพัฒน์ เพราะเจริญ',orderDays:'พุธ',prodDays:'พฤหัสบดี',shipDays:'ศุกร์'},
-  {no:18,routeCode:'S02',routeName:'กระทุ่มแบน',staff:'บิวตี้',empCode:'69050031',empName:'นายพีรพัฒน์ เพราะเจริญ',orderDays:'จันทร์',prodDays:'อังคาร',shipDays:'พุธ'},
+  {no:7,routeCode:'S02',routeName:'สระบุรี 1',staff:'อ้อ',empCode:'69050031',empName:'นายพีรพัฒน์ เพราะเจริญ',orderDays:'อังคาร',prodDays:'พุธ',shipDays:'พฤหัสบดี'},
+  {no:8,routeCode:'S02',routeName:'สระบุรี 2',staff:'อ้อ',empCode:'69050031',empName:'นายพีรพัฒน์ เพราะเจริญ',orderDays:'อังคาร',prodDays:'พุธ',shipDays:'พฤหัสบดี'},
+  {no:9,routeCode:'S02',routeName:'โคราช',staff:'อ้อ',empCode:'69050031',empName:'นายพีรพัฒน์ เพราะเจริญ',orderDays:'อาทิตย์',prodDays:'จันทร์',shipDays:'อังคาร'},
+  {no:10,routeCode:'S02',routeName:'สุพรรณบุรี',staff:'อ้อ',empCode:'69050031',empName:'นายพีรพัฒน์ เพราะเจริญ',orderDays:'พุธ',prodDays:'พฤหัสบดี',shipDays:'ศุกร์'},
+  {no:11,routeCode:'S02',routeName:'ชลบุรี 1',staff:'อ้อ',empCode:'69050031',empName:'นายพีรพัฒน์ เพราะเจริญ',orderDays:'จันทร์',prodDays:'อังคาร',shipDays:'พุธ'},
+  {no:12,routeCode:'S02',routeName:'ชลบุรี 2',staff:'อ้อ',empCode:'69050031',empName:'นายพีรพัฒน์ เพราะเจริญ',orderDays:'จันทร์',prodDays:'อังคาร',shipDays:'พุธ'},
+  {no:13,routeCode:'S02',routeName:'กาญจนบุรี',staff:'อ้อ',empCode:'69050031',empName:'นายพีรพัฒน์ เพราะเจริญ',orderDays:'พฤหัสบดี',prodDays:'ศุกร์',shipDays:'เสาร์'},
+  {no:14,routeCode:'S02',routeName:'อำนาญเจริญ',staff:'อ้อ',empCode:'69050031',empName:'นายพีรพัฒน์ เพราะเจริญ',orderDays:'พฤหัสบดี',prodDays:'ศุกร์',shipDays:'เสาร์'},
+  {no:15,routeCode:'S02',routeName:'โคราช 2',staff:'อ้อ',empCode:'69050031',empName:'นายพีรพัฒน์ เพราะเจริญ',orderDays:'ศุกร์',prodDays:'เสาร์',shipDays:'อาทิตย์'},
+  {no:16,routeCode:'S02',routeName:'โคราช 1',staff:'อ้อ',empCode:'69050031',empName:'นายพีรพัฒน์ เพราะเจริญ',orderDays:'ศุกร์',prodDays:'เสาร์',shipDays:'อาทิตย์'},
+  {no:17,routeCode:'S02',routeName:'บ่อพลอย-หลุมรัง (ลุงฮู้ด)',staff:'อ้อ',empCode:'69050031',empName:'นายพีรพัฒน์ เพราะเจริญ',orderDays:'พุธ',prodDays:'พฤหัสบดี',shipDays:'ศุกร์'},
+  {no:18,routeCode:'S02',routeName:'กระทุ่มแบน',staff:'อ้อ',empCode:'69050031',empName:'นายพีรพัฒน์ เพราะเจริญ',orderDays:'จันทร์',prodDays:'อังคาร',shipDays:'พุธ'},
   {no:19,routeCode:'S03',routeName:'เชียงใหม่',staff:'อ้อ',empCode:'62070003',empName:'นางสาวยุวดี สิงคาน',orderDays:'จันทร์',prodDays:'อังคาร',shipDays:'พุธ'},
   {no:20,routeCode:'S03',routeName:'สงขลา - นครศรีธรรมราช',staff:'อ้อ',empCode:'62070003',empName:'นางสาวยุวดี สิงคาน',orderDays:'อังคาร',prodDays:'พุธ',shipDays:'พฤหัสบดี'},
   {no:21,routeCode:'S03',routeName:'เชียงราย',staff:'อ้อ',empCode:'62070003',empName:'นางสาวยุวดี สิงคาน',orderDays:'อาทิตย์',prodDays:'จันทร์',shipDays:'อังคาร'},
-  {no:22,routeCode:'S03',routeName:'กำแพงเพชร - ตาก',staff:'อ้อ',empCode:'62070003',empName:'นางสาวยุวดี สิงคาน',orderDays:'อาทิตย์',prodDays:'จันทร์',shipDays:'อังคาร'},
-  {no:23,routeCode:'S03',routeName:'ใต้ - ภูเก็ต',staff:'อ้อ',empCode:'62070003',empName:'นางสาวยุวดี สิงคาน',orderDays:'อาทิตย์',prodDays:'จันทร์',shipDays:'อังคาร'},
-  {no:24,routeCode:'S03',routeName:'เพชรบูรณ์',staff:'อ้อ',empCode:'62070003',empName:'นางสาวยุวดี สิงคาน',orderDays:'พฤหัสบดี',prodDays:'ศุกร์',shipDays:'เสาร์'},
-  {no:25,routeCode:'S05',routeName:'นครสวรรค์ 1',staff:'โบว์',empCode:'68120509',empName:'นางสาวสุพัตรา แซ่ตั้น',orderDays:'พุธ',prodDays:'พฤหัสบดี',shipDays:'ศุกร์'},
-  {no:26,routeCode:'S05',routeName:'ขอนแก่น - มิตรภาพ',staff:'โบว์',empCode:'68120509',empName:'นางสาวสุพัตรา แซ่ตั้น',orderDays:'อังคาร',prodDays:'พุธ',shipDays:'พฤหัสบดี'},
-  {no:27,routeCode:'S05',routeName:'นครสวรรค์ 2',staff:'โบว์',empCode:'68120509',empName:'นางสาวสุพัตรา แซ่ตั้น',orderDays:'พฤหัสบดี',prodDays:'ศุกร์',shipDays:'เสาร์'},
-  {no:28,routeCode:'S05',routeName:'อุบลราชธานี - บุรีรัมย์',staff:'โบว์',empCode:'68120509',empName:'นางสาวสุพัตรา แซ่ตั้น',orderDays:'จันทร์',prodDays:'อังคาร',shipDays:'พุธ'},
-  {no:29,routeCode:'S05',routeName:'ขอนแก่น',staff:'โบว์',empCode:'68120509',empName:'นางสาวสุพัตรา แซ่ตั้น',orderDays:'อังคาร',prodDays:'พุธ',shipDays:'พฤหัสบดี'},
-  {no:30,routeCode:'S06',routeName:'ระยอง',staff:'อัพ',empCode:'67120209',empName:'นางสาวจุฑามาศ คุ้มผล',orderDays:'อาทิตย์',prodDays:'จันทร์',shipDays:'อังคาร'},
-  {no:31,routeCode:'S06',routeName:'เพชรบุรี',staff:'อัพ',empCode:'67120209',empName:'นางสาวจุฑามาศ คุ้มผล',orderDays:'พุธ',prodDays:'พฤหัสบดี',shipDays:'ศุกร์'},
-  {no:32,routeCode:'S06',routeName:'บูธหลัก',staff:'อัพ',empCode:'67120209',empName:'นางสาวจุฑามาศ คุ้มผล',orderDays:'อาทิตย์, อังคาร',prodDays:'จันทร์, พุธ',shipDays:'อังคาร, พฤหัสบดี'},
-  {no:33,routeCode:'S06',routeName:'นครนายก',staff:'อัพ',empCode:'67120209',empName:'นางสาวจุฑามาศ คุ้มผล',orderDays:'พุธ',prodDays:'พฤหัสบดี',shipDays:'ศุกร์'},
-  {no:34,routeCode:'S06',routeName:'ราชบุรี',staff:'อัพ',empCode:'67120209',empName:'นางสาวจุฑามาศ คุ้มผล',orderDays:'อังคาร',prodDays:'พุธ',shipDays:'พฤหัสบดี'}
+  {no:22,routeCode:'S06',routeName:'สระแก้ว',staff:'โบว์',empCode:'67120209',empName:'นางสาวจุฑามาศ คุ้มผล',orderDays:'อาทิตย์',prodDays:'จันทร์',shipDays:'อังคาร'},
+  {no:23,routeCode:'S03',routeName:'กำแพงเพชร - ตาก',staff:'อ้อ',empCode:'62070003',empName:'นางสาวยุวดี สิงคาน',orderDays:'อาทิตย์',prodDays:'จันทร์',shipDays:'อังคาร'},
+  {no:24,routeCode:'S03',routeName:'ใต้ - ภูเก็ต',staff:'อ้อ',empCode:'62070003',empName:'นางสาวยุวดี สิงคาน',orderDays:'อาทิตย์',prodDays:'จันทร์',shipDays:'อังคาร'},
+  {no:25,routeCode:'S03',routeName:'เพชรบูรณ์',staff:'อ้อ',empCode:'62070003',empName:'นางสาวยุวดี สิงคาน',orderDays:'พฤหัสบดี',prodDays:'ศุกร์',shipDays:'เสาร์'},
+  {no:26,routeCode:'S05',routeName:'นครสวรรค์ 1',staff:'โบว์',empCode:'68120509',empName:'นางสาวสุพัตรา แซ่ตั้น',orderDays:'พุธ',prodDays:'พฤหัสบดี',shipDays:'ศุกร์'},
+  {no:27,routeCode:'S06',routeName:'ระยอง',staff:'โบว์',empCode:'67120209',empName:'นางสาวจุฑามาศ คุ้มผล',orderDays:'อาทิตย์',prodDays:'จันทร์',shipDays:'อังคาร'},
+  {no:28,routeCode:'S05',routeName:'ขอนแก่น - มิตรภาพ',staff:'โบว์',empCode:'68120509',empName:'นางสาวสุพัตรา แซ่ตั้น',orderDays:'อังคาร',prodDays:'พุธ',shipDays:'พฤหัสบดี'},
+  {no:29,routeCode:'S05',routeName:'นครสวรรค์ 2',staff:'โบว์',empCode:'68120509',empName:'นางสาวสุพัตรา แซ่ตั้น',orderDays:'พฤหัสบดี',prodDays:'ศุกร์',shipDays:'เสาร์'},
+  {no:30,routeCode:'S05',routeName:'อุบลราชธานี - บุรีรัมย์',staff:'โบว์',empCode:'68120509',empName:'นางสาวสุพัตรา แซ่ตั้น',orderDays:'จันทร์',prodDays:'อังคาร',shipDays:'พุธ'},
+  {no:31,routeCode:'S05',routeName:'ขอนแก่น',staff:'โบว์',empCode:'68120509',empName:'นางสาวสุพัตรา แซ่ตั้น',orderDays:'อังคาร',prodDays:'พุธ',shipDays:'พฤหัสบดี'},
+  {no:32,routeCode:'S06',routeName:'เพชรบุรี',staff:'โบว์',empCode:'67120209',empName:'นางสาวจุฑามาศ คุ้มผล',orderDays:'พุธ',prodDays:'พฤหัสบดี',shipDays:'ศุกร์'},
+  {no:33,routeCode:'S06',routeName:'บูธหลัก',staff:'โบว์',empCode:'67120209',empName:'นางสาวจุฑามาศ คุ้มผล',orderDays:'อาทิตย์, อังคาร',prodDays:'จันทร์, พุธ',shipDays:'อังคาร, พฤหัสบดี'},
+  {no:34,routeCode:'S06',routeName:'นครนายก',staff:'โบว์',empCode:'67120209',empName:'นางสาวจุฑามาศ คุ้มผล',orderDays:'พุธ',prodDays:'พฤหัสบดี',shipDays:'ศุกร์'},
+  {no:35,routeCode:'S06',routeName:'ราชบุรี',staff:'โบว์',empCode:'67120209',empName:'นางสาวจุฑามาศ คุ้มผล',orderDays:'อังคาร',prodDays:'พุธ',shipDays:'พฤหัสบดี'},
+  {no:36,routeCode:'S06',routeName:'บูธรายวัน/บูธบริษัท',staff:'โบว์',empCode:'67120209',empName:'นางสาวจุฑามาศ คุ้มผล',orderDays:'อาทิตย์, ศุกร์',prodDays:'จันทร์, เสาร์',shipDays:'อังคาร, อาทิตย์'}
 ];
 
 // ====================================================================
@@ -401,15 +416,14 @@ function renderTabSchedule(){
 function renderTabMerge(){
   var h = '<div class="om-section-title">การทำสรุปเส้น</div>';
 
-  var headers = ['วัน','เช้า เก็บตกหลังจาก 16.00 น. วันก่อนหน้า','ยอดจริงของวันนั้น ส่งไฟล์ลงกลุ่ม และ ส่งใบตามห้อง 4 ห้อง','ยอดเย็น'];
+  var headers = ['วัน','ยอดจริงของวันนั้น ส่งไฟล์ลงกลุ่ม และ ส่งใบตามห้อง 4 ห้อง','ยอดเย็น'];
   var rows = MERGE_SCHEDULE.map(function(r){
-    var isOff = (r.morning === 'วันหยุด');
+    var isOff = (r.noon === 'วันหยุด');
     var style = isOff ? 'background:#fee2e2;color:#991b1b;font-weight:600' : '';
     return [
       '<span style="font-weight:700;'+style+'">'+r.day+'</span>',
-      '<span style="'+style+'">'+r.morning+'</span>',
       '<span style="'+style+'">'+r.noon+'</span>',
-      '<span style="'+style+'">'+r.evening+'</span>'
+      '<span style="'+style+'">'+(r.evening||'')+'</span>'
     ];
   });
   h += buildSimpleTable(headers, rows, {leftAlign:true});

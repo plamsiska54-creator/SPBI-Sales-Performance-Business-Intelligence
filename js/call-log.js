@@ -321,6 +321,38 @@ function openCallModal(editId){
 
   overlay.innerHTML = html;
 
+  // Auto-fill ข้อมูลลูกค้าเมื่อกรอกรหัส
+  var custIdInput = overlay.querySelector('#cl-customerId');
+  if (custIdInput) {
+    custIdInput.addEventListener('input', function() {
+      var q = (this.value || '').trim().toLowerCase();
+      if (!q) return;
+      // ใช้รายชื่อที่รวมส่วนที่แก้ในหน้าฐานข้อมูลลูกค้าแล้ว
+      // (เดิมอ่านคีย์ custDB ตรง ๆ ซึ่งเลิกใช้แล้วเพราะกินพื้นที่ localStorage เกินโควตา)
+      var custDB = [];
+      if (typeof window.getCustomerDB === 'function') custDB = window.getCustomerDB() || [];
+      if (!custDB.length && typeof CUST_DEFAULT_DATA !== 'undefined') custDB = CUST_DEFAULT_DATA;
+      var found = null;
+      for (var i = 0; i < custDB.length; i++) {
+        if ((custDB[i].code || '').toLowerCase() === q) { found = custDB[i]; break; }
+      }
+      if (found) {
+        var nameEl = overlay.querySelector('#cl-customerName');
+        var storeEl = overlay.querySelector('#cl-storeName');
+        var phoneEl = overlay.querySelector('#cl-phone');
+        var provEl = overlay.querySelector('#cl-province');
+        var distEl = overlay.querySelector('#cl-district');
+        var chEl = overlay.querySelector('#cl-salesChannel');
+        if (nameEl) nameEl.value = found.name || '';
+        if (storeEl) storeEl.value = found.name || '';
+        if (phoneEl && found.phone) phoneEl.value = found.phone;
+        if (provEl) provEl.value = found.province || '';
+        if (distEl) distEl.value = found.district || '';
+        if (chEl && found.channel) chEl.value = found.channel;
+      }
+    });
+  }
+
   // ปิด modal เมื่อคลิก overlay
   overlay.addEventListener('click', function(e){
     if(e.target === overlay) overlay.remove();

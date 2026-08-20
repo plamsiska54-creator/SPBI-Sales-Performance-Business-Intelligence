@@ -447,3 +447,277 @@ function renderAdminTarget(){
 
   el.innerHTML=html;
 }
+
+// ══════════════════════════════════════
+// Overview: Target Dashboard (ov-target)
+// ══════════════════════════════════════
+function _ovTargetToggleFilter(hide){
+  var sel='[data-preset="thismonth"],[data-preset="lastmonth"],[data-preset="3months"],#quarterDropdown';
+  var seps=document.querySelectorAll('#quickPeriodBtns .filter-sep');
+  document.querySelectorAll(sel).forEach(function(b){b.style.display=hide?'none':'';});
+  if(seps[0]) seps[0].style.display=hide?'none':'';
+}
+
+function renderOvTarget(){
+  _ovTargetToggleFilter(true);
+  var el=document.getElementById('ovTargetContent');
+  if(!el||typeof TARGET_2026==='undefined') return;
+
+  var yr=typeof _currentYearCE!=='undefined'?_currentYearCE:2026;
+  var tgt;
+  if(yr===2026){
+    tgt=_getTargetData();
+    _tgtRecalcTotals(tgt);
+  } else {
+    var raw=getTargetByYear(yr);
+    tgt={mt:raw.mt,amazon:raw.amazon,booth:raw.booth,online:raw.online,trading:raw.trading||{}};
+  }
+  var base=getTargetByYear(yr);
+  var TH=TARGET_2026.MONTHS_TH;
+  var MONTHS_12=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  var yearBE=yr+543;
+
+  // Period filter — use currentMonth from app.js
+  var selMonths=(typeof _resolveMonths==='function')?_resolveMonths():MONTHS_12.slice(0,6);
+  var selIndices=selMonths.map(function(m){return MONTHS_12.indexOf(m);}).filter(function(i){return i>=0;});
+  var isYTD=(typeof currentMonth!=='undefined'&&currentMonth==='YTD');
+
+  // Period label
+  var periodLabel;
+  if(isYTD){
+    periodLabel='YTD ('+TH[selIndices[0]]+'–'+TH[selIndices[selIndices.length-1]]+')';
+  } else if(selIndices.length===1){
+    periodLabel=TH[selIndices[0]];
+  } else if(selIndices.length===12){
+    periodLabel='ทั้งปี';
+  } else {
+    periodLabel=TH[selIndices[0]]+'–'+TH[selIndices[selIndices.length-1]];
+  }
+
+  var sections=[
+    {key:'mt',title:'Modern Trade',icon:'🏪',color:'#4f46e5',total:base.mtTotal},
+    {key:'amazon',title:'Amazon & ร้านของฝาก',icon:'📦',color:'#0891b2',total:base.amazonTotal},
+    {key:'booth',title:'Booth',icon:'🏬',color:'#f56e00',total:base.boothTotal},
+    {key:'online',title:'Online',icon:'🌐',color:'#10b981',total:base.onlineTotal}
+  ];
+  if(tgt.trading&&Object.keys(tgt.trading).length) sections.push({key:'trading',title:'Trading',icon:'🤝',color:'#8b5cf6',total:null});
+
+  // Full year monthly totals (for chart)
+  var grandMonthly=new Array(12).fill(0);
+  sections.forEach(function(sec){
+    var d=tgt[sec.key]||{};
+    Object.keys(d).forEach(function(k){
+      for(var i=0;i<12;i++) grandMonthly[i]+=(d[k].monthly[i]||0);
+    });
+  });
+  var grandTotalYear=grandMonthly.reduce(function(s,v){return s+v;},0);
+
+  // Period-filtered sum helper
+  function _sumPeriod(monthlyArr){
+    var s=0;
+    selIndices.forEach(function(i){s+=(monthlyArr[i]||0);});
+    return s;
+  }
+
+  // Period-filtered grand total
+  var grandTotalPeriod=_sumPeriod(grandMonthly);
+  var avgPerMonth=selIndices.length?Math.round(grandTotalPeriod/selIndices.length):0;
+
+  var html='';
+
+  // Header
+  html+='<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:20px">';
+  html+='<div>';
+  html+='<h2 style="margin:0;font-size:20px;color:var(--text)">🎯 เป้าหมายยอดขาย ปี '+yearBE+'</h2>';
+  html+='<p style="margin:4px 0 0;font-size:13px;color:var(--text2)">ข้อมูลเป้าหมายรายช่องทาง รายเดือน — ซิงค์กับแผงแอดมิน</p>';
+  html+='</div>';
+  var badges='';
+  if(yr===2026&&localStorage.getItem(_TARGET_LS_KEY)){
+    badges+='<span style="background:#fef3c7;color:#92400e;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:600;border:1px solid #fbbf24;margin-right:6px">✏️ แก้ไขจากแอดมิน</span>';
+  }
+  badges+='<span style="background:#eff6ff;color:#1e40af;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:600;border:1px solid #93c5fd">📅 '+periodLabel+'</span>';
+  html+=badges;
+  html+='</div>';
+
+  // Grand KPI cards
+  html+='<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:24px">';
+  html+='<div style="background:linear-gradient(135deg,#4f46e5,#7c3aed);border-radius:14px;padding:18px;color:#fff">';
+  html+='<div style="font-size:12px;opacity:.8">เป้าหมายช่วงเลือก</div>';
+  html+='<div style="font-size:26px;font-weight:800;margin-top:4px">'+fmtTargetM(grandTotalPeriod)+'</div>';
+  html+='<div style="font-size:11px;opacity:.7;margin-top:4px">'+periodLabel+' '+yearBE+' ('+selIndices.length+' เดือน)</div>';
+  html+='</div>';
+  html+='<div style="background:linear-gradient(135deg,#f56e00,#fb923c);border-radius:14px;padding:18px;color:#fff">';
+  html+='<div style="font-size:12px;opacity:.8">เป้าหมายรวมทั้งปี</div>';
+  html+='<div style="font-size:26px;font-weight:800;margin-top:4px">'+fmtTargetM(grandTotalYear)+'</div>';
+  html+='<div style="font-size:11px;opacity:.7;margin-top:4px">'+yearBE+' (12 เดือน)</div>';
+  html+='</div>';
+  html+='<div style="background:linear-gradient(135deg,#0891b2,#22d3ee);border-radius:14px;padding:18px;color:#fff">';
+  html+='<div style="font-size:12px;opacity:.8">เฉลี่ยต่อเดือน</div>';
+  html+='<div style="font-size:26px;font-weight:800;margin-top:4px">'+fmtTargetM(avgPerMonth)+'</div>';
+  html+='<div style="font-size:11px;opacity:.7;margin-top:4px">เป้าช่วงเลือก ÷ '+selIndices.length+' เดือน</div>';
+  html+='</div>';
+
+  // Per-channel mini KPIs (period-filtered)
+  sections.forEach(function(sec){
+    var secData=tgt[sec.key]||{};
+    var st=0;
+    Object.keys(secData).forEach(function(k){st+=_sumPeriod(secData[k].monthly);});
+    var pct=grandTotalPeriod?(st/grandTotalPeriod*100):0;
+    html+='<div style="background:var(--surface);border-radius:14px;padding:18px;border:1px solid var(--border);border-left:4px solid '+sec.color+'">';
+    html+='<div style="font-size:12px;color:var(--text2)">'+sec.icon+' '+sec.title+'</div>';
+    html+='<div style="font-size:22px;font-weight:800;color:var(--text);margin-top:4px">'+fmtTargetM(st)+'</div>';
+    html+='<div style="font-size:11px;color:'+sec.color+';margin-top:4px;font-weight:600">'+pct.toFixed(1)+'% ของเป้าช่วงเลือก</div>';
+    html+='</div>';
+  });
+  html+='</div>';
+
+  // Monthly bar chart via canvas
+  html+='<div style="background:var(--surface);border-radius:14px;padding:20px;border:1px solid var(--border);margin-bottom:20px">';
+  html+='<h3 style="margin:0 0 14px;font-size:15px;color:var(--text)">📊 เป้าหมายรายเดือน</h3>';
+  html+='<canvas id="ovTargetMonthlyChart" height="260" style="width:100%"></canvas>';
+  html+='</div>';
+
+  // Breakdown tables per section
+  sections.forEach(function(sec){
+    var secData=tgt[sec.key]||{};
+    var keys=Object.keys(secData);
+    if(!keys.length) return;
+
+    html+='<div style="background:var(--surface);border-radius:14px;padding:18px;border:1px solid var(--border);margin-bottom:16px">';
+    html+='<div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">';
+    html+='<span style="font-size:18px">'+sec.icon+'</span>';
+    html+='<h3 style="margin:0;font-size:15px;color:var(--text)">'+sec.title+' <span style="font-size:12px;color:var(--text2);font-weight:400">('+keys.length+' ช่องทาง)</span></h3>';
+    html+='</div>';
+    html+='<div style="overflow-x:auto"><table class="data-table"><thead><tr>';
+    html+='<th style="min-width:120px;text-align:left">ช่องทาง</th>';
+    for(var i=0;i<12;i++) html+='<th style="text-align:right;font-size:11px;min-width:75px">'+TH[i]+'</th>';
+    html+='<th style="text-align:right;font-weight:800;min-width:85px">รวมปี</th>';
+    html+='</tr></thead><tbody>';
+
+    var secMonthly=new Array(12).fill(0), secTotal=0;
+    keys.forEach(function(k){
+      var item=secData[k];
+      var label=item.label||k;
+      var rowTotal=0;
+      html+='<tr><td style="font-weight:600;white-space:nowrap">'+label+'</td>';
+      for(var i=0;i<12;i++){
+        var v=item.monthly[i]||0;
+        secMonthly[i]+=v;
+        rowTotal+=v;
+        var isSelected=selIndices.indexOf(i)>=0;
+        var cellStyle='text-align:right;font-size:11px;font-variant-numeric:tabular-nums';
+        if(!isSelected) cellStyle+=';opacity:0.35';
+        html+='<td style="'+cellStyle+'">'+Math.round(v).toLocaleString('th-TH')+'</td>';
+      }
+      secTotal+=rowTotal;
+      html+='<td style="text-align:right;font-weight:700;color:'+sec.color+'">'+fmtTargetM(rowTotal)+'</td></tr>';
+    });
+
+    html+='<tr style="background:var(--surface2);font-weight:700"><td>รวม '+sec.title+'</td>';
+    for(var i=0;i<12;i++){
+      var isSelected=selIndices.indexOf(i)>=0;
+      var sumStyle='text-align:right;font-size:11px';
+      if(!isSelected) sumStyle+=';opacity:0.35';
+      html+='<td style="'+sumStyle+'">'+Math.round(secMonthly[i]).toLocaleString('th-TH')+'</td>';
+    }
+    html+='<td style="text-align:right;font-weight:800;color:'+sec.color+'">'+fmtTargetM(secTotal)+'</td></tr>';
+    html+='</tbody></table></div></div>';
+  });
+
+  // Grand total monthly summary
+  html+='<div style="background:linear-gradient(135deg,#eff6ff,#f0f9ff);border-radius:14px;padding:18px;border:1px solid #93c5fd;margin-bottom:16px">';
+  html+='<h3 style="margin:0 0 12px;font-size:15px;color:#1e40af">📋 สรุปเป้าหมายรวมรายเดือน</h3>';
+  html+='<div style="overflow-x:auto"><table class="data-table"><thead><tr><th style="text-align:left">ช่องทาง</th>';
+  for(var i=0;i<12;i++) html+='<th style="text-align:right;font-size:11px">'+TH[i]+'</th>';
+  html+='<th style="text-align:right;font-weight:800">รวมปี</th></tr></thead><tbody>';
+
+  sections.forEach(function(sec){
+    var secData=tgt[sec.key]||{};
+    var sm=new Array(12).fill(0), st=0;
+    Object.keys(secData).forEach(function(k){for(var i=0;i<12;i++){sm[i]+=(secData[k].monthly[i]||0);}});
+    st=sm.reduce(function(s,v){return s+v;},0);
+    html+='<tr><td style="font-weight:600">'+sec.icon+' '+sec.title+'</td>';
+    for(var i=0;i<12;i++){
+      var isSelected=selIndices.indexOf(i)>=0;
+      var smStyle='text-align:right;font-size:11px;font-variant-numeric:tabular-nums';
+      if(!isSelected) smStyle+=';opacity:0.35';
+      html+='<td style="'+smStyle+'">'+fmtTargetM(sm[i])+'</td>';
+    }
+    html+='<td style="text-align:right;font-weight:700;color:'+sec.color+'">'+fmtTargetM(st)+'</td></tr>';
+  });
+
+  html+='<tr style="background:#dbeafe;font-weight:800"><td>🏆 รวมทั้งหมด</td>';
+  for(var i=0;i<12;i++){
+    var isSelected=selIndices.indexOf(i)>=0;
+    var tdStyle='text-align:right;font-size:12px';
+    if(!isSelected) tdStyle+=';opacity:0.35';
+    html+='<td style="'+tdStyle+'">'+fmtTargetM(grandMonthly[i])+'</td>';
+  }
+  html+='<td style="text-align:right;font-size:14px;color:#4f46e5">'+fmtTargetM(grandTotalYear)+'</td></tr>';
+  html+='</tbody></table></div></div>';
+
+  el.innerHTML=html;
+
+  // Draw monthly chart with period highlighting
+  _ovTargetDrawChart(grandMonthly, sections, tgt, TH, selIndices);
+}
+
+function _ovTargetDrawChart(grandMonthly, sections, tgt, TH, selIndices){
+  var canvas=document.getElementById('ovTargetMonthlyChart');
+  if(!canvas) return;
+  var ctx=canvas.getContext('2d');
+  var w=canvas.width=canvas.parentElement.clientWidth-40;
+  var h=canvas.height=260;
+  ctx.clearRect(0,0,w,h);
+
+  var maxVal=Math.max.apply(null,grandMonthly)||1;
+  maxVal=Math.ceil(maxVal/10000000)*10000000;
+  var chartH=h-50, startX=55, chartW=w-startX-10;
+  var barGroupW=chartW/12;
+  var colors=['#4f46e5','#0891b2','#f56e00','#10b981','#8b5cf6'];
+  var textColor=getComputedStyle(document.documentElement).getPropertyValue('--text2')||'#666';
+  var gridColor=getComputedStyle(document.documentElement).getPropertyValue('--border')||'#ddd';
+
+  // Grid lines
+  ctx.strokeStyle=gridColor; ctx.lineWidth=1;
+  for(var g=0;g<=5;g++){
+    var y=10+chartH-chartH*g/5;
+    ctx.beginPath(); ctx.moveTo(startX,y); ctx.lineTo(w-10,y); ctx.stroke();
+    ctx.fillStyle=textColor; ctx.font='10px sans-serif'; ctx.textAlign='right';
+    ctx.fillText(fmtTargetM(Math.round(maxVal*g/5)),startX-5,y+3);
+  }
+
+  // Stacked bars
+  var allSelected=!selIndices||selIndices.length===12;
+  for(var m=0;m<12;m++){
+    var x=startX+m*barGroupW;
+    var barW=barGroupW*0.6;
+    var bx=x+(barGroupW-barW)/2;
+    var yBottom=10+chartH;
+    var isSel=allSelected||(selIndices&&selIndices.indexOf(m)>=0);
+    ctx.globalAlpha=isSel?1:0.25;
+    sections.forEach(function(sec,si){
+      var secData=tgt[sec.key]||{};
+      var val=0;
+      Object.keys(secData).forEach(function(k){val+=(secData[k].monthly[m]||0);});
+      var barH=(val/maxVal)*chartH;
+      ctx.fillStyle=colors[si%colors.length];
+      ctx.fillRect(bx,yBottom-barH,barW,barH);
+      yBottom-=barH;
+    });
+    ctx.globalAlpha=1;
+    // Month label
+    ctx.fillStyle=textColor; ctx.font='11px sans-serif'; ctx.textAlign='center';
+    ctx.fillText(TH[m],bx+barW/2,h-5);
+  }
+
+  // Legend
+  var lx=startX;
+  sections.forEach(function(sec,si){
+    ctx.fillStyle=colors[si%colors.length];
+    ctx.fillRect(lx,h-25,10,10);
+    ctx.fillStyle=textColor; ctx.font='10px sans-serif'; ctx.textAlign='left';
+    ctx.fillText(sec.title,lx+14,h-16);
+    lx+=ctx.measureText(sec.title).width+28;
+  });
+}

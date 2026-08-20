@@ -275,13 +275,13 @@ function renderMentionsChart(weeklyMentions, activePlatforms) {
     options: {
       scales: {
         x: {
-          grid: { color: 'rgba(255,255,255,0.05)' },
-          ticks: { color: '#999' }
+          grid: { color: 'rgba(0,0,0,0.06)' },
+          ticks: { color: '#718096' }
         },
         y: {
           beginAtZero: true,
-          grid: { color: 'rgba(255,255,255,0.05)' },
-          ticks: { color: '#999' }
+          grid: { color: 'rgba(0,0,0,0.06)' },
+          ticks: { color: '#718096' }
         }
       },
       plugins: {
@@ -347,7 +347,7 @@ function renderSentimentChart(weeklySentiment) {
       plugins: {
         legend: {
           position: 'bottom',
-          labels: { color: '#ccc', padding: 16 }
+          labels: { color: '#4a5568', padding: 16 }
         },
         tooltip: {
           callbacks: {
@@ -397,12 +397,12 @@ function renderHashtagsChart(hashtags) {
       scales: {
         x: {
           beginAtZero: true,
-          grid: { color: 'rgba(255,255,255,0.05)' },
-          ticks: { color: '#999' }
+          grid: { color: 'rgba(0,0,0,0.06)' },
+          ticks: { color: '#718096' }
         },
         y: {
           grid: { display: false },
-          ticks: { color: '#ccc', font: { size: 11 } }
+          ticks: { color: '#4a5568', font: { size: 11 } }
         }
       },
       plugins: {
@@ -442,12 +442,12 @@ function renderPlatformsChart(platforms, activePlatforms) {
       scales: {
         x: {
           grid: { display: false },
-          ticks: { color: '#ccc' }
+          ticks: { color: '#4a5568' }
         },
         y: {
           beginAtZero: true,
-          grid: { color: 'rgba(255,255,255,0.05)' },
-          ticks: { color: '#999' }
+          grid: { color: 'rgba(0,0,0,0.06)' },
+          ticks: { color: '#718096' }
         }
       },
       plugins: {

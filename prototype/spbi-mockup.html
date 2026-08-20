@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SPBI Prototype - Sales Performance & Business Intelligence</title>
+<style>
+/* === THEME (reused from dashboard.css) === */
+:root {
+  --bg: #fef7ed;
+  --surface: #fffcf7;
+  --surface2: #fef9f0;
+  --border: #efd9b8;
+  --accent: #ea580c;
+  --accent2: #d97706;
+  --green: #16a34a;
+  --green-bg: #dcfce7;
+  --red: #dc2626;
+  --red-bg: #fee2e2;
+  --yellow: #b45309;
+  --yellow-bg: #fef3c7;
+  --text: #1c1410;
+  --text2: #6b4c35;
+  --muted: #a3866e;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', Tahoma, sans-serif; font-size: 14px; min-height: 100vh; }
+
+/* === PROTOTYPE BANNER === */
+.proto-banner {
+  background: #1e293b; color: #fbbf24; text-align: center; padding: 6px 16px;
+  font-size: 11px; font-weight: 700; letter-spacing: 1px; position: sticky; top: 0; z-index: 9999;
+}
+.proto-banner span { color: #94a3b8; font-weight: 400; margin-left: 8px; }
+
+/* === LOGIN PAGE === */
+.login-page {
+  min-height: 100vh; display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(135deg, #ea580c 0%, #d97706 50%, #92400e 100%);
+  position: relative; overflow: hidden;
+}
+.login-page .deco { position: absolute; border-radius: 50%; background: rgba(255,255,255,.08); }
+.login-page .deco1 { width: 400px; height: 400px; top: -120px; right: -100px; }
+.login-page .deco2 { width: 280px; height: 280px; bottom: -80px; left: -80px; }
+.login-page .deco3 { width: 150px; height: 150px; top: 60%; left: 15%; background: rgba(255,255,255,.05); }
+
+.login-card {
+  background: #fff; border-radius: 20px; padding: 48px 40px 40px; width: 100%; max-width: 420px;
+  box-shadow: 0 20px 60px rgba(0,0,0,.25); position: relative; z-index: 1;
+}
+.login-logo { text-align: center; margin-bottom: 32px; }
+.login-logo h1 { font-size: 26px; font-weight: 900; color: var(--accent); line-height: 1.2; }
+.login-logo .sub { font-size: 11px; color: var(--muted); letter-spacing: 2px; margin-top: 6px; }
+.login-logo .brand { font-size: 14px; color: var(--text2); margin-top: 4px; font-weight: 600; }
+
+.login-field { margin-bottom: 20px; }
+.login-field label { display: block; font-size: 12px; font-weight: 700; color: var(--text2); margin-bottom: 6px; }
+.login-field input {
+  width: 100%; padding: 12px 16px; border: 1.5px solid var(--border); border-radius: 10px;
+  font-size: 14px; color: var(--text); background: var(--bg); outline: none; transition: border .2s;
+}
+.login-field input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(234,88,12,.12); }
+
+.login-btn {
+  width: 100%; padding: 14px; background: linear-gradient(135deg, #ea580c, #d97706); color: #fff;
+  border: none; border-radius: 12px; font-size: 16px; font-weight: 700; cursor: pointer;
+  transition: all .2s; margin-top: 8px;
+}
+.login-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(234,88,12,.4); }
+.login-btn:active { transform: translateY(0); }
+
+.login-error {
+  background: var(--red-bg); color: var(--red); padding: 10px 14px; border-radius: 8px;
+  font-size: 12px; font-weight: 600; margin-top: 12px; display: none; text-align: center;
+}
+.login-hint {
+  margin-top: 20px; padding: 14px; background: var(--surface2); border: 1px dashed var(--border);
+  border-radius: 10px; font-size: 11px; color: var(--text2); line-height: 1.8;
+}
+.login-hint strong { color: var(--accent); }
+
+/* === DASHBOARD === */
+.dashboard-page { display: none; }
+
+.header {
+  background: linear-gradient(135deg, #ea580c 0%, #f97316 50%, #d97706 100%);
+  padding: 14px 32px; display: flex; align-items: center; justify-content: space-between;
+  box-shadow: 0 2px 12px rgba(234,88,12,.25);
+}
+.header-left h1 { font-size: 22px; font-weight: 900; color: #fff8e7; letter-spacing: 0.5px; }
+.header-left .sub { font-size: 11px; color: rgba(255,255,255,.65); margin-top: 3px; }
+.header-right { display: flex; align-items: center; gap: 12px; }
+
+.user-info { display: flex; align-items: center; gap: 10px; }
+.user-avatar {
+  width: 36px; height: 36px; border-radius: 50%; background: rgba(255,255,255,.2);
+  display: flex; align-items: center; justify-content: center; font-size: 16px; color: #fff; font-weight: 700;
+  border: 2px solid rgba(255,255,255,.3);
+}
+.user-name { font-size: 13px; font-weight: 600; color: #fff; }
+.role-badge {
+  display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 10px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .5px;
+}
+.role-badge.admin { background: #fbbf24; color: #92400e; }
+.role-badge.manager { background: #86efac; color: #14532d; }
+.role-badge.sales { background: #93c5fd; color: #1e3a5f; }
+.role-badge.viewer { background: rgba(255,255,255,.2); color: #fff; border: 1px solid rgba(255,255,255,.3); }
+
+.bell-btn {
+  position: relative; background: rgba(255,255,255,.15); border: 1px solid rgba(255,255,255,.25);
+  border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;
+  cursor: pointer; font-size: 18px; transition: all .2s;
+}
+.bell-btn:hover { background: rgba(255,255,255,.25); }
+.bell-dot {
+  position: absolute; top: 4px; right: 4px; width: 10px; height: 10px; background: #ef4444;
+  border-radius: 50%; border: 2px solid #ea580c; animation: bellPulse 2s infinite;
+}
+@keyframes bellPulse { 0%,100% { opacity:1; } 50% { opacity:.4; } }
+
+.logout-btn {
+  background: rgba(255,255,255,.15); border: 1px solid rgba(255,255,255,.25); color: #fff;
+  padding: 6px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer;
+  transition: all .2s;
+}
+.logout-btn:hover { background: rgba(255,255,255,.3); }
+
+/* Role Switcher (prototype only) */
+.role-switcher {
+  background: #1e293b; padding: 8px 32px; display: flex; align-items: center; gap: 10px;
+}
+.role-switcher label { font-size: 11px; color: #94a3b8; font-weight: 600; letter-spacing: .5px; }
+.role-sw-btn {
+  padding: 5px 14px; border-radius: 16px; font-size: 11px; font-weight: 700; cursor: pointer;
+  border: 1.5px solid #475569; color: #94a3b8; background: transparent; transition: all .18s;
+}
+.role-sw-btn:hover { border-color: #fbbf24; color: #fbbf24; }
+.role-sw-btn.active { background: #fbbf24; color: #1e293b; border-color: #fbbf24; }
+
+/* Filter Bar */
+.filter-bar {
+  background: var(--surface); border-bottom: 1px solid var(--border); padding: 10px 32px;
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  box-shadow: 0 1px 4px rgba(0,0,0,.06);
+}
+.filter-label { font-size: 12px; font-weight: 600; color: var(--text2); white-space: nowrap; }
+.fmtab {
+  padding: 6px 14px; border-radius: 20px; cursor: pointer; font-size: 12px; font-weight: 600;
+  color: var(--text2); background: var(--bg); border: 1.5px solid var(--border); transition: all .18s;
+  user-select: none;
+}
+.fmtab:hover:not(.active) { border-color: var(--accent); color: var(--accent); background: #fff7ed; }
+.fmtab.active { background: var(--accent); color: #fff; border-color: var(--accent); box-shadow: 0 2px 8px rgba(234,88,12,.3); }
+
+/* Tabs */
+.tabs {
+  display: flex; gap: 2px; padding: 8px 32px 0; background: var(--surface);
+  border-bottom: 2px solid var(--border); overflow-x: auto; scroll-behavior: smooth;
+  scrollbar-width: none; box-shadow: 0 2px 8px rgba(0,0,0,.08);
+}
+.tabs::-webkit-scrollbar { display: none; }
+.tab {
+  padding: 12px 16px; cursor: pointer; font-size: 13px; font-weight: 500; color: var(--muted);
+  border-bottom: 3px solid transparent; margin-bottom: -2px; transition: all .18s;
+  white-space: nowrap; user-select: none; position: relative;
+}
+.tab.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 600; }
+.tab:hover:not(.active) { color: var(--text2); background: var(--bg); }
+
+/* Brand Strip */
+.brand-strip { height: 6px; background: linear-gradient(90deg, #ea580c, #f97316, #d97706, #fbbf24, #d97706, #f97316, #ea580c); }
+
+/* Main Content */
+.main { padding: 24px 32px; max-width: 1400px; margin: 0 auto; }
+.section { display: none; }
+.section.active { display: block; }
+
+/* KPI Grid */
+.kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+.kpi-card {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
+  padding: 20px 22px; position: relative; overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,.07); transition: box-shadow .2s, transform .2s;
+}
+.kpi-card:hover { box-shadow: 0 6px 20px rgba(0,0,0,.12); transform: translateY(-2px); }
+.kpi-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; border-radius: 16px 16px 0 0;
+}
+.kpi-card.orange::before { background: linear-gradient(90deg, #ea580c, #f97316); }
+.kpi-card.yellow::before { background: linear-gradient(90deg, #d97706, #fbbf24); }
+.kpi-card.green::before { background: linear-gradient(90deg, #16a34a, #22c55e); }
+.kpi-card.red::before { background: linear-gradient(90deg, #dc2626, #ef4444); }
+.kpi-icon { font-size: 28px; margin-bottom: 8px; }
+.kpi-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .6px; margin-bottom: 6px; font-weight: 600; }
+.kpi-value { font-size: 28px; font-weight: 800; color: var(--text); line-height: 1.1; }
+.kpi-sub { font-size: 12px; color: var(--text2); margin-top: 6px; }
+.kpi-badge {
+  display: inline-flex; align-items: center; gap: 3px; padding: 3px 9px; border-radius: 12px;
+  font-size: 11px; font-weight: 700; margin-top: 8px;
+}
+.kpi-badge.pos { background: var(--green-bg); color: var(--green); }
+.kpi-badge.neg { background: var(--red-bg); color: var(--red); }
+.kpi-badge.warn { background: var(--yellow-bg); color: var(--yellow); }
+
+/* Chart Placeholder */
+.chart-placeholder {
+  background: var(--surface); border: 2px dashed var(--border); border-radius: 14px;
+  padding: 40px 20px; text-align: center; color: var(--muted); min-height: 260px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;
+}
+.chart-placeholder .icon { font-size: 48px; opacity: .4; }
+.chart-placeholder .label { font-size: 13px; font-weight: 600; }
+.chart-placeholder .note { font-size: 11px; color: var(--muted); }
+
+/* Cards */
+.card {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
+  padding: 20px 22px; box-shadow: 0 1px 6px rgba(0,0,0,.05);
+}
+.card-title {
+  font-size: 12px; font-weight: 700; color: var(--text2); text-transform: uppercase;
+  letter-spacing: .5px; margin-bottom: 16px;
+}
+.row { display: grid; gap: 16px; margin-bottom: 16px; }
+.row.cols2 { grid-template-columns: 1fr 1fr; }
+
+/* Action Bar */
+.action-bar { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+.action-btn {
+  padding: 8px 18px; border-radius: 10px; font-size: 12px; font-weight: 700; cursor: pointer;
+  border: 1.5px solid var(--border); background: var(--surface); color: var(--text2); transition: all .2s;
+  display: inline-flex; align-items: center; gap: 6px;
+}
+.action-btn:hover { border-color: var(--accent); color: var(--accent); background: #fff7ed; }
+.action-btn.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+.action-btn.primary:hover { background: #c2410c; }
+.action-btn.danger { background: var(--red); color: #fff; border-color: var(--red); }
+
+/* Section Title */
+.section-title {
+  font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 16px;
+  display: flex; align-items: center; gap: 8px;
+}
+.section-title::before {
+  content: ''; display: inline-block; width: 4px; height: 18px;
+  background: var(--accent); border-radius: 2px;
+}
+
+/* Mock Table */
+.mock-table { width: 100%; border-collapse: collapse; }
+.mock-table th {
+  background: var(--surface2); color: var(--text2); font-size: 11px; text-transform: uppercase;
+  letter-spacing: .5px; padding: 10px 14px; text-align: left; border-bottom: 2px solid var(--border);
+  font-weight: 700;
+}
+.mock-table td { padding: 10px 14px; border-bottom: 1px solid var(--border); font-size: 13px; }
+.mock-table tr:hover td { background: #fef3e2; }
+
+/* Pill */
+.pill {
+  display: inline-block; padding: 3px 9px; border-radius: 20px; font-size: 11px; font-weight: 700;
+}
+.pill.green { background: var(--green-bg); color: var(--green); }
+.pill.red { background: var(--red-bg); color: var(--red); }
+
+/* Notification Panel */
+.notif-panel {
+  display: none; position: fixed; top: 70px; right: 24px; width: 340px; max-height: 400px;
+  background: #fff; border-radius: 14px; box-shadow: 0 8px 32px rgba(0,0,0,.18);
+  border: 1px solid var(--border); z-index: 5000; overflow: hidden;
+}
+.notif-panel.show { display: block; }
+.notif-header {
+  padding: 14px 18px; border-bottom: 1px solid var(--border); font-size: 14px; font-weight: 700;
+  color: var(--text); display: flex; justify-content: space-between; align-items: center;
+}
+.notif-list { max-height: 320px; overflow-y: auto; }
+.notif-item {
+  padding: 12px 18px; border-bottom: 1px solid #f5f0e8; cursor: pointer; transition: background .15s;
+}
+.notif-item:hover { background: #fef7ed; }
+.notif-item .ni-title { font-size: 13px; font-weight: 600; color: var(--text); }
+.notif-item .ni-desc { font-size: 11px; color: var(--text2); margin-top: 3px; }
+.notif-item .ni-time { font-size: 10px; color: var(--muted); margin-top: 4px; }
+.notif-item.unread { border-left: 3px solid var(--accent); }
+
+/* Footer */
+.footer {
+  text-align: center; padding: 20px; color: var(--muted); font-size: 11px;
+  border-top: 1px solid var(--border); background: var(--surface); margin-top: 20px;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .kpi-grid { grid-template-columns: 1fr 1fr; }
+  .row.cols2 { grid-template-columns: 1fr; }
+  .main { padding: 12px 14px; }
+  .filter-bar, .tabs { padding-left: 14px; padding-right: 14px; }
+  .header { padding: 14px 16px; }
+  .login-card { margin: 16px; padding: 32px 24px 28px; }
+  .role-switcher { padding: 8px 14px; flex-wrap: wrap; }
+  .header-right { gap: 8px; }
+  .user-name { display: none; }
+}
+@media (max-width: 480px) {
+  .kpi-grid { grid-template-columns: 1fr; }
+  .header-left h1 { font-size: 18px; }
+  .notif-panel { right: 8px; left: 8px; width: auto; }
+}
+
+/* Hidden utility */
+.hidden { display: none !important; }
+
+/* Fade in animation */
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+.fade-in { animation: fadeIn .4s ease; }
+</style>
+</head>
+<body>
+
+<!-- Prototype Banner -->
+<div class="proto-banner">
+  PROTOTYPE - ต้นแบบเพื่อทดสอบ UX เท่านั้น ไม่ใช่ระบบจริง
+  <span>|</span>
+  <span>ส่วนที่จำลอง: Login, RBAC, Tab switching, KPI cards</span>
+</div>
+
+<!-- ==================== LOGIN PAGE ==================== -->
+<div id="loginPage" class="login-page">
+  <div class="deco deco1"></div>
+  <div class="deco deco2"></div>
+  <div class="deco deco3"></div>
+
+  <div class="login-card fade-in">
+    <div class="login-logo">
+      <h1>SPBI</h1>
+      <div class="brand">Sales Performance & Business Intelligence</div>
+      <div class="sub">WANWANACH PLATFORM</div>
+    </div>
+
+    <div class="login-field">
+      <label>Email</label>
+      <input type="email" id="loginEmail" placeholder="email@wanwanach.com" value="sale.analysis@wanwanach.com">
+    </div>
+    <div class="login-field">
+      <label>Password</label>
+      <input type="password" id="loginPassword" placeholder="รหัสผ่าน" value="demo1234">
+    </div>
+
+    <button class="login-btn" onclick="doLogin()">เข้าสู่ระบบ</button>
+
+    <div class="login-error" id="loginError"></div>
+
+    <div class="login-hint">
+      <strong>[Prototype]</strong> ทดลองเข้าสู่ระบบด้วย:<br>
+      <strong>admin@wanwanach.com</strong> &rarr; role: Admin<br>
+      <strong>manager@wanwanach.com</strong> &rarr; role: Manager<br>
+      <strong>sale.analysis@wanwanach.com</strong> &rarr; role: Sales<br>
+      <strong>viewer@wanwanach.com</strong> &rarr; role: Viewer<br>
+      <span style="color:var(--muted)">(password อะไรก็ได้)</span>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== DASHBOARD PAGE ==================== -->
+<div id="dashboardPage" class="dashboard-page">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-left">
+      <h1>SPBI Dashboard</h1>
+      <div class="sub">Sales Performance & Business Intelligence -- Wanwanach 2026</div>
+    </div>
+    <div class="header-right">
+      <div class="bell-btn" onclick="toggleNotif()">
+        <span>&#128276;</span>
+        <div class="bell-dot"></div>
+      </div>
+      <div class="user-info">
+        <div class="user-avatar" id="userAvatar">S</div>
+        <div>
+          <div class="user-name" id="userName">Sale Analysis</div>
+          <span class="role-badge sales" id="roleBadge">SALES</span>
+        </div>
+      </div>
+      <button class="logout-btn" onclick="doLogout()">ออกจากระบบ</button>
+    </div>
+  </div>
+
+  <!-- Role Switcher (Prototype Only) -->
+  <div class="role-switcher">
+    <label>[PROTO] สลับ Role เพื่อทดสอบ RBAC:</label>
+    <button class="role-sw-btn" onclick="switchRole('viewer')">Viewer</button>
+    <button class="role-sw-btn active" onclick="switchRole('sales')">Sales</button>
+    <button class="role-sw-btn" onclick="switchRole('manager')">Manager</button>
+    <button class="role-sw-btn" onclick="switchRole('admin')">Admin</button>
+  </div>
+
+  <!-- Filter Bar -->
+  <div class="filter-bar">
+    <div class="filter-label">ช่วงเวลา:</div>
+    <div class="fmtab active">ทั้งหมด</div>
+    <div class="fmtab" onclick="this.parentElement.querySelector('.active').classList.remove('active');this.classList.add('active')">สัปดาห์นี้</div>
+    <div class="fmtab" onclick="this.parentElement.querySelector('.active').classList.remove('active');this.classList.add('active')">เดือนนี้</div>
+    <div class="fmtab" onclick="this.parentElement.querySelector('.active').classList.remove('active');this.classList.add('active')">3 เดือน</div>
+    <div class="fmtab" onclick="this.parentElement.querySelector('.active').classList.remove('active');this.classList.add('active')">ไตรมาส</div>
+    <div style="width:1px;height:24px;background:var(--border);flex-shrink:0"></div>
+    <div class="filter-label" style="color:var(--text2)">ปี 2026 (YTD ม.ค.-ก.ค.)</div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs" id="mainTabs">
+    <div class="tab active" onclick="showTab(this,'overview')">ภาพรวมยอดขาย</div>
+    <div class="tab" onclick="showTab(this,'sales')">พนักงานขาย</div>
+    <div class="tab" onclick="showTab(this,'mt')">Modern Trade</div>
+    <div class="tab" onclick="showTab(this,'booth')">Booth</div>
+    <div class="tab" onclick="showTab(this,'online')">Online/Amazon</div>
+    <div class="tab" onclick="showTab(this,'cost')">ต้นทุน</div>
+    <div class="tab" onclick="showTab(this,'products')">สินค้า</div>
+    <div class="tab" onclick="showTab(this,'upload')" id="tabUpload">อัพเดทข้อมูล</div>
+    <div class="tab" onclick="showTab(this,'workflow')">WorkFlow NPD</div>
+  </div>
+
+  <!-- Brand Strip -->
+  <div class="brand-strip"></div>
+
+  <!-- Notification Panel -->
+  <div class="notif-panel" id="notifPanel">
+    <div class="notif-header">
+      <span>การแจ้งเตือน</span>
+      <span style="font-size:11px;color:var(--muted);cursor:pointer" onclick="toggleNotif()">ปิด X</span>
+    </div>
+    <div class="notif-list">
+      <div class="notif-item unread">
+        <div class="ni-title">ยอดขาย Booth ต่ำกว่าเป้า</div>
+        <div class="ni-desc">Booth สยามพารากอน ยอดขายต่ำกว่าเป้า 40% ในสัปดาห์นี้</div>
+        <div class="ni-time">5 นาทีที่แล้ว</div>
+      </div>
+      <div class="notif-item unread">
+        <div class="ni-title">ของเสียเกิน 60 ชิ้น</div>
+        <div class="ni-desc">Booth เซ็นทรัลเวิลด์ มีของเสียสะสม 78 ชิ้น</div>
+        <div class="ni-time">1 ชั่วโมงที่แล้ว</div>
+      </div>
+      <div class="notif-item">
+        <div class="ni-title">อัพโหลดข้อมูลสำเร็จ</div>
+        <div class="ni-desc">ข้อมูลยอดขาย มิ.ย. 2026 อัพโหลดเรียบร้อยแล้ว</div>
+        <div class="ni-time">เมื่อวาน 18:30</div>
+      </div>
+      <div class="notif-item">
+        <div class="ni-title">NPD Stage Gate ผ่าน</div>
+        <div class="ni-desc">สินค้า "ข้าวเกรียบรสใหม่" ผ่าน Gate 2 แล้ว</div>
+        <div class="ni-time">3 วันที่แล้ว</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main">
+
+    <!-- ===== TAB: OVERVIEW ===== -->
+    <div id="tab-overview" class="section active fade-in">
+
+      <!-- Action Buttons (RBAC controlled) -->
+      <div class="action-bar" id="actionBar">
+        <button class="action-btn rbac-export" data-min="sales">Export PDF</button>
+        <button class="action-btn rbac-export" data-min="sales">Export Excel</button>
+        <button class="action-btn rbac-import" data-min="manager">Import ข้อมูล</button>
+        <button class="action-btn primary rbac-admin" data-min="admin">Admin Panel</button>
+      </div>
+
+      <div class="section-title">ภาพรวมยอดขาย YTD 2026</div>
+
+      <!-- KPI Cards -->
+      <div class="kpi-grid">
+        <div class="kpi-card orange">
+          <div class="kpi-label">ยอดขายรวม (YTD)</div>
+          <div class="kpi-value">42.8M</div>
+          <div class="kpi-sub">จากทุกช่องทาง ม.ค.-ก.ค. 2026</div>
+          <div class="kpi-badge pos">+8.2% จากปีก่อน</div>
+        </div>
+        <div class="kpi-card yellow">
+          <div class="kpi-label">เป้าหมาย (Budget)</div>
+          <div class="kpi-value">48.5M</div>
+          <div class="kpi-sub">เป้าหมายปี 2026</div>
+          <div class="kpi-badge warn">เหลือ 5.7M</div>
+        </div>
+        <div class="kpi-card green">
+          <div class="kpi-label">Achievement %</div>
+          <div class="kpi-value">88.2%</div>
+          <div class="kpi-sub">ความสำเร็จเทียบเป้าหมาย</div>
+          <div class="kpi-badge pos">On Track</div>
+        </div>
+        <div class="kpi-card red">
+          <div class="kpi-label">เทียบปีก่อน (YoY)</div>
+          <div class="kpi-value">+8.2%</div>
+          <div class="kpi-sub">เทียบกับ YTD 2025: 39.5M</div>
+          <div class="kpi-badge pos">เติบโต</div>
+        </div>
+      </div>
+
+      <!-- Charts Row -->
+      <div class="row cols2">
+        <div class="card">
+          <div class="card-title">ยอดขายรายเดือน (Budget vs Actual)</div>
+          <div class="chart-placeholder">
+            <div class="icon">&#128202;</div>
+            <div class="label">Bar Chart - Budget vs Actual รายเดือน</div>
+            <div class="note">[จำลอง] จะใช้ Chart.js ในระบบจริง</div>
+            <div style="width:100%;margin-top:16px;display:flex;align-items:flex-end;gap:4px;justify-content:center;height:120px">
+              <div style="display:flex;gap:2px;align-items:flex-end">
+                <div style="width:20px;background:#fed7aa;border-radius:4px 4px 0 0;height:60px" title="Budget ม.ค."></div>
+                <div style="width:20px;background:#ea580c;border-radius:4px 4px 0 0;height:50px" title="Actual ม.ค."></div>
+              </div>
+              <div style="display:flex;gap:2px;align-items:flex-end">
+                <div style="width:20px;background:#fed7aa;border-radius:4px 4px 0 0;height:70px"></div>
+                <div style="width:20px;background:#ea580c;border-radius:4px 4px 0 0;height:65px"></div>
+              </div>
+              <div style="display:flex;gap:2px;align-items:flex-end">
+                <div style="width:20px;background:#fed7aa;border-radius:4px 4px 0 0;height:80px"></div>
+                <div style="width:20px;background:#ea580c;border-radius:4px 4px 0 0;height:90px"></div>
+              </div>
+              <div style="display:flex;gap:2px;align-items:flex-end">
+                <div style="width:20px;background:#fed7aa;border-radius:4px 4px 0 0;height:65px"></div>
+                <div style="width:20px;background:#ea580c;border-radius:4px 4px 0 0;height:55px"></div>
+              </div>
+              <div style="display:flex;gap:2px;align-items:flex-end">
+                <div style="width:20px;background:#fed7aa;border-radius:4px 4px 0 0;height:75px"></div>
+                <div style="width:20px;background:#ea580c;border-radius:4px 4px 0 0;height:80px"></div>
+              </div>
+              <div style="display:flex;gap:2px;align-items:flex-end">
+                <div style="width:20px;background:#fed7aa;border-radius:4px 4px 0 0;height:85px"></div>
+                <div style="width:20px;background:#ea580c;border-radius:4px 4px 0 0;height:78px"></div>
+              </div>
+              <div style="display:flex;gap:2px;align-items:flex-end">
+                <div style="width:20px;background:#fed7aa;border-radius:4px 4px 0 0;height:90px"></div>
+                <div style="width:20px;background:repeating-linear-gradient(45deg,#ea580c,#ea580c 2px,#f97316 2px,#f97316 4px);border-radius:4px 4px 0 0;height:40px;opacity:.5"></div>
+              </div>
+            </div>
+            <div style="display:flex;gap:16px;margin-top:8px;font-size:10px;color:var(--text2)">
+              <span><span style="display:inline-block;width:12px;height:8px;background:#fed7aa;border-radius:2px;margin-right:4px"></span>Budget</span>
+              <span><span style="display:inline-block;width:12px;height:8px;background:#ea580c;border-radius:2px;margin-right:4px"></span>Actual</span>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">สัดส่วนช่องทางการขาย</div>
+          <div class="chart-placeholder">
+            <div class="icon">&#127856;</div>
+            <div class="label">Donut Chart - สัดส่วนรายช่องทาง</div>
+            <div class="note">[จำลอง] จะใช้ Chart.js ในระบบจริง</div>
+            <div style="margin-top:16px;display:flex;flex-wrap:wrap;gap:8px;justify-content:center">
+              <div style="padding:6px 14px;background:#fff7ed;border:1px solid #fed7aa;border-radius:8px;font-size:12px;font-weight:600">
+                <span style="color:var(--accent)">Modern Trade</span> 35%
+              </div>
+              <div style="padding:6px 14px;background:#dcfce7;border:1px solid #bbf7d0;border-radius:8px;font-size:12px;font-weight:600">
+                <span style="color:var(--green)">Booth</span> 28%
+              </div>
+              <div style="padding:6px 14px;background:#fef3c7;border:1px solid #fde68a;border-radius:8px;font-size:12px;font-weight:600">
+                <span style="color:var(--yellow)">Online</span> 22%
+              </div>
+              <div style="padding:6px 14px;background:var(--red-bg);border:1px solid #fecaca;border-radius:8px;font-size:12px;font-weight:600">
+                <span style="color:var(--red)">Amazon</span> 15%
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Top Sales Table -->
+      <div class="card" style="margin-top:16px">
+        <div class="card-title">Top 5 พนักงานขาย (YTD)</div>
+        <div style="overflow-x:auto">
+          <table class="mock-table">
+            <thead>
+              <tr>
+                <th>อันดับ</th>
+                <th>ชื่อ</th>
+                <th>โซน</th>
+                <th>ยอดขาย</th>
+                <th>เป้าหมาย</th>
+                <th>Achievement</th>
+                <th>สถานะ</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span style="display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:#fef3c7;color:#92400e;font-size:11px;font-weight:700">1</span></td>
+                <td style="font-weight:600">สมชาย แสนดี</td>
+                <td>กรุงเทพฯ เหนือ</td>
+                <td style="font-weight:700">8.2M</td>
+                <td>7.5M</td>
+                <td style="font-weight:700;color:var(--green)">109.3%</td>
+                <td><span class="pill green">เกินเป้า</span></td>
+              </tr>
+              <tr>
+                <td><span style="display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:#f1f5f9;color:#475569;font-size:11px;font-weight:700;border:1px solid #cbd5e1">2</span></td>
+                <td style="font-weight:600">วรรณา สุขใจ</td>
+                <td>กรุงเทพฯ ใต้</td>
+                <td style="font-weight:700">7.8M</td>
+                <td>7.5M</td>
+                <td style="font-weight:700;color:var(--green)">104.0%</td>
+                <td><span class="pill green">เกินเป้า</span></td>
+              </tr>
+              <tr>
+                <td><span style="display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:#fde8d8;color:#9a3412;font-size:11px;font-weight:700">3</span></td>
+                <td style="font-weight:600">ประภา รุ่งเรือง</td>
+                <td>ปริมณฑล</td>
+                <td style="font-weight:700">6.5M</td>
+                <td>7.0M</td>
+                <td style="font-weight:700;color:var(--yellow)">92.8%</td>
+                <td><span class="pill red">ต่ำกว่าเป้า</span></td>
+              </tr>
+              <tr>
+                <td><span style="display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:#f1f5f9;color:#94a3b8;font-size:11px;font-weight:700">4</span></td>
+                <td style="font-weight:600">อนุชา ปิยะ</td>
+                <td>Online</td>
+                <td style="font-weight:700">5.9M</td>
+                <td>6.0M</td>
+                <td style="font-weight:700;color:var(--yellow)">98.3%</td>
+                <td><span class="pill red">ต่ำกว่าเป้า</span></td>
+              </tr>
+              <tr>
+                <td><span style="display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:#f1f5f9;color:#94a3b8;font-size:11px;font-weight:700">5</span></td>
+                <td style="font-weight:600">นภา ศรีทอง</td>
+                <td>ภาคเหนือ</td>
+                <td style="font-weight:700">5.4M</td>
+                <td>5.8M</td>
+                <td style="font-weight:700;color:var(--yellow)">93.1%</td>
+                <td><span class="pill red">ต่ำกว่าเป้า</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== TAB: SALES ===== -->
+    <div id="tab-sales" class="section">
+      <div class="section-title">พนักงานขาย</div>
+      <div class="chart-placeholder" style="min-height:400px">
+        <div class="icon">&#128100;</div>
+        <div class="label">หน้ารายละเอียดพนักงานขาย</div>
+        <div class="note">เลือกพนักงาน -> แสดง KPI, กราฟยอดขายรายเดือน, ตารางสินค้า</div>
+        <div class="note" style="margin-top:8px;color:var(--accent);font-weight:600">[จำลอง] จะแสดง Person Cards + Detail Panel เหมือนระบบเดิม</div>
+      </div>
+    </div>
+
+    <!-- ===== TAB: MODERN TRADE ===== -->
+    <div id="tab-mt" class="section">
+      <div class="section-title">Modern Trade</div>
+      <div class="chart-placeholder" style="min-height:400px">
+        <div class="icon">&#127978;</div>
+        <div class="label">หน้าวิเคราะห์ Modern Trade</div>
+        <div class="note">ยอดขายแยกร้าน, เปรียบเทียบ Budget vs Actual, Ranking ร้านค้า</div>
+        <div class="note" style="margin-top:8px;color:var(--accent);font-weight:600">[จำลอง] ข้อมูลจะดึงจาก Supabase ในระบบจริง</div>
+      </div>
+    </div>
+
+    <!-- ===== TAB: BOOTH ===== -->
+    <div id="tab-booth" class="section">
+      <div class="section-title">Booth</div>
+      <div class="chart-placeholder" style="min-height:400px">
+        <div class="icon">&#127914;</div>
+        <div class="label">หน้า Booth - ยอดขายรายบูธ</div>
+        <div class="note">กราฟยอดขาย, ของเสีย/ของคืน, แจ้งเตือนเกิน 60 ชิ้น</div>
+        <div class="note" style="margin-top:8px;color:var(--accent);font-weight:600">[จำลอง] มี bell notification เตือนของเสียเหมือนระบบเดิม</div>
+      </div>
+    </div>
+
+    <!-- ===== TAB: ONLINE ===== -->
+    <div id="tab-online" class="section">
+      <div class="section-title">Online / Amazon</div>
+      <div class="chart-placeholder" style="min-height:400px">
+        <div class="icon">&#128187;</div>
+        <div class="label">หน้า Online & Amazon</div>
+        <div class="note">ยอดขาย Online Platform, Amazon, Souvenir แยกช่องทาง</div>
+      </div>
+    </div>
+
+    <!-- ===== TAB: COST ===== -->
+    <div id="tab-cost" class="section">
+      <div class="section-title">ต้นทุน</div>
+      <div class="chart-placeholder" style="min-height:400px">
+        <div class="icon">&#128176;</div>
+        <div class="label">หน้าวิเคราะห์ต้นทุน</div>
+        <div class="note">ต้นทุนรายสินค้า, Margin, เปรียบเทียบกำไร</div>
+      </div>
+    </div>
+
+    <!-- ===== TAB: PRODUCTS ===== -->
+    <div id="tab-products" class="section">
+      <div class="section-title">สินค้า</div>
+      <div class="chart-placeholder" style="min-height:400px">
+        <div class="icon">&#128230;</div>
+        <div class="label">หน้ารายการสินค้า</div>
+        <div class="note">สินค้าทั้งหมด, ยอดขายแยกสินค้า, Ranking</div>
+      </div>
+    </div>
+
+    <!-- ===== TAB: UPLOAD ===== -->
+    <div id="tab-upload" class="section">
+      <div class="section-title">อัพเดทข้อมูล</div>
+      <div class="action-bar">
+        <button class="action-btn primary rbac-import" data-min="manager">อัพโหลด Excel</button>
+        <button class="action-btn rbac-admin" data-min="admin">จัดการผู้ใช้</button>
+      </div>
+      <div class="card">
+        <div class="card-title">อัพโหลดไฟล์ข้อมูลยอดขาย</div>
+        <div style="border:2px dashed var(--border);border-radius:12px;padding:40px;text-align:center;color:var(--muted)">
+          <div style="font-size:36px;margin-bottom:8px">&#128449;</div>
+          <div style="font-weight:600">ลากไฟล์มาวางที่นี่ หรือคลิกเพื่อเลือกไฟล์</div>
+          <div style="font-size:12px;margin-top:6px">รองรับ .xlsx, .xls (ขนาดไม่เกิน 10MB)</div>
+          <div style="font-size:11px;margin-top:12px;color:var(--accent);font-weight:600">[จำลอง] ระบบจริงจะ parse Excel แล้ว insert เข้า Supabase</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== TAB: WORKFLOW ===== -->
+    <div id="tab-workflow" class="section">
+      <div class="section-title">WorkFlow NPD (New Product Development)</div>
+      <div class="chart-placeholder" style="min-height:400px">
+        <div class="icon">&#128260;</div>
+        <div class="label">หน้า WorkFlow NPD</div>
+        <div class="note">Stage Gate Process, Swim Lane, RACI Matrix, KPI Tracking</div>
+        <div class="note" style="margin-top:8px;color:var(--accent);font-weight:600">[จำลอง] ใช้ layout เดิมจาก sales_dashboard.html</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    SPBI Platform v0.1 (Prototype) -- Wanwanach &copy; 2026 -- ข้อมูลจำลองเพื่อทดสอบ UX เท่านั้น
+  </div>
+
+</div>
+
+<script>
+/* =============================================
+   SPBI PROTOTYPE - JavaScript
+   ============================================= */
+
+// Mock user database
+const MOCK_USERS = {
+  'admin@wanwanach.com':          { name: 'ผู้ดูแลระบบ', role: 'admin',   avatar: 'A' },
+  'manager@wanwanach.com':        { name: 'ผู้จัดการฝ่ายขาย', role: 'manager', avatar: 'M' },
+  'sale.analysis@wanwanach.com':  { name: 'Sale Analysis', role: 'sales',   avatar: 'S' },
+  'viewer@wanwanach.com':         { name: 'ผู้ดูรายงาน', role: 'viewer',  avatar: 'V' },
+};
+
+// Role hierarchy for RBAC
+const ROLE_LEVEL = { viewer: 0, sales: 1, manager: 2, admin: 3 };
+
+let currentUser = null;
+let currentRole = 'sales';
+
+// ======= LOGIN =======
+function doLogin() {
+  var email = document.getElementById('loginEmail').value.trim().toLowerCase();
+  var pass  = document.getElementById('loginPassword').value;
+  var errEl = document.getElementById('loginError');
+
+  if (!email) {
+    errEl.textContent = 'กรุณากรอก Email';
+    errEl.style.display = 'block';
+    return;
+  }
+
+  // Mock auth: accept any email in MOCK_USERS, any password
+  var user = MOCK_USERS[email];
+  if (!user) {
+    // Accept unknown emails as viewer
+    user = { name: email.split('@')[0], role: 'viewer', avatar: email[0].toUpperCase() };
+  }
+
+  currentUser = { email: email, ...user };
+  currentRole = user.role;
+
+  // Show dashboard
+  document.getElementById('loginPage').style.display = 'none';
+  document.getElementById('dashboardPage').style.display = 'block';
+
+  updateUserUI();
+  applyRBAC();
+}
+
+function doLogout() {
+  currentUser = null;
+  document.getElementById('dashboardPage').style.display = 'none';
+  document.getElementById('loginPage').style.display = 'flex';
+  document.getElementById('loginError').style.display = 'none';
+}
+
+// ======= USER UI =======
+function updateUserUI() {
+  if (!currentUser) return;
+  document.getElementById('userName').textContent = currentUser.name;
+  document.getElementById('userAvatar').textContent = currentUser.avatar;
+
+  var badge = document.getElementById('roleBadge');
+  badge.textContent = currentRole.toUpperCase();
+  badge.className = 'role-badge ' + currentRole;
+
+  // Update role switcher buttons
+  document.querySelectorAll('.role-sw-btn').forEach(function(btn) {
+    btn.classList.toggle('active', btn.textContent.trim().toLowerCase() === currentRole);
+  });
+}
+
+// ======= RBAC =======
+function switchRole(role) {
+  currentRole = role;
+  updateUserUI();
+  applyRBAC();
+}
+
+function applyRBAC() {
+  var level = ROLE_LEVEL[currentRole] || 0;
+
+  // Export buttons: visible for sales+
+  document.querySelectorAll('.rbac-export').forEach(function(el) {
+    el.style.display = level >= ROLE_LEVEL.sales ? '' : 'none';
+  });
+
+  // Import buttons: visible for manager+
+  document.querySelectorAll('.rbac-import').forEach(function(el) {
+    el.style.display = level >= ROLE_LEVEL.manager ? '' : 'none';
+  });
+
+  // Admin buttons: visible for admin only
+  document.querySelectorAll('.rbac-admin').forEach(function(el) {
+    el.style.display = level >= ROLE_LEVEL.admin ? '' : 'none';
+  });
+
+  // Upload tab: hide for viewer
+  var tabUpload = document.getElementById('tabUpload');
+  if (tabUpload) {
+    tabUpload.style.display = level >= ROLE_LEVEL.manager ? '' : 'none';
+  }
+
+  // Show RBAC feedback
+  showRBACFeedback(currentRole);
+}
+
+function showRBACFeedback(role) {
+  // Remove old feedback
+  var old = document.getElementById('rbacFeedback');
+  if (old) old.remove();
+
+  var msgs = {
+    viewer:  'Role: Viewer -- ดูรายงานได้อย่างเดียว ไม่เห็นปุ่ม Export/Import',
+    sales:   'Role: Sales -- ดูรายงาน + Export ได้ ไม่เห็น Import/Admin',
+    manager: 'Role: Manager -- ดูรายงาน + Export + Import ได้ ไม่เห็น Admin Panel',
+    admin:   'Role: Admin -- เห็นทุกอย่าง + Admin Panel'
+  };
+
+  var colors = {
+    viewer: '#94a3b8', sales: '#3b82f6', manager: '#16a34a', admin: '#f59e0b'
+  };
+
+  var div = document.createElement('div');
+  div.id = 'rbacFeedback';
+  div.style.cssText = 'position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#1e293b;color:#fff;padding:10px 24px;border-radius:12px;font-size:12px;font-weight:600;z-index:9000;box-shadow:0 4px 20px rgba(0,0,0,.3);border-left:4px solid ' + colors[role] + ';transition:opacity .3s';
+  div.textContent = msgs[role] || '';
+  document.body.appendChild(div);
+
+  setTimeout(function() {
+    div.style.opacity = '0';
+    setTimeout(function() { div.remove(); }, 300);
+  }, 3000);
+}
+
+// ======= TABS =======
+function showTab(el, tabId) {
+  // Deactivate all tabs
+  document.querySelectorAll('#mainTabs .tab').forEach(function(t) { t.classList.remove('active'); });
+  el.classList.add('active');
+
+  // Hide all sections
+  document.querySelectorAll('.section').forEach(function(s) { s.classList.remove('active'); });
+
+  // Show target
+  var target = document.getElementById('tab-' + tabId);
+  if (target) {
+    target.classList.add('active');
+    target.classList.add('fade-in');
+  }
+}
+
+// ======= NOTIFICATION =======
+function toggleNotif() {
+  var panel = document.getElementById('notifPanel');
+  panel.classList.toggle('show');
+}
+
+// Close notif on click outside
+document.addEventListener('click', function(e) {
+  var panel = document.getElementById('notifPanel');
+  if (panel && panel.classList.contains('show')) {
+    if (!panel.contains(e.target) && !e.target.closest('.bell-btn')) {
+      panel.classList.remove('show');
+    }
+  }
+});
+
+// Allow Enter key on login
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Enter' && document.getElementById('loginPage').style.display !== 'none') {
+    doLogin();
+  }
+});
+
+// Filter bar tab clicking
+document.querySelectorAll('.filter-bar .fmtab').forEach(function(tab) {
+  tab.addEventListener('click', function() {
+    this.parentElement.querySelectorAll('.fmtab').forEach(function(t) { t.classList.remove('active'); });
+    this.classList.add('active');
+  });
+});
+</script>
+
+</body>
+</html>

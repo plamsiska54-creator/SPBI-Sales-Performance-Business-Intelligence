@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WSI - Website Analysis Report</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f8fafc; --bg-card: #ffffff; --text: #1e293b; --text-sub: #64748b;
+    --accent: #0d9488; --accent2: #f97316; --border: #e2e8f0;
+    --header-bg: #0f172a; --header-text: #f1f5f9;
+    --tag-bg: #ecfdf5; --tag-text: #065f46;
+    --warn-bg: #fff7ed; --warn-text: #9a3412;
+    --code-bg: #f1f5f9; --section-num: #0d9488;
+    --table-head: #0f172a; --table-stripe: #f8fafc;
+    --score-good: #16a34a; --score-mid: #d97706; --score-low: #dc2626;
+  }
+  @media(prefers-color-scheme:dark){:root{
+    --bg:#0f172a;--bg-card:#1e293b;--text:#e2e8f0;--text-sub:#94a3b8;
+    --border:#334155;--header-bg:#020617;--code-bg:#334155;
+    --tag-bg:#064e3b;--tag-text:#6ee7b7;--warn-bg:#431407;--warn-text:#fdba74;
+    --table-head:#020617;--table-stripe:#1e293b;
+  }}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Noto Sans Thai','Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.7;font-size:15px}
+  .hero{background:var(--header-bg);color:var(--header-text);padding:48px 24px;text-align:center}
+  .hero h1{font-size:clamp(1.6rem,4vw,2.4rem);font-weight:800;letter-spacing:-.5px;margin-bottom:8px}
+  .hero .sub{color:#94a3b8;font-size:14px;max-width:700px;margin:0 auto}
+  .hero .badge{display:inline-block;background:var(--accent);color:#fff;padding:4px 14px;border-radius:20px;font-size:12px;font-weight:700;margin-top:12px}
+  .theme-toggle{position:fixed;top:16px;right:16px;z-index:999;background:var(--bg-card);border:1px solid var(--border);border-radius:50%;width:40px;height:40px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;box-shadow:0 2px 8px rgba(0,0,0,.15);transition:transform .2s}
+  .theme-toggle:hover{transform:scale(1.1)}
+  .print-btn{position:fixed;top:16px;right:64px;z-index:999;background:var(--accent);color:#fff;border:none;border-radius:50%;width:40px;height:40px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;box-shadow:0 2px 8px rgba(0,0,0,.15);transition:transform .2s}
+  .print-btn:hover{transform:scale(1.1)}
+  .container{max-width:960px;margin:0 auto;padding:24px 16px}
+  .toc{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-bottom:32px}
+  .toc h2{font-size:16px;font-weight:700;margin-bottom:12px;color:var(--accent)}
+  .toc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:4px 16px}
+  .toc a{color:var(--text);text-decoration:none;font-size:13px;padding:3px 0;display:block;transition:color .2s}
+  .toc a:hover{color:var(--accent)}
+  .toc a span{color:var(--accent);font-weight:700;margin-right:6px}
+  section{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:20px}
+  section h2{font-size:1.15rem;font-weight:800;margin-bottom:16px;padding-bottom:10px;border-bottom:2px solid var(--accent);display:flex;align-items:center;gap:10px}
+  section h2 .num{background:var(--accent);color:#fff;width:28px;height:28px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
+  h3{font-size:.95rem;font-weight:700;margin:16px 0 8px;color:var(--accent)}
+  h4{font-size:.85rem;font-weight:700;margin:12px 0 6px;color:var(--text-sub)}
+  p,li{font-size:14px;color:var(--text);margin-bottom:6px}
+  ul,ol{padding-left:20px}
+  .tag{display:inline-block;background:var(--tag-bg);color:var(--tag-text);padding:2px 10px;border-radius:12px;font-size:11px;font-weight:600;margin:2px}
+  .warn{display:inline-block;background:var(--warn-bg);color:var(--warn-text);padding:2px 10px;border-radius:12px;font-size:11px;font-weight:600;margin:2px}
+  .conf{font-size:11px;color:var(--text-sub);font-weight:600}
+  table{width:100%;border-collapse:collapse;font-size:12.5px;margin:10px 0}
+  th{background:var(--table-head);color:#fff;padding:8px 10px;text-align:left;font-size:11px;font-weight:600;white-space:nowrap}
+  td{padding:7px 10px;border-bottom:1px solid var(--border);vertical-align:top}
+  tr:nth-child(even){background:var(--table-stripe)}
+  .overflow-x{overflow-x:auto}
+  code{background:var(--code-bg);padding:2px 6px;border-radius:4px;font-size:12px;font-family:'Cascadia Code','Fira Code',monospace}
+  pre{background:var(--code-bg);padding:14px;border-radius:8px;overflow-x:auto;font-size:12px;line-height:1.6;font-family:'Cascadia Code','Fira Code',monospace;margin:10px 0;color:var(--text)}
+  .grid-2{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+  .grid-4{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+  .stat{background:var(--tag-bg);border-radius:8px;padding:14px;text-align:center}
+  .stat .val{font-size:1.5rem;font-weight:800;color:var(--accent)}
+  .stat .lbl{font-size:11px;color:var(--text-sub);font-weight:600}
+  .score-bar{height:8px;border-radius:4px;background:var(--border);margin:6px 0;overflow:hidden}
+  .score-bar .fill{height:100%;border-radius:4px}
+  .kv{display:flex;gap:8px;margin:4px 0;font-size:13px}
+  .kv .k{font-weight:600;color:var(--text-sub);min-width:140px;flex-shrink:0}
+  .kv .v{color:var(--text)}
+  .check{list-style:none;padding:0}
+  .check li{padding:4px 0;font-size:13px}
+  .check li::before{content:'✅ ';margin-right:4px}
+  .check li.no::before{content:'❌ '}
+  .check li.warn::before{content:'⚠️ '}
+  .back-top{position:fixed;bottom:20px;right:20px;background:var(--accent);color:#fff;border:none;border-radius:50%;width:40px;height:40px;cursor:pointer;font-size:18px;display:none;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.2);z-index:999;transition:transform .2s}
+  .back-top:hover{transform:scale(1.1)}
+  .footer{text-align:center;padding:32px;color:var(--text-sub);font-size:12px}
+  @media print{
+    .theme-toggle,.print-btn,.back-top{display:none!important}
+    section{break-inside:avoid;box-shadow:none;border:1px solid #ddd}
+    .hero{padding:24px;background:#0f172a!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    body{font-size:11px}
+  }
+  @media(max-width:600px){
+    .hero{padding:32px 16px}
+    section{padding:16px}
+    .kv{flex-direction:column;gap:2px}
+    .kv .k{min-width:auto}
+  }
+</style>
+</head>
+<body>
+
+<button class="theme-toggle" onclick="toggleTheme()" title="Toggle Dark/Light">🌓</button>
+<button class="print-btn" onclick="window.print()" title="Print / Save PDF">🖨️</button>
+<button class="back-top" id="backTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">⬆</button>
+
+<div class="hero">
+  <div class="badge">MASTER ANALYSIS</div>
+  <h1>Wanwanach Sales Intelligence (WSI)</h1>
+  <div class="sub">Website Reverse Engineering &amp; Development Blueprint<br>วิเคราะห์ระบบ Sales Dashboard แบบครบวงจร 20 ส่วน</div>
+  <div style="margin-top:16px;font-size:12px;color:#64748b">Generated: July 2026 | Project: Sales Performance &amp; Business Intelligence</div>
+</div>
+
+<div class="container">
+
+<!-- Quick Stats -->
+<div class="grid-4" style="margin-bottom:24px">
+  <div class="stat"><div class="val">37</div><div class="lbl">JS Files</div></div>
+  <div class="stat"><div class="val">~50K</div><div class="lbl">Lines of Code</div></div>
+  <div class="stat"><div class="val">10+</div><div class="lbl">Main Sections</div></div>
+  <div class="stat"><div class="val">5</div><div class="lbl">User Roles</div></div>
+</div>
+
+<!-- TOC -->
+<div class="toc">
+  <h2>สารบัญ (Table of Contents)</h2>
+  <div class="toc-grid">
+    <a href="#s1"><span>01</span> ภาพรวมเว็บไซต์</a>
+    <a href="#s2"><span>02</span> โครงสร้างเว็บไซต์</a>
+    <a href="#s3"><span>03</span> วิเคราะห์หน้าเว็บ</a>
+    <a href="#s4"><span>04</span> Layout</a>
+    <a href="#s5"><span>05</span> UI Components</a>
+    <a href="#s6"><span>06</span> UX</a>
+    <a href="#s7"><span>07</span> Design System</a>
+    <a href="#s8"><span>08</span> Features</a>
+    <a href="#s9"><span>09</span> Business Process</a>
+    <a href="#s10"><span>10</span> Database</a>
+    <a href="#s11"><span>11</span> API</a>
+    <a href="#s12"><span>12</span> Technology Stack</a>
+    <a href="#s13"><span>13</span> Security</a>
+    <a href="#s14"><span>14</span> Performance</a>
+    <a href="#s15"><span>15</span> SEO</a>
+    <a href="#s16"><span>16</span> Responsive</a>
+    <a href="#s17"><span>17</span> Third-party Services</a>
+    <a href="#s18"><span>18</span> สถาปัตยกรรมระบบ</a>
+    <a href="#s19"><span>19</span> เอกสารพัฒนาระบบ</a>
+    <a href="#s20"><span>20</span> แผนพัฒนา</a>
+  </div>
+</div>
+
+<!-- ===== SECTION 1 ===== -->
+<section id="s1">
+  <h2><span class="num">1</span> วิเคราะห์ภาพรวมเว็บไซต์</h2>
+
+  <h3>เว็บไซต์เกี่ยวกับอะไร</h3>
+  <p>ระบบ Dashboard ภายในองค์กรสำหรับ <strong>บริษัท วรรณวนัช เบเกอรี่</strong> — ผู้ผลิตและจำหน่ายผลิตภัณฑ์เบเกอรี่รายใหญ่ของไทย (20+ ปี, 600+ พนักงาน, 300+ SKU) ใช้สำหรับติดตามยอดขาย, วิเคราะห์ KPI, จัดการข้อมูลช่องทางขาย และบริหารงานขายแบบรวมศูนย์</p>
+
+  <h3>กลุ่มลูกค้าเป้าหมาย (Internal Users)</h3>
+  <div class="overflow-x">
+  <table>
+    <tr><th>กลุ่มผู้ใช้</th><th>บทบาท</th><th>ความต้องการหลัก</th></tr>
+    <tr><td>ผู้บริหาร</td><td>Admin</td><td>ดูภาพรวม KPI, เทียบเป้าหมาย, ตัดสินใจเชิงกลยุทธ์</td></tr>
+    <tr><td>ผู้จัดการ</td><td>Manager</td><td>ติดตามทีมขาย, วิเคราะห์ช่องทาง, อนุมัติ</td></tr>
+    <tr><td>พนักงานขาย</td><td>Sales</td><td>ดูยอดขายรายวัน, กรอกข้อมูล, บันทึกลูกค้า</td></tr>
+    <tr><td>เจ้าหน้าที่</td><td>Officer</td><td>กรอกออเดอร์, อัปเดตข้อมูล, จัดการเอกสาร</td></tr>
+    <tr><td>หัวหน้าทีม</td><td>Leader</td><td>ดูแลทีม, ตรวจสอบรายงาน</td></tr>
+  </table>
+  </div>
+
+  <h3>จุดขาย (USP)</h3>
+  <ul>
+    <li><strong>All-in-One:</strong> รวมข้อมูลทุกช่องทาง (Modern Trade, Online, Amazon, Booth) ใน Dashboard เดียว</li>
+    <li><strong>Real-time KPI:</strong> เทียบเป้าหมาย vs ยอดจริง ด้วย visual indicators</li>
+    <li><strong>Multi-channel:</strong> ครอบคลุม 5+ ช่องทางขาย พร้อมรายละเอียดเฉพาะช่องทาง</li>
+    <li><strong>Data Entry + Analytics:</strong> ทั้งกรอกข้อมูลและวิเคราะห์ในระบบเดียว</li>
+  </ul>
+
+  <h3>Business Model</h3>
+  <p>Internal tool (ไม่มีรายได้จากตัวระบบ) — เป็น BI Dashboard เพื่อเพิ่มประสิทธิภาพการบริหารยอดขายของบริษัท ลดเวลาทำรายงาน และช่วยผู้บริหารตัดสินใจด้วยข้อมูล</p>
+
+  <h3>ประเภทเว็บไซต์</h3>
+  <p><span class="tag">SPA (Single Page Application)</span> <span class="tag">Internal BI Dashboard</span> <span class="tag">Data Entry System</span></p>
+
+  <h3>จุดแข็ง</h3>
+  <ul>
+    <li>ครอบคลุมข้อมูลครบทุกช่องทางขาย — หนึ่งในระบบที่ละเอียดมาก</li>
+    <li>UI สวย ใช้งานง่าย, มี Dark/Light theme, Thai/English</li>
+    <li>ไม่ต้องพึ่ง backend/database — deploy ง่าย ใช้ได้ทันที</li>
+    <li>มี Chart, Export PDF/Excel/PNG, Notification ครบ</li>
+    <li>Role-based access control กำหนดสิทธิ์เมนูตาม role</li>
+  </ul>
+
+  <h3>จุดอ่อน</h3>
+  <ul>
+    <li><span class="warn">Critical</span> ข้อมูลทั้งหมด hardcode ใน JS — ไม่มีฐานข้อมูลจริง</li>
+    <li><span class="warn">Critical</span> <code>app.js</code> ~19,800 บรรทัด — monolithic, ยากต่อการดูแล</li>
+    <li><span class="warn">High</span> Authentication เป็น client-side — ไม่ปลอดภัย</li>
+    <li><span class="warn">Medium</span> ไม่มี automated tests</li>
+    <li><span class="warn">Medium</span> Data entry เก็บใน localStorage — หายเมื่อ clear browser</li>
+  </ul>
+
+  <h3>สิ่งที่สามารถพัฒนาต่อได้</h3>
+  <ul>
+    <li>ย้ายไป Backend + Database จริง (Supabase/PostgreSQL)</li>
+    <li>แยก app.js เป็น module-based architecture</li>
+    <li>เพิ่ม real-time data sync, multi-user collaboration</li>
+    <li>สร้าง API สำหรับ mobile app</li>
+  </ul>
+</section>
+
+<!-- ===== SECTION 2 ===== -->
+<section id="s2">
+  <h2><span class="num">2</span> โครงสร้างเว็บไซต์ (Website Structure)</h2>
+
+  <h3>Sitemap</h3>
+  <pre>
+WSI Dashboard
+├── Landing Page (Welcome)
+├── Login Page
+└── Main Dashboard (SPA)
+    ├── 📊 ภาพรวมยอดขาย
+    │   ├── แบบเปิดออเดอร์ / แบบเงินเข้าบัญชี / เปรียบเทียบ
+    │   ├── Daily / Monthly / Customer / Salesperson
+    │   └── AI วิเคราะห์
+    ├── 🏪 ห้างค้าปลีก (Modern Trade)
+    │   ├── CJ Express / Big C / Tops / Makro / MM
+    │   ├── Aeon / The Mall
+    │   └── รายละเอียดแต่ละสาขา
+    ├── 🎪 บูธ
+    │   ├── ข้อมูลบูธ / ยอดขาย / สต็อก / ต้นทุน
+    │   ├── รายการขายสินค้า / ข้อมูลร้านค้า
+    │   └── วิเคราะห์ AI / อัพเดทข้อมูล
+    ├── 🛒 ออนไลน์
+    │   ├── ยอดขาย / ADS &amp; Campaign / อินฟลูเอนเซอร์
+    │   ├── ค่าขนส่ง / COD / สินค้าตีกลับ
+    │   ├── ออเดอร์คืน / ยกเลิก / วัสดุสิ้นเปลือง
+    │   ├── ต้นทุนขายสินค้า / รายการขายสินค้า
+    │   └── ข้อมูลร้านค้า / วิเคราะห์ AI / อัพเดทข้อมูล
+    ├── 🌏 อเมซอน &amp; ของฝาก
+    │   ├── Amazon / ร้านของฝาก / Black Canyon
+    │   └── Sales Visit Tracker
+    ├── 📋 ธุรการขาย
+    │   ├── พนักงาน / บิลขาย / Checklist / Error
+    │   └── บันทึกโทร / กรอกออเดอร์ / ผลงาน
+    ├── 📢 ฝ่ายขาย-การตลาด
+    │   ├── สินค้า / คุณภาพ / WorkFlow NPD
+    │   ├── KPI-CRM / ค่าใช้จ่าย / HR
+    │   └── Delist Risk / ศูนย์เอกสาร
+    └── ⚙️ แผงแอดมิน
+        ├── จัดการผู้ใช้ / สิทธิ์ / คู่มือ
+        └── จัดการสินค้า / ยอดขาย
+  </pre>
+
+  <h3>Navigation Flow</h3>
+  <p>Landing → Login → Dashboard (sidebar menu → sub-tabs → inner tabs → content)</p>
+
+  <h3>URL Structure</h3>
+  <div class="kv"><div class="k">Pattern:</div><div class="v">SPA ไม่เปลี่ยน URL — ใช้ <code>display:none/block</code> สลับ section</div></div>
+  <div class="kv"><div class="k">Login:</div><div class="v"><code>/login.html</code></div></div>
+  <div class="kv"><div class="k">Dashboard:</div><div class="v"><code>/sales_dashboard.html</code></div></div>
+
+  <h3>Menu Structure (Sidebar)</h3>
+  <p>8 เมนูหลัก แต่ละเมนูมี sub-menu ที่ expand/collapse ได้ ควบคุมการแสดงผลตาม role ของผู้ใช้ผ่าน config object</p>
+</section>
+
+<!-- ===== SECTION 3 ===== -->
+<section id="s3">
+  <h2><span class="num">3</span> วิเคราะห์หน้าเว็บทั้งหมด</h2>
+
+  <div class="overflow-x">
+  <table>
+    <tr><th>หน้า</th><th>วัตถุประสงค์</th><th>Components หลัก</th><th>CTA</th></tr>
+    <tr><td>Landing</td><td>แนะนำระบบ, ข้อมูลบริษัท</td><td>Hero, Stats, Enter Button</td><td>เข้าสู่ระบบ Dashboard</td></tr>
+    <tr><td>Login</td><td>ยืนยันตัวตน</td><td>Form, Remember me, Theme toggle</td><td>เข้าสู่ระบบ</td></tr>
+    <tr><td>ภาพรวมยอดขาย</td><td>สรุป KPI ทุกช่องทาง</td><td>KPI cards, Charts, Tables, Filters</td><td>กรองปี/เดือน/ช่วงเวลา</td></tr>
+    <tr><td>ห้างค้าปลีก</td><td>ยอดขาย Modern Trade แยกห้าง</td><td>Tab per chain, Branch cards, Charts</td><td>เลือกห้าง/สาขา</td></tr>
+    <tr><td>บูธ</td><td>จัดการข้อมูลบูธขาย</td><td>Booth cards, Sales table, Stock mgmt</td><td>ดูรายละเอียด/เพิ่มข้อมูล</td></tr>
+    <tr><td>ออนไลน์</td><td>วิเคราะห์ช่องทาง Online</td><td>Sub-tabs (10+), Charts, Entry forms</td><td>กรอกข้อมูล/ดูรายงาน</td></tr>
+    <tr><td>อเมซอน &amp; ของฝาก</td><td>ยอดขาย Amazon, ร้านของฝาก</td><td>Portal, Visit tracker, Maps</td><td>บันทึก visit/ดูสถิติ</td></tr>
+    <tr><td>ธุรการขาย</td><td>บริหารงานขาย, พนักงาน</td><td>Staff list, Bill mgmt, Checklist</td><td>กรอกออเดอร์/ดูผลงาน</td></tr>
+    <tr><td>ฝ่ายขาย-การตลาด</td><td>สินค้า, คุณภาพ, KPI</td><td>Product list, Quality forms, NPD workflow</td><td>ดูสินค้า/กรอก KPI</td></tr>
+    <tr><td>แผงแอดมิน</td><td>จัดการระบบ, ผู้ใช้, สิทธิ์</td><td>User mgmt, Role config, Guides</td><td>จัดการผู้ใช้/ตั้งค่า</td></tr>
+  </table>
+  </div>
+</section>
+
+<!-- ===== SECTION 4 ===== -->
+<section id="s4">
+  <h2><span class="num">4</span> วิเคราะห์ Layout</h2>
+
+  <h3>โครงสร้าง Layout หลัก</h3>
+  <pre>
+┌─────────────────────────────────────────────┐
+│  Topbar (logo, lang, theme, download, user) │
+├──────────┬──────────────────────────────────┤
+│          │  Page Title + Breadcrumb         │
+│ Sidebar  ├──────────────────────────────────┤
+│ (240px)  │                                  │
+│          │  Tab Buttons (sub-tabs)           │
+│ - Menu   │                                  │
+│ - Sub    │  Inner Tab Buttons               │
+│   items  │                                  │
+│          │  KPI Cards (grid)                │
+│ Collapse │                                  │
+│ able     │  Charts (Chart.js canvas)        │
+│          │                                  │
+│          │  Data Tables (overflow-x)        │
+│          │                                  │
+│          │  Entry Forms (modal/inline)      │
+│          │                                  │
+├──────────┴──────────────────────────────────┤
+│  Footer (version, date, credits)            │
+└─────────────────────────────────────────────┘
+  </pre>
+
+  <div class="kv"><div class="k">Grid System:</div><div class="v">CSS Grid + Flexbox (custom, no framework)</div></div>
+  <div class="kv"><div class="k">KPI Grid:</div><div class="v"><code>grid-template-columns: repeat(auto-fill, minmax(200px, 1fr))</code></div></div>
+  <div class="kv"><div class="k">Sidebar:</div><div class="v">240px fixed, collapsible to icon-only mode</div></div>
+  <div class="kv"><div class="k">Spacing:</div><div class="v">8px base unit, consistent 12-16px padding on cards</div></div>
+  <div class="kv"><div class="k">Responsive:</div><div class="v">Sidebar collapses on mobile, tables scroll horizontally</div></div>
+</section>
+
+<!-- ===== SECTION 5 ===== -->
+<section id="s5">
+  <h2><span class="num">5</span> UI Components</h2>
+
+  <div class="overflow-x">
+  <table>
+    <tr><th>Component</th><th>ใช้งาน</th><th>จำนวน</th></tr>
+    <tr><td>Button</td><td>CTA, Filter, Action (สไตล์ pill rounded)</td><td>100+</td></tr>
+    <tr><td>Card</td><td>KPI summary, Booth info, Store detail</td><td>50+</td></tr>
+    <tr><td>Form / Input</td><td>Data entry (date, text, number, select)</td><td>30+</td></tr>
+    <tr><td>Modal</td><td>Add/Edit data, Paste from Excel, Confirm</td><td>20+</td></tr>
+    <tr><td>Table</td><td>Data display with sort/filter/pagination</td><td>40+</td></tr>
+    <tr><td>Select / Dropdown</td><td>Year, Month, Booth, Branch filters</td><td>50+</td></tr>
+    <tr><td>Tabs</td><td>Main tabs, Sub-tabs, Inner tabs (3 levels)</td><td>30+</td></tr>
+    <tr><td>Chart (Chart.js)</td><td>Bar, Line, Pie, Doughnut, Radar</td><td>25+</td></tr>
+    <tr><td>Badge</td><td>Status indicators (เปิด/ปิด, สีสถานะ)</td><td>20+</td></tr>
+    <tr><td>Toast / Notification</td><td>Bell icon + dropdown notification list</td><td>1 system</td></tr>
+    <tr><td>Search Box</td><td>Table search, filter by name/code</td><td>10+</td></tr>
+    <tr><td>Pagination</td><td>Table pagination (numbered buttons)</td><td>10+</td></tr>
+    <tr><td>Loading / Skeleton</td><td>ไม่มี (render sync ทั้งหมด)</td><td>0</td></tr>
+    <tr><td>Progress Bar</td><td>Achievement % bars in KPI</td><td>10+</td></tr>
+    <tr><td>Accordion</td><td>Sidebar menu expand/collapse</td><td>8</td></tr>
+    <tr><td>Calendar</td><td>Date inputs (native HTML date picker)</td><td>5+</td></tr>
+    <tr><td>Map</td><td>Leaflet map for visit tracking</td><td>1</td></tr>
+    <tr><td>Tooltip</td><td>Title attributes on buttons</td><td>20+</td></tr>
+  </table>
+  </div>
+</section>
+
+<!-- ===== SECTION 6 ===== -->
+<section id="s6">
+  <h2><span class="num">6</span> วิเคราะห์ UX</h2>
+
+  <h3>User Journey</h3>
+  <p>Landing → Login (เลือก role) → Dashboard ภาพรวม → เลือกช่องทาง (sidebar) → ดูข้อมูล/กรอกข้อมูล → Export รายงาน</p>
+
+  <h3>Conversion Flow</h3>
+  <p>เป็น internal tool — "Conversion" = ผู้ใช้เข้าถึงข้อมูลที่ต้องการได้เร็ว + กรอกข้อมูลได้สำเร็จ</p>
+
+  <h3>UX Scores</h3>
+  <div class="grid-2" style="grid-template-columns:repeat(3,1fr)">
+    <div class="stat">
+      <div class="val" style="color:var(--score-good)">78/100</div>
+      <div class="lbl">UX Score</div>
+      <div class="score-bar"><div class="fill" style="width:78%;background:var(--score-good)"></div></div>
+      <div style="font-size:11px;color:var(--text-sub)">UI สวย, ใช้งานง่าย แต่ navigation ลึกหลายชั้น</div>
+    </div>
+    <div class="stat">
+      <div class="val" style="color:var(--score-mid)">55/100</div>
+      <div class="lbl">Accessibility Score</div>
+      <div class="score-bar"><div class="fill" style="width:55%;background:var(--score-mid)"></div></div>
+      <div style="font-size:11px;color:var(--text-sub)">ไม่มี ARIA labels, keyboard nav จำกัด</div>
+    </div>
+    <div class="stat">
+      <div class="val" style="color:var(--score-good)">82/100</div>
+      <div class="lbl">Conversion Score</div>
+      <div class="score-bar"><div class="fill" style="width:82%;background:var(--score-good)"></div></div>
+      <div style="font-size:11px;color:var(--text-sub)">Data entry forms ใช้ง่าย, Export ครบ</div>
+    </div>
+  </div>
+
+  <h3>ข้อเสนอแนะ UX</h3>
+  <ul>
+    <li>เพิ่ม Breadcrumb navigation เพื่อลดความสับสนในการนำทาง</li>
+    <li>เพิ่ม Loading states / Skeleton สำหรับ heavy sections</li>
+    <li>เพิ่ม Keyboard shortcuts สำหรับ power users</li>
+    <li>รวม Quick search global เพื่อค้นหาทุกหน้าจากที่เดียว</li>
+  </ul>
+</section>
+
+<!-- ===== SECTION 7 ===== -->
+<section id="s7">
+  <h2><span class="num">7</span> Design System</h2>
+
+  <h3>Color Palette</h3>
+  <div class="overflow-x">
+  <table>
+    <tr><th>สี</th><th>Hex</th><th>การใช้งาน</th></tr>
+    <tr><td style="background:#f97316;color:#fff;border-radius:4px;text-align:center;width:40px">●</td><td><code>#f97316</code></td><td>Primary accent (Orange) — branding, header, highlights</td></tr>
+    <tr><td style="background:#16a34a;color:#fff;border-radius:4px;text-align:center">●</td><td><code>#16a34a</code></td><td>Success / Positive — ยอดเพิ่ม, สำเร็จ, Shipping</td></tr>
+    <tr><td style="background:#3b82f6;color:#fff;border-radius:4px;text-align:center">●</td><td><code>#3b82f6</code></td><td>Info / Secondary — Entry forms, links</td></tr>
+    <tr><td style="background:#dc2626;color:#fff;border-radius:4px;text-align:center">●</td><td><code>#dc2626</code></td><td>Danger / Negative — ยอดลด, ตีกลับ, ลบ</td></tr>
+    <tr><td style="background:#7c3aed;color:#fff;border-radius:4px;text-align:center">●</td><td><code>#7c3aed</code></td><td>Purple — ต้นทุน, ค่าใช้จ่าย</td></tr>
+    <tr><td style="background:#0f172a;color:#fff;border-radius:4px;text-align:center">●</td><td><code>#0f172a</code></td><td>Dark — Table headers, Sidebar</td></tr>
+    <tr><td style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:4px;text-align:center">●</td><td><code>#f8fafc</code></td><td>Background — Light theme base</td></tr>
+  </table>
+  </div>
+
+  <h3>Typography</h3>
+  <div class="kv"><div class="k">Primary Font:</div><div class="v">Noto Sans Thai (Google Fonts)</div></div>
+  <div class="kv"><div class="k">Fallback:</div><div class="v">-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif</div></div>
+  <div class="kv"><div class="k">Font Weights:</div><div class="v">400 (body), 600 (semi-bold labels), 700 (bold), 800 (extra-bold headings)</div></div>
+  <div class="kv"><div class="k">Body Size:</div><div class="v">13-14px</div></div>
+  <div class="kv"><div class="k">Heading Scale:</div><div class="v">1.1rem → 1.3rem → 1.5rem</div></div>
+
+  <h3>Component Style</h3>
+  <div class="kv"><div class="k">Border Radius:</div><div class="v">8px (cards), 12px (large cards), 20px (pill buttons)</div></div>
+  <div class="kv"><div class="k">Shadow:</div><div class="v">Minimal — <code>0 2px 8px rgba(0,0,0,.08)</code></div></div>
+  <div class="kv"><div class="k">Design Pattern:</div><div class="v">Soft UI with rounded corners, color-coded sections per channel</div></div>
+</section>
+
+<!-- ===== SECTION 8 ===== -->
+<section id="s8">
+  <h2><span class="num">8</span> Features ทั้งหมด</h2>
+
+  <div class="overflow-x">
+  <table>
+    <tr><th>Feature</th><th>สถานะ</th><th>รายละเอียด</th></tr>
+    <tr><td>Login / Auth</td><td><span class="tag">มี</span></td><td>Client-side SHA-256, 20 demo accounts, 5 roles</td></tr>
+    <tr><td>Role-based Access</td><td><span class="tag">มี</span></td><td>Config-driven menu filtering per role</td></tr>
+    <tr><td>Dashboard KPI</td><td><span class="tag">มี</span></td><td>Target vs Actual, % Achievement, multi-period</td></tr>
+    <tr><td>Charts</td><td><span class="tag">มี</span></td><td>Chart.js — Bar, Line, Pie, Doughnut, Radar</td></tr>
+    <tr><td>Data Entry Forms</td><td><span class="tag">มี</span></td><td>ADS, Shipping, COD, Supply — localStorage-based</td></tr>
+    <tr><td>Paste from Excel</td><td><span class="tag">มี</span></td><td>Tab-separated parsing for bulk data import</td></tr>
+    <tr><td>Export PDF/Excel/PNG</td><td><span class="tag">มี</span></td><td>jsPDF, SheetJS, html2canvas</td></tr>
+    <tr><td>Notification System</td><td><span class="tag">มี</span></td><td>Bell icon, booth contract expiry alerts</td></tr>
+    <tr><td>Dark/Light Theme</td><td><span class="tag">มี</span></td><td>CSS variables toggle</td></tr>
+    <tr><td>Thai/English i18n</td><td><span class="tag">มี</span></td><td>Translation keys via i18n.js</td></tr>
+    <tr><td>Search &amp; Filter</td><td><span class="tag">มี</span></td><td>Per-table search, year/month/date range filters</td></tr>
+    <tr><td>Pagination</td><td><span class="tag">มี</span></td><td>Numbered page buttons for large tables</td></tr>
+    <tr><td>Map / Geolocation</td><td><span class="tag">มี</span></td><td>Leaflet.js for sales visit tracking</td></tr>
+    <tr><td>LINE Notify</td><td><span class="tag">มี</span></td><td>Server-proxied notifications</td></tr>
+    <tr><td>AI Analysis</td><td><span class="tag">มี</span></td><td>Pre-generated AI insights per section</td></tr>
+    <tr><td>Real-time DB</td><td><span class="warn">ไม่มี</span></td><td>ข้อมูล hardcoded ใน JS</td></tr>
+    <tr><td>User Registration</td><td><span class="warn">ไม่มี</span></td><td>Admin สร้าง account ให้</td></tr>
+    <tr><td>Forgot Password</td><td><span class="warn">ไม่มี</span></td><td>ไม่มีระบบ reset password</td></tr>
+  </table>
+  </div>
+</section>
+
+<!-- ===== SECTION 9 ===== -->
+<section id="s9">
+  <h2><span class="num">9</span> Business Process</h2>
+
+  <h3>Workflow หลัก</h3>
+  <pre>
+ฝ่ายขาย              ธุรการ              ผู้จัดการ            ผู้บริหาร
+  │                    │                   │                   │
+  ├─ เยี่ยมลูกค้า     │                   │                   │
+  ├─ บันทึก Visit ──→ │                   │                   │
+  ├─ รับออเดอร์ ───→ กรอกออเดอร์          │                   │
+  │                  ├─ ตรวจสอบบิล        │                   │
+  │                  ├─ อัปเดตยอดขาย ──→ ดู Dashboard        │
+  │                  │                   ├─ วิเคราะห์ KPI    │
+  │                  │                   ├─ ตรวจสอบทีม ──→ ดูภาพรวม
+  │                  │                   │                  ├─ ตัดสินใจ
+  │                  │                   │                  ├─ ปรับเป้า
+  </pre>
+
+  <h3>Data Entry Flow</h3>
+  <pre>
+Excel/ข้อมูลจริง → กรอกในฟอร์ม/วาง Excel → localStorage → แสดงผล Dashboard
+                                              ↓
+                                         Export CSV/PDF
+  </pre>
+</section>
+
+<!-- ===== SECTION 10 ===== -->
+<section id="s10">
+  <h2><span class="num">10</span> วิเคราะห์ฐานข้อมูล</h2>
+
+  <h3>สถานะปัจจุบัน</h3>
+  <p><span class="warn">ไม่มีฐานข้อมูลจริง</span> — ข้อมูลทั้งหมดอยู่ใน JavaScript objects + localStorage สำหรับ data entry</p>
+
+  <h3>ER Diagram (แนะนำสำหรับอนาคต)</h3>
+  <pre>
+┌──────────────┐     ┌──────────────────┐     ┌───────────────┐
+│    users     │     │   sales_targets  │     │  sales_actual │
+├──────────────┤     ├──────────────────┤     ├───────────────┤
+│ id (PK)      │     │ id (PK)          │     │ id (PK)       │
+│ username     │──┐  │ year             │     │ date          │
+│ password_hash│  │  │ month            │     │ channel       │
+│ role         │  │  │ channel          │     │ amount        │
+│ full_name    │  │  │ target_amount    │     │ orders        │
+│ email        │  └──│ created_by (FK)  │     │ user_id (FK)  │
+│ phone        │     └──────────────────┘     └───────────────┘
+│ status       │
+└──────────────┘     ┌──────────────────┐     ┌───────────────┐
+                     │     products     │     │   booths      │
+┌──────────────┐     ├──────────────────┤     ├───────────────┤
+│   branches   │     │ id (PK)          │     │ id (PK)       │
+├──────────────┤     │ code             │     │ name          │
+│ id (PK)      │     │ name             │     │ location      │
+│ chain        │     │ category         │     │ type          │
+│ name         │     │ unit             │     │ rent          │
+│ region       │     │ price            │     │ staff_id (FK) │
+│ status       │     │ cost             │     │ contract_end  │
+└──────────────┘     └──────────────────┘     └───────────────┘
+
+┌──────────────────┐  ┌──────────────────┐  ┌──────────────────┐
+│  cod_orders      │  │  shipping_daily  │  │  supply_entries  │
+├──────────────────┤  ├──────────────────┤  ├──────────────────┤
+│ id (PK)          │  │ id (PK)          │  │ id (PK)          │
+│ date             │  │ date             │  │ year             │
+│ email            │  │ platform         │  │ month            │
+│ tracking_no      │  │ parcels          │  │ product_id (FK)  │
+│ recipient        │  │ shipping_cost    │  │ qty              │
+│ amount           │  │ total_charge     │  │ amount           │
+│ fb_page          │  │ user_id (FK)     │  │ user_id (FK)     │
+└──────────────────┘  └──────────────────┘  └──────────────────┘
+  </pre>
+
+  <h3>SQL Schema ตัวอย่าง</h3>
+  <pre>
+CREATE TABLE users (
+  id          SERIAL PRIMARY KEY,
+  username    VARCHAR(50) UNIQUE NOT NULL,
+  password    VARCHAR(255) NOT NULL,
+  role        VARCHAR(20) NOT NULL DEFAULT 'officer',
+  full_name   VARCHAR(100),
+  email       VARCHAR(100),
+  status      VARCHAR(10) DEFAULT 'active',
+  created_at  TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE sales_actual (
+  id          SERIAL PRIMARY KEY,
+  date        DATE NOT NULL,
+  channel     VARCHAR(30) NOT NULL,
+  sub_channel VARCHAR(50),
+  amount      DECIMAL(12,2) DEFAULT 0,
+  orders      INTEGER DEFAULT 0,
+  user_id     INTEGER REFERENCES users(id),
+  created_at  TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE supply_entries (
+  id          SERIAL PRIMARY KEY,
+  year        SMALLINT NOT NULL,
+  month       VARCHAR(10) NOT NULL,
+  product_code VARCHAR(20) NOT NULL,
+  qty         INTEGER DEFAULT 0,
+  amount      DECIMAL(10,2) DEFAULT 0,
+  user_id     INTEGER REFERENCES users(id),
+  created_at  TIMESTAMPTZ DEFAULT NOW()
+);
+  </pre>
+</section>
+
+<!-- ===== SECTION 11 ===== -->
+<section id="s11">
+  <h2><span class="num">11</span> วิเคราะห์ API</h2>
+
+  <h3>API ปัจจุบัน (server.js)</h3>
+  <div class="overflow-x">
+  <table>
+    <tr><th>Method</th><th>Endpoint</th><th>หน้าที่</th></tr>
+    <tr><td><span class="tag">POST</span></td><td><code>/api/line-notify</code></td><td>Proxy ส่ง LINE Notify message</td></tr>
+    <tr><td><span class="tag">GET</span></td><td><code>/api/sheets/*</code></td><td>Proxy ดึงข้อมูลจาก Google Sheets</td></tr>
+    <tr><td><span class="tag">GET</span></td><td><code>/*</code></td><td>Static file server</td></tr>
+  </table>
+  </div>
+
+  <h3>API ที่แนะนำสำหรับอนาคต</h3>
+  <div class="overflow-x">
+  <table>
+    <tr><th>Method</th><th>Endpoint</th><th>Request</th><th>Response</th></tr>
+    <tr><td><span class="tag">POST</span></td><td><code>/api/auth/login</code></td><td><code>{ username, password }</code></td><td><code>{ token, user, role }</code></td></tr>
+    <tr><td><span class="tag">GET</span></td><td><code>/api/sales?year=2569&amp;channel=online</code></td><td>Query params</td><td><code>{ data: [...], total }</code></td></tr>
+    <tr><td><span class="tag">POST</span></td><td><code>/api/cod/orders</code></td><td><code>{ date, tracking_no, ... }</code></td><td><code>{ id, status: "created" }</code></td></tr>
+    <tr><td><span class="tag">PUT</span></td><td><code>/api/supply/:year/:month</code></td><td><code>{ items: [{code, qty}] }</code></td><td><code>{ status: "saved" }</code></td></tr>
+    <tr><td><span class="tag">GET</span></td><td><code>/api/booths</code></td><td>-</td><td><code>{ booths: [...] }</code></td></tr>
+    <tr><td><span class="tag">DELETE</span></td><td><code>/api/cod/orders/:id</code></td><td>-</td><td><code>{ status: "deleted" }</code></td></tr>
+    <tr><td><span class="tag">GET</span></td><td><code>/api/export/:type?filters</code></td><td>Query params</td><td>File download (CSV/PDF)</td></tr>
+  </table>
+  </div>
+</section>
+
+<!-- ===== SECTION 12 ===== -->
+<section id="s12">
+  <h2><span class="num">12</span> Technology Stack</h2>
+
+  <div class="overflow-x">
+  <table>
+    <tr><th>Layer</th><th>เทคโนโลยี</th><th>ความมั่นใจ</th><th>เหตุผล</th></tr>
+    <tr><td>Frontend</td><td>Vanilla HTML/CSS/JS</td><td class="conf">100%</td><td>สังเกตจากโค้ด — ไม่มี framework</td></tr>
+    <tr><td>Charts</td><td>Chart.js 4.4.1</td><td class="conf">100%</td><td>CDN link ใน HTML</td></tr>
+    <tr><td>Export PDF</td><td>jsPDF 2.5.1</td><td class="conf">100%</td><td>CDN link ใน HTML</td></tr>
+    <tr><td>Export Excel</td><td>SheetJS (xlsx) 0.18.5</td><td class="conf">100%</td><td>CDN link + package.json</td></tr>
+    <tr><td>Screenshot</td><td>html2canvas 1.4.1</td><td class="conf">100%</td><td>CDN link ใน HTML</td></tr>
+    <tr><td>Maps</td><td>Leaflet 1.9.4</td><td class="conf">100%</td><td>CDN link ใน HTML</td></tr>
+    <tr><td>Fonts</td><td>Google Fonts (Noto Sans Thai)</td><td class="conf">100%</td><td>CDN link ใน HTML</td></tr>
+    <tr><td>Backend</td><td>Node.js (built-in http)</td><td class="conf">100%</td><td>server.js ใช้ http module</td></tr>
+    <tr><td>Database</td><td>ไม่มี (JS hardcoded)</td><td class="conf">100%</td><td>ข้อมูลอยู่ใน .js files</td></tr>
+    <tr><td>Data Entry</td><td>localStorage</td><td class="conf">100%</td><td>สังเกตจาก code pattern</td></tr>
+    <tr><td>Hosting</td><td>LAN / Local server</td><td class="conf">95%</td><td>server.js listen port 8080</td></tr>
+    <tr><td>VCS</td><td>Git + GitHub</td><td class="conf">100%</td><td>มี .git + remote repos</td></tr>
+    <tr><td>Image Processing</td><td>Sharp (dev)</td><td class="conf">100%</td><td>package.json devDependency</td></tr>
+  </table>
+  </div>
+</section>
+
+<!-- ===== SECTION 13 ===== -->
+<section id="s13">
+  <h2><span class="num">13</span> Security</h2>
+
+  <ul class="check">
+    <li class="no">Authentication: Client-side only — password hash ใน JS (เปิด DevTools เห็นหมด)</li>
+    <li class="no">Authorization: Role check ฝั่ง client เท่านั้น ไม่มี server validation</li>
+    <li class="warn">Session: sessionStorage + localStorage — ไม่มี token expiry</li>
+    <li class="no">JWT / OAuth: ไม่มี</li>
+    <li class="no">CSRF Protection: ไม่มี</li>
+    <li class="warn">XSS: innerHTML ใช้ทั่ว — มีความเสี่ยง (แต่ข้อมูลไม่ได้มาจาก user input ภายนอก)</li>
+    <li class="no">Rate Limiting: ไม่มี</li>
+    <li class="no">CAPTCHA / MFA: ไม่มี</li>
+    <li class="warn">HTTPS: ขึ้นอยู่กับ deployment (server.js เป็น HTTP)</li>
+    <li class="no">Content Security Policy: ไม่มี custom CSP headers</li>
+  </ul>
+
+  <h3>ข้อเสนอแนะ</h3>
+  <ul>
+    <li>ย้าย Auth ไป server-side (JWT + bcrypt) หรือใช้ Supabase Auth</li>
+    <li>เพิ่ม HTTPS (Let's Encrypt หรือ reverse proxy)</li>
+    <li>ใช้ textContent แทน innerHTML เมื่อเป็นไปได้</li>
+    <li>เพิ่ม CSP headers, rate limiting, session timeout</li>
+  </ul>
+</section>
+
+<!-- ===== SECTION 14 ===== -->
+<section id="s14">
+  <h2><span class="num">14</span> Performance</h2>
+
+  <div class="overflow-x">
+  <table>
+    <tr><th>Metric</th><th>สถานะ</th><th>หมายเหตุ</th></tr>
+    <tr><td>Initial Load</td><td><span class="warn">ช้า</span></td><td>โหลด JS ~50,000+ lines, hardcoded data objects ทั้งหมด</td></tr>
+    <tr><td>Lazy Load</td><td><span class="warn">ไม่มี</span></td><td>ทุกอย่างโหลดทีเดียว</td></tr>
+    <tr><td>Code Splitting</td><td><span class="warn">บางส่วน</span></td><td>แยก JS files แล้ว แต่ยังโหลดพร้อมกัน</td></tr>
+    <tr><td>Image Optimization</td><td><span class="tag">ดี</span></td><td>ใช้ Sharp สำหรับ resize</td></tr>
+    <tr><td>Minification</td><td><span class="warn">ไม่มี</span></td><td>ไม่มี build process</td></tr>
+    <tr><td>Compression</td><td><span class="warn">ไม่มี</span></td><td>server.js ไม่มี gzip</td></tr>
+    <tr><td>CDN</td><td><span class="tag">บางส่วน</span></td><td>Libraries ใช้ CDN, แต่โค้ดหลักไม่ได้อยู่บน CDN</td></tr>
+    <tr><td>Cache</td><td><span class="warn">ไม่มี</span></td><td>ไม่มี cache headers</td></tr>
+  </table>
+  </div>
+
+  <h3>Lighthouse Score (ประมาณการ)</h3>
+  <div class="grid-4">
+    <div class="stat"><div class="val" style="color:var(--score-mid)">~60</div><div class="lbl">Performance</div></div>
+    <div class="stat"><div class="val" style="color:var(--score-mid)">~55</div><div class="lbl">Accessibility</div></div>
+    <div class="stat"><div class="val" style="color:var(--score-good)">~80</div><div class="lbl">Best Practices</div></div>
+    <div class="stat"><div class="val" style="color:var(--score-low)">~30</div><div class="lbl">SEO</div></div>
+  </div>
+</section>
+
+<!-- ===== SECTION 15 ===== -->
+<section id="s15">
+  <h2><span class="num">15</span> SEO</h2>
+  <p><span class="warn">N/A (Internal Tool)</span> — เป็นระบบภายใน ไม่ต้องการ SEO แต่ถ้าจะทำเป็น public product:</p>
+  <ul class="check">
+    <li class="no">Meta Tags: มี title เท่านั้น ไม่มี description</li>
+    <li class="no">Open Graph: ไม่มี</li>
+    <li class="no">Sitemap.xml: ไม่มี</li>
+    <li class="no">Robots.txt: ไม่มี</li>
+    <li class="no">Structured Data: ไม่มี</li>
+    <li class="warn">Heading Structure: ใช้ div + inline style แทน semantic headings</li>
+    <li class="no">Alt Text: รูปภาพส่วนใหญ่ไม่มี alt</li>
+  </ul>
+</section>
+
+<!-- ===== SECTION 16 ===== -->
+<section id="s16">
+  <h2><span class="num">16</span> Responsive</h2>
+  <div class="overflow-x">
+  <table>
+    <tr><th>Device</th><th>สถานะ</th><th>รายละเอียด</th></tr>
+    <tr><td>Desktop (1280px+)</td><td><span class="tag">ดี</span></td><td>Layout เต็มหน้า, sidebar + content</td></tr>
+    <tr><td>Tablet (768-1279px)</td><td><span class="tag">ใช้ได้</span></td><td>Sidebar collapse ได้, tables scroll</td></tr>
+    <tr><td>Mobile (&lt; 768px)</td><td><span class="warn">พอใช้</span></td><td>Sidebar ซ่อน, แต่ตารางและ charts บีบ</td></tr>
+  </table>
+  </div>
+  <h3>ข้อเสนอแนะ</h3>
+  <ul>
+    <li>เพิ่ม mobile-first card layout แทนตารางบน mobile</li>
+    <li>ทำ bottom navigation bar สำหรับ mobile</li>
+    <li>ปรับ chart ให้ responsive ตาม container width</li>
+  </ul>
+</section>
+
+<!-- ===== SECTION 17 ===== -->
+<section id="s17">
+  <h2><span class="num">17</span> Third-party Services</h2>
+  <div class="overflow-x">
+  <table>
+    <tr><th>Service</th><th>สถานะ</th><th>การใช้งาน</th></tr>
+    <tr><td>Google Fonts</td><td><span class="tag">ใช้</span></td><td>Noto Sans Thai</td></tr>
+    <tr><td>Chart.js</td><td><span class="tag">ใช้</span></td><td>Charting library (CDN)</td></tr>
+    <tr><td>Leaflet</td><td><span class="tag">ใช้</span></td><td>Map for visit tracking</td></tr>
+    <tr><td>LINE Notify</td><td><span class="tag">ใช้</span></td><td>Push notification via server proxy</td></tr>
+    <tr><td>Google Sheets</td><td><span class="tag">ใช้</span></td><td>Data source via server proxy</td></tr>
+    <tr><td>Google Analytics</td><td><span class="warn">ไม่ใช้</span></td><td>-</td></tr>
+    <tr><td>Payment Gateway</td><td><span class="warn">ไม่ใช้</span></td><td>N/A (internal tool)</td></tr>
+    <tr><td>CRM</td><td><span class="warn">ไม่ใช้</span></td><td>มี KPI-CRM section แต่ไม่เชื่อม external CRM</td></tr>
+  </table>
+  </div>
+</section>
+
+<!-- ===== SECTION 18 ===== -->
+<section id="s18">
+  <h2><span class="num">18</span> สถาปัตยกรรมระบบ</h2>
+
+  <h3>ปัจจุบัน: Monolith SPA</h3>
+  <pre>
+┌─────────────────────────────────────────────────────┐
+│                   Browser (Client)                  │
+│  ┌───────────┐  ┌────────┐  ┌─────────────────────┐│
+│  │ HTML (SPA)│  │CSS (2) │  │  JS Files (37)      ││
+│  │ 5,500 ln  │  │        │  │  app.js = 19,800 ln ││
+│  │           │  │ themes │  │  data = hardcoded    ││
+│  │           │  │        │  │  localStorage entry  ││
+│  └───────────┘  └────────┘  └─────────────────────┘│
+└──────────────────────┬──────────────────────────────┘
+                       │ HTTP (port 8080)
+┌──────────────────────▼──────────────────────────────┐
+│              Node.js Static Server                  │
+│  ┌────────────┐  ┌──────────────┐  ┌─────────────┐ │
+│  │Static Files│  │LINE Notify   │  │Google Sheets │ │
+│  │  Serving   │  │  Proxy       │  │  Proxy       │ │
+│  └────────────┘  └──────┬───────┘  └──────┬──────┘ │
+└──────────────────────────┼─────────────────┼────────┘
+                           │                 │
+                    ┌──────▼───┐      ┌──────▼──────┐
+                    │LINE API  │      │Google API   │
+                    └──────────┘      └─────────────┘
+  </pre>
+
+  <h3>แนะนำ: Modern Architecture</h3>
+  <pre>
+┌──────────────┐     ┌──────────────┐     ┌──────────────┐
+│   Frontend   │     │   Backend    │     │   Database   │
+│  (React/Vue) │────▶│  (Node/Nest) │────▶│ (PostgreSQL) │
+│   + Vite     │     │  REST API    │     │  + Supabase  │
+│   + Tailwind │     │  JWT Auth    │     │              │
+└──────────────┘     └──────────────┘     └──────────────┘
+                           │
+              ┌────────────┼────────────┐
+        ┌─────▼─────┐ ┌────▼────┐ ┌────▼─────┐
+        │LINE Notify│ │ Google  │ │  S3/R2   │
+        │           │ │ Sheets  │ │ Storage  │
+        └───────────┘ └─────────┘ └──────────┘
+  </pre>
+
+  <h3>Folder Structure ปัจจุบัน</h3>
+  <pre>
+Project Sales/
+├── sales_dashboard.html    # Main SPA (5,500 lines)
+├── login.html              # Login page
+├── server.js               # Node.js static server
+├── package.json
+├── css/
+│   ├── dashboard.css       # Main styles + themes
+│   └── login.css
+├── js/                     # 37 JavaScript files
+│   ├── app.js              # Core logic (~19,800 lines)
+│   ├── auth.js             # Authentication
+│   ├── shell.js            # Sidebar/navigation
+│   ├── i18n.js             # Translations
+│   ├── export.js           # PDF/Excel/PNG export
+│   ├── notifications.js    # Bell notifications
+│   ├── *-data.js           # Hardcoded data files
+│   └── *-branches.js       # Branch/store data
+├── img/                    # Product images
+├── scripts/                # Data processing scripts
+└── Data/                   # JSON data files
+  </pre>
+</section>
+
+<!-- ===== SECTION 19 ===== -->
+<section id="s19">
+  <h2><span class="num">19</span> เอกสารสำหรับการพัฒนาระบบ</h2>
+
+  <h3>User Stories (ตัวอย่าง)</h3>
+  <div class="overflow-x">
+  <table>
+    <tr><th>ID</th><th>As a</th><th>I want to</th><th>So that</th><th>Priority</th></tr>
+    <tr><td>US-01</td><td>ผู้บริหาร</td><td>ดูภาพรวม KPI ทุกช่องทางในหน้าเดียว</td><td>ตัดสินใจเชิงกลยุทธ์ได้เร็ว</td><td><span class="tag">Must</span></td></tr>
+    <tr><td>US-02</td><td>ผู้จัดการ</td><td>กรองข้อมูลตามปี/เดือน/ช่องทาง</td><td>วิเคราะห์เจาะลึกช่วงเวลาที่สนใจ</td><td><span class="tag">Must</span></td></tr>
+    <tr><td>US-03</td><td>เจ้าหน้าที่</td><td>กรอกข้อมูล COD/ค่าขนส่ง รายวัน</td><td>ข้อมูลครบถ้วนสำหรับรายงาน</td><td><span class="tag">Must</span></td></tr>
+    <tr><td>US-04</td><td>เจ้าหน้าที่</td><td>วางข้อมูลจาก Excel ลง form ได้</td><td>ลดเวลากรอกข้อมูลทีละรายการ</td><td><span class="tag">Should</span></td></tr>
+    <tr><td>US-05</td><td>ผู้จัดการ</td><td>Export รายงานเป็น PDF/Excel</td><td>ส่งรายงานให้ผู้บริหาร</td><td><span class="tag">Must</span></td></tr>
+    <tr><td>US-06</td><td>Admin</td><td>จัดการ user accounts และสิทธิ์</td><td>ควบคุมการเข้าถึงข้อมูล</td><td><span class="tag">Must</span></td></tr>
+    <tr><td>US-07</td><td>พนักงานขาย</td><td>บันทึก visit ลูกค้าพร้อม location</td><td>มีหลักฐานเยี่ยมลูกค้า</td><td><span class="tag">Should</span></td></tr>
+    <tr><td>US-08</td><td>ผู้บริหาร</td><td>รับ notification เมื่อสัญญาบูธใกล้หมด</td><td>วางแผนต่อสัญญาทันเวลา</td><td><span class="tag">Should</span></td></tr>
+  </table>
+  </div>
+
+  <h3>Non-functional Requirements</h3>
+  <ul>
+    <li><strong>Performance:</strong> หน้า Dashboard โหลดภายใน 3 วินาที</li>
+    <li><strong>Availability:</strong> ระบบพร้อมใช้ 99% ในเวลาทำงาน (8:00-18:00)</li>
+    <li><strong>Security:</strong> ข้อมูลขายเป็นความลับ — ต้องมี authentication</li>
+    <li><strong>Scalability:</strong> รองรับ 50 concurrent users</li>
+    <li><strong>Compatibility:</strong> Chrome, Edge, Safari (latest 2 versions)</li>
+    <li><strong>Localization:</strong> ภาษาไทย (primary), English (secondary)</li>
+  </ul>
+</section>
+
+<!-- ===== SECTION 20 ===== -->
+<section id="s20">
+  <h2><span class="num">20</span> แผนพัฒนาเว็บไซต์ใหม่</h2>
+
+  <div class="overflow-x">
+  <table>
+    <tr><th>Phase</th><th>งาน</th><th>ระยะเวลา</th><th>ทีม</th><th>งบประมาณ</th></tr>
+    <tr>
+      <td><strong>Phase 1</strong><br>Foundation</td>
+      <td>
+        <ul style="margin:0;padding-left:16px;font-size:12px">
+          <li>Setup Backend (Node.js/NestJS + PostgreSQL)</li>
+          <li>Auth system (JWT + role-based)</li>
+          <li>Core API (sales, users, products)</li>
+          <li>Frontend framework (React/Vue + Vite)</li>
+          <li>Design system + component library</li>
+        </ul>
+      </td>
+      <td>6-8 สัปดาห์</td>
+      <td>2 Dev, 1 Designer</td>
+      <td>~150,000-250,000 ฿</td>
+    </tr>
+    <tr>
+      <td><strong>Phase 2</strong><br>Core Features</td>
+      <td>
+        <ul style="margin:0;padding-left:16px;font-size:12px">
+          <li>Dashboard KPI + Charts</li>
+          <li>Modern Trade / Online / Booth modules</li>
+          <li>Data entry forms (migrate from localStorage)</li>
+          <li>Export PDF/Excel</li>
+          <li>Notification system</li>
+        </ul>
+      </td>
+      <td>8-10 สัปดาห์</td>
+      <td>2-3 Dev, 1 Designer, 1 QA</td>
+      <td>~200,000-350,000 ฿</td>
+    </tr>
+    <tr>
+      <td><strong>Phase 3</strong><br>Advanced</td>
+      <td>
+        <ul style="margin:0;padding-left:16px;font-size:12px">
+          <li>Admin panel (user mgmt, roles)</li>
+          <li>Amazon/ของฝาก/Visit tracker</li>
+          <li>Real-time sync + multi-user</li>
+          <li>Mobile responsive optimization</li>
+          <li>AI-powered analytics</li>
+        </ul>
+      </td>
+      <td>6-8 สัปดาห์</td>
+      <td>2-3 Dev, 1 QA</td>
+      <td>~150,000-300,000 ฿</td>
+    </tr>
+    <tr>
+      <td><strong>Phase 4</strong><br>Polish &amp; Scale</td>
+      <td>
+        <ul style="margin:0;padding-left:16px;font-size:12px">
+          <li>Performance optimization</li>
+          <li>Security audit + hardening</li>
+          <li>CI/CD pipeline</li>
+          <li>Data migration from current system</li>
+          <li>User training + documentation</li>
+          <li>Mobile app (PWA or native)</li>
+        </ul>
+      </td>
+      <td>4-6 สัปดาห์</td>
+      <td>1-2 Dev, 1 DevOps, 1 QA</td>
+      <td>~100,000-200,000 ฿</td>
+    </tr>
+  </table>
+  </div>
+
+  <h3>ความเสี่ยงและแนวทางลด</h3>
+  <div class="overflow-x">
+  <table>
+    <tr><th>ความเสี่ยง</th><th>ระดับ</th><th>แนวทางลด</th></tr>
+    <tr><td>Data migration ซับซ้อน (hardcoded → DB)</td><td><span class="warn">High</span></td><td>เขียน migration scripts, ทดสอบข้อมูลทีละ module</td></tr>
+    <tr><td>ผู้ใช้ต้านการเปลี่ยนแปลง</td><td><span class="warn">Medium</span></td><td>ทำ UI ให้คล้ายเดิม, อบรมผู้ใช้, ทำ parallel run</td></tr>
+    <tr><td>Scope creep (เพิ่ม feature ไม่หยุด)</td><td><span class="warn">High</span></td><td>Lock scope per phase, prioritize MoSCoW</td></tr>
+    <tr><td>Performance ไม่ดีพอ</td><td><span class="warn">Medium</span></td><td>Load testing ตั้งแต่ Phase 1, set benchmarks</td></tr>
+  </table>
+  </div>
+
+  <h3>สรุปรวม</h3>
+  <div class="grid-2" style="margin-top:12px">
+    <div class="stat"><div class="val">~24-32</div><div class="lbl">สัปดาห์ (6-8 เดือน)</div></div>
+    <div class="stat"><div class="val">~600K-1.1M</div><div class="lbl">งบประมาณรวม (บาท)</div></div>
+  </div>
+</section>
+
+<div class="footer">
+  <p><strong>Wanwanach Sales Intelligence (WSI)</strong> — Website Analysis Report</p>
+  <p>Generated: July 2026 | Analyzed by AI Team</p>
+  <p style="margin-top:8px;font-size:11px">หมายเหตุ: รายงานนี้อ้างอิงจากการวิเคราะห์ source code จริง ข้อมูลที่เป็น "การคาดการณ์" ได้ระบุ % ความมั่นใจไว้แล้ว</p>
+</div>
+
+</div>
+
+<script>
+function toggleTheme(){
+  var d=document.documentElement;
+  var current=d.getAttribute('data-theme');
+  d.setAttribute('data-theme', current==='dark'?'light':'dark');
+  localStorage.setItem('wsi-theme', d.getAttribute('data-theme'));
+}
+(function(){
+  var saved=localStorage.getItem('wsi-theme');
+  if(saved) document.documentElement.setAttribute('data-theme',saved);
+})();
+window.addEventListener('scroll',function(){
+  document.getElementById('backTop').style.display=window.scrollY>400?'flex':'none';
+});
+</script>
+</body>
+</html>

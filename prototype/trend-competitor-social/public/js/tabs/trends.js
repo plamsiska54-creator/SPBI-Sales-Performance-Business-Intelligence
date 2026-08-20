@@ -291,16 +291,16 @@ function renderTopProductsChart(products, weekRange) {
       },
       scales: {
         x: {
-          ticks: { color: '#999', maxRotation: 45 },
-          grid: { color: 'rgba(255,255,255,0.05)' }
+          ticks: { color: '#718096', maxRotation: 45 },
+          grid: { color: 'rgba(0,0,0,0.06)' }
         },
         y: {
           ticks: {
-            color: '#999',
+            color: '#718096',
             callback: (v) => v >= 1000 ? (v / 1000).toFixed(0) + 'K' : v
           },
-          grid: { color: 'rgba(255,255,255,0.05)' },
-          title: { display: true, text: 'Search Volume', color: '#999' }
+          grid: { color: 'rgba(0,0,0,0.06)' },
+          title: { display: true, text: 'Search Volume', color: '#718096' }
         }
       }
     }
@@ -353,13 +353,13 @@ function renderCategoriesChart(categoryTrends, categories, weekRange) {
       scales: {
         x: {
           ticks: {
-            color: '#999',
+            color: '#718096',
             callback: (v) => v >= 1000 ? (v / 1000).toFixed(0) + 'K' : v
           },
-          grid: { color: 'rgba(255,255,255,0.05)' }
+          grid: { color: 'rgba(0,0,0,0.06)' }
         },
         y: {
-          ticks: { color: '#ccc' },
+          ticks: { color: '#4a5568' },
           grid: { display: false }
         }
       }
@@ -422,13 +422,13 @@ function renderKeywordsChart(keywords) {
       scales: {
         x: {
           ticks: {
-            color: '#999',
+            color: '#718096',
             callback: (v) => v >= 1000 ? (v / 1000).toFixed(0) + 'K' : v
           },
-          grid: { color: 'rgba(255,255,255,0.05)' }
+          grid: { color: 'rgba(0,0,0,0.06)' }
         },
         y: {
-          ticks: { color: '#ccc', font: { size: 11 } },
+          ticks: { color: '#4a5568', font: { size: 11 } },
           grid: { display: false }
         }
       }

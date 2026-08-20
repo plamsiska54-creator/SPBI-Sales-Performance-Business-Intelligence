@@ -1229,5 +1229,286 @@ function _aiKpiCard(icon,label,value,sub,color){
     +'<div style="font-size:11px;color:#94a3b8">'+sub+'</div></div>';
 }
 
+// ============================================================
+// SUPABASE INTEGRATION — ดึงข้อมูลจริงจาก API อัพเดททุกจุด
+// ============================================================
+var _ORD_SUPA = { loaded: false, loading: false, branchStaff: {} };
+
+var _ORD_ROUTE_STAFF = {
+  'A':'S01','B':'S01','C':'S01','D':'S01','E':'S01',
+  'F1':'S01','F2':'S01','G':'S01','ราชพฤกษ์':'S01','วิภาวดี':'S01',
+  'สระบุรี':'S02','โคราช':'S02','สุพรรณบุรี':'S02',
+  'ชลบุรี':'S02','กาญจนบุรี':'S02','อำนาจเจริญ':'S02',
+  'บ่อพลอย':'S02','กระทุ่มแบน':'S02','มิตรภาพ':'S02',
+  'เชียงใหม่':'S03','สงขลา':'S03','เชียงราย':'S03',
+  'กำแพงเพชร':'S03','ใต้':'S03','ภูเก็ต':'S03','เพชรบูรณ์':'S03','นครศรี':'S03',
+  'นครสวรรค์':'S05','ขอนแก่น':'S05','อุบล':'S05','บุรีรัมย์':'S05',
+  'ระยอง':'S06','เพชรบุรี':'S06','บูธ':'S06','นครนายก':'S06','ราชบุรี':'S06'
+};
+
+function _ordRouteToStaff(route) {
+  if (!route) return null;
+  var r = route.trim();
+  for (var key in _ORD_ROUTE_STAFF) {
+    if (r === key || r.indexOf(key) === 0) return _ORD_ROUTE_STAFF[key];
+  }
+  if (/^[A-G]$/.test(r) || r === 'F1' || r === 'F2') return 'S01';
+  if (r.indexOf('COCO') >= 0 || r.indexOf('coco') >= 0) return 'S01';
+  if (r.indexOf('บูธ') >= 0) return 'S06';
+  return null;
+}
+
+function _ordStaffIdx(code) {
+  for (var i = 0; i < ORD_STAFF.length; i++) {
+    if (ORD_STAFF[i].code === code) return i;
+  }
+  return -1;
+}
+
+var _TH_MONTHS = ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+var _EN_MONTHS_SHORT = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+window.ordLoadFromSupa = function() {
+  if (_ORD_SUPA.loaded || _ORD_SUPA.loading) return Promise.resolve();
+  if (typeof _supaFetch !== 'function') {
+    console.warn('[OrdSupa] _supaFetch not available');
+    return Promise.resolve();
+  }
+  _ORD_SUPA.loading = true;
+  console.log('[OrdSupa] Loading ordering data from Supabase...');
+
+  return Promise.all([
+    _supaFetch('location_monthly',
+      'select=branch_code,route&year_month=gte.2025-01&route=neq.&order=branch_code', 5000),
+    _supaFetch('sales_daily',
+      'select=date,branch_code,n_transactions,qty,revenue&date=gte.2026-01-01&order=date', 5000)
+  ]).then(function(results) {
+    var locData = results[0] || [];
+    var salesData = results[1] || [];
+
+    // Step 1: Build branch_code → staff mapping
+    var branchStaff = {};
+    locData.forEach(function(row) {
+      if (!row.branch_code || !row.route) return;
+      var staffCode = _ordRouteToStaff(row.route);
+      if (staffCode && !branchStaff[row.branch_code]) {
+        branchStaff[row.branch_code] = staffCode;
+      }
+    });
+    _ORD_SUPA.branchStaff = branchStaff;
+    console.log('[OrdSupa] Branch→Staff mapping:', Object.keys(branchStaff).length, 'branches');
+
+    // Step 2: Aggregate sales_daily by month and staff
+    var monthlyBills = {};  // { 'ม.ค.': [s01,s02,s03,s05,s06] }
+    var monthlyPieces = {};
+    var dailyByMonth = {}; // { 5: { '01': [s01,s02,...], '02': [...] } }
+    var staffCount = ORD_STAFF.length;
+    var monthsFound = {};
+
+    salesData.forEach(function(row) {
+      if (!row.date) return;
+      var parts = row.date.split('-');
+      var monthIdx = parseInt(parts[1], 10) - 1; // 0-based
+      var dayStr = parts[2];
+      var monthNum = monthIdx + 1;
+      var thMonth = _TH_MONTHS[monthIdx];
+      var bills = row.n_transactions || 0;
+      var pieces = row.qty || 0;
+      var staffCode = branchStaff[row.branch_code] || null;
+      var sIdx = staffCode ? _ordStaffIdx(staffCode) : -1;
+
+      // Monthly aggregate
+      if (!monthlyBills[thMonth]) {
+        monthlyBills[thMonth] = new Array(staffCount).fill(0);
+        monthlyPieces[thMonth] = new Array(staffCount).fill(0);
+        monthsFound[thMonth] = monthNum;
+      }
+      if (sIdx >= 0) {
+        monthlyBills[thMonth][sIdx] += bills;
+        monthlyPieces[thMonth][sIdx] += pieces;
+      }
+
+      // Daily aggregate
+      if (!dailyByMonth[monthNum]) dailyByMonth[monthNum] = {};
+      if (!dailyByMonth[monthNum][dayStr]) {
+        dailyByMonth[monthNum][dayStr] = new Array(staffCount).fill(0);
+      }
+      if (sIdx >= 0) {
+        dailyByMonth[monthNum][dayStr][sIdx] += bills;
+      }
+    });
+
+    // Step 3: Update ORD_BILLS
+    var sortedMonths = Object.keys(monthlyBills).sort(function(a, b) {
+      return (monthsFound[a] || 0) - (monthsFound[b] || 0);
+    });
+
+    ORD_BILLS.months = {};
+    ORD_BILLS.pieces = {};
+    sortedMonths.forEach(function(m) {
+      ORD_BILLS.months[m] = monthlyBills[m];
+      ORD_BILLS.pieces[m] = monthlyPieces[m];
+    });
+
+    // Update daily data for each month
+    Object.keys(dailyByMonth).forEach(function(monthNum) {
+      var key = 'daily' + monthNum;
+      var dayMap = dailyByMonth[monthNum];
+      var days = Object.keys(dayMap).sort();
+      ORD_BILLS[key] = days.map(function(d) {
+        return { day: d, bills: dayMap[d] };
+      });
+    });
+
+    // Step 4: Update month tabs in HTML
+    _ordUpdateBillMonthTabs(sortedMonths, monthsFound);
+
+    _ORD_SUPA.loaded = true;
+    _ORD_SUPA.loading = false;
+    console.log('[OrdSupa] Done! Months:', sortedMonths.join(', '),
+      '| Total bills:', Object.values(monthlyBills).reduce(function(s, arr) {
+        return s + arr.reduce(function(a, b) { return a + b; }, 0);
+      }, 0));
+
+    // Re-render if ordering tab is active
+    if (typeof renderOrdStaff === 'function') renderOrdStaff();
+    if (typeof renderOrdBills === 'function') renderOrdBills();
+    if (typeof renderOrdErrors === 'function') renderOrdErrors();
+
+    return true;
+  }).catch(function(err) {
+    console.error('[OrdSupa] Error:', err);
+    _ORD_SUPA.loading = false;
+    return false;
+  });
+};
+
+function _ordUpdateBillMonthTabs(sortedMonths, monthsFound) {
+  var tabsEl = document.getElementById('ordBillMonthTabs');
+  if (!tabsEl) return;
+  var html = '';
+  sortedMonths.forEach(function(m, i) {
+    var mNum = monthsFound[m];
+    var active = (i === sortedMonths.length - 1) ? ' active' : '';
+    html += '<div class="fmtab' + active + '" data-m="' + mNum
+      + '" onclick="ordSelectBillMonth(' + mNum + ',this)">' + m + ' 2569</div>';
+    if (active) _ordBillMonth = mNum;
+  });
+  tabsEl.innerHTML = html;
+}
+
+// Override renderOrdBillDaily to handle dynamic months
+var _origRenderOrdBillDaily = window.renderOrdBillDaily;
+window.renderOrdBillDaily = function() {
+  var canvas = document.getElementById('ordBillDailyChart');
+  if (!canvas) return;
+  destroyChart('billDaily');
+  var key = 'daily' + _ordBillMonth;
+  var data = ORD_BILLS[key];
+  if (!data || !data.length) {
+    if (_origRenderOrdBillDaily) return _origRenderOrdBillDaily();
+    return;
+  }
+  var selVal = (document.getElementById('ordBillPerson') || {}).value || 'all';
+  var labels = data.map(function(d) { return d.day; });
+  var values;
+  if (selVal === 'all') {
+    values = data.map(function(d) { return d.bills.reduce(function(a, b) { return a + b; }, 0); });
+  } else {
+    var idx = ORD_STAFF.map(function(s) { return s.nick; }).indexOf(selVal);
+    values = data.map(function(d) { return idx >= 0 ? d.bills[idx] : 0; });
+  }
+  _ordCharts.billDaily = new Chart(canvas, {
+    type: 'bar',
+    data: { labels: labels, datasets: [{ label: 'จำนวนบิล', data: values, backgroundColor: 'rgba(59,130,246,.6)', borderRadius: 4 }] },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } },
+      scales: { y: { beginAtZero: true, title: { display: true, text: 'บิล' } }, x: { title: { display: true, text: 'วันที่' } } } }
+  });
+};
+
+// Override renderOrdBills to update chart title dynamically
+var _origRenderOrdBills = window.renderOrdBills;
+window.renderOrdBills = function() {
+  var kpi = document.getElementById('ordBillsKPI');
+  var mKeys = Object.keys(ORD_BILLS.months);
+  if (!mKeys.length) return;
+  var lastM = mKeys[mKeys.length - 1];
+  var totalBills = ORD_BILLS.months[lastM].reduce(function(a, b) { return a + b; }, 0);
+  var totalPcs = (ORD_BILLS.pieces[lastM] || []).reduce(function(a, b) { return a + b; }, 0);
+  var allMonthsBills = 0;
+  mKeys.forEach(function(m) {
+    allMonthsBills += ORD_BILLS.months[m].reduce(function(a, b) { return a + b; }, 0);
+  });
+  if (kpi) {
+    kpi.innerHTML = kpiCard('🧾 บิลเดือนล่าสุด (' + lastM + ')', fmt(totalBills) + ' บิล', 'รวมทุกคน')
+      + kpiCard('📦 ชิ้นเดือนล่าสุด', fmt(totalPcs) + ' ชิ้น', lastM)
+      + kpiCard('👥 เฉลี่ย/คน', fmt(Math.round(totalBills / ORD_STAFF.length)) + ' บิล/คน', '')
+      + kpiCard('📊 รวมทั้งปี (' + mKeys.length + ' เดือน)', fmt(allMonthsBills) + ' บิล', 'ข้อมูลจาก Supabase', '#16a34a');
+  }
+
+  var sel = document.getElementById('ordBillPerson');
+  if (sel && sel.options.length <= 1) {
+    ORD_STAFF.forEach(function(s) {
+      var o = document.createElement('option');
+      o.value = s.nick; o.textContent = s.name + ' (' + s.nick + ')';
+      sel.appendChild(o);
+    });
+  }
+
+  // Update monthly chart title
+  var monthlyTitle = document.querySelector('#ord-bills .card:nth-child(2) .card-title');
+  if (monthlyTitle) {
+    monthlyTitle.textContent = '📊 จำนวนบิลรายเดือนต่อคน (' + mKeys.join(' – ') + ' 2569)';
+  }
+
+  renderOrdBillDaily();
+  renderOrdBillMonthly();
+  renderOrdBillSummary();
+};
+
+function renderOrdBillMonthly() {
+  var canvas = document.getElementById('ordBillMonthlyChart');
+  if (!canvas) return;
+  destroyChart('billMonthly');
+  var colors = ['#3b82f6', '#f59e0b', '#10b981', '#ef4444', '#8b5cf6'];
+  var mKeys = Object.keys(ORD_BILLS.months);
+  var datasets = ORD_STAFF.map(function(s, i) {
+    var vals = mKeys.map(function(m) { return ORD_BILLS.months[m][i]; });
+    return { label: s.nick, data: vals, backgroundColor: colors[i % colors.length] };
+  });
+  _ordCharts.billMonthly = new Chart(canvas, {
+    type: 'bar',
+    data: { labels: mKeys, datasets: datasets },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top' } },
+      scales: { y: { beginAtZero: true, title: { display: true, text: 'บิล' } } } }
+  });
+}
+
+function renderOrdBillSummary() {
+  var tbody = document.getElementById('ordBillSummaryTBody');
+  if (!tbody) return;
+  var html = '';
+  var mKeys = Object.keys(ORD_BILLS.months);
+  ORD_STAFF.forEach(function(s, i) {
+    mKeys.forEach(function(m) {
+      html += '<tr><td>' + s.name + '</td><td>' + s.nick + '</td><td>' + s.zone + '</td><td>' + m + '</td>'
+        + '<td style="text-align:right">' + fmt(ORD_BILLS.months[m][i]) + '</td>'
+        + '<td style="text-align:right">' + fmt((ORD_BILLS.pieces[m] || [])[i] || 0) + '</td></tr>';
+    });
+  });
+  tbody.innerHTML = html;
+}
+
+// Auto-load on ordering tab
+var _origOrdStaff = window.renderOrdStaff;
+var _ordSupaTriggered = false;
+window.renderOrdStaff = function() {
+  _origOrdStaff();
+  if (!_ordSupaTriggered && typeof _supaFetch === 'function') {
+    _ordSupaTriggered = true;
+    ordLoadFromSupa();
+  }
+};
+
 })();
 

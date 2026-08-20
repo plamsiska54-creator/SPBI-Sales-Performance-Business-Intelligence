@@ -69,10 +69,10 @@ window.CRM_DATA = {
       {name:'ลูกค้าทั่วไป',status:'active',lastOrder:'2026-07-18',totalOrders:200,totalSales:4800000,contact:'-',phone:'-',nextVisit:'-'}
     ],
     activities:[
-      {date:'2026-07-18',type:'visit',customer:'OR (Amazon Cafe)',note:'เยี่ยม 5 สาขา เปิดสินค้าใหม่ 3 SKU',staff:'ณัฏฐวรรณ'},
+      {date:'2026-07-18',type:'visit',customer:'OR (Amazon Cafe)',note:'เยี่ยม 5 สาขา เปิดสินค้าใหม่ 3 SKU',staff:'ว่าง'},
       {date:'2026-07-17',type:'order',customer:'COCO',note:'PO #CC-1807 ยอด 95,000',staff:'ภาณุวัฒน์'},
       {date:'2026-07-16',type:'call',customer:'ร้านของฝาก (กลุ่ม A)',note:'แนะนำสินค้าใหม่ NPD',staff:'วีระ'},
-      {date:'2026-07-15',type:'visit',customer:'RM',note:'ตรวจชั้นวาง + เก็บ return',staff:'ณัฏฐวรรณ'}
+      {date:'2026-07-15',type:'visit',customer:'RM',note:'ตรวจชั้นวาง + เก็บ return',staff:'ว่าง'}
     ]
   },
   booth: {
@@ -186,8 +186,8 @@ window.renderKpiOverview = function(){
     _kpiTrendChart=new Chart(ctx,{
       type:'bar',
       data:{labels:FC_MONTHS,datasets:[
-        {label:'เป้า (M)',data:tA,backgroundColor:'rgba(99,102,241,0.15)',borderColor:'#6366f1',borderWidth:2,type:'line',tension:0.3,pointRadius:4},
-        {label:'Actual (M)',data:aA,backgroundColor:aA.map(function(v,i){return v>=tA[i]?'#16a34a':'#f59e0b';})}
+        {label:'เป้า (M)',data:tA,backgroundColor:'rgba(99,102,241,0.18)',borderColor:'#6366f1',borderWidth:2,borderRadius:6},
+        {label:'Actual (M)',data:aA,backgroundColor:aA.map(function(v,i){return v>=tA[i]?'#16a34a':'#f59e0b';}),borderRadius:6}
       ]},
       options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top'}},scales:{y:{beginAtZero:true,ticks:{callback:function(v){return v+'M';}}}}}
     });

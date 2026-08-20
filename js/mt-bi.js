@@ -1708,9 +1708,10 @@ function _ordRenderBillTable() {
     pageQty += (b[6] || 0);
     pageNet += (b[7] || 0);
     pageItems += (b[5] || 0);
-    html += '<tr>';
+    var invEsc = b[0].replace(/'/g, "\\'");
+    html += '<tr style="cursor:pointer" onclick="showBillDetail(\'' + invEsc + '\')" title="คลิกเพื่อดูรายการสินค้า">';
     html += '<td style="text-align:center;color:var(--muted)">' + (start + i + 1) + '</td>';
-    html += '<td style="text-align:left;font-family:monospace;font-size:12px">' + b[0] + '</td>';
+    html += '<td style="text-align:left;font-family:monospace;font-size:12px">' + b[0] + ' <span style="font-size:10px;color:var(--primary)">🔍</span></td>';
     if (billIsAll) html += '<td style="text-align:left;font-size:12px">' + (_OL_CUSTS[b[2]] || '-') + '</td>';
     html += '<td style="text-align:left">' + monthLabel + '</td>';
     html += '<td style="text-align:left;max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="' + branchName + '">' + branchName + '</td>';
@@ -2093,7 +2094,9 @@ function _mtBiRenderProductPerf(){
       var rankClr=p.rank==='A+'?'#dc2626':p.rank==='A'?'#ea580c':p.rank==='B'?'#d97706':'#94a3b8';
       html+='<tr style="background:'+bg3+'">';
       html+='<td style="padding:5px 8px;text-align:center;font-size:11px;color:var(--muted)">'+(MEDAL3[i]||(i+1))+'</td>';
-      html+='<td style="padding:5px 8px;font-weight:600;font-size:12px;color:var(--text)">'+_stripBrand(p.name)+'</td>';
+      var _cmJson=JSON.stringify(p.m||{}).replace(/'/g,"\\'").replace(/"/g,'&quot;');
+      var _cpName=_stripBrand(p.name).replace(/'/g,"\\'");
+      html+='<td style="padding:5px 8px;font-weight:600;font-size:12px">'+_stripBrand(p.name)+'</td>';
       html+='<td style="padding:5px 8px;text-align:center"><span style="padding:1px 6px;border-radius:8px;font-size:10px;font-weight:700;background:'+(p.type==='Ambient'?'#fff7ed':'#eff6ff')+';color:'+(p.type==='Ambient'?'#ea580c':'#2563eb')+'">'+p.type+'</span></td>';
       html+='<td style="padding:5px 8px;text-align:center"><span style="padding:1px 6px;border-radius:8px;font-size:10px;font-weight:800;color:#fff;background:'+rankClr+'">'+p.rank+'</span></td>';
       html+='<td style="padding:5px 8px;text-align:right;font-size:12px;color:var(--text)">'+fmtQ(p.tu)+' ชิ้น</td>';
@@ -2117,11 +2120,15 @@ function _mtBiRenderProductPerf(){
 
   // Product ranking table
   html+='<div class="table-wrap"><table id="ppProdTable"><thead><tr>';
-  html+='<th>NO</th><th style="text-align:left">ชื่อสินค้า</th><th>TYPE</th><th style="text-align:right">RSP</th><th style="text-align:right">GP%</th><th>RANK</th><th style="text-align:right">รวมชิ้น</th><th style="text-align:right">รวมบาท</th><th style="text-align:right">%REVENUE</th><th style="text-align:left">หมายเหตุ</th>';
+  html+='<th>NO</th><th style="text-align:left">ชื่อสินค้า</th><th>TYPE</th><th style="text-align:right">RSP</th><th style="text-align:right">GP%</th><th>RANK</th><th style="text-align:right">รวมชิ้น</th><th style="text-align:right">รวมบาท</th><th style="text-align:right">%REVENUE</th><th style="text-align:left">หมายเหตุ</th><th>Performance</th><th style="width:40px"></th>';
   html+='</tr></thead><tbody>';
   products.forEach(function(p,i){
     var pct=totalBaht>0?((p.tb/totalBaht)*100):0;
     var rankColor=p.rank==='A+'?'#dc2626':p.rank==='A'?'#ea580c':p.rank==='B'?'#d97706':'#94a3b8';
+    var mv=activeMonths.map(function(mk){return p.m&&p.m[mk]?p.m[mk].b||0:0;});
+    var perf=window.calcPerf(mv);
+    var _pJson=JSON.stringify(p.m||{}).replace(/'/g,"\\'").replace(/"/g,'&quot;');
+    var _pNm=_stripBrand(p.name).replace(/'/g,"\\'");
     html+='<tr data-type="'+p.type+'" data-rank="'+p.rank+'" data-name="'+(p.name||'').toLowerCase()+'">';
     html+='<td style="text-align:center">'+(i+1)+'</td>';
     html+='<td style="text-align:left;max-width:240px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="'+_stripBrand(p.name)+'">'+_stripBrand(p.name)+'</td>';
@@ -2133,6 +2140,8 @@ function _mtBiRenderProductPerf(){
     html+='<td style="text-align:right;font-weight:600">'+fmtB(p.tb)+'</td>';
     html+='<td style="text-align:right">'+pct.toFixed(1)+'%</td>';
     html+='<td style="text-align:left;font-size:12px;color:var(--muted)">'+(p.rmk||'—')+'</td>';
+    html+='<td style="text-align:center">'+window.perfBadgeHTML(perf)+'</td>';
+    html+='<td style="text-align:center" onclick="showSkuPerf(\''+_pNm+'\',JSON.parse(this.getAttribute(\'data-m\')),\'ห้างค้าปลีก — '+chLabel.replace(/'/g,"\\'")+'\')" data-m="'+_pJson+'">'+window.perfSearchIcon()+'</td>';
     html+='</tr>';
   });
   html+='</tbody></table></div></div>';
@@ -2150,15 +2159,22 @@ function _mtBiRenderProductPerf(){
     html+='<th style="text-align:right">'+(idx>=0?MONTH_TH[idx]:mk)+'</th>';
   });
   html+='<th style="text-align:right;font-weight:800">ยอดรวม</th>';
+  html+='<th>Performance</th><th style="width:40px"></th>';
   html+='</tr></thead><tbody>';
   products.forEach(function(p){
+    var _mJson=JSON.stringify(p.m||{}).replace(/'/g,"\\'").replace(/"/g,'&quot;');
+    var _pName=_stripBrand(p.name).replace(/'/g,"\\'");
+    var mv2=activeMonths.map(function(mk){return p.m&&p.m[mk]?p.m[mk].b||0:0;});
+    var perf2=window.calcPerf(mv2);
     html+='<tr data-mtype="'+p.type+'" data-mrank="'+p.rank+'">';
-    html+='<td style="text-align:left;position:sticky;left:0;background:var(--card);z-index:1;max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:12px" title="'+_stripBrand(p.name)+'">'+_stripBrand(p.name)+'</td>';
+    html+='<td style="text-align:left;position:sticky;left:0;background:var(--card);z-index:1;max-width:220px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:12px" title="'+_stripBrand(p.name)+'">'+_stripBrand(p.name)+'</td>';
     activeMonths.forEach(function(mk){
       var md=p.m&&p.m[mk]?p.m[mk]:null;
       html+='<td style="text-align:right;font-size:12px" data-b="'+(md?md.b:0)+'" data-q="'+(md?md.u:0)+'">'+(md?fmtB(md.b):'—')+'</td>';
     });
     html+='<td style="text-align:right;font-weight:700;font-size:12px">'+fmtB(p.tb)+'</td>';
+    html+='<td style="text-align:center">'+window.perfBadgeHTML(perf2)+'</td>';
+    html+='<td style="text-align:center" onclick="showSkuPerf(\''+_pName+'\',JSON.parse(this.getAttribute(\'data-m\')),\'ห้างค้าปลีก — '+chLabel.replace(/'/g,"\\'")+'\')" data-m="'+_mJson+'">'+window.perfSearchIcon()+'</td>';
     html+='</tr>';
   });
   // Total row
@@ -2170,6 +2186,7 @@ function _mtBiRenderProductPerf(){
     html+='<td style="text-align:right;font-size:12px">'+fmtB(sumB)+'</td>';
   });
   html+='<td style="text-align:right;font-size:12px">'+fmtB(totalBaht)+'</td>';
+  html+='<td></td><td></td>';
   html+='</tr>';
   html+='</tbody></table></div></div>';
 
@@ -2835,17 +2852,23 @@ function _mtBiRenderMMCustomer(){
     html+='<div class="table-wrap"><table><thead><tr>';
     html+='<th>#</th><th>ชื่อสินค้า</th>';
     for(var mi=0;mi<dataMonths;mi++) html+='<th style="text-align:right">'+MONTHS_TH[mi]+'</th>';
-    html+='<th style="text-align:right">รวม</th></tr></thead><tbody>';
+    html+='<th style="text-align:right">รวม</th><th>Performance</th><th style="width:40px"></th></tr></thead><tbody>';
     for(var pi=0;pi<prods.length;pi++){
       var p=prods[pi];
       var rowTotal=0;
-      html+='<tr><td>'+(pi+1)+'</td><td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+_stripBrand((p.n||p.name)||'สินค้า '+(pi+1))+'</td>';
+      var _mmJson=JSON.stringify(p.m||{}).replace(/'/g,"\\'").replace(/"/g,'&quot;');
+      var _mmName=_stripBrand((p.n||p.name)||'สินค้า '+(pi+1)).replace(/'/g,"\\'");
+      var mmVals=[];for(var vi=0;vi<dataMonths;vi++){mmVals.push((p.m&&p.m[MONTHS_EN[vi]])?p.m[MONTHS_EN[vi]].b||0:0);}
+      var mmPerf=window.calcPerf(mmVals);
+      html+='<tr><td>'+(pi+1)+'</td><td style="max-width:220px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="'+_stripBrand((p.n||p.name)||'สินค้า '+(pi+1))+'">'+_stripBrand((p.n||p.name)||'สินค้า '+(pi+1))+'</td>';
       for(var mi=0;mi<dataMonths;mi++){
         var val=(p.m&&p.m[MONTHS_EN[mi]])?p.m[MONTHS_EN[mi]].b||0:0;
         rowTotal+=val;
         html+='<td style="text-align:right">'+(val>0?Math.round(val).toLocaleString('th-TH'):'—')+'</td>';
       }
-      html+='<td style="text-align:right;font-weight:600">'+(rowTotal>0?Math.round(rowTotal).toLocaleString('th-TH'):'—')+'</td></tr>';
+      html+='<td style="text-align:right;font-weight:600">'+(rowTotal>0?Math.round(rowTotal).toLocaleString('th-TH'):'—')+'</td>';
+      html+='<td style="text-align:center">'+window.perfBadgeHTML(mmPerf)+'</td>';
+      html+='<td style="text-align:center" onclick="showSkuPerf(\''+_mmName+'\',JSON.parse(this.getAttribute(\'data-m\')),\'MM Mega Market\')" data-m="'+_mmJson+'">'+window.perfSearchIcon()+'</td></tr>';
     }
     html+='</tbody></table></div></div>';
   }
