@@ -1,5 +1,8 @@
 node_modules/
 Data/
+!data/
+!data/area_monitoring.json
+!data/branch_names.json
 *.bak*
 .claude/
 test_*.html

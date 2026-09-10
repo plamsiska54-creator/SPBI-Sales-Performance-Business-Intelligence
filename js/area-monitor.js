@@ -19,8 +19,9 @@
   var _amBranchNames = {};   // code -> name lookup
 
   var AREA_NAMES = [];
-  var MONTH_LABELS = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.'];
-  var MONTH_NUMS = [1, 2, 3, 4, 5, 6, 7];
+  var ALL_MONTH_LABELS = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
+  var MONTH_LABELS = [];
+  var MONTH_NUMS = [];
 
   // สีสำหรับแต่ละเขต (orange/brown theme)
   var AREA_COLORS = [
@@ -60,6 +61,14 @@
         _amData = results[0];
         _amBranchNames = results[1] || {};
         AREA_NAMES = Object.keys(_amData);
+        // Derive months from data dynamically
+        var firstArea = _amData[AREA_NAMES[0]];
+        if (firstArea && firstArea.months) {
+          MONTH_NUMS = firstArea.months;
+        } else {
+          MONTH_NUMS = [1,2,3,4,5,6,7,8,9,10,11,12];
+        }
+        MONTH_LABELS = MONTH_NUMS.map(function(m) { return ALL_MONTH_LABELS[m - 1]; });
         _amInited = true;
         _amSetupFilters();
         _amSetupListeners();
