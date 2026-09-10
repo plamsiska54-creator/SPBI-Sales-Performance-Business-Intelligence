@@ -35,32 +35,8 @@
       <button type="submit" id="loginBtn" class="login-btn">เข้าสู่ระบบ</button>
     </form>
 
-    <!-- Demo accounts -->
-    <div class="demo-box">
-      <div class="demo-title">บัญชีตัวอย่าง (กดเพื่อกรอกอัตโนมัติ)</div>
-      <div class="demo-grid">
-        <button type="button" class="demo-btn" data-email="sale.analysis@wanwanach.com">
-          <span class="demo-role admin">แอดมิน</span>
-          <span class="demo-email">sale.analysis@wanwanach.com</span>
-        </button>
-        <button type="button" class="demo-btn" data-email="palm.b@wanwanach.com">
-          <span class="demo-role manager">ผู้จัดการ</span>
-          <span class="demo-email">palm.b@wanwanach.com</span>
-        </button>
-        <button type="button" class="demo-btn" data-email="online.sale@wanwanach.com">
-          <span class="demo-role sales">เซลล์</span>
-          <span class="demo-email">online.sale@wanwanach.com</span>
-        </button>
-        <button type="button" class="demo-btn" data-email="order@wanwanach.com">
-          <span class="demo-role viewer">ธุรการขาย</span>
-          <span class="demo-email">order@wanwanach.com</span>
-        </button>
-      </div>
-      <div class="demo-hint">รหัสผ่าน: <code>Wan_1234@</code></div>
-    </div>
-
     <div class="login-note">
-      เวอร์ชันสำหรับรีวิวในเครื่อง · ระบบจริงจะยืนยันตัวตนผ่าน Supabase Auth
+      Sales Performance &amp; Business Intelligence · Wanwanach
     </div>
   </div>
 </div>
@@ -90,16 +66,6 @@
     errEl.textContent = '';
     errEl.classList.remove('show');
   }
-
-  // กดบัญชีทดลอง → auto-fill อีเมล + รหัส demo
-  Array.prototype.forEach.call(document.querySelectorAll('.demo-btn'), function (b) {
-    b.addEventListener('click', function () {
-      emailEl.value = b.getAttribute('data-email');
-      passEl.value = 'Wan_1234@';
-      clearError();
-      passEl.focus();
-    });
-  });
 
   form.addEventListener('submit', function (e) {
     e.preventDefault();
