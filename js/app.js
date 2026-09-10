@@ -2671,36 +2671,90 @@ const _imgDB = (function(){
   };
 })();
 
-// Restore product images from IndexedDB (async, runs on load)
+function _uploadImgToServer(code, dataUrl){
+  return fetch('/api/catalog/upload',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({code:code, dataUrl:dataUrl})
+  }).then(function(r){return r.json();})
+    .then(function(j){
+      if(j.ok) return j.img;
+      console.error('[ImgUpload]',j.error); return null;
+    }).catch(function(e){ console.error('[ImgUpload]',e); return null; });
+}
+function _deleteImgFromServer(code){
+  return fetch('/api/catalog/delete-image',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({code:code})
+  }).then(function(r){return r.json();}).catch(function(){return{ok:false};});
+}
+
 async function restoreProductImages(){
   try {
-    // migrate from localStorage first
-    const lsKeys = [];
-    for(let i=0;i<localStorage.length;i++){
-      const k=localStorage.key(i);
+    var lsKeys = [];
+    for(var i=0;i<localStorage.length;i++){
+      var k=localStorage.key(i);
       if(k&&k.startsWith('prodImg_')) lsKeys.push(k);
     }
     if(lsKeys.length){
-      for(const key of lsKeys){
-        const val=localStorage.getItem(key);
-        if(val) await _imgDB.set(key, val);
-        localStorage.removeItem(key);
+      for(var ki=0;ki<lsKeys.length;ki++){
+        var val=localStorage.getItem(lsKeys[ki]);
+        if(val) await _imgDB.set(lsKeys[ki], val);
+        localStorage.removeItem(lsKeys[ki]);
       }
     }
-    const all = await _imgDB.getAll();
-    for(const {key,value} of all){
-      if(!key.startsWith('prodImg_')) continue;
-      const rest = key.slice(8);
-      for(const ch of Object.keys(PRODUCTS)){
+    var all = await _imgDB.getAll();
+    for(var ai=0;ai<all.length;ai++){
+      var entry=all[ai];
+      if(!entry.key.startsWith('prodImg_')) continue;
+      var rest = entry.key.slice(8);
+      for(var ch of Object.keys(PRODUCTS)){
         if(rest.startsWith(ch+'_')){
-          const code = rest.slice(ch.length+1);
-          const prod = (PRODUCTS[ch]||[]).find(p=>p.code===code);
-          if(prod) prod.img = value;
+          var code = rest.slice(ch.length+1);
+          var prod = (PRODUCTS[ch]||[]).find(function(p){return p.code===code;});
+          if(prod && !prod.img) prod.img = entry.value;
           break;
         }
       }
     }
   } catch(e){}
+  try {
+    var ovRes = await fetch('/api/catalog/overrides');
+    var ov = await ovRes.json();
+    var serverImgs = (ov && ov.images) ? ov.images : {};
+    if(Object.keys(serverImgs).length){
+      Object.keys(serverImgs).forEach(function(code){
+        var imgPath = serverImgs[code];
+        Object.keys(PRODUCTS).forEach(function(ch){
+          (PRODUCTS[ch]||[]).forEach(function(p){
+            if(p.code===code) p.img = imgPath;
+          });
+        });
+      });
+    }
+    var allIdb = await _imgDB.getAll();
+    var migrated = 0;
+    for(var mi=0;mi<allIdb.length;mi++){
+      var ent=allIdb[mi];
+      if(!ent.key.startsWith('prodImg_')||!ent.value) continue;
+      if(!ent.value.startsWith('data:')) continue;
+      var codeFromKey='';
+      var restKey=ent.key.slice(8);
+      for(var chk of Object.keys(PRODUCTS)){
+        if(restKey.startsWith(chk+'_')){ codeFromKey=restKey.slice(chk.length+1); break; }
+      }
+      if(!codeFromKey||serverImgs[codeFromKey]) continue;
+      var url=await _uploadImgToServer(codeFromKey,ent.value);
+      if(url){
+        migrated++;
+        Object.keys(PRODUCTS).forEach(function(ch){
+          (PRODUCTS[ch]||[]).forEach(function(p){if(p.code===codeFromKey) p.img=url;});
+        });
+      }
+    }
+    if(migrated) console.log('[ImgMigrate] uploaded',migrated,'images to server');
+  } catch(e){ console.error('[ImgRestore]',e); }
 }
 restoreProductImages();
 
@@ -3178,6 +3232,7 @@ function handleChangeImg(input){
       if(p){
         p.img=newSrc;
         _imgDB.set('prodImg_'+_prodCh+'_'+p.code,newSrc);
+        _uploadImgToServer(p.code,newSrc).then(function(url){if(url){p.img=url;var el2=document.getElementById('prodModalImg');if(el2)el2.src=url;}});
       }
       const imgEl=document.getElementById('prodModalImg');
       if(imgEl){imgEl.src=newSrc;imgEl.style.transform='';}
@@ -3274,6 +3329,7 @@ function rotateProdImg(delta){
     const newSrc=canvas.toDataURL('image/jpeg',0.82);
     p.img=newSrc;
     _imgDB.set('prodImg_'+_prodCh+'_'+p.code, newSrc);
+    _uploadImgToServer(p.code,newSrc).then(function(url){if(url){p.img=url;var el2=document.getElementById('prodModalImg');if(el2)el2.src=url;}});
     const imgEl=document.getElementById('prodModalImg');
     if(imgEl) imgEl.src=newSrc;
     if(_fileHandle) saveImagesToFile(true);
@@ -3550,8 +3606,15 @@ function saveNewProduct(){
     note:(document.getElementById('npNote')||{}).value||''
   };
   var imgData = modal ? (modal._npImgData||'') : '';
-  if(imgData){ newData.img = imgData; _imgDB.set('prodImg_'+chVal+'_'+newData.code, imgData); }
-  else { newData.img = ''; _imgDB.del('prodImg_'+chVal+'_'+newData.code); }
+  if(imgData){
+    newData.img = imgData;
+    _imgDB.set('prodImg_'+chVal+'_'+newData.code, imgData);
+    _uploadImgToServer(newData.code,imgData).then(function(url){if(url)newData.img=url;});
+  } else {
+    newData.img = '';
+    _imgDB.del('prodImg_'+chVal+'_'+newData.code);
+    _deleteImgFromServer(newData.code);
+  }
   if(editMode){
     var oldCh=editMode.ch, oldCode=editMode.code;
     if(oldCh!==chVal){
@@ -14925,10 +14988,14 @@ var _ROLES_MENU_SECTIONS=[
   {id:'amazon',icon:'📦',label:'อเมซอน & ของฝาก'},
   {id:'ordering',icon:'📝',label:'ธุรการขาย'},
   {id:'sm-expense',icon:'💼',label:'ฝ่ายขาย - การตลาด'},
+  {id:'visit-plan',icon:'📍',label:'แผนเข้าพบลูกค้า'},
+  {id:'marketing',icon:'📣',label:'การตลาด'},
+  {id:'bakery',icon:'🧁',label:'วิเคราะห์เบเกอรี่'},
+  {id:'health-bento',icon:'🍱',label:'ข้าวกล่อง'},
   {id:'admin',icon:'⚙️',label:'แผงแอดมิน'}
 ];
-var _ALL_MENUS=['overview','mt','booth','online','amazon','ordering','sm-expense'];
-var _ALL_MENUS_ADMIN=['overview','mt','booth','online','amazon','ordering','sm-expense','admin'];
+var _ALL_MENUS=['overview','mt','booth','online','amazon','ordering','sm-expense','visit-plan','marketing','bakery','health-bento'];
+var _ALL_MENUS_ADMIN=['overview','mt','booth','online','amazon','ordering','sm-expense','visit-plan','marketing','bakery','health-bento','admin'];
 var _ROLES_DEFAULT_USERS=[
   {id:1,email:'jaturat.w@wanwanach.com',name:'กรรมการบริหาร',role:'manager',active:true,menus:_ALL_MENUS},
   {id:2,email:'sathidpong.w@wanwanach.com',name:'กรรมการบริหาร',role:'manager',active:true,menus:_ALL_MENUS},
@@ -14941,17 +15008,22 @@ var _ROLES_DEFAULT_USERS=[
   {id:9,email:'sales.manager@wanwanach.com',name:'ผู้จัดการ',role:'manager',active:true,menus:_ALL_MENUS},
   {id:10,email:'secretary@wanwanach.com',name:'เลขากรรมการบริหาร',role:'manager',active:true,menus:_ALL_MENUS},
   {id:11,email:'sale.analysis@wanwanach.com',name:'แอดมิน',role:'admin',active:true,menus:_ALL_MENUS_ADMIN},
-  {id:12,email:'moderntrade.support@wanwanach.com',name:'เซลล์',role:'sales',active:true,menus:['overview','sm-expense']},
+  {id:12,email:'moderntrade.support@wanwanach.com',name:'ซัพพอตเซลล์',role:'officer',active:true,menus:_ALL_MENUS},
   {id:13,email:'online.sale@wanwanach.com',name:'เซลล์',role:'sales',active:true,menus:['overview','sm-expense','online']},
-  {id:14,email:'sales.amz.souvenir@wanwanach.com',name:'เซลล์',role:'sales',active:true,menus:['overview','sm-expense','amazon']},
-  {id:15,email:'moderntrde_sales@wanwanach.com',name:'เซลล์',role:'sales',active:true,menus:['overview','sm-expense','mt']},
-  {id:16,email:'order.supervisor@wanwanach.com',name:'หัวหน้างาน',role:'leader',active:true,menus:['overview','sm-expense','ordering']},
-  {id:17,email:'order@wanwanach.com',name:'ธุรการขาย',role:'officer',active:true,menus:['overview','sm-expense','ordering']},
-  {id:18,email:'support.sale@wanwanach.com',name:'ซัพพอตเซลล์',role:'officer',active:true,menus:['overview','sm-expense']},
-  {id:19,email:'support.sale2@wanwanach.com',name:'ซัพพอตเซลล์',role:'officer',active:true,menus:['overview','sm-expense']},
-  {id:20,email:'admin@wanwanach.com',name:'แอดมิน',role:'admin',active:true,menus:_ALL_MENUS_ADMIN}
+  {id:14,email:'sales.amz.souvenir@wanwanach.com',name:'เซลล์ พี่ซี',role:'sales',active:true,menus:['overview','sm-expense','amazon']},
+  {id:15,email:'booth.sales@wanwanach.com',name:'เซลล์',role:'sales',active:true,menus:['overview','sm-expense','amazon']},
+  {id:16,email:'moderntrde_sales@wanwanach.com',name:'เซลล์',role:'sales',active:true,menus:['overview','sm-expense','mt']},
+  {id:17,email:'order.supervisor@wanwanach.com',name:'หัวหน้างาน',role:'leader',active:true,menus:['overview','sm-expense','ordering']},
+  {id:18,email:'order@wanwanach.com',name:'ธุรการขาย',role:'officer',active:true,menus:['overview','sm-expense','ordering']},
+  {id:19,email:'support.sale@wanwanach.com',name:'ซัพพอตเซลล์',role:'officer',active:true,menus:_ALL_MENUS},
+  {id:20,email:'support.sale2@wanwanach.com',name:'ซัพพอตเซลล์',role:'officer',active:true,menus:_ALL_MENUS},
+  {id:21,email:'mkt.manager@wanwanach.com',name:'ผู้จัดการการตลาด',role:'admin',active:true,menus:_ALL_MENUS_ADMIN},
+  {id:22,email:'admin@wanwanach.com',name:'แอดมิน',role:'admin',active:true,menus:_ALL_MENUS_ADMIN}
 ];
+var _ROLES_DATA_VERSION='20260910c';
 function _getRolesUsers(){
+  var ver=localStorage.getItem('adminRolesVersion');
+  if(ver!==_ROLES_DATA_VERSION){ localStorage.removeItem('adminRolesUsers'); localStorage.setItem('adminRolesVersion',_ROLES_DATA_VERSION); }
   var saved=localStorage.getItem('adminRolesUsers');
   if(saved){ try{return JSON.parse(saved);}catch(e){} }
   return JSON.parse(JSON.stringify(_ROLES_DEFAULT_USERS));
