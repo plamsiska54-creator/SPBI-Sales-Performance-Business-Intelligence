@@ -66,7 +66,7 @@
       .then(function (results) {
         _amData = results[0];
         _amBranchNames = results[1] || {};
-        AREA_NAMES = Object.keys(_amData);
+        AREA_NAMES = Object.keys(_amData).filter(function(k) { return k.charAt(0) !== '_'; });
         // Derive months from data dynamically
         var firstArea = _amData[AREA_NAMES[0]];
         if (firstArea && firstArea.months) {
