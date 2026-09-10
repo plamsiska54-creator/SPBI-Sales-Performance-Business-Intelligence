@@ -1,0 +1,434 @@
+/* ============================================================
+   auth.css — Login overlay (โทนเขียว-เทอร์ควอยซ์ให้เข้ากับแดชบอร์ด Health Bento)
+   ============================================================ */
+
+/* --- Login Overlay --- */
+#login-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #16a34a 0%, #00bfa5 100%);
+  animation: overlayIn 0.3s ease;
+}
+
+#login-overlay.fade-out {
+  animation: overlayOut 0.3s ease forwards;
+}
+
+@keyframes overlayIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes overlayOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+/* --- Login Card --- */
+.login-card {
+  background: #ffffff;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 480px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+  animation: cardIn 0.4s ease;
+  overflow: hidden;
+}
+
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(20px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* --- Brand Header (inside card) --- */
+.hb-login-head {
+  background: linear-gradient(135deg, #16a34a 0%, #00bfa5 100%);
+  padding: 36px 40px 28px;
+  text-align: center;
+  border-radius: 20px 20px 0 0;
+}
+
+.hb-login-brand {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: 1px;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.hb-login-brand-en {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.9);
+  letter-spacing: 4px;
+  margin-top: 2px;
+  font-weight: 400;
+}
+
+.hb-login-tagline {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.85);
+  margin-top: 6px;
+}
+
+/* --- Login Body --- */
+.hb-login-body {
+  padding: 32px 40px 28px;
+}
+
+.hb-login-title {
+  text-align: center;
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #2d3748;
+  margin: 0 0 24px;
+}
+
+/* --- Form Fields --- */
+.login-field {
+  margin-bottom: 18px;
+}
+
+.login-field label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #4a5568;
+  margin-bottom: 6px;
+}
+
+.login-field input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  font-family: var(--font-family, 'Segoe UI', sans-serif);
+  color: #2d3748;
+  background: #f7fafc;
+  transition: all 0.2s ease;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.login-field input:focus {
+  border-color: #16a34a;
+  background: #ffffff;
+  box-shadow: 0 0 0 4px rgba(22, 163, 74, 0.12);
+}
+
+.login-field input::placeholder {
+  color: #a0aec0;
+}
+
+/* --- Error --- */
+.login-error {
+  color: #e53e3e;
+  font-size: 0.85rem;
+  min-height: 22px;
+  text-align: center;
+  margin-bottom: 6px;
+}
+
+/* --- Login Button --- */
+.login-btn {
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #16a34a, #0e9f6e);
+  color: #ffffff;
+  font-size: 1.05rem;
+  font-weight: 600;
+  font-family: var(--font-family, 'Segoe UI', sans-serif);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  letter-spacing: 0.5px;
+}
+
+.login-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(22, 163, 74, 0.35);
+}
+
+.login-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.login-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* --- Demo Accounts Block --- */
+.hb-demo {
+  margin-top: 24px;
+  border-top: 1px solid #e2e8f0;
+  padding-top: 18px;
+}
+
+.hb-demo-label {
+  font-size: 0.82rem;
+  color: #718096;
+  font-weight: 500;
+  margin-bottom: 12px;
+}
+
+.hb-demo-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.hb-demo-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  padding: 10px 14px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 10px;
+  background: #ffffff;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-align: left;
+  font-family: inherit;
+}
+
+.hb-demo-card:hover {
+  border-color: #16a34a;
+  background: #fff8f0;
+}
+
+.hb-demo-card.active {
+  border-color: #16a34a;
+  background: #fff3e6;
+  box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.12);
+}
+
+.hb-demo-role {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #ffffff;
+  padding: 2px 10px;
+  border-radius: 12px;
+  line-height: 1.5;
+}
+
+.hb-demo-role.admin   { background: #f59e0b; }
+.hb-demo-role.manager { background: #16a34a; }
+.hb-demo-role.sales   { background: #0ea5e9; }
+.hb-demo-role.officer { background: #64748b; }
+
+.hb-demo-email {
+  font-size: 0.75rem;
+  color: #718096;
+  word-break: break-all;
+}
+
+.hb-demo-pass {
+  margin-top: 10px;
+  font-size: 0.85rem;
+  color: #4a5568;
+}
+
+.hb-demo-pass code {
+  font-weight: 700;
+  color: #2d3748;
+  font-size: 0.95rem;
+  letter-spacing: 0.5px;
+}
+
+/* --- Footer --- */
+.hb-login-foot {
+  margin-top: 16px;
+  font-size: 0.72rem;
+  color: #a0aec0;
+  text-align: center;
+  line-height: 1.5;
+}
+
+.hb-login-foot code {
+  font-size: 0.7rem;
+  background: #f7fafc;
+  padding: 1px 4px;
+  border-radius: 3px;
+}
+
+/* --- User Info in Header --- */
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: 8px;
+}
+
+.user-name {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.user-role {
+  font-size: 0.7rem;
+  color: #ffffff;
+  background: linear-gradient(135deg, #16a34a, #0e9f6e);
+  padding: 2px 8px;
+  border-radius: 12px;
+  white-space: nowrap;
+  font-weight: 500;
+}
+
+.logout-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border: 1px solid rgba(229, 62, 62, 0.3);
+  border-radius: 8px;
+  background: rgba(229, 62, 62, 0.06);
+  color: #e53e3e;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 0;
+}
+
+.logout-btn:hover {
+  background: rgba(229, 62, 62, 0.15);
+  border-color: #e53e3e;
+  transform: translateY(-1px);
+}
+
+/* --- Dark Theme --- */
+[data-theme="dark"] .login-card {
+  background: #1e2433;
+}
+
+[data-theme="dark"] .hb-login-body {
+  background: #1e2433;
+}
+
+[data-theme="dark"] .hb-login-title {
+  color: #e2e8f0;
+}
+
+[data-theme="dark"] .login-field label {
+  color: #e2e8f0;
+}
+
+[data-theme="dark"] .login-field input {
+  background: #151a27;
+  border-color: rgba(255, 255, 255, 0.12);
+  color: #e2e8f0;
+}
+
+[data-theme="dark"] .login-field input:focus {
+  border-color: #16a34a;
+  background: #1a1f2e;
+  box-shadow: 0 0 0 4px rgba(22, 163, 74, 0.15);
+}
+
+[data-theme="dark"] .login-field input::placeholder {
+  color: #64748b;
+}
+
+[data-theme="dark"] .login-error {
+  color: #fc8181;
+}
+
+[data-theme="dark"] .hb-demo {
+  border-top-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .hb-demo-label {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .hb-demo-card {
+  background: #151a27;
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .hb-demo-card:hover {
+  border-color: #16a34a;
+  background: #1a1f2e;
+}
+
+[data-theme="dark"] .hb-demo-card.active {
+  border-color: #16a34a;
+  background: rgba(22, 163, 74, 0.1);
+}
+
+[data-theme="dark"] .hb-demo-email {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .hb-demo-pass {
+  color: #cbd5e0;
+}
+
+[data-theme="dark"] .hb-demo-pass code {
+  color: #f7fafc;
+}
+
+[data-theme="dark"] .hb-login-foot {
+  color: #64748b;
+}
+
+[data-theme="dark"] .hb-login-foot code {
+  background: rgba(255, 255, 255, 0.06);
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .logout-btn {
+  border-color: rgba(252, 129, 129, 0.3);
+  background: rgba(252, 129, 129, 0.08);
+  color: #fc8181;
+}
+
+[data-theme="dark"] .logout-btn:hover {
+  background: rgba(252, 129, 129, 0.18);
+  border-color: #fc8181;
+}
+
+/* --- Responsive --- */
+@media (max-width: 767px) {
+  .login-card {
+    margin: 16px;
+    max-width: calc(100% - 32px);
+  }
+
+  .hb-login-head {
+    padding: 28px 24px 20px;
+  }
+
+  .hb-login-brand {
+    font-size: 1.6rem;
+  }
+
+  .hb-login-body {
+    padding: 24px 24px 20px;
+  }
+
+  .hb-demo-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .user-name {
+    display: none;
+  }
+
+  .user-role {
+    font-size: 0.65rem;
+    padding: 2px 6px;
+  }
+}

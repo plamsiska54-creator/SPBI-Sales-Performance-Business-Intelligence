@@ -1,0 +1,502 @@
+/* ============================================================
+   health.css — ธีมสีของ Health Bento + สไตล์ของ ui-kit
+   โหลดหลัง main/sidebar/charts/auth เพื่อ override ค่าสีของเดิม
+   ============================================================ */
+
+:root {
+  /* พาเลตสุขภาพ: เขียวใบไม้ + เทอร์ควอยซ์ + ส้มอ่อน */
+  --accent-pink: #e11d48;
+  --accent-purple: #16a34a;
+  --accent-blue: #0ea5e9;
+  --accent-teal: #00bfa5;
+  --accent-orange: #f59e0b;
+  --accent-gradient: linear-gradient(135deg, #16a34a, #00bfa5);
+
+  --hb-green: #16a34a;
+  --hb-green-dark: #15803d;
+  --hb-teal: #00bfa5;
+  --hb-lime: #84cc16;
+  --hb-amber: #f59e0b;
+  --hb-rose: #e11d48;
+
+  --card-shadow-hover: 0 6px 24px rgba(22, 163, 74, 0.14);
+}
+
+[data-theme="dark"] {
+  --card-shadow-hover: 0 6px 24px rgba(22, 163, 74, 0.22);
+}
+
+/* --- Header / Sidebar branding --- */
+.sidebar-logo,
+.login-logo {
+  background: var(--accent-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.sidebar-item.active {
+  background: rgba(22, 163, 74, 0.12);
+  color: var(--hb-green-dark);
+}
+
+[data-theme="dark"] .sidebar-item.active {
+  background: rgba(22, 163, 74, 0.20);
+  color: #86efac;
+}
+
+.refresh-btn:hover {
+  background: var(--accent-gradient);
+}
+
+/* --- แถบบอกว่าเป็นตัวเลขประมาณการ --- */
+.hb-assumption {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  margin-bottom: var(--spacing-md);
+  border-radius: var(--radius-sm);
+  background: rgba(22, 163, 74, 0.08);
+  border-left: 3px solid var(--hb-green);
+  color: var(--text-primary);
+  font-size: var(--font-size-sm);
+  line-height: 1.5;
+}
+
+/* --- KPI cards --- */
+.hb-kpi-grid {
+  display: grid;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-lg);
+}
+.hb-kpi-grid.cols-4 { grid-template-columns: repeat(4, 1fr); }
+.hb-kpi-grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
+.hb-kpi-grid.cols-2 { grid-template-columns: repeat(2, 1fr); }
+
+.hb-kpi {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-left: 4px solid var(--hb-green);
+  border-radius: var(--radius-md);
+  padding: 18px 20px;
+  box-shadow: var(--card-shadow);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+.hb-kpi:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--card-shadow-hover);
+}
+.hb-kpi:nth-child(2)  { border-left-color: var(--hb-teal); }
+.hb-kpi:nth-child(3)  { border-left-color: var(--accent-blue); }
+.hb-kpi:nth-child(4)  { border-left-color: var(--hb-amber); }
+.hb-kpi:nth-child(5)  { border-left-color: var(--hb-lime); }
+.hb-kpi:nth-child(6)  { border-left-color: var(--hb-rose); }
+.hb-kpi:nth-child(7)  { border-left-color: #7c4dff; }
+.hb-kpi:nth-child(8)  { border-left-color: #0891b2; }
+
+.hb-kpi-icon { font-size: 1.4rem; line-height: 1; margin-bottom: 6px; }
+.hb-kpi-label { font-size: var(--font-size-sm); color: var(--text-muted); margin-bottom: 4px; }
+.hb-kpi-value { font-size: 1.65rem; font-weight: 700; color: var(--text-heading); line-height: 1.2; }
+.hb-kpi-sub {
+  display: inline-block;
+  margin-top: 6px;
+  padding: 2px 10px;
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+}
+.hb-kpi-sub.positive { color: #15803d; background: rgba(22, 163, 74, 0.10); }
+.hb-kpi-sub.negative { color: #be123c; background: rgba(225, 29, 72, 0.10); }
+.hb-kpi-sub.neutral  { color: var(--text-muted); background: rgba(113, 128, 150, 0.10); }
+[data-theme="dark"] .hb-kpi-sub.positive { color: #86efac; background: rgba(22, 163, 74, 0.18); }
+[data-theme="dark"] .hb-kpi-sub.negative { color: #fda4af; background: rgba(225, 29, 72, 0.18); }
+
+/* --- Panel / ตาราง --- */
+.hb-panel { padding-bottom: 8px; }
+
+.data-table tfoot td {
+  border-top: 2px solid var(--card-border);
+  padding: 12px 14px;
+  color: var(--text-heading);
+  background: rgba(22, 163, 74, 0.05);
+}
+
+.hb-chart-note {
+  margin-top: 10px;
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+/* --- Pill --- */
+.hb-pill {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  white-space: nowrap;
+}
+.hb-pill.neutral  { color: var(--text-muted);  background: rgba(113, 128, 150, 0.12); }
+.hb-pill.positive { color: #15803d; background: rgba(22, 163, 74, 0.12); }
+.hb-pill.negative { color: #be123c; background: rgba(225, 29, 72, 0.12); }
+.hb-pill.warning  { color: #b45309; background: rgba(245, 158, 11, 0.14); }
+.hb-pill.info     { color: #0369a1; background: rgba(14, 165, 233, 0.12); }
+[data-theme="dark"] .hb-pill.positive { color: #86efac; }
+[data-theme="dark"] .hb-pill.negative { color: #fda4af; }
+[data-theme="dark"] .hb-pill.warning  { color: #fcd34d; }
+[data-theme="dark"] .hb-pill.info     { color: #7dd3fc; }
+
+/* --- กล่องข้อสังเกต --- */
+.hb-note-box {
+  margin-top: var(--spacing-lg);
+  padding: 22px;
+  border-radius: var(--radius-lg);
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-top: 3px solid var(--hb-green);
+  box-shadow: var(--card-shadow);
+}
+.hb-note-box h3 {
+  font-size: var(--font-size-lg);
+  color: var(--text-heading);
+  margin-bottom: var(--spacing-md);
+}
+.hb-note-item {
+  padding: 12px 16px;
+  border-radius: var(--radius-sm);
+  margin-bottom: 8px;
+}
+.hb-note-item:last-child { margin-bottom: 0; }
+.hb-note-item.alert       { background: rgba(225, 29, 72, 0.07); }
+.hb-note-item.warning     { background: rgba(245, 158, 11, 0.08); }
+.hb-note-item.opportunity { background: rgba(22, 163, 74, 0.08); }
+.hb-note-item.info        { background: rgba(14, 165, 233, 0.07); }
+.hb-note-badge { font-weight: 700; font-size: var(--font-size-sm); color: var(--text-heading); }
+.hb-note-item p {
+  margin-top: 4px;
+  font-size: var(--font-size-sm);
+  color: var(--text-primary);
+  line-height: 1.6;
+}
+
+/* --- Timeline (roadmap) --- */
+.hb-timeline { position: relative; padding-left: 26px; }
+.hb-timeline::before {
+  content: '';
+  position: absolute;
+  left: 8px; top: 4px; bottom: 4px;
+  width: 2px;
+  background: var(--card-border);
+}
+.hb-tl-item { position: relative; padding: 0 0 20px 6px; }
+.hb-tl-item:last-child { padding-bottom: 0; }
+.hb-tl-item::before {
+  content: '';
+  position: absolute;
+  left: -22px; top: 5px;
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  background: var(--hb-green);
+  box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.18);
+}
+.hb-tl-item.todo::before  { background: var(--text-muted); box-shadow: 0 0 0 3px rgba(113,128,150,0.15); }
+.hb-tl-item.doing::before { background: var(--hb-amber);   box-shadow: 0 0 0 3px rgba(245,158,11,0.20); }
+.hb-tl-phase { font-size: var(--font-size-xs); color: var(--text-muted); }
+.hb-tl-title { font-weight: 700; color: var(--text-heading); margin: 2px 0 4px; }
+.hb-tl-desc  { font-size: var(--font-size-sm); color: var(--text-primary); line-height: 1.6; }
+.hb-tl-meta  { margin-top: 6px; display: flex; gap: 8px; flex-wrap: wrap; }
+
+/* --- การ์ดข้อความสองคอลัมน์ (persona, ความเสี่ยง) --- */
+.hb-cards {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--spacing-md);
+}
+.hb-card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-md);
+  padding: 18px 20px;
+  box-shadow: var(--card-shadow);
+}
+.hb-card-head { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.hb-card-emoji { font-size: 1.6rem; }
+.hb-card-title { font-weight: 700; color: var(--text-heading); }
+.hb-card-sub { font-size: var(--font-size-xs); color: var(--text-muted); }
+.hb-card p { font-size: var(--font-size-sm); color: var(--text-primary); line-height: 1.6; }
+.hb-card ul { margin: 8px 0 0 18px; font-size: var(--font-size-sm); color: var(--text-primary); line-height: 1.7; }
+
+/* --- Responsive --- */
+@media (max-width: 1199px) {
+  .hb-kpi-grid.cols-4 { grid-template-columns: repeat(2, 1fr); }
+  .hb-kpi-grid.cols-3 { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 767px) {
+  .hb-kpi-grid.cols-4,
+  .hb-kpi-grid.cols-3,
+  .hb-kpi-grid.cols-2 { grid-template-columns: 1fr; }
+  .hb-cards { grid-template-columns: 1fr; }
+}
+
+/* ============================================================
+   หน้าล็อกอิน Health Bento — การ์ดหัวเขียว (โทนเดียวกับแดชบอร์ด) + บัญชีตัวอย่าง
+   ============================================================ */
+
+#login-overlay {
+  background: linear-gradient(135deg, #16a34a 0%, #00bfa5 55%, #0e9f6e 100%);
+  padding: 24px;
+  overflow-y: auto;
+}
+
+.login-card.hb-login {
+  padding: 0;
+  overflow: hidden;
+  max-width: 460px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+/* --- หัวการ์ด --- */
+.hb-login-head {
+  background: linear-gradient(135deg, #15803d, #16a34a 55%, #00bfa5);
+  padding: 30px 32px 26px;
+  text-align: center;
+  color: #ffffff;
+}
+
+.hb-login-brand {
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 0.5px;
+}
+
+.hb-login-brand-en {
+  margin-top: 4px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 2px;
+  color: rgba(255, 255, 255, 0.85);
+  text-transform: uppercase;
+}
+
+.hb-login-tagline {
+  margin-top: 12px;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+/* --- ตัวการ์ด --- */
+.hb-login-body {
+  padding: 26px 32px 24px;
+}
+
+.hb-login-title {
+  text-align: center;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-heading);
+  margin-bottom: 20px;
+}
+
+.hb-login .login-field input:focus {
+  border-color: #16a34a;
+  box-shadow: 0 0 0 4px rgba(22, 163, 74, 0.12);
+}
+
+.hb-login .login-btn {
+  background: linear-gradient(135deg, #16a34a, #0e9f6e);
+}
+
+.hb-login .login-btn:hover:not(:disabled) {
+  box-shadow: 0 6px 20px rgba(22, 163, 74, 0.32);
+}
+
+/* --- บัญชีตัวอย่าง --- */
+.hb-demo {
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 1px dashed var(--card-border);
+}
+
+.hb-demo-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+}
+
+.hb-demo-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+
+.hb-demo-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
+  padding: 9px 11px;
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-sm);
+  background: rgba(22, 163, 74, 0.03);
+  cursor: pointer;
+  text-align: left;
+  font-family: var(--font-family);
+  transition: border-color var(--transition-fast), background var(--transition-fast), transform var(--transition-fast);
+}
+
+.hb-demo-card:hover {
+  border-color: #16a34a;
+  background: rgba(22, 163, 74, 0.08);
+  transform: translateY(-1px);
+}
+
+.hb-demo-card.active {
+  border-color: #16a34a;
+  background: rgba(22, 163, 74, 0.12);
+  box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.12);
+}
+
+.hb-demo-role {
+  padding: 1px 9px;
+  border-radius: var(--radius-full);
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+.hb-demo-role.admin   { background: #f59e0b; }
+.hb-demo-role.manager { background: #16a34a; }
+.hb-demo-role.sales   { background: #0ea5e9; }
+.hb-demo-role.officer { background: #64748b; }
+
+.hb-demo-email {
+  font-size: 0.7rem;
+  color: var(--text-primary);
+  word-break: break-all;
+  line-height: 1.35;
+}
+
+.hb-demo-pass {
+  margin-top: 12px;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+.hb-demo-pass code,
+.hb-login-foot code {
+  padding: 2px 7px;
+  border-radius: 6px;
+  background: rgba(245, 158, 11, 0.14);
+  color: #b45309;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.hb-login-foot {
+  margin-top: 16px;
+  text-align: center;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+[data-theme="dark"] .hb-demo-card {
+  background: rgba(22, 163, 74, 0.07);
+}
+[data-theme="dark"] .hb-demo-pass code,
+[data-theme="dark"] .hb-login-foot code {
+  background: rgba(245, 158, 11, 0.2);
+  color: #fcd34d;
+}
+
+@media (max-width: 520px) {
+  .hb-demo-grid { grid-template-columns: 1fr; }
+  .hb-login-body { padding: 22px 20px 20px; }
+  .hb-login-head { padding: 26px 20px 22px; }
+}
+
+/* ============================================================
+   กล่อง AI วิเคราะห์ (ai-analyst.js)
+   ============================================================ */
+
+.hb-ai-box {
+  margin-top: var(--spacing-lg);
+  border-radius: var(--radius-lg);
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  box-shadow: var(--card-shadow);
+  overflow: hidden;
+}
+
+.hb-ai-head {
+  padding: 16px 22px;
+  background: linear-gradient(135deg, rgba(22, 163, 74, 0.12), rgba(0, 191, 165, 0.10));
+  border-bottom: 1px solid var(--card-border);
+}
+
+.hb-ai-title {
+  display: block;
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+  color: var(--text-heading);
+}
+
+.hb-ai-sub {
+  display: block;
+  margin-top: 3px;
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+}
+
+.hb-ai-body {
+  padding: 16px 22px 6px;
+  display: grid;
+  gap: 10px;
+}
+
+.hb-ai-item {
+  padding: 12px 16px;
+  border-radius: var(--radius-sm);
+  border-left: 3px solid var(--text-muted);
+  background: rgba(113, 128, 150, 0.06);
+}
+.hb-ai-item.good   { border-left-color: #16a34a; background: rgba(22, 163, 74, 0.07); }
+.hb-ai-item.info   { border-left-color: #0ea5e9; background: rgba(14, 165, 233, 0.07); }
+.hb-ai-item.warn   { border-left-color: #f59e0b; background: rgba(245, 158, 11, 0.09); }
+.hb-ai-item.risk   { border-left-color: #e11d48; background: rgba(225, 29, 72, 0.08); }
+.hb-ai-item.action { border-left-color: #7c4dff; background: rgba(124, 77, 255, 0.07); }
+
+.hb-ai-badge {
+  font-weight: 700;
+  font-size: var(--font-size-sm);
+  color: var(--text-heading);
+}
+
+.hb-ai-item p {
+  margin-top: 4px;
+  font-size: var(--font-size-sm);
+  color: var(--text-primary);
+  line-height: 1.65;
+}
+
+.hb-ai-foot {
+  padding: 8px 22px 16px;
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+/* ตารางผลสำรวจราคาตลาด */
+.hb-survey-highlight {
+  background: rgba(245, 158, 11, 0.10);
+  border-left: 3px solid var(--hb-amber);
+  padding: 12px 16px;
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-sm);
+  color: var(--text-primary);
+  line-height: 1.6;
+  margin-bottom: var(--spacing-md);
+}
