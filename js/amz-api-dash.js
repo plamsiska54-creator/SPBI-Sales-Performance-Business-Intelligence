@@ -299,12 +299,17 @@ function _amzApiAutoSync() {
   var p2 = _supaFetch('product_monthly',
     'select=year_month,product_name,customer_category,revenue,qty&channel=eq.Telesale&order=year_month'
   );
+  var p3 = _supaFetch('location_monthly',
+    'select=branch_code,branch_name,province&order=branch_name&limit=5000'
+  );
 
-  Promise.all([p1, p2]).then(function(results) {
+  Promise.all([p1, p2, p3]).then(function(results) {
     var dailyRows = results[0] || [];
     var prodRows = results[1] || [];
+    var locRows = results[2] || [];
     if (!dailyRows.length && !prodRows.length) { _amzApiSynced = false; return; }
     _amzApiBuildOrderData(dailyRows, prodRows);
+    _amzBuildCustData(dailyRows, locRows);
   }).catch(function() {
     _amzApiSynced = false;
   });
@@ -508,7 +513,152 @@ function _amzApiBuildOrderData(dailyRows, prodRows) {
     window._salesPageRendered = false;
   }
 
-  console.log('[API Sync] สร้าง AMZ_ORDER_DATA จาก Supabase สำเร็จ:', allMonths.length, 'เดือน,', rows.length, 'รายการ');
+  console.log('[API Sync] สร้าง AMZ_ORDER_DATA จาก Supabase สำเร็จ:', allMonths.length, 'เดือน,', dailyRows.length, 'รายการ');
+}
+
+// ---- สร้าง AMZ_CUST_DATA จาก API (แทนที่ข้อมูล hardcode) ----
+var _AMZ_SOV_CATS = { 'ร้านของฝาก': true, 'ลูกค้าทั่วไป': true };
+
+function _amzBuildCustData(dailyRows, locRows) {
+  var curYear = new Date().getFullYear();
+  var yearRows = dailyRows.filter(function(r) {
+    return r.date && r.date.substring(0, 4) === String(curYear);
+  });
+  if (!yearRows.length) return;
+
+  // build branch name/province lookup from location_monthly
+  var brLookup = {};
+  locRows.forEach(function(r) {
+    if (r.branch_code && !brLookup[r.branch_code]) {
+      brLookup[r.branch_code] = { name: r.branch_name || r.branch_code, prov: r.province || '' };
+    }
+  });
+
+  // group by branch_code → { months: {MM: revenue}, cat: customer_category, totalRev }
+  var branches = {};
+  yearRows.forEach(function(r) {
+    var bc = r.branch_code || '';
+    if (!bc) return;
+    var mo = parseInt(r.date.substring(5, 7));
+    var rev = Number(r.revenue) || 0;
+    var cat = r.customer_category || 'OR';
+    if (!branches[bc]) branches[bc] = { months: {}, cat: cat, totalRev: 0 };
+    if (!branches[bc].months[mo]) branches[bc].months[mo] = 0;
+    branches[bc].months[mo] += rev;
+    branches[bc].totalRev += rev;
+  });
+
+  // find the range of months with data
+  var allMoNums = {};
+  yearRows.forEach(function(r) {
+    var mo = parseInt(r.date.substring(5, 7));
+    allMoNums[mo] = true;
+  });
+  var moList = Object.keys(allMoNums).map(Number).sort(function(a, b) { return a - b; });
+  var maxMo = moList[moList.length - 1] || 1;
+  var curMoNum = new Date().getMonth() + 1;
+  var isLastMoIncomplete = (maxMo === curMoNum);
+
+  var thMonths = ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+  var MONTHS = [];
+  for (var i = 0; i < maxMo; i++) MONTHS.push(thMonths[i]);
+  var completeMo = isLastMoIncomplete ? maxMo - 1 : maxMo;
+
+  // compute new/lost per month and build customer rows
+  var amzSummary = [], sovSummary = [];
+  var amzRows = [], sovRows = [];
+  var bcKeys = Object.keys(branches);
+
+  // for each branch: determine first-seen month, last-seen month
+  bcKeys.forEach(function(bc) {
+    var br = branches[bc];
+    var isSov = _AMZ_SOV_CATS[br.cat] ? true : false;
+    var moKeys = Object.keys(br.months).map(Number).sort(function(a, b) { return a - b; });
+    var firstMo = moKeys[0];
+    var lastMo = moKeys[moKeys.length - 1];
+    var lookup = brLookup[bc] || {};
+    var name = lookup.name || bc;
+    var prov = lookup.prov || '';
+    var dist = '';
+
+    // build monthly sales array
+    var salesArr = [];
+    for (var m = 1; m <= maxMo; m++) {
+      salesArr.push(br.months[m] || 0);
+    }
+
+    var nf = firstMo > 1 ? 'ใหม่เดือน ' + firstMo : '';
+    var lf = (lastMo < completeMo) ? 'หายเดือน ' + (lastMo + 1) : '';
+
+    var row = {
+      c: bc,
+      n: bc + ' ' + name,
+      p: prov,
+      d: dist,
+      s: salesArr,
+      t: br.totalRev,
+      nf: nf,
+      lf: lf
+    };
+
+    if (isSov) sovRows.push(row);
+    else amzRows.push(row);
+  });
+
+  // compute summary: new/lost per month
+  for (var m = 1; m <= maxMo; m++) {
+    var amzNew = 0, amzLost = 0, sovNew = 0, sovLost = 0;
+    bcKeys.forEach(function(bc) {
+      var br = branches[bc];
+      var isSov = _AMZ_SOV_CATS[br.cat] ? true : false;
+      var moKeys = Object.keys(br.months).map(Number);
+      var hasCur = moKeys.indexOf(m) >= 0;
+      var hasPrev = false;
+      for (var p = 1; p < m; p++) {
+        if (moKeys.indexOf(p) >= 0) { hasPrev = true; break; }
+      }
+      if (m === 1) {
+        // month 1 is baseline, no new/lost
+      } else {
+        // new = in current month but never before
+        if (hasCur && !hasPrev) {
+          if (isSov) sovNew++; else amzNew++;
+        }
+        // lost = was in previous month but not in current (skip incomplete month)
+        if (m <= completeMo) {
+          var hadPrevMo = moKeys.indexOf(m - 1) >= 0;
+          if (hadPrevMo && !hasCur) {
+            if (isSov) sovLost++; else amzLost++;
+          }
+        }
+      }
+    });
+    amzSummary.push({ m: m, n: amzNew, l: amzLost, net: amzNew - amzLost });
+    sovSummary.push({ m: m, n: sovNew, l: sovLost, net: sovNew - sovLost });
+  }
+
+  var amzTotN = 0, amzTotL = 0, sovTotN = 0, sovTotL = 0;
+  amzSummary.forEach(function(s) { amzTotN += s.n; amzTotL += s.l; });
+  sovSummary.forEach(function(s) { sovTotN += s.n; sovTotL += s.l; });
+
+  window.AMZ_CUST_DATA = {
+    SUMMARY: {
+      amazon: amzSummary,
+      amzTotal: { n: amzTotN, l: amzTotL, net: amzTotN - amzTotL },
+      souvenir: sovSummary,
+      sovTotal: { n: sovTotN, l: sovTotL, net: sovTotN - sovTotL }
+    },
+    MONTHS: MONTHS,
+    AMZ: amzRows,
+    SOV: sovRows
+  };
+
+  console.log('[API Sync] สร้าง AMZ_CUST_DATA จาก API สำเร็จ: AMZ=' + amzRows.length + ', SOV=' + sovRows.length + ', เดือน=' + maxMo);
+
+  // re-render if customer page is active
+  if (typeof window.renderAmzCustomers === 'function') {
+    try { window.renderAmzCustomers(); } catch (e) {}
+  }
 }
 
 function _amzApiSetMonth(val) {

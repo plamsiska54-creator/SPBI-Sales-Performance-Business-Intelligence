@@ -9,17 +9,10 @@
       "autoPort": true
     },
     {
-      "name": "trend-dashboard",
+      "name": "fieldforce",
       "runtimeExecutable": "node",
-      "runtimeArgs": ["prototype/trend-competitor-social/server.js"],
-      "port": 3500,
-      "autoPort": true
-    },
-    {
-      "name": "health-bento",
-      "runtimeExecutable": "node",
-      "runtimeArgs": ["../Health Bento/server.js"],
-      "port": 3600,
+      "runtimeArgs": ["fieldforce/server.js"],
+      "port": 3700,
       "autoPort": true
     }
   ]

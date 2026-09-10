@@ -22,7 +22,7 @@ function _newEvent(){
     locations:[],
     objective:'',
     participants:[], products:[],
-    fuel:[], tolls:[], accommodation:[], perDiem:[], otherExpenses:[],
+    fuel:[], tolls:[], accommodation:[], perDiem:[], depreciation:[], labor:[], otherExpenses:[],
     salesBefore:0, salesAfter:0,
     roi:{
       grossProfit:0, mktBudget:0,
@@ -30,6 +30,7 @@ function _newEvent(){
       avgOrderValue:0, purchaseFreqYear:0, custLifeYears:0,
       laborSavings:0, agencySavings:0, wasteSavings:0, automationCost:0
     },
+    photos:[],
     goals:{
       lineOaBefore:0, lineOaAfter:0,
       fbBefore:0, fbAfter:0,
@@ -79,11 +80,13 @@ function _budgetSummary(ev){
   var tollCost = _sumArr(ev.tolls,'amount');
   var accomCost = ev.accommodation.reduce(function(s,a){return s+_accomTotal(a);},0);
   var perDiemCost = ev.perDiem.reduce(function(s,p){return s+_perDiemTotal(p);},0);
+  var depreciationCost = _sumArr(ev.depreciation||[],'amount');
+  var laborCost = _sumArr(ev.labor||[],'amount');
   var otherCost = _sumArr(ev.otherExpenses,'amount');
   var travelCost = fuelCost + tollCost;
-  var total = prodCost + accomCost + travelCost + perDiemCost + otherCost;
+  var total = prodCost + accomCost + travelCost + perDiemCost + depreciationCost + laborCost + otherCost;
   return {prodCost:prodCost, fuelCost:fuelCost, tollCost:tollCost, accomCost:accomCost,
-    perDiemCost:perDiemCost, otherCost:otherCost, travelCost:travelCost, total:total};
+    perDiemCost:perDiemCost, depreciationCost:depreciationCost, laborCost:laborCost, otherCost:otherCost, travelCost:travelCost, total:total};
 }
 
 // CSS styles
@@ -287,10 +290,24 @@ function _renderEventForm(el){
   ev.perDiem.forEach(function(p,i){ html += _perDiemRow(p,i); });
   html += '</tbody></table></div><button class="evt-add-btn" onclick="evtAddPerDiem()" style="margin:6px 0 16px">➕ เพิ่มรายการ</button>';
 
+  // Depreciation
+  if(!ev.depreciation) ev.depreciation = [];
+  html += '<div style="font-size:13px;font-weight:700;color:#1e293b;margin-bottom:6px">🚗 ค่าเสื่อมรถ</div>'
+    +'<div style="overflow-x:auto"><table class="evt-tbl"><thead><tr><th>รายการ</th><th style="text-align:right;width:160px">จำนวนเงิน</th><th style="width:40px"></th></tr></thead><tbody id="evtDeprecBody">';
+  ev.depreciation.forEach(function(d,i){ html += _expRow('depreciation',d,i); });
+  html += '</tbody></table></div><button class="evt-add-btn" onclick="evtAddExp(\'depreciation\',\'ค่าเสื่อมรถครั้งที่ '+(ev.depreciation.length+1)+'\')" style="margin:6px 0 16px">➕ เพิ่มรายการ</button>';
+
+  // Labor
+  if(!ev.labor) ev.labor = [];
+  html += '<div style="font-size:13px;font-weight:700;color:#1e293b;margin-bottom:6px">👷 ค่าแรงพนักงาน</div>'
+    +'<div style="overflow-x:auto"><table class="evt-tbl"><thead><tr><th>รายการ</th><th style="text-align:right;width:160px">จำนวนเงิน</th><th style="width:40px"></th></tr></thead><tbody id="evtLaborBody">';
+  ev.labor.forEach(function(l,i){ html += _expRow('labor',l,i); });
+  html += '</tbody></table></div><button class="evt-add-btn" onclick="evtAddExp(\'labor\',\'ค่าแรงพนักงานครั้งที่ '+(ev.labor.length+1)+'\')" style="margin:6px 0 16px">➕ เพิ่มรายการ</button>';
+
   // Other expenses
   html += '<div style="font-size:13px;font-weight:700;color:#1e293b;margin-bottom:6px">📋 ค่าใช้จ่ายอื่นๆ</div>'
-    +'<div style="overflow-x:auto"><table class="evt-tbl"><thead><tr><th>รายการ</th><th style="text-align:right;width:160px">จำนวนเงิน</th><th style="width:40px"></th></tr></thead><tbody id="evtOtherBody">';
-  ev.otherExpenses.forEach(function(o,i){ html += _expRow('other',o,i); });
+    +'<div style="overflow-x:auto"><table class="evt-tbl"><thead><tr><th>รายการ</th><th style="text-align:right;width:90px">จำนวน</th><th style="text-align:right;width:110px">ราคา</th><th style="text-align:right;width:110px">รวม</th><th style="width:40px"></th></tr></thead><tbody id="evtOtherBody">';
+  ev.otherExpenses.forEach(function(o,i){ html += _otherExpRow(o,i); });
   html += '</tbody></table></div><button class="evt-add-btn" onclick="evtAddExp(\'other\',\'\')" style="margin:6px 0 0">➕ เพิ่มรายการ</button>';
 
   html += '</div></div>';
@@ -405,9 +422,33 @@ function _renderEventForm(el){
     +'<button class="evt-add-btn" onclick="evtDownloadMemo(\'image\')" style="background:#7c3aed;color:#fff;border-color:#7c3aed">🖼️ รูปภาพ</button>'
     +'<button class="evt-add-btn" onclick="evtDownloadMemo(\'excel\')" style="background:#16a34a;color:#fff;border-color:#16a34a">📊 Excel</button>'
     +'</div>'
-    +'<div id="evtMemoContent" style="padding:20px;background:#fff;border:1px solid #e2e8f0;border-radius:12px;min-height:80px;font-size:13px;color:#334155;line-height:1.8">'
+    +'<div id="evtMemoContent" style="padding:20px;background:#fff;border:1px solid #e2e8f0;border-radius:12px;min-height:80px;font-size:13px;color:#334155;line-height:1.8;overflow-x:auto">'
     +'<span style="color:#94a3b8">กดปุ่ม "สร้าง Memo" เพื่อสร้างเอกสารเสนอโครงการ</span>'
     +'</div></div></div>';
+
+  // ── Section 11: Event Photos ──
+  if(!ev.photos) ev.photos = [];
+  html += '<div class="evt-section"><div class="evt-section-head">📸 รูปกิจกรรม</div><div class="evt-section-body">'
+    +'<div style="display:flex;gap:8px;align-items:center;margin-bottom:12px">'
+    +'<label style="padding:8px 18px;border:2px dashed #94a3b8;border-radius:10px;cursor:pointer;font-size:13px;font-weight:600;color:#475569;display:inline-flex;align-items:center;gap:6px">'
+    +'📷 เพิ่มรูปภาพ <input type="file" accept="image/*" multiple onchange="evtAddPhotos(this.files)" style="display:none">'
+    +'</label>'
+    +'<span style="font-size:11px;color:#94a3b8">รองรับ JPG, PNG (ย่อขนาดอัตโนมัติ)</span>'
+    +'</div>'
+    +'<div id="evtPhotoGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px">';
+  ev.photos.forEach(function(p,i){
+    html += '<div style="background:#fff;border-radius:10px;border:1px solid #e2e8f0;overflow:hidden;position:relative">'
+      +'<img src="'+p.data+'" style="width:100%;height:140px;object-fit:cover;display:block">'
+      +'<div style="padding:8px">'
+      +'<input type="date" value="'+(p.date||'')+'" onchange="evtPhotoDate('+i+',this.value)" style="width:100%;padding:4px 6px;border:1px solid #e2e8f0;border-radius:6px;font-size:11px;box-sizing:border-box">'
+      +'<input type="text" value="'+(p.caption||'')+'" placeholder="คำอธิบาย..." onchange="evtPhotoCaption('+i+',this.value)" style="width:100%;padding:4px 6px;border:1px solid #e2e8f0;border-radius:6px;font-size:11px;margin-top:4px;box-sizing:border-box">'
+      +'</div>'
+      +'<button onclick="evtDelPhoto('+i+')" style="position:absolute;top:4px;right:4px;border:none;background:rgba(0,0,0,.5);color:#fff;border-radius:50%;width:24px;height:24px;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center">✕</button>'
+      +'</div>';
+  });
+  html += '</div>';
+  if(ev.photos.length === 0) html += '<div style="text-align:center;padding:30px 0;color:#94a3b8;font-size:13px">📷 ยังไม่มีรูปภาพ — กดปุ่มด้านบนเพื่อเพิ่ม</div>';
+  html += '</div></div>';
 
   // Bottom save
   html += '<div style="display:flex;justify-content:flex-end;gap:8px;margin:16px 0 30px">'
@@ -464,6 +505,15 @@ function _expRow(type,item,i){
     +'<td><input type="number" value="'+(item.amount||'')+'" onchange="evtExpChange(\''+type+'\','+i+',\'amount\',this.value)" style="text-align:right"></td>'
     +'<td><button class="evt-del-btn" onclick="evtDelExp(\''+type+'\','+i+')">🗑️</button></td></tr>';
 }
+function _otherExpRow(item,i){
+  var qty = item.qty||1, price = item.price||0;
+  var tot = qty * price;
+  return '<tr><td><input value="'+(item.label||'')+'" onchange="evtExpChange(\'other\','+i+',\'label\',this.value)"></td>'
+    +'<td><input type="number" min="1" value="'+qty+'" onchange="evtExpChange(\'other\','+i+',\'qty\',this.value)" style="text-align:right"></td>'
+    +'<td><input type="number" value="'+(price||'')+'" onchange="evtExpChange(\'other\','+i+',\'price\',this.value)" style="text-align:right"></td>'
+    +'<td style="text-align:right;font-weight:700;color:#2563eb">฿'+_fmt(tot)+'</td>'
+    +'<td><button class="evt-del-btn" onclick="evtDelExp(\'other\','+i+')">🗑️</button></td></tr>';
+}
 function _accomRow(a,i){
   var tot = _accomTotal(a);
   return '<tr><td><input value="'+(a.hotel||'')+'" onchange="evtAccomChange('+i+',\'hotel\',this.value)"></td>'
@@ -501,6 +551,8 @@ function _budgetHTML(b){
     +'<div class="evt-summary-row"><span>🏨 ค่าที่พัก</span><span class="evt-summary-val">฿'+_fmt(b.accomCost)+'</span></div>'
     +'<div class="evt-summary-row"><span>🚗 ค่าเดินทาง (น้ำมัน+ทางด่วน)</span><span class="evt-summary-val">฿'+_fmt(b.travelCost)+'</span></div>'
     +'<div class="evt-summary-row"><span>🍽️ ค่าเบี้ยเลี้ยง</span><span class="evt-summary-val">฿'+_fmt(b.perDiemCost)+'</span></div>'
+    +'<div class="evt-summary-row"><span>🚗 ค่าเสื่อมรถ</span><span class="evt-summary-val">฿'+_fmt(b.depreciationCost)+'</span></div>'
+    +'<div class="evt-summary-row"><span>👷 ค่าแรงพนักงาน</span><span class="evt-summary-val">฿'+_fmt(b.laborCost)+'</span></div>'
     +'<div class="evt-summary-row"><span>📋 ค่าใช้จ่ายอื่น</span><span class="evt-summary-val">฿'+_fmt(b.otherCost)+'</span></div>'
     +'<div class="evt-summary-row"><span>💰 รวมทั้งหมด</span><span class="evt-summary-val" style="color:#dc2626;font-size:18px">฿'+_fmt(b.total)+'</span></div>'
     +'</div>';
@@ -666,28 +718,42 @@ function _refreshProdTable(){
 }
 
 // Generic expense (fuel/toll/other)
+function _getExpArr(type){
+  if(type==='fuel') return _editingEvt.fuel;
+  if(type==='toll') return _editingEvt.tolls;
+  if(type==='depreciation'){ if(!_editingEvt.depreciation) _editingEvt.depreciation=[]; return _editingEvt.depreciation; }
+  if(type==='labor'){ if(!_editingEvt.labor) _editingEvt.labor=[]; return _editingEvt.labor; }
+  return _editingEvt.otherExpenses;
+}
 window.evtAddExp = function(type,defaultLabel){
-  var arr = type==='fuel'? _editingEvt.fuel : type==='toll'? _editingEvt.tolls : _editingEvt.otherExpenses;
-  arr.push({label:defaultLabel||'',amount:0});
+  var arr = _getExpArr(type);
+  if(type==='other') arr.push({label:defaultLabel||'',qty:1,price:0,amount:0});
+  else arr.push({label:defaultLabel||'',amount:0});
   _refreshExpTable(type);
 };
 window.evtExpChange = function(type,i,key,val){
-  var arr = type==='fuel'? _editingEvt.fuel : type==='toll'? _editingEvt.tolls : _editingEvt.otherExpenses;
-  arr[i][key] = key==='amount' ? parseFloat(val)||0 : val;
+  var arr = _getExpArr(type);
+  if(key==='label') arr[i][key] = val;
+  else arr[i][key] = parseFloat(val)||0;
+  if(type==='other' && (key==='qty'||key==='price')){
+    arr[i].amount = (arr[i].qty||1) * (arr[i].price||0);
+    _refreshExpTable(type); return;
+  }
   _refreshBudget();
 };
 window.evtDelExp = function(type,i){
-  var arr = type==='fuel'? _editingEvt.fuel : type==='toll'? _editingEvt.tolls : _editingEvt.otherExpenses;
+  var arr = _getExpArr(type);
   arr.splice(i,1);
   _refreshExpTable(type);
 };
 function _refreshExpTable(type){
-  var bodyId = type==='fuel'?'evtFuelBody':type==='toll'?'evtTollBody':'evtOtherBody';
+  var bodyMap = {fuel:'evtFuelBody',toll:'evtTollBody',depreciation:'evtDeprecBody',labor:'evtLaborBody',other:'evtOtherBody'};
+  var bodyId = bodyMap[type] || 'evtOtherBody';
   var tb = document.getElementById(bodyId);
   if(!tb) return;
-  var arr = type==='fuel'? _editingEvt.fuel : type==='toll'? _editingEvt.tolls : _editingEvt.otherExpenses;
+  var arr = _getExpArr(type);
   tb.innerHTML = '';
-  arr.forEach(function(item,i){ tb.innerHTML += _expRow(type,item,i); });
+  arr.forEach(function(item,i){ tb.innerHTML += type==='other' ? _otherExpRow(item,i) : _expRow(type,item,i); });
   _refreshBudget();
 }
 
@@ -848,6 +914,73 @@ function _refreshBillTable(){
   if(gs) gs.innerHTML = _goalsSummaryHTML(_editingEvt.goals);
 }
 
+// ── Photos ──
+function _resizeImage(file, maxW, maxH, quality, cb){
+  var reader = new FileReader();
+  reader.onload = function(e){
+    var img = new Image();
+    img.onload = function(){
+      var w = img.width, h = img.height;
+      if(w > maxW){ h = h * maxW / w; w = maxW; }
+      if(h > maxH){ w = w * maxH / h; h = maxH; }
+      var canvas = document.createElement('canvas');
+      canvas.width = w; canvas.height = h;
+      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+      cb(canvas.toDataURL('image/jpeg', quality));
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+window.evtAddPhotos = function(files){
+  if(!_editingEvt || !files || !files.length) return;
+  if(!_editingEvt.photos) _editingEvt.photos = [];
+  var pending = files.length;
+  var today = new Date().toISOString().slice(0,10);
+  Array.from(files).forEach(function(file){
+    _resizeImage(file, 800, 600, 0.6, function(dataUrl){
+      _editingEvt.photos.push({data:dataUrl, date:today, caption:''});
+      pending--;
+      if(pending === 0) _refreshPhotoGrid();
+    });
+  });
+};
+window.evtPhotoDate = function(i, val){
+  if(!_editingEvt || !_editingEvt.photos[i]) return;
+  _editingEvt.photos[i].date = val;
+};
+window.evtPhotoCaption = function(i, val){
+  if(!_editingEvt || !_editingEvt.photos[i]) return;
+  _editingEvt.photos[i].caption = val;
+};
+window.evtDelPhoto = function(i){
+  if(!_editingEvt || !_editingEvt.photos) return;
+  if(!confirm('ลบรูปนี้?')) return;
+  _editingEvt.photos.splice(i,1);
+  _refreshPhotoGrid();
+};
+function _refreshPhotoGrid(){
+  var grid = document.getElementById('evtPhotoGrid');
+  if(!grid) return;
+  var photos = _editingEvt.photos || [];
+  var html = '';
+  photos.forEach(function(p,i){
+    html += '<div style="background:#fff;border-radius:10px;border:1px solid #e2e8f0;overflow:hidden;position:relative">'
+      +'<img src="'+p.data+'" style="width:100%;height:140px;object-fit:cover;display:block">'
+      +'<div style="padding:8px">'
+      +'<input type="date" value="'+(p.date||'')+'" onchange="evtPhotoDate('+i+',this.value)" style="width:100%;padding:4px 6px;border:1px solid #e2e8f0;border-radius:6px;font-size:11px;box-sizing:border-box">'
+      +'<input type="text" value="'+(p.caption||'')+'" placeholder="คำอธิบาย..." onchange="evtPhotoCaption('+i+',this.value)" style="width:100%;padding:4px 6px;border:1px solid #e2e8f0;border-radius:6px;font-size:11px;margin-top:4px;box-sizing:border-box">'
+      +'</div>'
+      +'<button onclick="evtDelPhoto('+i+')" style="position:absolute;top:4px;right:4px;border:none;background:rgba(0,0,0,.5);color:#fff;border-radius:50%;width:24px;height:24px;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center">✕</button>'
+      +'</div>';
+  });
+  grid.innerHTML = html;
+  var emptyMsg = grid.nextElementSibling;
+  if(emptyMsg && emptyMsg.textContent.indexOf('ยังไม่มีรูปภาพ')!==-1){
+    emptyMsg.style.display = photos.length > 0 ? 'none' : '';
+  }
+}
+
 // ── AI Analysis (4 มิติ ROI) ──
 window.evtAiAnalyze = function(){
   if(!_editingEvt) return;
@@ -983,14 +1116,14 @@ window.evtGenMemo = function(){
   var b = _budgetSummary(ev);
   var g = ev.goals || {};
   var r = ev.roi || {};
-  var TD = 'padding:6px 8px;border-bottom:1px solid #e2e8f0;';
-  var TDR = TD+'text-align:right;';
+  var TD = 'padding:6px 8px;border-bottom:1px solid #e2e8f0;word-break:break-word;';
+  var TDR = TD+'text-align:right;white-space:nowrap;';
   var TH = 'padding:6px 8px;font-weight:700;border-bottom:1px solid #e2e8f0;';
-  var THW = TH+'width:150px;';
+  var THW = TH+'width:130px;white-space:nowrap;';
   var SEC = 'font-weight:700;font-size:14px;color:#1e293b;margin:18px 0 8px;';
-  var TBLH = 'padding:6px 8px;background:#f1f5f9;font-size:11px;font-weight:700;color:#475569;border-bottom:1px solid #e2e8f0;';
+  var TBLH = 'padding:6px 8px;background:#f1f5f9;font-size:11px;font-weight:700;color:#475569;border-bottom:1px solid #e2e8f0;white-space:nowrap;';
 
-  var html = '<div id="evtMemoPrintArea" style="font-family:\'Sarabun\',sans-serif;max-width:750px;margin:0 auto">';
+  var html = '<div id="evtMemoPrintArea" style="font-family:\'Sarabun\',sans-serif;max-width:100%;margin:0 auto;overflow-x:auto">';
   html += '<div style="text-align:center;border-bottom:3px double #1e293b;padding-bottom:12px;margin-bottom:16px">'
     +'<div style="font-size:20px;font-weight:800;color:#1e293b">📋 บันทึกข้อความ (Memo)</div>'
     +'<div style="font-size:14px;color:#64748b;margin-top:4px">โครงการ: '+ev.name+'</div></div>';
@@ -1013,7 +1146,7 @@ window.evtGenMemo = function(){
   var locs = ev.locations||[];
   if(locs.length>0){
     html += '<div style="'+SEC+'">📍 สถานที่จัดงาน ('+locs.length+' แห่ง)</div>';
-    html += '<table style="width:100%;border-collapse:collapse;font-size:12px">';
+    html += '<table style="width:100%;border-collapse:collapse;font-size:12px;table-layout:auto">';
     html += '<tr><th style="'+TBLH+'">#</th><th style="'+TBLH+'">สถานที่</th><th style="'+TBLH+'">จังหวัด</th><th style="'+TBLH+'">วันที่</th></tr>';
     locs.forEach(function(l,i){
       html += '<tr><td style="'+TD+'text-align:center">'+(i+1)+'</td><td style="'+TD+'">'+(l.name||'-')+'</td><td style="'+TD+'">'+(l.province||'-')+'</td><td style="'+TD+'">'+(l.date||'-')+'</td></tr>';
@@ -1025,7 +1158,7 @@ window.evtGenMemo = function(){
   var parts = ev.participants||[];
   if(parts.length>0){
     html += '<div style="'+SEC+'">👥 ผู้เข้าร่วม ('+parts.length+' คน)</div>';
-    html += '<table style="width:100%;border-collapse:collapse;font-size:12px">';
+    html += '<table style="width:100%;border-collapse:collapse;font-size:12px;table-layout:auto">';
     html += '<tr><th style="'+TBLH+'">#</th><th style="'+TBLH+'">ชื่อ</th><th style="'+TBLH+'">ตำแหน่ง</th><th style="'+TBLH+'">แผนก</th><th style="'+TBLH+'">โทร</th></tr>';
     parts.forEach(function(p,i){
       html += '<tr><td style="'+TD+'text-align:center">'+(i+1)+'</td><td style="'+TD+'">'+(p.name||'-')+'</td><td style="'+TD+'">'+(p.position||'-')+'</td><td style="'+TD+'">'+(p.department||'-')+'</td><td style="'+TD+'">'+(p.phone||'-')+'</td></tr>';
@@ -1038,7 +1171,7 @@ window.evtGenMemo = function(){
   if(prods.length>0){
     var prodTotal = prods.reduce(function(s,p){return s+_productTotal(p);},0);
     html += '<div style="'+SEC+'">📦 รายการสินค้า ('+prods.length+' รายการ)</div>';
-    html += '<table style="width:100%;border-collapse:collapse;font-size:12px">';
+    html += '<table style="width:100%;border-collapse:collapse;font-size:12px;table-layout:auto">';
     html += '<tr><th style="'+TBLH+'">#</th><th style="'+TBLH+'">รหัส</th><th style="'+TBLH+'">ชื่อสินค้า</th><th style="'+TBLH+'text-align:right">จำนวน</th><th style="'+TBLH+'text-align:right">ราคา/หน่วย</th><th style="'+TBLH+'text-align:right">รวม</th></tr>';
     prods.forEach(function(p,i){
       html += '<tr><td style="'+TD+'text-align:center">'+(i+1)+'</td><td style="'+TD+'">'+(p.code||'-')+'</td><td style="'+TD+'">'+(p.name||'-')+'</td><td style="'+TDR+'">'+_fmt(p.qty||0)+'</td><td style="'+TDR+'">฿'+_fmt(p.price||0)+'</td><td style="'+TDR+'font-weight:700">฿'+_fmt(_productTotal(p))+'</td></tr>';
@@ -1094,7 +1227,9 @@ window.evtGenMemo = function(){
   if(ev.otherExpenses.length>0){
     html += '<tr><td colspan="2" style="padding:6px 8px;font-weight:700;color:#475569;font-size:12px;background:#f8fafc;border-bottom:1px solid #e2e8f0">📎 ค่าใช้จ่ายอื่น</td></tr>';
     ev.otherExpenses.forEach(function(o){
-      html += '<tr><td style="'+TD+'padding-left:24px">'+(o.desc||'-')+'</td><td style="'+TDR+'">฿'+_fmt(o.amount||0)+'</td></tr>';
+      var oQty=o.qty||1, oPrice=o.price||0, oTot=oQty*oPrice||o.amount||0;
+      var oDetail = oQty>1 ? ' ('+_fmt(oQty)+' × ฿'+_fmt(oPrice)+')' : '';
+      html += '<tr><td style="'+TD+'padding-left:24px">'+(o.label||o.desc||'-')+oDetail+'</td><td style="'+TDR+'">฿'+_fmt(oTot)+'</td></tr>';
     });
     html += '<tr><td style="'+TD+'padding-left:24px;font-weight:600">รวมค่าใช้จ่ายอื่น</td><td style="'+TDR+'font-weight:600">฿'+_fmt(b.otherCost)+'</td></tr>';
   } else {
@@ -1123,7 +1258,7 @@ window.evtGenMemo = function(){
   var c = _roiCalc(ev);
   if(c.mktBudget>0 || c.newCustCount>0 || c.ltv>0 || c.totalSavingsYear>0){
     html += '<div style="'+SEC+'">📈 วิเคราะห์ ROI 4 มิติ</div>';
-    html += '<table style="width:100%;border-collapse:collapse;font-size:12px">';
+    html += '<table style="width:100%;border-collapse:collapse;font-size:12px;table-layout:auto">';
     if(c.mktBudget>0){
       html += '<tr><td colspan="2" style="padding:5px 8px;font-weight:700;color:#2563eb;background:#eff6ff;border-bottom:1px solid #e2e8f0">1. Direct Sales ROI</td></tr>';
       html += '<tr><td style="'+TD+'padding-left:16px">กำไรขั้นต้น / งบการตลาด</td><td style="'+TDR+'">฿'+_fmt(c.grossProfit)+' / ฿'+_fmt(c.mktBudget)+'</td></tr>';
@@ -1159,7 +1294,7 @@ window.evtGenMemo = function(){
   var bills = g.newCustBills||[];
   if(bills.length>0){
     html += '<div style="'+SEC+'font-size:13px;margin-top:10px">📝 รายการบิลลูกค้าใหม่ ('+bills.length+' บิล)</div>';
-    html += '<table style="width:100%;border-collapse:collapse;font-size:12px">';
+    html += '<table style="width:100%;border-collapse:collapse;font-size:12px;table-layout:auto">';
     html += '<tr><th style="'+TBLH+'">#</th><th style="'+TBLH+'">ชื่อลูกค้า</th><th style="'+TBLH+'">เลขที่บิล</th><th style="'+TBLH+'">วันที่</th></tr>';
     bills.forEach(function(bl,i){
       html += '<tr><td style="'+TD+'text-align:center">'+(i+1)+'</td><td style="'+TD+'">'+(bl.customer||'-')+'</td><td style="'+TD+'">'+(bl.billNo||'-')+'</td><td style="'+TD+'">'+(bl.date||'-')+'</td></tr>';
@@ -1182,13 +1317,59 @@ window.evtDownloadMemo = function(type){
   if(!content){ alert('กรุณาสร้าง Memo ก่อนดาวน์โหลด'); return; }
   var name = (_editingEvt?_editingEvt.name:'Event')+'_Memo';
 
-  if(type==='pdf'||type==='image'){
-    var printWin = window.open('','','width=800,height=600');
-    printWin.document.write('<html><head><title>'+name+'</title><style>body{font-family:Sarabun,sans-serif;padding:20px;}</style></head><body>');
-    printWin.document.write(content.innerHTML);
-    printWin.document.write('</body></html>');
-    printWin.document.close();
-    setTimeout(function(){ printWin.print(); },500);
+  function _captureAtWidth(cb){
+    var origW = content.style.width;
+    var origMax = content.style.maxWidth;
+    content.style.width = '750px';
+    content.style.maxWidth = '750px';
+    html2canvas(content,{scale:2,useCORS:true,backgroundColor:'#ffffff',width:750}).then(function(canvas){
+      content.style.width = origW;
+      content.style.maxWidth = origMax;
+      cb(canvas);
+    }).catch(function(err){
+      content.style.width = origW;
+      content.style.maxWidth = origMax;
+      throw err;
+    });
+  }
+
+  if(type==='image'){
+    var btn = event&&event.target; if(btn){btn.disabled=true;btn.textContent='⏳ กำลังสร้าง...';}
+    _captureAtWidth(function(canvas){
+      var a = document.createElement('a');
+      a.href = canvas.toDataURL('image/png');
+      a.download = name+'.png';
+      a.click();
+      if(btn){btn.disabled=false;btn.textContent='🖼️ รูปภาพ';}
+    });
+  } else if(type==='pdf'){
+    var btn = event&&event.target; if(btn){btn.disabled=true;btn.textContent='⏳ กำลังสร้าง...';}
+    _captureAtWidth(function(canvas){
+      var imgW = 190;
+      var imgH = canvas.height * imgW / canvas.width;
+      var pdf = new jspdf.jsPDF({orientation:'p', unit:'mm', format:'a4'});
+      var pageH = 277;
+      if(imgH <= pageH){
+        pdf.addImage(canvas.toDataURL('image/png'),'PNG',10,10,imgW,imgH);
+      } else {
+        var remainH = imgH;
+        var srcY = 0;
+        while(remainH > 0){
+          var sliceH = Math.min(pageH, remainH);
+          var sliceCanvas = document.createElement('canvas');
+          sliceCanvas.width = canvas.width;
+          sliceCanvas.height = Math.round(canvas.height * sliceH / imgH);
+          var ctx = sliceCanvas.getContext('2d');
+          ctx.drawImage(canvas, 0, Math.round(srcY * canvas.height / imgH), canvas.width, sliceCanvas.height, 0, 0, sliceCanvas.width, sliceCanvas.height);
+          pdf.addImage(sliceCanvas.toDataURL('image/png'),'PNG',10,10,imgW,sliceH);
+          remainH -= sliceH;
+          srcY += sliceH;
+          if(remainH > 0) pdf.addPage();
+        }
+      }
+      pdf.save(name+'.pdf');
+      if(btn){btn.disabled=false;btn.textContent='📄 PDF';}
+    });
   } else if(type==='excel'){
     var table = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><meta charset="utf-8"></head><body>';
     table += content.innerHTML;

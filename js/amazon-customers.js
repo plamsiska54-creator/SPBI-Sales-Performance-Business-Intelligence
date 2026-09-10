@@ -159,6 +159,7 @@ function amzCustFilterChannel(ch) {
   if (sel) sel.value = '';
   _amzCustRenderKPI();
   _amzCustRenderChart();
+  _amzCustRenderCompareTable();
 
   _amzCustRenderPills();
   _amzCustPopulateProvinces();
@@ -319,6 +320,43 @@ function _amzCustRenderChart() {
   });
 }
 
+function _amzCustRenderCompareTable() {
+  var el = document.getElementById('amzCustCompareTable');
+  if (!el) return;
+  var summary = _amzCustGetSummary();
+  var months = AMZ_CUST_DATA.MONTHS;
+  var ms = summary.months;
+
+  var cumNew = 0, cumLost = 0;
+  var html = '<thead><tr><th>เดือน</th><th class="td-right">ลูกค้าใหม่</th><th class="td-right">ลูกค้าหาย</th><th class="td-right">สุทธิ</th><th class="td-right">สะสมใหม่</th><th class="td-right">สะสมหาย</th><th class="td-right">สะสมสุทธิ</th></tr></thead><tbody>';
+  for (var i = 0; i < ms.length; i++) {
+    cumNew += ms[i].n;
+    cumLost += ms[i].l;
+    var cumNet = cumNew - cumLost;
+    var netCls = ms[i].net > 0 ? 'color:#16a34a' : ms[i].net < 0 ? 'color:#dc2626' : '';
+    var cumCls = cumNet > 0 ? 'color:#16a34a' : cumNet < 0 ? 'color:#dc2626' : '';
+    html += '<tr>' +
+      '<td style="font-weight:600">' + months[i] + '</td>' +
+      '<td class="td-right" style="color:#16a34a;font-weight:600">+' + ms[i].n.toLocaleString() + '</td>' +
+      '<td class="td-right" style="color:#dc2626;font-weight:600">-' + ms[i].l.toLocaleString() + '</td>' +
+      '<td class="td-right" style="font-weight:700;' + netCls + '">' + (ms[i].net > 0 ? '+' : '') + ms[i].net.toLocaleString() + '</td>' +
+      '<td class="td-right">' + cumNew.toLocaleString() + '</td>' +
+      '<td class="td-right">' + cumLost.toLocaleString() + '</td>' +
+      '<td class="td-right" style="font-weight:700;' + cumCls + '">' + (cumNet > 0 ? '+' : '') + cumNet.toLocaleString() + '</td>' +
+      '</tr>';
+  }
+  html += '</tbody><tfoot><tr style="font-weight:700;background:#f1f5f9">' +
+    '<td>รวม</td>' +
+    '<td class="td-right" style="color:#16a34a">+' + summary.totalNew.toLocaleString() + '</td>' +
+    '<td class="td-right" style="color:#dc2626">-' + summary.totalLost.toLocaleString() + '</td>' +
+    '<td class="td-right" style="' + (summary.totalNet > 0 ? 'color:#16a34a' : 'color:#dc2626') + '">' + (summary.totalNet > 0 ? '+' : '') + summary.totalNet.toLocaleString() + '</td>' +
+    '<td class="td-right">' + cumNew.toLocaleString() + '</td>' +
+    '<td class="td-right">' + cumLost.toLocaleString() + '</td>' +
+    '<td class="td-right" style="' + (cumNet > 0 ? 'color:#16a34a' : 'color:#dc2626') + '">' + (cumNet > 0 ? '+' : '') + cumNet.toLocaleString() + '</td>' +
+    '</tr></tfoot>';
+  el.innerHTML = html;
+}
+
 function _amzCustRenderPills() {
   var el = document.getElementById('amzCustPills');
   if (!el) return;
@@ -422,6 +460,7 @@ function renderAmzCustomers() {
 
   _amzCustRenderKPI();
   _amzCustRenderChart();
+  _amzCustRenderCompareTable();
 
   _amzCustRenderPills();
   _amzCustPopulateProvinces();

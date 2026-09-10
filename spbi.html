@@ -13,15 +13,19 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700;800;900&display=swap">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<link rel="stylesheet" href="css/dashboard.css?v=20260816a">
-<link rel="stylesheet" href="css/menu-matrix.css?v=20260816a">
-<link rel="stylesheet" href="css/prod-timeline.css?v=20260820a">
+<link rel="stylesheet" href="css/dashboard.css?v=20260909b">
+<link rel="stylesheet" href="css/menu-matrix.css?v=20260909b">
+<link rel="stylesheet" href="css/prod-timeline.css?v=20260909d">
+<link rel="stylesheet" href="css/sticker-monitor.css?v=20260909b">
+<link rel="stylesheet" href="css/sales-target-ai.css?v=20260909b">
 <script>
+  // Single build version — change this one value to bust cache for all local files
+  var SPBI_BUILD='20260909b';
   // Apply saved theme before first paint to prevent flash
   (function(){var t=localStorage.getItem('spbi-theme');if(t)document.documentElement.setAttribute('data-theme',t)})();
 </script>
 <!-- Auth + RBAC (โหลดก่อน app.js). Guard เช็ค session ทันทีก่อน render -->
-<script src="js/auth.js?v=20260728b"></script>
+<script src="js/auth.js?v=20260909b"></script>
 <script>
   // Session guard: ถ้ายังไม่ login เด้งไป login.html ก่อนโหลดเนื้อหา/app.js
   window.__spbiSession = (typeof requireAuth === 'function') ? requireAuth() : null;
@@ -94,9 +98,9 @@
     </div>
     <nav id="sidebarNav" class="sidebar-nav"></nav>
     <div class="sidebar-foot">
-      <span class="hbadge ok" data-i18n="sidebar.status">✅ YTD Jan–Jun ข้อมูลครบ</span>
-      <span data-i18n="sidebar.info">📊 SPBI · ข้อมูล ม.ค.–ก.ค.</span>
-      <span data-i18n="sidebar.update">อัปเดต: 8 ก.ค. 2026</span>
+      <span id="sbStatus" class="hbadge ok"></span>
+      <span id="sbInfo"></span>
+      <span id="sbUpdate"></span>
     </div>
   </aside>
   <div id="sidebarBackdrop" onclick="closeSidebarDrawer()"></div>
@@ -296,7 +300,7 @@
     <div class="sub-tab" onclick="showSubTab(this,'ov-sales');renderSales()" data-i18n="ov.sales">👤 พนักงานขาย</div>
 
     <div class="sub-tab" onclick="showSubTab(this,'ov-target');renderOvTarget()" data-i18n="ov.target">🎯 เป้าหมาย</div>
-    <div class="sub-tab" onclick="showSubTab(this,'ov-ai');renderOverviewAI()" data-i18n="ov.ai">🤖 วิเคราะห์ AI</div>
+    <div class="sub-tab" onclick="showSubTab(this,'ov-ai');renderSalesTargetAI()" data-i18n="ov.ai">🤖 วิเคราะห์ AI</div>
     <div class="sub-tab" onclick="showSubTab(this,'ov-manual')">📖 คู่มือการใช้งาน</div>
     <div class="sub-tab rbac-import" onclick="showSubTab(this,'ov-update')" data-i18n="ov.update">🔄 อัพเดทข้อมูล</div>
   </div>
@@ -347,6 +351,10 @@
       </div>
     </div>
     <div class="period-type-btn" onclick="resetFilters()" style="background:none;border:1.5px dashed var(--border);color:var(--text3,#9ca3af)" title="ล้างตัวเลือกทั้งหมด" data-i18n="filter.clear">✕ ล้าง</div>
+    <div class="filter-sep action-sep"></div>
+    <button class="action-btn" onclick="shareToLine()" style="padding:5px 14px;border:none;border-radius:8px;background:#06c755;color:#fff;cursor:pointer;font-size:12px;font-weight:600;display:flex;align-items:center;gap:5px;white-space:nowrap"><span style="font-size:14px">💬</span> ส่ง LINE</button>
+    <button class="action-btn" onclick="copyLineSummary(event)" style="padding:5px 14px;border:none;border-radius:8px;background:#06c755;color:#fff;cursor:pointer;font-size:12px;font-weight:600;display:flex;align-items:center;gap:5px;white-space:nowrap;opacity:.85"><span style="font-size:14px">📋</span> คัดลอกข้อความ</button>
+    <button class="action-btn" onclick="captureKPI(event)" style="padding:5px 14px;border:none;border-radius:8px;background:#2563eb;color:#fff;cursor:pointer;font-size:12px;font-weight:600;display:flex;align-items:center;gap:5px;white-space:nowrap"><span style="font-size:14px">📸</span> จับภาพ KPI</button>
   </div>
   <div class="filter-info">
     <div class="filter-sep"></div>
@@ -357,6 +365,7 @@
   <div id="ov-main" class="sub-section active">
   <div id="monthBannerOverview" class="month-banner" style="display:none"><div class="dot"></div><span id="monthBannerTextOverview"></span></div>
   <div class="kpi-grid" id="overviewKPI"></div>
+  <div id="ovComparisonSummary" style="margin-top:14px"></div>
   <div id="ovBelowTarget" style="margin-top:12px;margin-bottom:20px"></div>
   <!-- overviewBar + overviewAch removed (duplicates of trend section) -->
   <div class="row cols2" style="margin-top:12px">
@@ -406,6 +415,10 @@
       <th style="padding:8px 12px;text-align:right">% ACHIEVE</th>
       <th style="padding:8px 12px">PROGRESS</th>
     </tr></thead><tbody id="overviewChannelTable"></tbody></table></div>
+  </div>
+  <div class="card mt" id="ovChannelCompare" style="margin-top:14px">
+    <div class="card-title">📊 เปรียบเทียบช่องทาง (MoM / YoY / YTD)</div>
+    <div id="ovChannelCompareBody"></div>
   </div>
 
   </div>
@@ -628,13 +641,7 @@
   </div>
   <div id="salesMthCard" class="card mt">
     <div class="card-title">Monthly Breakdown รายพนักงาน (บาท)</div>
-    <div class="table-wrap"><table><thead><tr>
-      <th>พนักงานขาย</th>
-      <th style="text-align:right">ม.ค.</th><th style="text-align:right">ก.พ.</th>
-      <th style="text-align:right">มี.ค.</th><th style="text-align:right">เม.ย.</th>
-      <th style="text-align:right">พ.ค.</th><th style="text-align:right">มิ.ย.</th>
-      <th style="text-align:right">YTD</th>
-      <th>Performance</th>
+    <div class="table-wrap"><table><thead><tr id="salesMthHead">
     </tr></thead><tbody id="salesMthTable"></tbody></table></div>
   </div>
 
@@ -701,16 +708,7 @@
 
   <!-- sub-section: วิเคราะห์ AI -->
   <div id="ov-ai" class="sub-section">
-    <div class="card" style="padding:0;overflow:hidden;margin-bottom:16px">
-      <div id="overviewAIHeader" style="background:linear-gradient(135deg,#7c3aed,#a78bfa);padding:18px 22px;color:#fff">
-        <div style="font-size:16px;font-weight:800">🤖 AI วิเคราะห์ภาพรวมยอดขาย</div>
-        <div id="overviewAISchedule" style="font-size:11px;opacity:.8;margin-top:4px"></div>
-      </div>
-      <div style="padding:16px 20px">
-        <div id="overviewAIKPI" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;margin-bottom:16px"></div>
-        <div id="overviewAIBody"></div>
-      </div>
-    </div>
+    <div id="salesTargetContent" class="sta-root"></div>
   </div>
 
   <!-- sub-section: เป้าหมาย -->
@@ -974,6 +972,18 @@
           </div>
         </div>
 
+        <div style="background:#faf5ff;border-radius:10px;padding:14px 16px">
+          <div style="font-weight:700;font-size:14px;margin-bottom:6px;color:#7c3aed">🆕 เทียบปีต่อปี (Year-over-Year) — เปรียบเทียบผลงานสินค้าข้ามปี</div>
+          <div style="font-size:13px;color:#475569;line-height:2">
+            ระบบจะเปรียบเทียบยอดขายสินค้าระหว่างปีปัจจุบันกับปีก่อนหน้า ในช่วงเดือนเดียวกัน แสดงอัตโนมัติในหน้า "ผลงานสินค้า" ทุกแท็บ:<br>
+            <strong>หน้าที่แสดง:</strong> อเมซอน & ของฝาก (ผลงานสินค้า), ห้างค้าปลีก (ผลงานสินค้า), ฝ่ายขาย (ผลงานสินค้า)<br>
+            <strong>การ์ด KPI:</strong> ยอดขายรวมปีก่อน vs ปีนี้ (บาท), อัตราเติบโต (%) ทั้งบาทและจำนวนชิ้น<br>
+            <strong>กราฟแท่งคู่:</strong> เปรียบเทียบ Top 10 สินค้ายอดขายสูงสุด — แท่งเทา (ปีก่อน) vs แท่งม่วง (ปีนี้)<br>
+            <strong>ตาราง:</strong> แสดงสินค้าทุกรายการพร้อม % เปลี่ยนแปลง และแถบแสดงแนวโน้ม (สีเขียว = เติบโต, สีแดง = ลดลง)<br>
+            <strong>หมายเหตุ:</strong> ข้อมูลเปรียบเทียบเฉพาะเดือนที่มีข้อมูลทั้ง 2 ปี เช่น ถ้าปีนี้มีข้อมูลถึง ก.ค. จะเปรียบเทียบ ม.ค.–ก.ค. ของทั้ง 2 ปี
+          </div>
+        </div>
+
         <div style="background:#f0fdf4;border-radius:10px;padding:14px 16px">
           <div style="font-weight:700;font-size:14px;margin-bottom:6px;color:#1e40af">❓ อัพโหลดไฟล์ยอดเข้าบัญชี แล้วยอดเปลี่ยนทันทีไหม?</div>
           <div style="font-size:13px;color:#475569;line-height:2">
@@ -1050,7 +1060,7 @@
       <button class="ch-tab-btn" data-ch="Aeon" onclick="selectProdTab('Aeon')" style="border:2px solid #00308733;color:#003087;background:white;padding:7px 16px;border-radius:20px;cursor:pointer;font-size:12px;font-weight:700;white-space:nowrap;transition:all .15s">AEON <span style="font-size:10px;opacity:.6">(13)</span></button>
       <button class="ch-tab-btn" data-ch="The Mall" onclick="selectProdTab('The Mall')" style="border:2px solid #c6282833;color:#c62828;background:white;padding:7px 16px;border-radius:20px;cursor:pointer;font-size:12px;font-weight:700;white-space:nowrap;transition:all .15s">The Mall <span style="font-size:10px;opacity:.6">(7)</span></button>
       <button class="ch-tab-btn" data-ch="Amazon" onclick="selectProdTab('Amazon')" style="border:2px solid #1b5e2033;color:#1b5e20;background:white;padding:7px 16px;border-radius:20px;cursor:pointer;font-size:12px;font-weight:700;white-space:nowrap;transition:all .15s">Amazon <span style="font-size:10px;opacity:.6">(36)</span></button>
-      <button class="ch-tab-btn" data-ch="BCY" onclick="selectProdTab('BCY')" style="border:2px solid #1a1a1a33;color:#1a1a1a;background:white;padding:7px 16px;border-radius:20px;cursor:pointer;font-size:12px;font-weight:700;white-space:nowrap;transition:all .15s">Black Canyon <span style="font-size:10px;opacity:.6">(24)</span></button>
+      <button class="ch-tab-btn" data-ch="Black Canyon" onclick="selectProdTab('Black Canyon')" style="border:2px solid #1a1a1a33;color:#1a1a1a;background:white;padding:7px 16px;border-radius:20px;cursor:pointer;font-size:12px;font-weight:700;white-space:nowrap;transition:all .15s">Black Canyon <span style="font-size:10px;opacity:.6">(28)</span></button>
       <button class="ch-tab-btn" data-ch="Online" onclick="selectProdTab('Online')" style="border:2px solid #2563eb33;color:#2563eb;background:white;padding:7px 16px;border-radius:20px;cursor:pointer;font-size:12px;font-weight:700;white-space:nowrap;transition:all .15s">🛒 Online <span style="font-size:10px;opacity:.6">(58)</span></button>
       <button class="ch-tab-btn" data-ch="พันธุ์ไทย" onclick="selectProdTab('พันธุ์ไทย')" style="border:2px solid #4e342e33;color:#4e342e;background:white;padding:7px 16px;border-radius:20px;cursor:pointer;font-size:12px;font-weight:700;white-space:nowrap;transition:all .15s">🐘 พันธุ์ไทย <span style="font-size:10px;opacity:.6">(46)</span></button>
     </div>
@@ -1260,6 +1270,7 @@
 
     <div class="sub-tab" onclick="mtClickChannel(this,'Aeon')">🛍 Aeon</div>
     <div class="sub-tab" onclick="mtClickChannel(this,'TheMall')">🏢 The Mall</div>
+    <div class="sub-tab" onclick="mtClickChannel(this,'Wholegrain')">🌾 โฮลเกรน</div>
     <div class="sub-tab" onclick="mtClickChannel(this,'StickerCancel')" style="border-left:2px solid var(--border);margin-left:8px;padding-left:12px">🏷️ สต็อกสติ๊กเกอร์ยกเลิกขาย</div>
   </div>
   <div id="mtPeriodFilter" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:10px 12px;margin-bottom:4px;background:var(--surface);border-radius:10px;border:1px solid var(--border);box-shadow:0 2px 6px rgba(0,0,0,.08)">
@@ -1773,7 +1784,9 @@
     <!-- Header row: title + selectors -->
     <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:16px">
       <div style="font-size:15px;font-weight:800;color:#1e293b">&#128176; ต้นทุนและกำไร-ขาดทุน บูธ</div>
-      <div style="display:flex;gap:8px;align-items:center">
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+        <span style="font-size:12px;color:#64748b">สาขา</span>
+        <select id="cost-booth" onchange="renderCostSection()" style="border:1px solid #e2e8f0;border-radius:8px;padding:5px 10px;font-size:13px;font-family:inherit;cursor:pointer;background:#fff;color:#1e293b;font-weight:600"></select>
         <span style="font-size:12px;color:#64748b">เดือน</span>
         <select id="cost-mo" onchange="renderCostSection()" style="border:1px solid #e2e8f0;border-radius:8px;padding:5px 10px;font-size:13px;font-family:inherit;cursor:pointer;background:#fff;color:#1e293b;font-weight:600"></select>
         <select id="cost-yr" onchange="onCostYrChange()" style="border:1px solid #e2e8f0;border-radius:8px;padding:5px 10px;font-size:13px;font-family:inherit;cursor:pointer;background:#fff;color:#1e293b;font-weight:600"></select>
@@ -1791,6 +1804,11 @@
         <div style="font-size:13px;font-weight:800;color:#1e293b;margin-bottom:10px">&#129383; สัดส่วนค่าใช้จ่าย</div>
         <canvas id="cost-pie-chart" height="200"></canvas>
       </div>
+    </div>
+    <!-- Monthly profit per booth chart -->
+    <div class="card mt" style="padding:16px;margin-bottom:12px">
+      <div style="font-size:13px;font-weight:800;color:#1e293b;margin-bottom:10px">&#128202; กำไร-ขาดทุน รายเดือน แยกสาขา</div>
+      <canvas id="cost-monthly-booth-chart" height="120"></canvas>
     </div>
     <!-- Trend chart -->
     <div class="card mt" style="padding:16px;margin-bottom:12px">
@@ -2323,6 +2341,7 @@
     <div class="sub-tab" onclick="showOnlineSub(this,'ol-cost');setCostMode(_costMode);updateCostFilter()" data-i18n="ol.cost">💰 ต้นทุนขายสินค้า</div>
     <div class="sub-tab" onclick="showOnlineSub(this,'ol-prodrank');renderProdRank()" data-i18n="ol.prodrank">📋 รายการขายสินค้า</div>
     <div class="sub-tab" onclick="showOnlineSub(this,'ol-shops');renderOlShops()" data-i18n="ol.shops">🏪 ข้อมูลร้านค้า</div>
+    <div class="sub-tab" onclick="showOnlineSub(this,'ol-agent');renderOlAgent()" data-i18n="ol.agent">🤝 ตัวแทนขายสินค้า</div>
     <div class="sub-tab" onclick="showOnlineSub(this,'ol-ai');renderOnlineAI()" data-i18n="ol.ai">🤖 AI วิเคราะห์</div>
     <div class="sub-tab rbac-import" onclick="showOnlineSub(this,'ol-dataupdate')" data-i18n="ol.dataupdate">🔄 อัพเดทข้อมูล</div>
     <div class="sub-tab" onclick="showOnlineSub(this,'ol-manual')" data-i18n="ol.manual">📖 คู่มือการใช้งาน</div>
@@ -2916,6 +2935,8 @@
   </div>
 </div><!-- end ol-cancel -->
 
+
+
 <div id="ol-supply" class="ol-sub" style="display:none">
   <!-- เมนูย่อยภายใน -->
   <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap">
@@ -3124,6 +3145,8 @@
 </div><!-- end ol-prodrank -->
 
 <div id="ol-shops" class="ol-sub" style="display:none"></div><!-- end ol-shops -->
+
+<div id="ol-agent" class="ol-sub" style="display:none"></div><!-- end ol-agent -->
 
 <div id="ol-ai" class="ol-sub" style="display:none">
   <div class="kpi-grid" id="olAiKPI"></div>
@@ -3351,9 +3374,10 @@
       <div style="color:#0891b2;cursor:default">10. ต้นทุนขายสินค้า</div>
       <div style="color:#0891b2;cursor:default">11. รายการขายสินค้า</div>
       <div style="color:#0891b2;cursor:default">12. ข้อมูลร้านค้า</div>
-      <div style="color:#0891b2;cursor:default">13. AI วิเคราะห์</div>
-      <div style="color:#0891b2;cursor:default">14. อัพเดทข้อมูล</div>
-      <div style="color:#0891b2;cursor:default">15. คำถามที่พบบ่อย (FAQ)</div>
+      <div style="color:#0891b2;cursor:default">13. ไลฟ์สด (Live)</div>
+      <div style="color:#0891b2;cursor:default">14. AI วิเคราะห์</div>
+      <div style="color:#0891b2;cursor:default">15. อัพเดทข้อมูล</div>
+      <div style="color:#0891b2;cursor:default">16. คำถามที่พบบ่อย (FAQ)</div>
     </div>
   </div>
 
@@ -3615,9 +3639,37 @@
     </div>
   </div>
 
+  <!-- 13. ไลฟ์สด (Live) -->
+  <div style="background:#fff;border-radius:14px;padding:20px 24px;margin-bottom:16px;border:1px solid #e2e8f0;border-left:4px solid #dc2626">
+    <div style="font-size:16px;font-weight:800;color:#dc2626;margin-bottom:10px">13. 🔴 ไลฟ์สด (Live)</div>
+    <div style="font-size:13px;color:#334155;line-height:1.9">
+      <p style="margin:0 0 8px">ระบบวัด Performance การไลฟ์สดขายสินค้า แยกเป็น <strong>2 ด้าน</strong> คือผลงานของ<strong>คนไลฟ์</strong> และ<strong>ผลตอบแทนที่บริษัทได้รับ</strong> ภายในมี 7 แท็บย่อย:</p>
+      <ul style="margin:0 0 10px;padding-left:18px;font-size:12px;color:#475569;line-height:1.9">
+        <li><strong>📊 ภาพรวมไลฟ์</strong> — GMV, จำนวนไลฟ์, ออเดอร์, ผู้ชม, Conversion, ยอดขาย/ชั่วโมง, กำไรสุทธิ, Live ROI พร้อม Conversion Funnel (ผู้ชม → กดดูสินค้า → กดตะกร้า → ออเดอร์)</li>
+        <li><strong>👤 ผลงานคนไลฟ์</strong> — จัดอันดับด้วยคะแนน 100 คะแนน แยกรายหมวด พร้อมวิเคราะห์สาเหตุว่าเก่ง/อ่อนตรงไหนเทียบค่าเฉลี่ยทีม</li>
+        <li><strong>🔴 รายการไลฟ์</strong> — ตารางไลฟ์ทุกครั้ง พร้อมคะแนนรายไลฟ์ แก้ไข/ลบ และดาวน์โหลด CSV</li>
+        <li><strong>📝 บันทึกข้อมูล</strong> — ฟอร์มกรอกข้อมูลไลฟ์ 6 ส่วน (ข้อมูลไลฟ์, ผู้ชม, ยอดขาย, ต้นทุน, ผลหลังไลฟ์, คะแนนทักษะ)</li>
+        <li><strong>💰 กำไร &amp; ROI</strong> — โครงสร้างกำไร (P&amp;L) หักต้นทุนสินค้า ส่วนลด ค่าธรรมเนียม คอมมิชชั่น ค่าขนส่ง ค่าโฆษณา ค่าตัวคนไลฟ์</li>
+        <li><strong>⚙️ เกณฑ์คะแนน</strong> — ตั้งค่าเกณฑ์ที่ถือว่าได้คะแนนเต็มของแต่ละตัวชี้วัด</li>
+        <li><strong>📖 คู่มือ &amp; สูตร</strong> — สูตร KPI ทุกตัวและสูตรคะแนน 100 คะแนนแบบละเอียด</li>
+      </ul>
+      <div style="background:#fef2f2;border-radius:10px;padding:12px 16px;margin-bottom:10px">
+        <div style="font-weight:700;color:#b91c1c;margin-bottom:6px">⭐ คะแนนคนไลฟ์ 100 คะแนน</div>
+        <ul style="margin:0;padding-left:18px;font-size:12px;color:#475569;line-height:1.8">
+          <li>A. Sales Performance 40 (GMV 15 · ออเดอร์ 5 · ยอดขาย/ชม. 10 · Conversion 10)</li>
+          <li>B. Audience Performance 20 (ผู้ชม 5 · Engagement 5 · View→Click 5 · ผู้ติดตามใหม่ 5)</li>
+          <li>C. Live Skill 20 (ความรู้สินค้า · การนำเสนอ · การสื่อสาร · Call to Action — หัวหน้างานประเมินข้อละ 5)</li>
+          <li>D. Discipline 10 (ตรงเวลา 3 · ระยะเวลาไลฟ์ 3 · ความสม่ำเสมอ 2 · ทำตาม Script 2)</li>
+          <li>E. Business Impact 10 (ลูกค้าใหม่ · ซื้อซ้ำ · ยอดขายหลังไลฟ์ · Net Margin ข้อละ 2.5)</li>
+        </ul>
+      </div>
+      <p style="margin:0;font-size:12px;color:#b45309;background:#fffbeb;border-radius:8px;padding:10px 14px">⚠️ ข้อมูลไลฟ์เก็บไว้ในเบราว์เซอร์ของเครื่องนี้เท่านั้น ควรกดดาวน์โหลด CSV เก็บสำรองเป็นประจำ</p>
+    </div>
+  </div>
+
   <!-- 13. AI วิเคราะห์ -->
   <div style="background:#fff;border-radius:14px;padding:20px 24px;margin-bottom:16px;border:1px solid #e2e8f0;border-left:4px solid #8b5cf6">
-    <div style="font-size:16px;font-weight:800;color:#8b5cf6;margin-bottom:10px">13. 🤖 AI วิเคราะห์</div>
+    <div style="font-size:16px;font-weight:800;color:#8b5cf6;margin-bottom:10px">14. 🤖 AI วิเคราะห์</div>
     <div style="font-size:13px;color:#334155;line-height:1.9">
       <p style="margin:0 0 8px">ใช้ AI วิเคราะห์ข้อมูลยอดขายออนไลน์แบบอัตโนมัติ</p>
       <ul style="margin:0;padding-left:18px;font-size:12px;color:#475569;line-height:1.8">
@@ -3630,7 +3682,7 @@
 
   <!-- 14. อัพเดทข้อมูล -->
   <div style="background:#fff;border-radius:14px;padding:20px 24px;margin-bottom:16px;border:1px solid #e2e8f0;border-left:4px solid #15803d">
-    <div style="font-size:16px;font-weight:800;color:#15803d;margin-bottom:10px">14. 🔄 อัพเดทข้อมูล</div>
+    <div style="font-size:16px;font-weight:800;color:#15803d;margin-bottom:10px">15. 🔄 อัพเดทข้อมูล</div>
     <div style="font-size:13px;color:#334155;line-height:1.9">
       <p style="margin:0 0 8px">อัพโหลดไฟล์ Excel เพื่ออัพเดทข้อมูลออนไลน์แต่ละหมวด (สิทธิ์ Admin)</p>
       <ul style="margin:0;padding-left:18px;font-size:12px;color:#475569;line-height:1.8">
@@ -3645,7 +3697,7 @@
 
   <!-- FAQ -->
   <div style="background:#fff;border-radius:14px;padding:20px 24px;margin-bottom:16px;border:1px solid #e2e8f0;border-left:4px solid #64748b">
-    <div style="font-size:16px;font-weight:800;color:#475569;margin-bottom:12px">15. ❓ คำถามที่พบบ่อย (FAQ)</div>
+    <div style="font-size:16px;font-weight:800;color:#475569;margin-bottom:12px">16. ❓ คำถามที่พบบ่อย (FAQ)</div>
     <div style="font-size:13px;color:#334155;line-height:1.9">
 
       <div style="background:#f8fafc;border-radius:10px;padding:10px 14px;margin-bottom:8px">
@@ -3845,6 +3897,10 @@
       <div class="card-title">📋 Target Breakdown แยกช่องทาง</div>
       <div style="overflow-x:auto" id="amzTargetChTable"></div>
     </div>
+    <div class="card" style="margin-top:16px">
+      <div class="card-title">📈 ยอดขายรายเดือนแยกช่องทางย่อย</div>
+      <div style="height:380px;position:relative"><canvas id="amzChMonthlyLine"></canvas></div>
+    </div>
   </div>
   <div id="amz-map" class="sub-section">
     <div class="card mt" style="padding:0;overflow:hidden">
@@ -3910,6 +3966,12 @@
     <div class="card mt" style="margin-bottom:16px">
       <div class="card-title">📊 ลูกค้าใหม่ vs ลูกค้าหาย รายเดือน</div>
       <div class="chart-wrap h300"><canvas id="amzCustChart"></canvas></div>
+    </div>
+
+    <!-- Comparison Table -->
+    <div class="card mt" id="amzCustCompareCard" style="margin-bottom:16px;overflow-x:auto">
+      <div class="card-title">📋 เปรียบเทียบลูกค้าใหม่ vs ลูกค้าหาย รายเดือน</div>
+      <table class="amz-cust-compare-tbl" id="amzCustCompareTable"></table>
     </div>
 
     <!-- Month pills -->
@@ -5720,6 +5782,7 @@
       <div id="orgChart" class="org-chart"></div>
     </div>
   </div>
+
 </div>
 
 <!-- ===== ORDERING (ธุรการขาย) ===== -->
@@ -6083,7 +6146,7 @@
       </select>
     </div>
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:16px" id="kpiDeptCards"></div>
-    <div class="card"><div class="card-title" id="kpiDeptTitle">📊 KPI รายพนักงาน</div><div class="table-wrap" style="margin-top:12px"><div id="kpiDeptTable"></div></div></div>
+    <div class="card"><div class="card-title" id="kpiDeptTitle">📊 KPI รายเดือน</div><div class="table-wrap" style="margin-top:12px"><div id="kpiDeptTable"></div></div></div>
   </div>
 
   <!-- Forecast / Revised -->
@@ -6503,6 +6566,9 @@
   <div id="mkt-evt-dash" class="mkt-sub" style="display:none">
     <div id="mktEvtDashContent"></div>
   </div>
+  <div id="mkt-activation" class="mkt-sub" style="display:none">
+    <div id="mktActivationContent"></div>
+  </div>
 </div>
 
 <div id="tab-admin" class="section" data-min="admin">
@@ -6885,6 +6951,7 @@
     <div class="sub-tab" onclick="smSelectMain(this,'sm-docs')" data-i18n="sm.docs">📂 ศูนย์เอกสาร</div>
     <div class="sub-tab" onclick="smSelectMain(this,'sm-customer')">📇 ฐานข้อมูลลูกค้า</div>
     <div class="sub-tab" onclick="smSelectMain(this,'sm-ai')" data-i18n="sm.ai">🤖 วิเคราะห์ AI</div>
+    <div class="sub-tab" onclick="smSelectMain(this,'sm-sticker')">🏷️ มอนิเตอร์สติ๊กเกอร์</div>
   </div>
   <!-- Level-2: sub-tabs (built dynamically) -->
   <div class="sub-tabs sm-sub-tabs" id="smSubTabs" style="background:#eff6ff;border-bottom:2px solid #f56e00"></div>
@@ -6955,7 +7022,23 @@
       <div id="smAIBody"></div>
     </div>
   </div>
+
+  <!-- 15. มอนิเตอร์สติ๊กเกอร์ -->
+  <div id="sm-sticker" class="sub-section">
+    <div id="stickerContent"></div>
+  </div>
+
 </div><!-- /tab-sm-expense -->
+
+<!-- ===== BAKERY ANALYTICS ===== -->
+<div id="tab-bakery" class="section">
+  <iframe id="bakery-iframe" src="" style="width:100%;height:calc(100vh - 60px);border:none;border-radius:12px" allowfullscreen></iframe>
+</div>
+
+<!-- ===== HEALTH BENTO ===== -->
+<div id="tab-health-bento" class="section">
+  <iframe id="health-bento-iframe" src="" style="width:100%;height:calc(100vh - 60px);border:none;border-radius:12px" allowfullscreen></iframe>
+</div>
 
 </main><!-- /contentArea -->
   </div><!-- /app-body -->
@@ -6966,14 +7049,13 @@
 
 <script src="js/staff-data.js"></script>
 <script src="js/ordering-data.js"></script>
-<script src="js/checklist-live.js"></script>
 <script src="js/amazon-customers.js"></script>
 <script src="js/amz-visit-tracker.js"></script>
 <script src="js/amz-branches.js"></script>
 <script src="js/bc-branches.js"></script>
 <script src="js/amz-order-data.js"></script>
 <script src="js/amz-api-dash.js"></script>
-<script src="js/amz-portal.js?v=20260727"></script>
+<script src="js/amz-portal.js?v=20260909c"></script>
 <script src="js/call-log.js"></script>
 <script src="js/ord-manual.js"></script>
 <script src="js/customers-data.js"></script>
@@ -6985,7 +7067,7 @@
 <script src="js/quality-form.js"></script>
 <script src="js/customers-default.js"></script>
 <script src="js/customer-db.js"></script>
-<script src="js/sales-expense.js?v=20260816a"></script>
+<script src="js/sales-expense.js?v=20260909f"></script>
 <script src="js/delist.js"></script>
 <script src="js/cj-branches.js"></script>
 <script src="js/bigc-branches.js"></script>
@@ -6994,9 +7076,14 @@
 <script src="js/makro-branches.js"></script>
 <script src="js/aeon-branches.js"></script>
 <script src="js/target-data.js"></script>
-<script src="js/app.js?v=20260816a"></script>
+<script src="js/data-daily.js?v=20260909b"></script>
+<script src="js/data-booth.js?v=20260909b"></script>
+<script src="js/data-stock-full.js?v=20260909b"></script>
+<script src="js/data-ship.js?v=20260909b"></script>
+<script src="js/data-cod.js?v=20260909b"></script>
+<script src="js/app.js?v=20260910b"></script>
 <script src="js/forecast-data.js"></script>
-<script src="js/mt-bi.js?v=20260729h"></script>
+<script src="js/mt-bi.js?v=20260909c"></script>
 <script src="js/export.js"></script>
 <script src="js/area-monitor.js"></script>
 <!-- Shell: Sidebar + TopBar navigation (config-driven + RBAC). โหลดหลัง app.js เพราะ reuse showTab/updateTabBells -->
@@ -7005,14 +7092,20 @@
 <script src="js/supa-data.js"></script>
 <script src="js/visit-plan.js"></script>
 <script src="js/marketing.js"></script>
-<script src="js/mkt-events.js"></script>
-<script src="js/prod-timeline-data.js?v=20260820a"></script>
-<script src="js/prod-timeline.js?v=20260820a"></script>
-<script src="js/shell.js?v=20260816a"></script>
-<script src="js/booth-form.js?v=20260730"></script>
-<script src="js/notifications.js?v=20260729h"></script>
-<script src="js/i18n.js?v=20260816a"></script>
-<script src="js/catalog-matrix.js?v=20260816a"></script><script>
+<script src="js/mkt-events.js?v=20260909b"></script>
+<script src="js/mkt-activation.js?v=20260909b"></script>
+<script src="js/prod-timeline-data.js?v=20260909c"></script>
+<script src="js/prod-timeline.js?v=20260909d"></script>
+<script src="js/sticker-data.js?v=20260909b"></script>
+<script src="js/sticker-monitor.js?v=20260909b"></script>
+<script src="js/sales-target-data.js?v=20260909b"></script>
+<script src="js/sales-target-ai.js?v=20260909b"></script>
+<script src="js/shell.js?v=20260909b"></script>
+<script src="js/booth-form.js?v=20260909b"></script>
+<script src="js/notifications.js?v=20260909b"></script>
+<script src="js/i18n.js?v=20260909b"></script>
+<script src="js/catalog-sales.js"></script>
+<script src="js/catalog-matrix.js?v=20260909b"></script><script>
   // เติมข้อมูลผู้ใช้บน header + บังคับ RBAC หลัง DOM + app.js พร้อม
   (function () {
     var s = window.__spbiSession || (typeof getSession === 'function' && getSession());
@@ -7283,5 +7376,7 @@ window.showMtMonthDetail=function(mo){
   _pdOpen('รายการสินค้า — '+(MO_TH[mo]||mo)+' '+beY+' ('+chLabel+')',html);
 };
 </script>
+<script src="js/compare-utils.js"></script>
+<script src="js/chatbot.js"></script>
 </body>
 </html>

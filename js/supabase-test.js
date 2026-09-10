@@ -56,7 +56,7 @@ function _supaFmtDate(d) {
   return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
 }
 
-var MONTH_TH = ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+var _SUPA_MTH = ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
 
 function supaTestInit() {
   supaPreset('all');
@@ -373,7 +373,7 @@ function _supaRenderMonthlyChart(data) {
     monthly[ym].rev += r.revenue || 0;
   });
   var sortedM = Object.entries(monthly).sort(function(a, b) { return a[0].localeCompare(b[0]); });
-  var labels = sortedM.map(function(e) { return MONTH_TH[e[1].m - 1]; });
+  var labels = sortedM.map(function(e) { return _SUPA_MTH[e[1].m - 1]; });
   var vals = sortedM.map(function(e) { return e[1].rev; });
 
   _supaDestroyChart('monthly');
@@ -563,7 +563,7 @@ function _supaRenderDataTable(data) {
       if (!grouped[key]) {
         var mIdx = parseInt(m.substring(5, 7)) - 1;
         var yr = parseInt(m.substring(0, 4)) + 543;
-        grouped[key] = { label: MONTH_TH[mIdx] + ' ' + yr, channel: ch, revenue: 0, qty: 0, tx: 0, sortKey: m };
+        grouped[key] = { label: _SUPA_MTH[mIdx] + ' ' + yr, channel: ch, revenue: 0, qty: 0, tx: 0, sortKey: m };
       }
       grouped[key].revenue += r.revenue || 0;
       grouped[key].qty += r.qty || 0;

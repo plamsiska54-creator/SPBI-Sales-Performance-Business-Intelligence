@@ -6,6 +6,51 @@
 var _mtBiCurrent = 'dashboard';
 var _mtBiCatOpen = {};
 
+// ── Patch SALES_DATA from CATALOG_DATA for missing months (lazy, runs once) ──
+var _mtSalesPatched=false;
+function _mtPatchSalesFromCatalog(){
+  if(_mtSalesPatched) return;
+  if(typeof SALES_DATA==='undefined'||typeof CATALOG_DATA==='undefined') return;
+  _mtSalesPatched=true;
+  var mt=SALES_DATA.ModernTrade;
+  if(!mt) return;
+  var CAT_TO_SD={'CJ':'CJ','Big C':'BigC','MM':'MM','Aeon':'Aeon','Top':'Top','The Mall':'TheMall','Makro':'Makro','โฮลเกรน':'Wholegrain'};
+  var MO_KEYS=['jan','feb','mar','apr','may','jun','jul','aug','sep','oct','nov','dec'];
+  var MO_EN=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  var aggregated={};
+  (CATALOG_DATA.products||[]).forEach(function(p){
+    if(!p.sales2026||!p.channel) return;
+    var sdKey=CAT_TO_SD[p.channel];
+    if(!sdKey) return;
+    if(!aggregated[sdKey]) aggregated[sdKey]={};
+    for(var mi=0;mi<12;mi++){
+      var mk=MO_KEYS[mi];
+      var s=p.sales2026[mk];
+      if(!s||!s.baht) continue;
+      if(!aggregated[sdKey][mi]) aggregated[sdKey][mi]={q:0,b:0};
+      aggregated[sdKey][mi].q+=(s.unit||0);
+      aggregated[sdKey][mi].b+=(s.baht||0);
+    }
+  });
+  var patched=0;
+  Object.keys(aggregated).forEach(function(sdKey){
+    if(!mt[sdKey]) mt[sdKey]={name:sdKey,years:{}};
+    if(!mt[sdKey].years[2026]) mt[sdKey].years[2026]={total:{qty:0,net:0,cost:0,profit:0,lines:0},months:{}};
+    var yd=mt[sdKey].years[2026];
+    for(var mi=0;mi<12;mi++){
+      var moEN=MO_EN[mi];
+      if(yd.months[moEN]) continue;
+      var ag=aggregated[sdKey][mi];
+      if(!ag||!ag.b) continue;
+      yd.months[moEN]={q:Math.round(ag.q),b:Math.round(ag.b*100)/100,cost:0,profit:0,lines:0};
+      yd.total.qty+=Math.round(ag.q);
+      yd.total.net+=Math.round(ag.b*100)/100;
+      patched++;
+    }
+  });
+  if(patched) console.log('[MT-BI] Patched '+patched+' missing months from CATALOG_DATA');
+}
+
 // ── MT Channel Company Info ──
 var MT_COMPANY_INFO = {
   CJ: {
@@ -84,6 +129,17 @@ var MT_COMPANY_INFO = {
     desc: 'ผู้นำด้าน supply chain เชื่อมเกษตรกร-ผู้ผลิตท้องถิ่น สู่ผู้บริโภค ในเครือ TCC Group ของไทย',
     website: 'https://mmvietnam.com/en/',
     webLabel: 'mmvietnam.com'
+  },
+  Wholegrain: {
+    nameTH: 'โฮลเกรน',
+    nameEN: 'Wholegrain',
+    taxId: '',
+    address: '',
+    type: 'ค้าปลีก (Retail)',
+    country: '🇹🇭 ไทย',
+    desc: 'ช่องทางค้าปลีกใหม่ — โฮลเกรน',
+    website: '',
+    webLabel: ''
   }
 };
 
@@ -757,6 +813,7 @@ function _mtBiChannelActual(chKey){
 
 // ── Compute actual sales per channel by CE year from SALES_DATA ──
 function _mtBiChannelActualByYear(chKey, ceYear){
+  _mtPatchSalesFromCatalog();
   var MONTHS_EN=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   var months={},total=0;
   if(typeof SALES_DATA!=='undefined'&&SALES_DATA.ModernTrade&&SALES_DATA.ModernTrade[chKey]){
@@ -777,7 +834,7 @@ function _mtBiChannelActualByYear(chKey, ceYear){
 }
 
 // ── Aggregate all MT channels ──
-var _MT_ALL_CHANNELS = ['CJ','BigC','Top','Makro','MM','Aeon','TheMall','Lotus','Villa','MK'];
+var _MT_ALL_CHANNELS = ['CJ','BigC','Top','Makro','MM','Aeon','TheMall','Lotus','Villa','MK','Wholegrain'];
 
 function _mtBiGetSalesAll(yr) {
   if (typeof SALES_DATA === 'undefined' || !SALES_DATA.ModernTrade) return null;
@@ -969,6 +1026,12 @@ function _mtBiRenderSalesTarget(){
   html+='</tr>';
   html+='</tbody></table></div></div>';
 
+  // กราฟเส้นยอดขายรายเดือนแยกช่องทาง MT
+  html+='<div class="card" style="margin-bottom:16px">';
+  html+='<div class="card-title">📈 ยอดขายรายเดือนแยกช่องทาง MT</div>';
+  html+='<div style="position:relative;height:380px"><canvas id="mtChMonthlyLine"></canvas></div>';
+  html+='</div>';
+
   // Source note
   html+='<div style="text-align:center;padding:12px;color:var(--muted);font-size:11px">';
   html+='📄 ข้อมูล Target จาก Target '+tgtYear+'.xlsx | '+periodLabel+'</div>';
@@ -1046,6 +1109,49 @@ function _mtBiRenderSalesTarget(){
           }
         }]
       });
+    }
+
+    // Line chart: ยอดขายรายเดือนแยกช่องทาง MT
+    var mtLineCtx=document.getElementById('mtChMonthlyLine');
+    if(mtLineCtx){
+      var mtChKeys=['CJ','BigC','MM','Aeon','Top','TheMall','Makro','Wholegrain'];
+      var mtLineDS=[];
+      mtChKeys.forEach(function(ck){
+        var chActual=_mtBiChannelActualByYear(ck,tgtYear);
+        var vals=[];
+        var hasAny=false;
+        for(var mi=0;mi<12;mi++){
+          var v=chActual.months[MONTHS_EN[mi]]||0;
+          vals.push(v);
+          if(v>0) hasAny=true;
+        }
+        if(!hasAny) return;
+        var label=(typeof MT_CH_LABELS!=='undefined'&&MT_CH_LABELS[ck])?MT_CH_LABELS[ck]:ck;
+        var clr=(typeof MT_CH_COLORS!=='undefined'&&MT_CH_COLORS[ck])?MT_CH_COLORS[ck]:'#64748b';
+        mtLineDS.push({
+          label:label,data:vals,
+          borderColor:clr,backgroundColor:clr+'18',
+          borderWidth:2.5,pointRadius:5,pointBackgroundColor:clr,
+          tension:0.3,fill:false
+        });
+      });
+      if(mtLineDS.length){
+        new Chart(mtLineCtx.getContext('2d'),{
+          type:'line',
+          data:{labels:_stMonthsTH,datasets:mtLineDS},
+          options:{
+            responsive:true,maintainAspectRatio:false,
+            plugins:{
+              legend:{position:'bottom',labels:{usePointStyle:true,pointStyle:'circle',padding:14,font:{size:12}}},
+              tooltip:{callbacks:{label:function(ctx){var v=ctx.parsed.y;return ctx.dataset.label+': '+(v>=1e6?(v/1e6).toFixed(2)+' M':v>=1e3?(v/1e3).toFixed(1)+' K':v.toLocaleString());}}}
+            },
+            scales:{
+              y:{beginAtZero:true,ticks:{callback:function(v){return v>=1e6?(v/1e6).toFixed(1)+'M':v>=1e3?(v/1e3).toFixed(0)+'K':v;}}},
+              x:{ticks:{font:{size:11}}}
+            }
+          }
+        });
+      }
     }
   },120);
 
@@ -1222,7 +1328,8 @@ function _mtBiRenderPromoAll(){
     {key:'Top',label:'Tops',icon:'🏷',color:'#16a34a',active:false,count:0,cost:0,pct:0},
     {key:'TheMall',label:'The Mall',icon:'🏢',color:'#d97706',active:false,count:0,cost:0,pct:0},
     {key:'Makro',label:'Makro',icon:'📦',color:'#0ea5e9',active:false,count:0,cost:0,pct:0},
-    {key:'Aeon',label:'Aeon',icon:'🛍',color:'#e11d48',active:false,count:0,cost:0,pct:0}
+    {key:'Aeon',label:'Aeon',icon:'🛍',color:'#e11d48',active:false,count:0,cost:0,pct:0},
+    {key:'Wholegrain',label:'โฮลเกรน',icon:'🌾',color:'#65a30d',active:false,count:0,cost:0,pct:0}
   ];
 
   html+='<div class="card" style="padding:20px;border-radius:12px;margin-bottom:18px">';
@@ -1630,7 +1737,7 @@ function _ordBillChangeMonth(val) {
 
 // ดึงรายการบิลจาก ORDER_LIST ตาม channel + ปี + คำค้นหา
 function _ordGetBills() {
-  var custMap = {CJ:'ซีเจ', BigC:'BIG C', Top:'TOP', Makro:'MAKRO', MM:'MM', Aeon:'AEON', TheMall:'The Mall', Lotus:'LOTUS', Villa:'VILLA MARKET'};
+  var custMap = {CJ:'ซีเจ', BigC:'BIG C', Top:'TOP', Makro:'MAKRO', MM:'MM', Aeon:'AEON', TheMall:'The Mall', Lotus:'LOTUS', Villa:'VILLA MARKET', Wholegrain:'โฮลเกรน'};
   var isAll = _mtCh === 'All';
   var custName = isAll ? null : (custMap[_mtCh] || _mtCh);
   var allCustNames = null;
@@ -2034,6 +2141,16 @@ function _mtBiRenderProductPerf(){
   html+='<div style="position:relative;height:300px"><canvas id="ppTypeChart"></canvas></div></div>';
   html+='</div>';
 
+  // ── YoY Comparison (via CATALOG_SALES) ──
+  var _mtYoYChartData = null;
+  var _mtToCsCh={CJ:'CJ',BigC:'Big C',MM:'MM',Aeon:'Aeon',Top:'Top',TheMall:'The Mall',Makro:'Makro',Wholegrain:'โฮลเกรน'};
+  var _csCh=isAllPP?null:(_mtToCsCh[ch]||ch);
+  var _csYoY=window.buildCatalogYoY?window.buildCatalogYoY(_csCh):null;
+  if(_csYoY&&_csYoY.list.length>0){
+    _mtYoYChartData=_csYoY;
+    html+=window.buildYoYHTML(_csYoY.list,_csYoY.bePY,_csYoY.beCY,_csYoY.periodLabel,'mtYoYChart');
+  }
+
   // ── Product Category Grouping (Top 20 per group) ──
   var PP_CATS=[
     {key:'cake',label:'กลุ่มขนมเค้ก',icon:'🎂',clr:'#e11d48',match:function(n){return(n.indexOf('เค้ก')!==-1||n.indexOf('มูส')!==-1||n.indexOf('เบาหวิว')!==-1||n.indexOf('บราวนี่')!==-1||n.indexOf('ลาวา')!==-1||n.indexOf('คัพเค้ก')!==-1)&&n.indexOf('ชิฟฟ่อน')===-1&&n.indexOf('วุ้น')===-1;}},
@@ -2194,7 +2311,7 @@ function _mtBiRenderProductPerf(){
   html+='📄 ข้อมูลจาก MT Data — '+chLabel+'</div>';
 
   // Delayed chart init
-  setTimeout(function(){_ppInitCharts(products,ambientB,chillB,color);},100);
+  setTimeout(function(){_ppInitCharts(products,ambientB,chillB,color);if(_mtYoYChartData)window.initYoYChart('mtYoYChart',_mtYoYChartData.list,_mtYoYChartData.bePY,_mtYoYChartData.beCY);},100);
 
   return html;
 }
@@ -4086,10 +4203,10 @@ function _mtBiRenderDataUpdate(){
   var sources = [
     {icon:'📊',title:'ยอดขาย (Sales Data)',desc:'ข้อมูลยอดขายรายลูกค้า รายเดือน ทุกช่องทาง MT',
      file:'sales-data-gen.js',src:'รวมnew.xlsx (769K rows)',range:'2024–2026',
-     detail:'แยกตาม: CJ, Big C, Top, Makro, MM, Aeon, The Mall',color:'#f97316',uploadKey:'mt-sales'},
+     detail:'แยกตาม: CJ, Big C, Top, Makro, MM, Aeon, The Mall, โฮลเกรน',color:'#f97316',uploadKey:'mt-sales'},
     {icon:'🎯',title:'เป้าหมาย (Target)',desc:'เป้าหมายยอดขายรายช่องทาง รายเดือน ปี 2026',
      file:'target-data.js',src:'Target 2026.xlsx',range:'2026',
-     detail:'เป้า CJ / Big C / Top / Makro / MM / Aeon / The Mall',color:'#4f46e5',uploadKey:'mt-target'},
+     detail:'เป้า CJ / Big C / Top / Makro / MM / Aeon / The Mall / โฮลเกรน',color:'#4f46e5',uploadKey:'mt-target'},
     {icon:'📦',title:'Forecast / Revised',desc:'พยากรณ์ยอดสั่งซื้อรายสัปดาห์ แยกช่องทาง',
      file:'forecast-data.js',src:'Forecast/Revised สัปดาห์ MDT',range:'2026',
      detail:'หน่วย: ชิ้น — เปรียบเทียบ Forecast vs Actual',color:'#0891b2',uploadKey:'mt-forecast'},

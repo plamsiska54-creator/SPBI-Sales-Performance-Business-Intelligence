@@ -7,7 +7,7 @@ var _SUPA_LIVE = { loaded: false, loading: false, _promise: null };
 
 var _SL_CH_MAP = { 'ModernTrade': 'Modern Trade', 'Amazon': 'Amazon & Souvenir', 'Telesale': 'Amazon & Souvenir', 'Booth': 'Booth', 'Online': 'Online' };
 var _SL_DAILY_CH = { 'ModernTrade': 'MT', 'Amazon': 'AMS', 'Telesale': 'AMS', 'Booth': 'Booth', 'Online': 'Online' };
-var _SL_MT_KEY = { 'Big C': 'BIG C', 'Makro': 'MAKRO', 'Aeon': 'AEON', 'Top': 'TOP', 'ซีเจ': 'CJ', 'LOTUS': 'Lotus' };
+var _SL_MT_KEY = { 'Big C': 'BIG C', 'Makro': 'MAKRO', 'Aeon': 'AEON', 'Top': 'TOP', 'ซีเจ': 'CJ', 'LOTUS': 'Lotus', 'โฮลเกรน': 'โฮลเกรน', 'Wholegrain': 'โฮลเกรน' };
 var _SL_AMZ_KEY = { 'black canyon': 'Black Canyon', 'ร้านกาแฟทั่วไป': 'ลูกค้าทั่วไป' };
 var _SL_BOOTH_KEY = { 'ลำยา3เก่า': 'ลำพยา 3 (เก่า)', 'ปตทคุณาวรรณ': 'ร้านใหม่ (ปตท.คุณาวรรณ)', 'หน้ามอ': 'หน้ามอ (ม.เกษตร)', 'หนองพงนก': 'หนองพงนก' };
 var _SL_CH_NORMALIZE = { 'Telesale': 'Amazon', '': null };
@@ -308,6 +308,18 @@ function _supaReRenderVisible() {
       try { window[rerender[tab]](); } catch(e) { console.warn('[SupaLive] re-render', tab, e); }
     }
   });
+  // Also re-render sub-tab functions when overview is visible
+  var ovSec = document.getElementById('tab-overview');
+  if (ovSec && ovSec.style.display !== 'none') {
+    ['renderSales','renderCustomer'].forEach(function(fn) {
+      if (typeof window[fn] === 'function') try { window[fn](); } catch(e) {}
+    });
+  }
+  // Re-render AI tab if visible
+  var aiSec = document.getElementById('ov-ai');
+  if (aiSec && aiSec.style.display !== 'none' && typeof window.renderSalesTargetAI === 'function') {
+    try { window.renderSalesTargetAI(); } catch(e) { console.warn('[SupaLive] re-render AI', e); }
+  }
 }
 
 function _supaUpdateYearDropdowns() {
@@ -456,6 +468,8 @@ function _supaLiveAutoLoad() {
       _applyYear(_CY);
       _supaUpdateYearDropdowns();
       _supaReRenderVisible();
+      if (typeof _amzApiSynced !== 'undefined') { _amzApiSynced = false; }
+      if (typeof _amzApiAutoSync === 'function') _amzApiAutoSync();
       if (badge) { badge.textContent = '✅ ข้อมูลสดจาก Supabase'; badge.style.color = '#16a34a'; }
       console.log('[SupaLive] โหลดสำเร็จ — ปีที่มี:', Object.keys(_YEAR_MAP).sort().join(', '));
     } else {

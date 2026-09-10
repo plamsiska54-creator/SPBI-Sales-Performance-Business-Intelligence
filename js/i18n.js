@@ -17,6 +17,11 @@
     'menu.ordering':       { th: 'ธุรการขาย',           en: 'Sales Admin' },
     'menu.crm':            { th: 'ลูกค้าสัมพันธ์',       en: 'CRM' },
     'menu.sm-expense':     { th: 'ฝ่ายขาย - การตลาด',   en: 'Sales & Marketing' },
+    'menu.visit-plan':     { th: 'แผนเข้าพบลูกค้า',     en: 'Visit Plan' },
+    'menu.supatest':       { th: 'Supabase',              en: 'Supabase' },
+    'menu.marketing':      { th: 'การตลาด',              en: 'Marketing' },
+    'menu.bakery':         { th: 'วิเคราะห์เบเกอรี่',     en: 'Bakery Analytics' },
+    'menu.health-bento':   { th: 'ข้าวกล่อง',            en: 'Health Bento' },
     'menu.admin':          { th: 'แผงแอดมิน',           en: 'Admin Panel' },
 
     // -- Topbar --
@@ -32,10 +37,7 @@
     'dl.pdf':              { th: '📄 PDF (.pdf)',        en: '📄 PDF (.pdf)' },
     'dl.image':            { th: '🖼️ รูปภาพ (.png)',     en: '🖼️ Image (.png)' },
 
-    // -- Sidebar footer --
-    'sidebar.status':      { th: '✅ YTD Jan–Jun ข้อมูลครบ',  en: '✅ YTD Jan–Jun data complete' },
-    'sidebar.info':        { th: '📊 Sales Dashboard 2026 · ข้อมูล ม.ค.–ก.ค.', en: '📊 Sales Dashboard 2026 · Data Jan–Jul' },
-    'sidebar.update':      { th: 'อัปเดต: 8 ก.ค. 2026',    en: 'Updated: 8 Jul 2026' },
+    // -- Sidebar footer (dynamic — set by _updateSidebarStatus()) --
 
     // -- Overview sub-tabs --
     'ov.main':             { th: '📊 งบประมาณ vs จริง',   en: '📊 Budget vs Actual' },
@@ -201,6 +203,7 @@
     'ov.ai':               { th: '🤖 วิเคราะห์ AI',        en: '🤖 AI Analytics' },
     'bth.ai':              { th: '🤖 วิเคราะห์ AI',        en: '🤖 AI Analytics' },
     'ol.ai':               { th: '🤖 วิเคราะห์ AI',        en: '🤖 AI Analytics' },
+    'ol.live':             { th: '🔴 ไลฟ์สด (Live)',      en: '🔴 Live Selling' },
     'ord.ai':              { th: '🤖 วิเคราะห์ AI',        en: '🤖 AI Analytics' },
     'sm.ai':               { th: '🤖 วิเคราะห์ AI',        en: '🤖 AI Analytics' },
     'sm.delist':           { th: '⚠️ สินค้าเสี่ยงถอด',     en: '⚠️ Delist Risk' },
@@ -389,6 +392,7 @@
     'sub.ol-supply':     { th: 'วัสดุสิ้นเปลือง',     en: 'Supplies' },
     'sub.ol-cost':       { th: 'ต้นทุนขายสินค้า',    en: 'COGS' },
     'sub.ol-prodrank':   { th: 'รายการขายสินค้า',    en: 'Product Sales List' },
+    'sub.ol-live':       { th: 'ไลฟ์สด (Live)',      en: 'Live Selling' },
     'sub.ol-ai':         { th: 'วิเคราะห์ AI',       en: 'AI Analytics' },
     'sub.ol-dataupdate': { th: 'อัพเดทข้อมูล',      en: 'Data Update' },
     'sub.ord-staff':     { th: 'พนักงาน & เขต',     en: 'Staff & Territory' },
@@ -504,6 +508,7 @@
       } else if (tabName === 'online') {
         var activeOlSub = activeSection.querySelector('.sub-section[style*="display: block"], .sub-section[style*="display:block"]');
         if (activeOlSub && activeOlSub.id === 'ol-ai' && typeof renderOnlineAI === 'function') renderOnlineAI();
+        if (activeOlSub && activeOlSub.id === 'ol-live' && typeof renderLivePerf === 'function') renderLivePerf();
       } else if (tabName === 'admin') {
         var activeAdmSub = activeSection.querySelector('.sub-section[style*="display: block"], .sub-section[style*="display:block"]');
         if (activeAdmSub && activeAdmSub.id === 'adm-roles' && typeof renderAdminRoles === 'function') renderAdminRoles();

@@ -137,7 +137,9 @@ var _kpiFcChart = null;
 // ============================================================
 window.renderKpiOverview = function(){
   var channels=['Modern Trade','Amazon & Souvenir','Booth','Online'];
-  var months=['Jan','Feb','Mar','Apr','May','Jun','Jul'];
+  var now=new Date(),cm=now.getMonth();
+  var allM=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  var months=allM.slice(0,Math.min(cm+1,12));
   var totTarget=0,totActual=0,totGP=0;
   var chData=[];
   channels.forEach(function(ch){
@@ -181,7 +183,7 @@ window.renderKpiOverview = function(){
   if(ctx){
     if(_kpiTrendChart)_kpiTrendChart.destroy();
     var tA=[],aA=[];
-    var mK=['Jan','Feb','Mar','Apr','May','Jun','Jul'];
+    var mK=months;
     mK.forEach(function(m){var cm=CHANNEL_MONTHLY[m];var t2=0,a2=0;channels.forEach(function(ch){var d=cm&&cm[ch]?cm[ch]:{t:0,a:0};t2+=d.t||0;a2+=d.a||0;});tA.push(t2/1e6);aA.push(a2/1e6);});
     _kpiTrendChart=new Chart(ctx,{
       type:'bar',
@@ -202,7 +204,9 @@ window.renderKpiDept = function(){
   var dept=sel.value;
   var chMap={mt:'Modern Trade',amazon:'Amazon & Souvenir',booth:'Booth',online:'Online'};
   var ch=chMap[dept]||'Modern Trade';
-  var months=['Jan','Feb','Mar','Apr','May','Jun','Jul'];
+  var now=new Date(),cm=now.getMonth();
+  var allM=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  var months=allM.slice(0,Math.min(cm+1,12));
   var tS=0,aS=0;
   months.forEach(function(m){var cm=CHANNEL_MONTHLY[m];var d=cm&&cm[ch]?cm[ch]:{t:0,a:0};tS+=d.t||0;aS+=d.a||0;});
   var pct=tS?aS/tS*100:0,gp=aS*0.32;

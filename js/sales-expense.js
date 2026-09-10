@@ -51,7 +51,8 @@ var SM_MENU = {
     { id: 'sm-docs-company',   label: '📜 หนังสือสำคัญบริษัท', render: 'renderDocsCompany' }
   ]},
   'sm-customer':     { label: '📇 ฐานข้อมูลลูกค้า', subs: null, render: 'renderCustomerDB' },
-  'sm-ai':           { label: '🤖 วิเคราะห์ AI', subs: null, render: 'renderSmAI' }
+  'sm-ai':           { label: '🤖 วิเคราะห์ AI', subs: null, render: 'renderSmAI' },
+  'sm-sticker':      { label: '🏷️ มอนิเตอร์สติ๊กเกอร์', subs: null, render: 'renderStickerMonitor' }
 };
 
 var _smCurrentMain = 'sm-products';
@@ -178,7 +179,7 @@ function _smRenderSection(id) {
   }
   // ---- 6. KPI ตัวชี้วัด ----
   else if (id === 'sm-kpi') {
-    el.innerHTML = _smPageCard('🎯', 'KPI ฝ่ายขาย - การตลาด 2026', 'ตัวชี้วัดรายทีม ม.ค. - มิ.ย. 2569', _smKpiContent());
+    el.innerHTML = _smPageCard('🎯', 'KPI ฝ่ายขาย - การตลาด 2026', 'ตัวชี้วัดรายทีม ม.ค. - ก.ค. 2569', _smKpiContent());
   }
   // ---- 8. ข้อมูลบุคลากร ----
   else if (id === 'sm-hr-org') {
@@ -224,93 +225,93 @@ function _smPageCard(icon, title, desc, body) {
 // ---- KPI ตัวชี้วัด content (from Excel) ----
 var SM_KPI_DATA = {
   'Modern Trade': {
-    score: [2.50, 3.05, 2.95, 2.75, 2.45, 2.50],
+    score: [2.50, 3.05, 2.95, 2.75, 2.45, 2.50, 2.35, 2.40],
     items: [
-      { no:1, cat:'Financial', name:'ยอดขายสุทธิ (Net Sales Revenue)', unit:'%', weight:20, target:'640.5M บาท/ปี',
-        monthly:[{v:39.51,s:2},{v:36.30,s:2},{v:39.78,s:3},{v:37.65,s:2},{v:35.48,s:1},{v:34.43,s:1}], avg:0.92 },
+      { no:1, cat:'Financial', name:'ยอดขายสุทธิ (Net Sales Revenue)', unit:'%', weight:20, target:'640.6M บาท/ปี',
+        monthly:[{v:39.51,s:2},{v:36.30,s:2},{v:39.78,s:3},{v:37.65,s:2},{v:35.48,s:1},{v:34.43,s:1},{v:31.48,s:1},{v:36.39,s:1}], avg:1.00 },
       { no:'', cat:'', name:'กำไรหลังหักค่าใช้จ่าย', unit:'%', weight:20, target:'64.05M บาท/ปี',
-        monthly:[{v:1.74,s:1},{v:1.90,s:1},{v:0,s:0},{v:0,s:1},{v:0,s:0},{v:0,s:0}], avg:0.25 },
+        monthly:[{v:1.74,s:1},{v:1.90,s:1},{v:0,s:0},{v:0,s:1},{v:0,s:0},{v:0,s:0},{v:0,s:0},{v:0,s:0}], avg:0.25 },
       { no:2, cat:'Customer & Market', name:'สินค้าใหม่เข้าห้าง (New Listing)', unit:'SKUs', weight:15, target:'80-100 SKUs/ปี',
-        monthly:[{v:4,s:2},{v:5,s:3},{v:5,s:3},{v:3,s:2},{v:6,s:3},{v:3,s:2}], avg:1.25 },
+        monthly:[{v:4,s:2},{v:5,s:3},{v:5,s:3},{v:3,s:2},{v:6,s:3},{v:3,s:2},{v:1,s:1},{v:3,s:2}], avg:1.33 },
       { no:3, cat:'Operational', name:'อัตราสินค้าขาดสต็อก (Out of Stock)', unit:'%', weight:15, target:'90-100%',
-        monthly:[{v:'100%',s:5},{v:'100%',s:5},{v:'100%',s:5},{v:'98%',s:5},{v:'100%',s:5},{v:'100%',s:5}], avg:2.50 },
+        monthly:[{v:'100%',s:5},{v:'100%',s:5},{v:'100%',s:5},{v:'98%',s:5},{v:'100%',s:5},{v:'100%',s:5},{v:'100%',s:5},{v:'100%',s:5}], avg:2.92 },
       { no:'', cat:'Internal Process', name:'ความแม่นยำพยากรณ์ (Forecast Accuracy)', unit:'%', weight:15, target:'90-100%',
-        monthly:[{v:'95%',s:4},{v:'95%',s:4},{v:'95%',s:4},{v:'90%',s:3},{v:'95%',s:4},{v:'95%',s:4}], avg:1.92 },
+        monthly:[{v:'95%',s:4},{v:'95%',s:4},{v:'95%',s:4},{v:'90%',s:3},{v:'95%',s:4},{v:'95%',s:4},{v:'95%',s:4},{v:'95%',s:4}], avg:2.25 },
       { no:4, cat:'', name:'อัตราสินค้าถูกคัดออก (De-list Rate)', unit:'%', weight:10, target:'0-10%',
-        monthly:[{v:'7.1%',s:2},{v:'2.7%',s:4},{v:'12.3%',s:3},{v:'6.1%',s:4},{v:'12.9%',s:2},{v:'5.4%',s:4}], avg:1.58 },
+        monthly:[{v:'7.1%',s:2},{v:'2.7%',s:4},{v:'12.3%',s:3},{v:'6.1%',s:4},{v:'12.9%',s:2},{v:'5.4%',s:4},{v:'4.1%',s:4},{v:'10.5%',s:3}], avg:1.92 },
       { no:'', cat:'Reporting', name:'Daily & Weekly Insight Report', unit:'%', weight:5, target:'90-100%',
-        monthly:[{v:'80%',s:1},{v:'100%',s:5},{v:'100%',s:5},{v:'100%',s:5},{v:'100%',s:5},{v:'100%',s:5}], avg:2.17 }
+        monthly:[{v:'80%',s:1},{v:'100%',s:5},{v:'100%',s:5},{v:'100%',s:5},{v:'100%',s:5},{v:'100%',s:5},{v:'100%',s:5},{v:'100%',s:5}], avg:2.58 }
     ]
   },
   'Amazon & Souvenir': {
-    score: [2.10, 1.95, 1.15, 1.40, 1.40, 1.60],
+    score: [2.10, 1.95, 1.15, 1.40, 1.40, 1.60, 1.60, 1.60],
     items: [
       { no:1, cat:'Strategic Growth', name:'HQ Listing & Product Launch Success', unit:'SKUs', weight:20, target:'30-50 SKUs/ปี',
-        monthly:[{v:0,s:1},{v:0,s:1},{v:0,s:1},{v:0,s:1},{v:0,s:1},{v:0,s:1}], avg:0.50 },
+        monthly:[{v:0,s:1},{v:0,s:1},{v:0,s:1},{v:0,s:1},{v:0,s:1},{v:0,s:1},{v:0,s:1},{v:0,s:1}], avg:0.58 },
       { no:'', cat:'Channel Expansion', name:'New Franchise Acquisition Rate (DSD)', unit:'%', weight:20, target:'20-30%',
-        monthly:[{v:'0.7%',s:1},{v:'0%',s:1},{v:'0%',s:1},{v:'0.7%',s:1},{v:'0.7%',s:1},{v:'0.6%',s:1}], avg:0.50 },
+        monthly:[{v:'0.7%',s:1},{v:'0%',s:1},{v:'0%',s:1},{v:'0.7%',s:1},{v:'0.7%',s:1},{v:'0.6%',s:1},{v:'0.6%',s:1},{v:'1.0%',s:1}], avg:0.58 },
       { no:2, cat:'Distribution', name:'Distribution Coverage (Route Planning)', unit:'Quality', weight:10, target:'80-100 สาขา/ปี',
-        monthly:[{v:7,s:4},{v:0,s:1},{v:0,s:1},{v:6,s:3},{v:6,s:3},{v:12,s:5}], avg:1.42 },
+        monthly:[{v:7,s:4},{v:0,s:1},{v:0,s:1},{v:6,s:3},{v:6,s:3},{v:12,s:5},{v:10,s:5},{v:18,s:5}], avg:1.83 },
       { no:3, cat:'Operational', name:'Waste & Return Optimization', unit:'%', weight:5, target:'90-100%',
-        monthly:[{v:'3.7%',s:5},{v:'6.5%',s:4},{v:'6%',s:4},{v:'1.2%',s:5},{v:'0.5%',s:5},{v:'0.5%',s:5}], avg:2.33 },
+        monthly:[{v:'3.7%',s:5},{v:'6.5%',s:4},{v:'6%',s:4},{v:'1.2%',s:5},{v:'0.5%',s:5},{v:'0.5%',s:5},{v:'0.5%',s:5},{v:'0.5%',s:5}], avg:2.75 },
       { no:'', cat:'Financial', name:'Sales Target Achievement', unit:'%', weight:20, target:'194.5M บาท/ปี',
-        monthly:[{v:'88.6%',s:1},{v:'80.9%',s:1},{v:'77.5%',s:1},{v:'71.3%',s:1},{v:'63.0%',s:1},{v:'57.2%',s:1}], avg:0.50 },
+        monthly:[{v:'88.6%',s:1},{v:'80.9%',s:1},{v:'77.5%',s:1},{v:'71.3%',s:1},{v:'63.0%',s:1},{v:'57.2%',s:1},{v:'63.9%',s:1},{v:'60.2%',s:1}], avg:0.58 },
       { no:'', cat:'', name:'กำไรหลังหักค่าใช้จ่าย', unit:'%', weight:20, target:'19.45M บาท/ปี',
-        monthly:[{v:'17.8%',s:4},{v:'17.8%',s:4},{v:'0%',s:0},{v:'0%',s:0},{v:'0%',s:0},{v:'0%',s:0}], avg:0.67 },
+        monthly:[{v:'17.8%',s:4},{v:'17.8%',s:4},{v:'0%',s:0},{v:'0%',s:0},{v:'0%',s:0},{v:'0%',s:0},{v:'0%',s:0},{v:'0%',s:0}], avg:0.67 },
       { no:4, cat:'Reporting', name:'Daily & Weekly Insight Report', unit:'%', weight:5, target:'90-100%',
-        monthly:[{v:'80%',s:1},{v:'100%',s:5},{v:'100%',s:5},{v:'100%',s:5},{v:'100%',s:5},{v:'100%',s:5}], avg:2.17 }
+        monthly:[{v:'80%',s:1},{v:'100%',s:5},{v:'100%',s:5},{v:'100%',s:5},{v:'100%',s:5},{v:'100%',s:5},{v:'100%',s:5},{v:'100%',s:5}], avg:2.58 }
     ]
   },
   'Booth': {
-    score: [4.20, 3.20, 3.75, 3.55, 3.40, 3.70],
+    score: [4.20, 3.20, 3.75, 3.55, 3.40, 3.70, 3.10, 3.00],
     items: [
       { no:1, cat:'Sales Growth', name:'Sales Target Achievement', unit:'%', weight:20, target:'36M บาท/ปี',
-        monthly:[{v:'192%',s:5},{v:'96.9%',s:2},{v:'94.1%',s:2},{v:'50.6%',s:1},{v:'27.2%',s:1},{v:'17.8%',s:1}], avg:1.00 },
+        monthly:[{v:'192%',s:5},{v:'96.9%',s:2},{v:'94.1%',s:2},{v:'50.6%',s:1},{v:'27.2%',s:1},{v:'17.8%',s:1},{v:'17.0%',s:1},{v:'10.1%',s:1}], avg:1.08 },
       { no:'', cat:'', name:'กำไรหลังหักค่าใช้จ่าย', unit:'%', weight:20, target:'360K บาท/ปี',
-        monthly:[{v:'13.1%',s:2},{v:'13.1%',s:2},{v:'33.5%',s:5},{v:'13.1%',s:5},{v:'31.0%',s:5},{v:'30.9%',s:5}], avg:2.00 },
+        monthly:[{v:'13.1%',s:2},{v:'13.1%',s:2},{v:'33.5%',s:5},{v:'13.1%',s:5},{v:'31.0%',s:5},{v:'30.9%',s:5},{v:'14.1%',s:2},{v:'15.4%',s:3}], avg:2.17 },
       { no:2, cat:'Operational', name:'Wastage Management', unit:'%', weight:20, target:'ไม่เกิน 5-10%',
-        monthly:[{v:'1.8%',s:5},{v:'4.4%',s:5},{v:'3.7%',s:5},{v:'5%',s:4},{v:'3%',s:5},{v:'3%',s:5}], avg:2.42 },
+        monthly:[{v:'1.8%',s:5},{v:'4.4%',s:5},{v:'3.7%',s:5},{v:'5%',s:4},{v:'3%',s:5},{v:'3%',s:5},{v:'2%',s:5},{v:'2%',s:5}], avg:2.83 },
       { no:'', cat:'', name:'Stock & Audit Accuracy', unit:'%', weight:20, target:'90-100%',
-        monthly:[{v:'100%',s:5},{v:'99%',s:5},{v:'99%',s:4},{v:'100%',s:5},{v:'99%',s:4},{v:'99%',s:4}], avg:2.25 },
+        monthly:[{v:'100%',s:5},{v:'99%',s:5},{v:'99%',s:4},{v:'100%',s:5},{v:'99%',s:4},{v:'99%',s:4},{v:'99%',s:4},{v:'99%',s:4}], avg:2.58 },
       { no:3, cat:'Expansion', name:'New Location Acquisition', unit:'Quality', weight:15, target:'50-60 แห่ง',
-        monthly:[{v:6,s:5},{v:1,s:1},{v:2,s:2},{v:2,s:2},{v:0,s:1},{v:3,s:3}], avg:1.17 },
+        monthly:[{v:6,s:5},{v:1,s:1},{v:2,s:2},{v:2,s:2},{v:0,s:1},{v:3,s:3},{v:3,s:3},{v:0,s:1}], avg:1.42 },
       { no:4, cat:'Reporting', name:'Daily & Weekly Insight Report', unit:'%', weight:5, target:'90-100%',
-        monthly:[{v:'80%',s:1},{v:'100%',s:5},{v:'100%',s:5},{v:'100%',s:5},{v:'100%',s:5},{v:'100%',s:5}], avg:2.17 }
+        monthly:[{v:'80%',s:1},{v:'100%',s:5},{v:'100%',s:5},{v:'100%',s:5},{v:'100%',s:5},{v:'100%',s:5},{v:'100%',s:5},{v:'100%',s:5}], avg:2.58 }
     ]
   },
   'Online': {
-    score: [4.35, 3.25, 2.55, 2.60, 2.85, 2.75],
+    score: [4.35, 3.25, 2.55, 2.60, 2.85, 2.75, 2.95, 3.00],
     items: [
       { no:1, cat:'Sales & Revenue', name:'ยอดขายรวมตามเป้า', unit:'%', weight:25, target:'90M บาท/ปี',
-        monthly:[{v:'113.8%',s:5},{v:'59.3%',s:1},{v:'41.2%',s:1},{v:'42.9%',s:2},{v:'44.5%',s:1},{v:'37.1%',s:1}], avg:0.92 },
+        monthly:[{v:'113.8%',s:5},{v:'59.3%',s:1},{v:'41.2%',s:1},{v:'42.9%',s:2},{v:'44.5%',s:1},{v:'37.1%',s:1},{v:'35.6%',s:1},{v:'14.3%',s:1}], avg:1.00 },
       { no:'', cat:'', name:'กำไรหลังหักค่าใช้จ่าย', unit:'%', weight:20, target:'9M บาท/ปี',
-        monthly:[{v:'44.3%',s:5},{v:'32.1%',s:5},{v:'0.1%',s:1},{v:'14.9%',s:2},{v:'18.6%',s:4},{v:'15.4%',s:3}], avg:1.67 },
+        monthly:[{v:'44.3%',s:5},{v:'32.1%',s:5},{v:'0.1%',s:1},{v:'14.9%',s:2},{v:'18.6%',s:4},{v:'15.4%',s:3},{v:'17.6%',s:4},{v:'58.5%',s:5}], avg:2.00 },
       { no:2, cat:'Strategic Growth', name:'Test Market (New Product)', unit:'SKUs', weight:10, target:'50-60 SKUs',
-        monthly:[{v:0,s:1},{v:0,s:1},{v:3,s:2},{v:1,s:1},{v:3,s:2},{v:0,s:1}], avg:0.67 },
+        monthly:[{v:0,s:1},{v:0,s:1},{v:3,s:2},{v:1,s:1},{v:3,s:2},{v:0,s:1},{v:0,s:1},{v:2,s:1}], avg:0.75 },
       { no:'', cat:'', name:'ROAS / Marketing Efficiency', unit:'%', weight:15, target:'5-10%',
-        monthly:[{v:'5.2%',s:5},{v:'10.5%',s:3},{v:'12.3%',s:3},{v:'17.3%',s:1},{v:'15.3%',s:1},{v:'13.3%',s:2}], avg:1.25 },
+        monthly:[{v:'5.2%',s:5},{v:'10.5%',s:3},{v:'12.3%',s:3},{v:'17.3%',s:1},{v:'15.3%',s:1},{v:'13.3%',s:2},{v:'12.8%',s:2},{v:'21.4%',s:1}], avg:1.42 },
       { no:3, cat:'Live & Channel', name:'Traffic & Follower Growth', unit:'%', weight:10, target:'20-50%',
-        monthly:[{v:'35.1%',s:5},{v:'99.97%',s:5},{v:'99.97%',s:5},{v:'85.6%',s:5},{v:'105.6%',s:5},{v:'36.4%',s:5}], avg:2.50 },
+        monthly:[{v:'35.1%',s:5},{v:'99.97%',s:5},{v:'99.97%',s:5},{v:'85.6%',s:5},{v:'105.6%',s:5},{v:'36.4%',s:5},{v:'59.6%',s:5},{v:'58.4%',s:5}], avg:2.92 },
       { no:4, cat:'Operations', name:'Fulfillment Efficiency', unit:'%', weight:10, target:'0-10%',
-        monthly:[{v:'1.1%',s:5},{v:'0.6%',s:5},{v:'1.0%',s:5},{v:'0.9%',s:5},{v:'1.2%',s:5},{v:'1.0%',s:5}], avg:2.50 },
+        monthly:[{v:'1.1%',s:5},{v:'0.6%',s:5},{v:'1.0%',s:5},{v:'0.9%',s:5},{v:'1.2%',s:5},{v:'1.0%',s:5},{v:'0.5%',s:5},{v:'1.2%',s:5}], avg:2.92 },
       { no:'', cat:'Team Performance', name:'การพัฒนาทักษะทีมงาน', unit:'Quality', weight:5, target:'100-120 ครั้ง/ปี',
-        monthly:[{v:8,s:4},{v:8,s:4},{v:8,s:4},{v:9,s:4},{v:9,s:4},{v:12,s:5}], avg:2.08 },
+        monthly:[{v:8,s:4},{v:8,s:4},{v:8,s:4},{v:9,s:4},{v:9,s:4},{v:12,s:5},{v:12,s:5},{v:12,s:5}], avg:2.50 },
       { no:5, cat:'Reporting', name:'Daily & Weekly Insight Report', unit:'%', weight:5, target:'90-100%',
-        monthly:[{v:'80%',s:1},{v:'100%',s:5},{v:'100%',s:5},{v:'100%',s:5},{v:'100%',s:5},{v:'100%',s:5}], avg:2.17 }
+        monthly:[{v:'80%',s:1},{v:'100%',s:5},{v:'100%',s:5},{v:'100%',s:5},{v:'100%',s:5},{v:'100%',s:5},{v:'100%',s:5},{v:'100%',s:5}], avg:2.58 }
     ]
   },
   'Ordering Center': {
-    score: [0, 0, 0, 0, 0, 0],
+    score: [0, 0, 0, 0, 0, 0, 0, 0],
     items: [
-      { no:1, cat:'Sales Target', name:'ยอดขายรวมตามเป้า', unit:'%', weight:30, target:'-', monthly:[{v:'-',s:0},{v:'-',s:0},{v:'-',s:0},{v:'-',s:0},{v:'-',s:0},{v:'-',s:0}], avg:0 },
-      { no:2, cat:'TeleSales', name:'ยอดเป้าหมายการโทรเปิดออเดอร์', unit:'%', weight:15, target:'-', monthly:[{v:'-',s:0},{v:'-',s:0},{v:'-',s:0},{v:'-',s:0},{v:'-',s:0},{v:'-',s:0}], avg:0 },
-      { no:3, cat:'Conversion', name:'อัตราการเปลี่ยนลูกค้า', unit:'%', weight:15, target:'-', monthly:[{v:'-',s:0},{v:'-',s:0},{v:'-',s:0},{v:'-',s:0},{v:'-',s:0},{v:'-',s:0}], avg:0 }
+      { no:1, cat:'Sales Target', name:'ยอดขายรวมตามเป้า', unit:'%', weight:30, target:'-', monthly:[{v:'-',s:0},{v:'-',s:0},{v:'-',s:0},{v:'-',s:0},{v:'-',s:0},{v:'-',s:0},{v:'-',s:0},{v:'-',s:0}], avg:0 },
+      { no:2, cat:'TeleSales', name:'ยอดเป้าหมายการโทรเปิดออเดอร์', unit:'%', weight:15, target:'-', monthly:[{v:'-',s:0},{v:'-',s:0},{v:'-',s:0},{v:'-',s:0},{v:'-',s:0},{v:'-',s:0},{v:'-',s:0},{v:'-',s:0}], avg:0 },
+      { no:3, cat:'Conversion', name:'อัตราการเปลี่ยนลูกค้า', unit:'%', weight:15, target:'-', monthly:[{v:'-',s:0},{v:'-',s:0},{v:'-',s:0},{v:'-',s:0},{v:'-',s:0},{v:'-',s:0},{v:'-',s:0},{v:'-',s:0}], avg:0 }
     ]
   }
 };
 
 function _smKpiContent() {
-  var months = ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.'];
+  var months = ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.'];
   var teamKeys = Object.keys(SM_KPI_DATA);
   var scoreColor = function(s) {
     if (s >= 4) return '#16a34a';
@@ -361,7 +362,7 @@ function _smKpiContent() {
     var tk2 = teamKeys[t2]; var td2 = SM_KPI_DATA[tk2];
     h += '<tr><td style="padding:8px;font-weight:600;border-bottom:1px solid #f1f5f9">'+tk2+'</td>';
     var sum2 = 0; var cnt2 = 0;
-    for (var m2 = 0; m2 < 6; m2++) {
+    for (var m2 = 0; m2 < months.length; m2++) {
       var sv = td2.score[m2];
       var c2 = scoreColor(sv);
       if (sv > 0) { sum2 += sv; cnt2++; }
@@ -399,7 +400,7 @@ function _smKpiContent() {
       h += '<td style="padding:6px 8px;border-bottom:1px solid #f1f5f9;font-weight:600;white-space:nowrap">'+it.name+'</td>';
       h += '<td style="padding:6px 8px;text-align:center;border-bottom:1px solid #f1f5f9">'+it.weight+'%</td>';
       h += '<td style="padding:6px 8px;text-align:center;border-bottom:1px solid #f1f5f9;color:#64748b;font-size:11px;white-space:nowrap">'+it.target+'</td>';
-      for (var m4 = 0; m4 < 6; m4++) {
+      for (var m4 = 0; m4 < months.length; m4++) {
         var md = it.monthly[m4];
         var sc = md.s;
         var bgc = sc >= 4 ? '#dcfce7' : sc >= 3 ? '#dbeafe' : sc >= 2 ? '#fef3c7' : sc >= 1 ? '#ffedd5' : '#fee2e2';
@@ -412,7 +413,7 @@ function _smKpiContent() {
     }
     // total row
     h += '<tr style="background:#f8fafc;font-weight:700"><td colspan="4" style="padding:8px;border-top:2px solid #e2e8f0">รวมคะแนน KPI</td>';
-    for (var m5 = 0; m5 < 6; m5++) {
+    for (var m5 = 0; m5 < months.length; m5++) {
       var msv = td3.score[m5];
       var mc5 = scoreColor(msv);
       h += '<td style="padding:8px;text-align:center;border-top:2px solid #e2e8f0;color:'+mc5+'">'+( msv > 0 ? msv.toFixed(2) : '-')+'</td>';
@@ -718,7 +719,8 @@ function smInitTab() {
 var SM_STAFF = [
   'นางสาววนัสนันท์ อินต๊ะเสน (คุณวี)',
   'นางสาวระวีวรรณ ไพรสงบ (แอลลี่)',
-  'ว่าง (BKK 1)',
+  'นางสาวกัลยาณี (บี)',
+  'นางสาวณัฐฏวรรณ (ยู)',
   'นายภาณุวัฒน์ ปานเผือก (ซี)',
   'นายวีระ พรมมี (กานต์)',
   'นางสาวธัญรัตน์ พุ่มนิล (ต้นปาล์ม)',
@@ -728,7 +730,7 @@ var SM_STAFF = [
 
 var SM_CHANNELS = ['Modern Trade', 'Booth', 'Online', 'Amazon', 'Ordering Center', 'ฝ่ายขาย - การตลาด'];
 
-var SM_EXP_TYPES = ['ค่าน้ำมัน', 'ค่าเบี้ยเลี้ยง', 'ค่าคอมมิชชั่น', 'ค่าทางด่วน', 'ค่าที่จอดรถ', 'ค่าใช้จ่ายอื่นๆ'];
+var SM_EXP_TYPES = ['ค่าน้ำมัน', 'ค่าน้ำมันเกินจากฟลีทการ์ด', 'ค่าเบี้ยเลี้ยง', 'ค่าคอมมิชชั่น', 'ค่าทางด่วน', 'ค่าที่จอดรถ', 'ค่าของตัวอย่าง', 'สินค้าตัวอย่าง', 'ค่าขนส่ง', 'ค่าใช้จ่ายอื่นๆ'];
 
 var SM_SAMPLE_REASONS = [
   'ใช้สำหรับเป็นตัวอย่างการผลิตสินค้าใหม่',
@@ -1164,7 +1166,7 @@ function _ovExpDestroyAll() { Object.keys(_ovExpCharts).forEach(function(k) { _o
 function _ovExpFmt(v) { return '฿' + v.toLocaleString('th-TH', {minimumFractionDigits: 2}); }
 function _ovExpPct(part, total) { return total > 0 ? (part / total * 100).toFixed(1) + '%' : '0%'; }
 
-var _ovExpFilter = { year: '', quarter: '', month: '', dateFrom: '', dateTo: '' };
+var _ovExpFilter = { year: '', quarter: '', month: '', dateFrom: '', dateTo: '', staff: '' };
 
 function _ovExpGetDate(r, cat) {
   if (cat === 'fda') return r.dateFda || '';
@@ -1193,7 +1195,11 @@ function _ovExpPassFilter(dateStr) {
 }
 
 function _ovExpFilterData(arr, cat) {
-  return arr.filter(function(r) { return _ovExpPassFilter(_ovExpGetDate(r, cat)); });
+  return arr.filter(function(r) {
+    if (!_ovExpPassFilter(_ovExpGetDate(r, cat))) return false;
+    if (_ovExpFilter.staff && r.staff && r.staff.indexOf(_ovExpFilter.staff) === -1) return false;
+    return true;
+  });
 }
 
 function _ovExpCollectYears() {
@@ -1250,6 +1256,23 @@ function _ovExpBuildFilterBar() {
   }
   h += '</select></div>';
 
+  var _staffList = {};
+  var _sArr = _smLoad('smExpSales');
+  for (var si = 0; si < _sArr.length; si++) { if (_sArr[si].staff) _staffList[_sArr[si].staff] = true; }
+  var _sArrSample = _smLoad('smExpSample');
+  for (var si2 = 0; si2 < _sArrSample.length; si2++) { if (_sArrSample[si2].staff) _staffList[_sArrSample[si2].staff] = true; }
+  var _staffKeys = Object.keys(_staffList).sort();
+
+  h += '<div style="display:flex;flex-direction:column;gap:4px"><label style="font-size:11px;font-weight:600;color:#64748b">เซลล์</label>' +
+    '<select id="ovExpF-staff" onchange="_ovExpOnFilter()" style="padding:6px 10px;border:1px solid #cbd5e1;border-radius:6px;font-size:13px;min-width:120px">' +
+    '<option value="">ทุกคน</option>';
+  for (var sk = 0; sk < _staffKeys.length; sk++) {
+    var sNick = _staffKeys[sk].match(/\(([^)]+)\)/) ? _staffKeys[sk].match(/\(([^)]+)\)/)[1] : _staffKeys[sk];
+    var sSel = f.staff === sNick ? ' selected' : '';
+    h += '<option value="' + sNick + '"' + sSel + '>' + sNick + '</option>';
+  }
+  h += '</select></div>';
+
   h += '<div style="display:flex;flex-direction:column;gap:4px"><label style="font-size:11px;font-weight:600;color:#64748b">ตั้งแต่วันที่</label>' +
     '<input type="date" id="ovExpF-dateFrom" value="' + (f.dateFrom || '') + '" onchange="_ovExpOnFilter()" style="padding:6px 10px;border:1px solid #cbd5e1;border-radius:6px;font-size:13px"></div>';
 
@@ -1266,13 +1289,14 @@ function _ovExpOnFilter() {
   _ovExpFilter.year = (document.getElementById('ovExpF-year') || {}).value || '';
   _ovExpFilter.quarter = (document.getElementById('ovExpF-quarter') || {}).value || '';
   _ovExpFilter.month = (document.getElementById('ovExpF-month') || {}).value || '';
+  _ovExpFilter.staff = (document.getElementById('ovExpF-staff') || {}).value || '';
   _ovExpFilter.dateFrom = (document.getElementById('ovExpF-dateFrom') || {}).value || '';
   _ovExpFilter.dateTo = (document.getElementById('ovExpF-dateTo') || {}).value || '';
   renderOvExpense();
 }
 
 function _ovExpResetFilter() {
-  _ovExpFilter = { year: '', quarter: '', month: '', dateFrom: '', dateTo: '' };
+  _ovExpFilter = { year: '', quarter: '', month: '', dateFrom: '', dateTo: '', staff: '' };
   renderOvExpense();
 }
 
@@ -1313,6 +1337,7 @@ function renderOvExpense() {
   if (_ovExpFilter.year) _fParts.push('ปี ' + (parseInt(_ovExpFilter.year) + 543));
   if (_ovExpFilter.quarter) _fParts.push('ไตรมาส ' + _ovExpFilter.quarter);
   if (_ovExpFilter.month) { var _ml = ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.']; _fParts.push(_ml[parseInt(_ovExpFilter.month) - 1]); }
+  if (_ovExpFilter.staff) _fParts.push('เซลล์: ' + _ovExpFilter.staff);
   if (_ovExpFilter.dateFrom) _fParts.push('ตั้งแต่ ' + _ovExpFilter.dateFrom);
   if (_ovExpFilter.dateTo) _fParts.push('ถึง ' + _ovExpFilter.dateTo);
   if (_fParts.length > 0) {
@@ -1348,7 +1373,59 @@ function renderOvExpense() {
     '<div class="card"><div class="card-title">ค่าใช้จ่ายรายบุคคล (Top 10)</div><div class="chart-wrap h280"><canvas id="ovExpStaff"></canvas></div></div>' +
     '<div class="card"><div class="card-title">ค่าใช้จ่ายเซลล์ แยกหัวข้อ</div><div class="chart-wrap h280"><canvas id="ovExpTypePie"></canvas></div></div></div>';
 
-  // Row 6: Channel pie + Recent table
+  // Row 6: Staff × ExpType breakdown table + stacked bar
+  var _staffExpMap = {};
+  var _allExpTypes = {};
+  sales.forEach(function(r) {
+    if (!r.staff) return;
+    var sn = r.staff.match(/\(([^)]+)\)/) ? r.staff.match(/\(([^)]+)\)/)[1] : r.staff;
+    var et = r.expType || 'อื่นๆ';
+    if (!_staffExpMap[sn]) _staffExpMap[sn] = {};
+    _staffExpMap[sn][et] = (_staffExpMap[sn][et] || 0) + (r.amount || 0);
+    _allExpTypes[et] = (_allExpTypes[et] || 0) + (r.amount || 0);
+  });
+  var _setNames = Object.keys(_staffExpMap).sort(function(a, b) {
+    var ta = 0, tb = 0;
+    Object.keys(_staffExpMap[a]).forEach(function(k) { ta += _staffExpMap[a][k]; });
+    Object.keys(_staffExpMap[b]).forEach(function(k) { tb += _staffExpMap[b][k]; });
+    return tb - ta;
+  });
+  var _setTypes = Object.keys(_allExpTypes).sort(function(a, b) { return _allExpTypes[b] - _allExpTypes[a]; });
+
+  h += '<div class="card" style="margin-top:16px"><div class="card-title">📊 ค่าใช้จ่ายเซลล์ แยกตามบุคคล × หัวข้อ</div>' +
+    '<div class="chart-wrap" style="height:' + Math.max(280, _setNames.length * 40 + 60) + 'px"><canvas id="ovExpStaffStack"></canvas></div>' +
+    '<div style="overflow-x:auto;margin-top:16px"><table style="width:100%;font-size:12px;border-collapse:collapse;min-width:600px">' +
+    '<thead><tr style="background:#f8fafc"><th style="padding:8px 10px;text-align:left;position:sticky;left:0;background:#f8fafc;z-index:1">ชื่อเซลล์</th>';
+  for (var ti = 0; ti < _setTypes.length; ti++) {
+    h += '<th style="padding:8px 6px;text-align:right;white-space:nowrap;font-size:11px">' + _setTypes[ti] + '</th>';
+  }
+  h += '<th style="padding:8px 10px;text-align:right;font-weight:700;background:#fff7ed">รวม</th></tr></thead><tbody>';
+  for (var si = 0; si < _setNames.length; si++) {
+    var sn2 = _setNames[si], rowTotal = 0;
+    h += '<tr style="border-bottom:1px solid #f1f5f9"><td style="padding:6px 10px;font-weight:600;position:sticky;left:0;background:#fff;z-index:1">' + sn2 + '</td>';
+    for (var ti2 = 0; ti2 < _setTypes.length; ti2++) {
+      var val = _staffExpMap[sn2][_setTypes[ti2]] || 0;
+      rowTotal += val;
+      h += '<td style="padding:6px;text-align:right;color:' + (val > 0 ? '#1e293b' : '#cbd5e1') + '">' + (val > 0 ? _ovExpFmt(val) : '-') + '</td>';
+    }
+    h += '<td style="padding:6px 10px;text-align:right;font-weight:700;background:#fff7ed;color:#ea580c">' + _ovExpFmt(rowTotal) + '</td></tr>';
+  }
+  var colTotals = [];
+  for (var ti3 = 0; ti3 < _setTypes.length; ti3++) {
+    var ct = 0;
+    _setNames.forEach(function(sn3) { ct += _staffExpMap[sn3][_setTypes[ti3]] || 0; });
+    colTotals.push(ct);
+  }
+  h += '<tr style="background:#f8fafc;font-weight:700;border-top:2px solid #e2e8f0"><td style="padding:8px 10px;position:sticky;left:0;background:#f8fafc;z-index:1">รวมทั้งหมด</td>';
+  var grandColTotal = 0;
+  for (var ti4 = 0; ti4 < colTotals.length; ti4++) {
+    grandColTotal += colTotals[ti4];
+    h += '<td style="padding:8px 6px;text-align:right">' + _ovExpFmt(colTotals[ti4]) + '</td>';
+  }
+  h += '<td style="padding:8px 10px;text-align:right;background:#fff7ed;color:#ea580c">' + _ovExpFmt(grandColTotal) + '</td></tr>';
+  h += '</tbody></table></div></div>';
+
+  // Row 7: Channel pie + Recent table
   h += '<div class="row cols2" style="margin-top:16px">' +
     '<div class="card"><div class="card-title">ค่าใช้จ่ายแยกช่องทาง</div><div class="chart-wrap h280"><canvas id="ovExpChPie"></canvas></div></div>' +
     '<div class="card"><div class="card-title">รายการล่าสุด (10 รายการ)</div><div id="ovExpRecent" style="overflow-x:auto"></div></div></div>';
@@ -1444,7 +1521,29 @@ function renderOvExpense() {
         tooltip: { callbacks: { label: function(ctx) { return ctx.label + ': ' + _ovExpFmt(ctx.raw); } } } } }
   });
 
-  // 6) Pie — แยกช่องทาง (รวมทุกหมวดที่มี channel)
+  // 6) Staff × ExpType stacked bar
+  var _ssColors = ['#f97316','#3b82f6','#10b981','#8b5cf6','#ec4899','#eab308','#06b6d4','#ef4444','#84cc16','#f59e0b','#6366f1','#14b8a6','#d946ef','#0ea5e9'];
+  _ovExpCharts.staffStack = new Chart(document.getElementById('ovExpStaffStack'), {
+    type: 'bar',
+    data: {
+      labels: _setNames,
+      datasets: _setTypes.map(function(et, ei) {
+        return {
+          label: et,
+          data: _setNames.map(function(sn) { return _staffExpMap[sn][et] || 0; }),
+          backgroundColor: _ssColors[ei % _ssColors.length],
+          borderRadius: 3
+        };
+      })
+    },
+    options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { position: 'bottom', labels: { padding: 10, font: { size: 10 } } },
+        tooltip: { callbacks: { label: function(ctx) { return ctx.dataset.label + ': ' + _ovExpFmt(ctx.raw); } } } },
+      scales: { x: { stacked: true, beginAtZero: true, ticks: { callback: function(v) { return '฿' + v.toLocaleString(); } } },
+        y: { stacked: true } } }
+  });
+
+  // 7) Pie — แยกช่องทาง (รวมทุกหมวดที่มี channel)
   var byCh = {};
   fda.forEach(function(r) { if (r.channel) byCh[r.channel] = (byCh[r.channel] || 0) + (r.cost || 0); });
   sample.forEach(function(r) { if (r.channel) byCh[r.channel] = (byCh[r.channel] || 0) + (r.totalPrice || 0); });
@@ -1616,6 +1715,207 @@ function _initLeaveSeedData() {
 }
 
 */
+
+// ---- Expense Seed Data (from รายละเอียดการเบิกค่าใช้จ่าย Sales.xlsx) ----
+var _EXP_SEED = [
+  ['2026-06-01','ณัฐฏวรรณ (ยู)','ค่าน้ำมันเกินจากฟลีทการ์ด',987,'นครปฐม'],
+  ['2026-06-02','ณัฐฏวรรณ (ยู)','ค่าน้ำมันเกินจากฟลีทการ์ด',1000,'ปทุมธานี'],
+  ['2026-06-02','ภาณุวัฒน์ (ซี)','ค่าน้ำมันเกินจากฟลีทการ์ด',1000,'นครชัยศรี11'],
+  ['2026-06-04','กัลยาณี (บี)','ค่าทางด่วน',300,''],
+  ['2026-06-04','กัลยาณี (บี)','ค่าของตัวอย่าง',364,''],
+  ['2026-06-05','ภาณุวัฒน์ (ซี)','ค่าน้ำมันเกินจากฟลีทการ์ด',1000,'นครชัยศรี11'],
+  ['2026-06-06','ณัฐฏวรรณ (ยู)','ค่าน้ำมันเกินจากฟลีทการ์ด',500,'นครปฐม'],
+  ['2026-06-07','ระวีวรรณ (แอล)','ค่าน้ำมันเกินจากฟลีทการ์ด',1000,'สุพรรณบุรี'],
+  ['2026-06-08','ณัฐฏวรรณ (ยู)','ค่าน้ำมันเกินจากฟลีทการ์ด',1530,'ปทุมธานี'],
+  ['2026-06-08','ภาณุวัฒน์ (ซี)','ค่าน้ำมันเกินจากฟลีทการ์ด',1000,'นครชัยศรี11'],
+  ['2026-06-09','ระวีวรรณ (แอล)','ค่าน้ำมันเกินจากฟลีทการ์ด',1000,'นครปฐม'],
+  ['2026-06-10','กัลยาณี (บี)','ค่าของตัวอย่าง',530,'ใช้เพื่อเทสรัน มินิบันลาบโบโลน่า'],
+  ['2026-06-10','กัลยาณี (บี)','ซื้อสินค้าตัวอย่าง Amz',260,''],
+  ['2026-06-10','ณัฐฏวรรณ (ยู)','ค่าน้ำมันเกินจากฟลีทการ์ด',1000,'นนทบุรี'],
+  ['2026-06-10','ภาณุวัฒน์ (ซี)','ค่าน้ำมันเกินจากฟลีทการ์ด',1000,'นครชัยศรี11'],
+  ['2026-06-10','ระวีวรรณ (แอล)','ซื้อผงลาบ เทสรัน',790,''],
+  ['2026-06-11','กัลยาณี (บี)','ซื้อสินค้าตัวอย่าง',1571,''],
+  ['2026-06-11','ภาณุวัฒน์ (ซี)','ค่าน้ำมันเกินจากฟลีทการ์ด',1000,'เมืองนครปฐม'],
+  ['2026-06-12','ณัฐฏวรรณ (ยู)','ค่าน้ำมันเกินจากฟลีทการ์ด',500,'นครปฐม'],
+  ['2026-06-13','วีระ (กานต์)','ค่าทางด่วน',260,''],
+  ['2026-06-13','วีระ (กานต์)','ค่าทางด่วน',60,''],
+  ['2026-06-14','ระวีวรรณ (แอล)','ค่าน้ำมันเกินจากฟลีทการ์ด',1000,'นครปฐม'],
+  ['2026-06-14','วีระ (กานต์)','ค่าทางด่วน',60,''],
+  ['2026-06-14','วีระ (กานต์)','ค่าทางด่วน',100,''],
+  ['2026-06-15','ระวีวรรณ (แอล)','ค่าน้ำมันเกินจากฟลีทการ์ด',1000,'นครปฐม'],
+  ['2026-06-21','ภาณุวัฒน์ (ซี)','ค่าน้ำมันเกินจากฟลีทการ์ด',1000,'กรุงเทพมหานคร'],
+  ['2026-06-21','ระวีวรรณ (แอล)','ค่าน้ำมันเกินจากฟลีทการ์ด',1000,'นครปฐม'],
+  ['2026-06-23','ระวีวรรณ (แอล)','ค่าน้ำมันเกินจากฟลีทการ์ด',1000,'นครปฐม'],
+  ['2026-06-26','ระวีวรรณ (แอล)','ค่าน้ำมันเกินจากฟลีทการ์ด',1000,'นครปฐม'],
+  ['2026-06-29','กัลยาณี (บี)','ค่าทางด่วน',270,''],
+  ['2026-06-29','กัลยาณี (บี)','ค่าทางด่วน',95,''],
+  ['2026-06-29','กัลยาณี (บี)','สุ่มซื้อสินค้าหน้าสาขา',151,''],
+  ['2026-06-30','วีระ (กานต์)','ค่าน้ำมันเกินจากฟลีทการ์ด',3000,''],
+  ['2026-07-01','ณัฐฏวรรณ (ยู)','ค่าน้ำมันเกินจากฟลีทการ์ด',1000,'ปทุมธานี'],
+  ['2026-07-01','ภาณุวัฒน์ (ซี)','ค่าน้ำมันเกินจากฟลีทการ์ด',1000,'นครปฐม'],
+  ['2026-07-01','วีระ (กานต์)','สินค้าตัวอย่าง',145,''],
+  ['2026-07-01','วีระ (กานต์)','ค่าทางด่วน',225,''],
+  ['2026-07-02','ระวีวรรณ (แอล)','ซื้อสินค้าให้RD',1230,''],
+  ['2026-07-02','วีระ (กานต์)','สินค้าตัวอย่าง',423,''],
+  ['2026-07-03','ภาณุวัฒน์ (ซี)','ค่าน้ำมันเกินจากฟลีทการ์ด',1000,'นครปฐม'],
+  ['2026-07-05','ระวีวรรณ (แอล)','ค่าน้ำมันเกินจากฟลีทการ์ด',1000,'นครปฐม'],
+  ['2026-07-05','วีระ (กานต์)','ค่าน้ำมันเกินจากฟลีทการ์ด',1000,'นครปฐม'],
+  ['2026-07-06','ณัฐฏวรรณ (ยู)','ค่าน้ำมันเกินจากฟลีทการ์ด',1000,'ปทุมธานี'],
+  ['2026-07-06','ภาณุวัฒน์ (ซี)','ค่าน้ำมันเกินจากฟลีทการ์ด',1000,'กรุงเทพมหานคร'],
+  ['2026-07-07','ระวีวรรณ (แอล)','ค่าน้ำมันเกินจากฟลีทการ์ด',1000,'นครปฐม'],
+  ['2026-07-07','วีระ (กานต์)','ค่าน้ำมันเกินจากฟลีทการ์ด',1000,'กรุงเทพมหานคร'],
+  ['2026-07-08','ณัฐฏวรรณ (ยู)','ค่าน้ำมันเกินจากฟลีทการ์ด',1000,'นครปฐม'],
+  ['2026-07-08','ภาณุวัฒน์ (ซี)','ค่าน้ำมันเกินจากฟลีทการ์ด',1000,'นครปฐม'],
+  ['2026-07-08','วีระ (กานต์)','ค่าน้ำมันเกินจากฟลีทการ์ด',1000,'กรุงเทพมหานคร'],
+  ['2026-07-10','ณัฐฏวรรณ (ยู)','ค่าน้ำมันเกินจากฟลีทการ์ด',1000,'นครปฐม'],
+  ['2026-07-10','ภาณุวัฒน์ (ซี)','ค่าน้ำมันเกินจากฟลีทการ์ด',1000,'กรุงเทพมหานคร'],
+  ['2026-07-10','วีระ (กานต์)','ค่าน้ำมันเกินจากฟลีทการ์ด',500,'นครปฐม'],
+  ['2026-07-12','วีระ (กานต์)','ค่าน้ำมันเกินจากฟลีทการ์ด',500,'สมุทรปราการ'],
+  ['2026-07-13','ณัฐฏวรรณ (ยู)','ค่าน้ำมันเกินจากฟลีทการ์ด',1000,'ปทุมธานี'],
+  ['2026-07-13','ภาณุวัฒน์ (ซี)','ซื้อแพคเกจกล่องข้าวแฮปปี้ไบท์',823,''],
+  ['2026-07-13','ภาณุวัฒน์ (ซี)','ซื้อแพคเกจกล่อง+ช้อน พันธ์ุไทย',78,''],
+  ['2026-07-13','ภาณุวัฒน์ (ซี)','ค่าน้ำมันเกินจากฟลีทการ์ด',1000,'นครชัยศรี'],
+  ['2026-07-13','วีระ (กานต์)','ค่าน้ำมันเกินจากฟลีทการ์ด',1000,'กรุงเทพมหานคร'],
+  ['2026-07-14','ภาณุวัฒน์ (ซี)','ค่าน้ำมันเกินจากฟลีทการ์ด',1000,'นนทบุรี'],
+  ['2026-07-15','ณัฐฏวรรณ (ยู)','ค่าน้ำมันเกินจากฟลีทการ์ด',1000,'กรุงเทพมหานคร'],
+  ['2026-07-15','วีระ (กานต์)','ค่าน้ำมันเกินจากฟลีทการ์ด',1000,'นครปฐม'],
+  ['2026-07-17','ภาณุวัฒน์ (ซี)','ค่าน้ำมันเกินจากฟลีทการ์ด',1000,'นนทบุรี'],
+  ['2026-07-17','วีระ (กานต์)','ค่าทางด่วน',85,''],
+  ['2026-07-17','วีระ (กานต์)','ค่าทางด่วน',60,''],
+  ['2026-07-17','วีระ (กานต์)','ค่าทางด่วน',75,''],
+  ['2026-07-17','วีระ (กานต์)','ค่าน้ำมันเกินจากฟลีทการ์ด',1000,'สมุทรปราการ'],
+  ['2026-07-18','ณัฐฏวรรณ (ยู)','ค่าน้ำมันเกินจากฟลีทการ์ด',1000,'นนทบุรี'],
+  ['2026-07-18','ภาณุวัฒน์ (ซี)','ค่าน้ำมันเกินจากฟลีทการ์ด',1000,'นครชัยศรี'],
+  ['2026-07-18','ระวีวรรณ (แอล)','ค่าน้ำมันเกินจากฟลีทการ์ด',1000,'นครปฐม'],
+  ['2026-07-19','วีระ (กานต์)','ค่าทางด่วน',85,''],
+  ['2026-07-19','วีระ (กานต์)','ค่าทางด่วน',10,''],
+  ['2026-07-19','วีระ (กานต์)','ค่าทางด่วน',60,''],
+  ['2026-07-19','วีระ (กานต์)','ค่าน้ำมันเกินจากฟลีทการ์ด',1000,'สมุทรปราการ'],
+  ['2026-07-20','วีระ (กานต์)','ค่าทางด่วน',65,''],
+  ['2026-07-20','วีระ (กานต์)','ค่าทางด่วน',60,''],
+  ['2026-07-21','ภาณุวัฒน์ (ซี)','ค่าน้ำมันเกินจากฟลีทการ์ด',1000,'นครปฐม'],
+  ['2026-07-21','วีระ (กานต์)','ค่าทางด่วน',60,''],
+  ['2026-07-21','วีระ (กานต์)','ค่าทางด่วน',50,''],
+  ['2026-07-21','วีระ (กานต์)','ค่าทางด่วน',55,''],
+  ['2026-07-21','วีระ (กานต์)','ค่าน้ำมันเกินจากฟลีทการ์ด',1000,''],
+  ['2026-07-22','ณัฐฏวรรณ (ยู)','ค่าน้ำมันเกินจากฟลีทการ์ด',1000,'นครปฐม'],
+  ['2026-07-22','ระวีวรรณ (แอล)','ค่าน้ำมันเกินจากฟลีทการ์ด',1000,'นครปฐม'],
+  ['2026-07-22','วีระ (กานต์)','ค่าทางด่วน',75,''],
+  ['2026-07-22','วีระ (กานต์)','ค่าทางด่วน',60,''],
+  ['2026-07-22','วีระ (กานต์)','ค่าน้ำมันเกินจากฟลีทการ์ด',1000,''],
+  ['2026-07-23','วีระ (กานต์)','ค่าน้ำมันเกินจากฟลีทการ์ด',500,'นครปฐม'],
+  ['2026-07-24','ณัฐฏวรรณ (ยู)','ค่าน้ำมันเกินจากฟลีทการ์ด',1000,'ปทุมธานี'],
+  ['2026-07-24','วีระ (กานต์)','ค่าน้ำมันเกินจากฟลีทการ์ด',1000,''],
+  ['2026-07-24','วีระ (กานต์)','ค่าทางด่วน',60,''],
+  ['2026-07-24','วีระ (กานต์)','ค่าทางด่วน',85,''],
+  ['2026-07-25','วีระ (กานต์)','ค่าน้ำมันเกินจากฟลีทการ์ด',500,'ชลบุรี'],
+  ['2026-07-26','วีระ (กานต์)','ค่าทางด่วน',60,''],
+  ['2026-07-26','วีระ (กานต์)','ค่าทางด่วน',95,''],
+  ['2026-07-26','วีระ (กานต์)','ค่าน้ำมันเกินจากฟลีทการ์ด',1000,'นครปฐม'],
+  ['2026-07-27','ระวีวรรณ (แอล)','ค่าน้ำมันเกินจากฟลีทการ์ด',1000,'นครปฐม'],
+  ['2026-07-27','วีระ (กานต์)','ค่าน้ำมันเกินจากฟลีทการ์ด',1000,''],
+  ['2026-07-27','วีระ (กานต์)','ค่าทางด่วน',60,''],
+  ['2026-07-27','วีระ (กานต์)','ค่าทางด่วน',195,''],
+  ['2026-07-27','วีระ (กานต์)','ค่าน้ำมันเกินจากฟลีทการ์ด',500,'นครปฐม'],
+  ['2026-07-29','ณัฐฏวรรณ (ยู)','ค่าน้ำมันเกินจากฟลีทการ์ด',1000,'ปทุมธานี'],
+  ['2026-07-29','วีระ (กานต์)','ค่าน้ำมันเกินจากฟลีทการ์ด',1000,''],
+  ['2026-07-29','วีระ (กานต์)','ค่าทางด่วน',60,''],
+  ['2026-07-29','วีระ (กานต์)','ค่าทางด่วน',120,''],
+  ['2026-07-30','ระวีวรรณ (แอล)','ค่าน้ำมันเกินจากฟลีทการ์ด',1000,'กาญจนบุรี'],
+  ['2026-07-30','วีระ (กานต์)','ค่าน้ำมันเกินจากฟลีทการ์ด',1000,''],
+  ['2026-07-30','วีระ (กานต์)','ค่าทางด่วน',55,''],
+  ['2026-07-30','วีระ (กานต์)','ค่าทางด่วน',60,''],
+  ['2026-08-01','ภาณุวัฒน์ (ซี)','ค่าน้ำมันเกินจากฟลีทการ์ด',1000,'นครปฐม'],
+  ['2026-08-02','วีระ (กานต์)','ค่าทางด่วน',70,''],
+  ['2026-08-02','วีระ (กานต์)','ค่าทางด่วน',60,''],
+  ['2026-08-02','วีระ (กานต์)','ค่าน้ำมันเกินจากฟลีทการ์ด',1000,'นนทบุรี'],
+  ['2026-08-03','ภาณุวัฒน์ (ซี)','ค่าน้ำมันเกินจากฟลีทการ์ด',1000,'นครปฐม'],
+  ['2026-08-03','วีระ (กานต์)','ค่าทางด่วน',190,''],
+  ['2026-08-03','วีระ (กานต์)','ค่าทางด่วน',60,''],
+  ['2026-08-03','วีระ (กานต์)','ค่าทางด่วน',75,''],
+  ['2026-08-04','ภาณุวัฒน์ (ซี)','ค่าน้ำมันเกินจากฟลีทการ์ด',1000,'นนทบุรี'],
+  ['2026-08-04','วีระ (กานต์)','ค่าทางด่วน',65,''],
+  ['2026-08-04','วีระ (กานต์)','ค่าทางด่วน',50,''],
+  ['2026-08-04','วีระ (กานต์)','ค่าทางด่วน',25,''],
+  ['2026-08-04','วีระ (กานต์)','ค่าทางด่วน',60,''],
+  ['2026-08-04','วีระ (กานต์)','ค่าทางด่วน',10,''],
+  ['2026-08-04','วีระ (กานต์)','ค่าน้ำมันเกินจากฟลีทการ์ด',1000,'บางใหญ่'],
+  ['2026-08-05','ระวีวรรณ (แอล)','ค่าน้ำมันเกินจากฟลีทการ์ด',1000,'นครปฐม'],
+  ['2026-08-05','วีระ (กานต์)','ค่าน้ำมันเกินจากฟลีทการ์ด',1000,'สมุทรปราการ'],
+  ['2026-08-08','ภาณุวัฒน์ (ซี)','ค่าน้ำมันเกินจากฟลีทการ์ด',1000,'นครปฐม'],
+  ['2026-08-09','วีระ (กานต์)','ค่าน้ำมันเกินจากฟลีทการ์ด',1000,'ราชบุรี'],
+  ['2026-08-10','ระวีวรรณ (แอล)','ค่าน้ำมันเกินจากฟลีทการ์ด',1000,'นครปฐม'],
+  ['2026-08-10','วีระ (กานต์)','ค่าน้ำมันเกินจากฟลีทการ์ด',100,'กรุงเทพมหานคร'],
+  ['2026-08-10','วีระ (กานต์)','ค่าน้ำมันเกินจากฟลีทการ์ด',900,'กรุงเทพมหานคร'],
+  ['2026-08-11','ภาณุวัฒน์ (ซี)','ค่าน้ำมันเกินจากฟลีทการ์ด',1000,'สุพรรณบุรี'],
+  ['2026-08-11','วีระ (กานต์)','ค่าน้ำมันเกินจากฟลีทการ์ด',1000,'สมุทรปราการ'],
+  ['2026-08-13','ระวีวรรณ (แอล)','ค่าน้ำมันเกินจากฟลีทการ์ด',1000,'นนทบุรี'],
+  ['2026-08-14','ระวีวรรณ (แอล)','ค่าน้ำมันเกินจากฟลีทการ์ด',850,'นครปฐม'],
+  ['2026-08-14','วีระ (กานต์)','ค่าน้ำมันเกินจากฟลีทการ์ด',1000,'นครปฐม'],
+  ['2026-08-15','ภาณุวัฒน์ (ซี)','ค่าน้ำมันเกินจากฟลีทการ์ด',1000,'นครปฐม'],
+  ['2026-08-16','วีระ (กานต์)','ค่าน้ำมันเกินจากฟลีทการ์ด',1000,'กรุงเทพมหานคร'],
+  ['2026-08-17','วีระ (กานต์)','ค่าน้ำมันเกินจากฟลีทการ์ด',1000,'กรุงเทพมหานคร'],
+  ['2026-08-18','ภาณุวัฒน์ (ซี)','ค่าน้ำมันเกินจากฟลีทการ์ด',1000,'นครปฐม'],
+  ['2026-08-18','ระวีวรรณ (แอล)','ค่าน้ำมันเกินจากฟลีทการ์ด',1000,'นครปฐม'],
+  ['2026-08-21','ภาณุวัฒน์ (ซี)','ค่าน้ำมันเกินจากฟลีทการ์ด',1000,'นครปฐม'],
+  ['2026-08-21','ระวีวรรณ (แอล)','ค่าน้ำมันเกินจากฟลีทการ์ด',830,'อยุธยา'],
+  ['2026-08-21','วีระ (กานต์)','ไปพบลูกค้าใหม่',20,''],
+  ['2026-08-21','วีระ (กานต์)','ไปพบลูกค้า',60,''],
+  ['2026-08-21','วีระ (กานต์)','ค่าน้ำมันเกินจากฟลีทการ์ด',1000,'นครปฐม'],
+  ['2026-08-22','ภาณุวัฒน์ (ซี)','ค่าน้ำมันเกินจากฟลีทการ์ด',1000,'กรุงเทพมหานคร'],
+  ['2026-08-22','ระวีวรรณ (แอล)','ค่าน้ำมันเกินจากฟลีทการ์ด',820,'นครปฐม'],
+  ['2026-08-23','วีระ (กานต์)','ค่าน้ำมันเกินจากฟลีทการ์ด',500,''],
+  ['2026-08-24','วีระ (กานต์)','ไปพบลูกค้า',165,''],
+  ['2026-08-24','วีระ (กานต์)','ค่าน้ำมันเกินจากฟลีทการ์ด',1000,''],
+  ['2026-08-25','วีระ (กานต์)','ไปพบลูกค้า',80,''],
+  ['2026-08-25','วีระ (กานต์)','ค่าน้ำมันเกินจากฟลีทการ์ด',500,''],
+  ['2026-08-26','วีระ (กานต์)','ไปพบลูกค้า',175,''],
+  ['2026-08-26','วีระ (กานต์)','ไปพบลูกค้า',120,''],
+  ['2026-08-27','ระวีวรรณ (แอล)','ค่าน้ำมันเกินจากฟลีทการ์ด',1000,'นนทบุรี'],
+  ['2026-08-27','วีระ (กานต์)','ค่าทางด่วน',45,''],
+  ['2026-08-28','ภาณุวัฒน์ (ซี)','ค่าน้ำมันเกินจากฟลีทการ์ด',1000,'นครปฐม'],
+  ['2026-08-29','ระวีวรรณ (แอล)','ค่าน้ำมันเกินจากฟลีทการ์ด',500,'ราชบุรี'],
+  ['2026-08-30','ระวีวรรณ (แอล)','ค่าน้ำมันเกินจากฟลีทการ์ด',1000,'นครปฐม'],
+  ['2026-08-30','วีระ (กานต์)','ค่าน้ำมันเกินจากฟลีทการ์ด',1000,'กรุงเทพมหานคร'],
+  ['2026-08-31','ภาณุวัฒน์ (ซี)','ค่าขนส่ง Lalamove',1026,''],
+  ['2026-08-31','ภาณุวัฒน์ (ซี)','ค่าน้ำมันเกินจากฟลีทการ์ด',1000,'นครชัยศรี']
+];
+
+var _EXP_SEED_STAFF = {
+  'กัลยาณี (บี)': 'นางสาวกัลยาณี (บี)',
+  'ระวีวรรณ (แอล)': 'นางสาวระวีวรรณ ไพรสงบ (แอลลี่)',
+  'ณัฐฏวรรณ (ยู)': 'นางสาวณัฐฏวรรณ (ยู)',
+  'วีระ (กานต์)': 'นายวีระ พรมมี (กานต์)',
+  'ภาณุวัฒน์ (ซี)': 'นายภาณุวัฒน์ ปานเผือก (ซี)'
+};
+
+function _initExpSeedData() {
+  if (localStorage.getItem('smExpSalesSeeded') === 'v1') return;
+  var existing = _smLoad('smExpSales');
+  var existingIds = {};
+  existing.forEach(function(r) { existingIds[r.id] = true; });
+
+  for (var i = 0; i < _EXP_SEED.length; i++) {
+    var s = _EXP_SEED[i];
+    var id = 'SE-SEED-' + (i + 1);
+    if (existingIds[id]) continue;
+    existing.push({
+      id: id,
+      dateWithdraw: s[0],
+      dateBill: s[0],
+      staff: _EXP_SEED_STAFF[s[1]] || s[1],
+      expType: s[2],
+      billNo: '',
+      amount: s[3],
+      remark: s[4],
+      createdAt: '2026-09-09T00:00:00.000Z',
+      source: 'excel-import'
+    });
+  }
+  _smSave('smExpSales', existing);
+  localStorage.setItem('smExpSalesSeeded', 'v1');
+}
+_initExpSeedData();
 
 // ---- Leave Dashboard ----
 var _lvDashFilter = { year: '', month: '', dateFrom: '', dateTo: '' };
@@ -3673,6 +3973,13 @@ function renderSmProdPerf() {
   html += '<div class="card" style="padding:16px;text-align:center"><div style="font-size:11px;color:var(--muted)">ยอดขายรวม (ชิ้น)</div><div style="font-size:28px;font-weight:800;color:var(--text)">' + fmtQ(Math.round(totalQty)) + '</div></div>';
   html += '<div class="card" style="padding:16px;text-align:center"><div style="font-size:11px;color:var(--muted)">จำนวนกลุ่มสินค้า</div><div style="font-size:28px;font-weight:800;color:#4f46e5">' + PP_CATS.length + ' กลุ่ม</div></div>';
   html += '</div>';
+
+  // ── YoY Comparison (via CATALOG_SALES) ──
+  var _smYoY = window.buildCatalogYoY ? window.buildCatalogYoY(null) : null;
+  if (_smYoY && _smYoY.list.length > 0) {
+    html += window.buildYoYHTML(_smYoY.list, _smYoY.bePY, _smYoY.beCY, _smYoY.periodLabel, 'smYoYChart');
+    setTimeout(function() { window.initYoYChart('smYoYChart', _smYoY.list, _smYoY.bePY, _smYoY.beCY); }, 200);
+  }
 
   // Category summary grid
   html += '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:20px">';

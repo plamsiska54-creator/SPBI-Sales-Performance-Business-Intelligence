@@ -34,6 +34,7 @@
 
   var _MO_TH = ['','ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
 
+  var _MON_IDX = {Jan:'01',Feb:'02',Mar:'03',Apr:'04',May:'05',Jun:'06',Jul:'07',Aug:'08',Sep:'09',Oct:'10',Nov:'11',Dec:'12'};
   function _amzGetYearMonths() {
     if (typeof AMZ_ORDER_DATA === 'undefined') return [];
     var all = AMZ_ORDER_DATA.months || [];
@@ -49,6 +50,7 @@
     else if (_amzPeriod === 'q2') allowed = ['04','05','06'];
     else if (_amzPeriod === 'q3') allowed = ['07','08','09'];
     else if (_amzPeriod === 'q4') allowed = ['10','11','12'];
+    else if (_MON_IDX[_amzPeriod]) allowed = [_MON_IDX[_amzPeriod]];
     else return byYear;
     return byYear.filter(function(ym) { return allowed.indexOf(ym.split('-')[1]) >= 0; });
   }
@@ -933,11 +935,14 @@
     var topCh = chData.slice().sort(function (a, b) { return b.a - a.a; })[0] || { ch: '—', a: 0 };
     var yearLabel = _amzYear === 'all' ? '5 ปี (2022–2026)' : 'ปี ' + (parseInt(_amzYear)+543);
 
+    var _amzCmpHtml='';
+    if(typeof CMP!=='undefined'){var _ami=typeof MONTHS!=='undefined'?MONTHS.length-1:6;var _amMom=CMP.calcMoMChannel('Amazon & Souvenir',_ami);var _amYoy=CMP.calcYoYChannel('Amazon & Souvenir',_ami);var _ab1=_amMom&&_amMom.pct!==null?CMP.badge(_amMom.pct,'MoM'):'';var _ab2=_amYoy&&_amYoy.pct!==null?CMP.badge(_amYoy.pct,'YoY'):'';if(_ab1||_ab2)_amzCmpHtml='<div class="cmp-group">'+_ab1+_ab2+'</div>';}
     var kpiEl = document.getElementById('amazonKPI');
     if (kpiEl) {
       kpiEl.innerHTML =
         '<div class="kpi-card blue"><div class="kpi-label">💰 Revenue รวม</div>'
         + '<div class="kpi-value sm">' + (grandA / 1e6).toFixed(2) + ' M</div>'
+        + _amzCmpHtml
         + '<div class="kpi-sub">' + yearLabel + ' (' + months.length + ' เดือน)</div></div>'
         + '<div class="kpi-card blue"><div class="kpi-label">📊 เฉลี่ย/เดือน</div>'
         + '<div class="kpi-value sm">' + (avgMth / 1e6).toFixed(2) + ' M</div>'
@@ -1551,7 +1556,88 @@
 
     var chTbl = document.getElementById('amzTargetChTable');
     if (chTbl) {
+      var yr = parseInt(_amzTargetYear) || new Date().getFullYear();
+      var T = (typeof getTargetByYear === 'function') ? getTargetByYear(yr) : null;
+      var amzT = (T && T.amazon) ? T.amazon : {};
+
+      var _regionGroups = [
+        { name: 'BKK 1 (ปทุมธานี)', color: '#ea580c', items: [
+          { key: 'BKK1_Amazon', label: 'Amazon' },
+          { key: 'BKK1_Souvenir', label: 'ร้านของฝาก' }
+        ]},
+        { name: 'BKK 2 (นนทบุรี)', color: '#2563eb', items: [
+          { key: 'BKK2_Amazon', label: 'Amazon' },
+          { key: 'BKK2_Souvenir', label: 'ร้านของฝาก' }
+        ]},
+        { name: 'BKK 3 (สมุทรปราการ)', color: '#7c3aed', items: [
+          { key: 'BKK3_Amazon', label: 'Amazon' },
+          { key: 'BKK3_Souvenir', label: 'ร้านของฝาก' }
+        ]}
+      ];
+      var _otherRegions = [
+        { key: 'North', label: 'North (เหนือ)', color: '#16a34a' },
+        { key: 'NE_Upper', label: 'อีสานบน', color: '#0891b2' },
+        { key: 'NE_Lower', label: 'อีสานล่าง', color: '#d97706' },
+        { key: 'Central', label: 'Central (กลาง)', color: '#e11d48' },
+        { key: 'CentralEast', label: 'ตะวันออก', color: '#059669' },
+        { key: 'South', label: 'South (ใต้)', color: '#6366f1' }
+      ];
+
+      function _sumKeyMonths(key) {
+        var s = 0;
+        if (!amzT[key] || !amzT[key].monthly) return 0;
+        months.forEach(function(ym) {
+          var mi = parseInt(ym.split('-')[1]) - 1;
+          s += (amzT[key].monthly[mi] || 0);
+        });
+        return s;
+      }
+      function _tgtRow(label, tgt, indent, bold) {
+        var style = 'padding:8px 10px' + (indent ? ';padding-left:28px' : '') + (bold ? ';font-weight:800' : '');
+        var r = '<tr' + (bold ? ' style="background:#fef9c3"' : '') + '>';
+        r += '<td style="' + style + '">' + label + '</td>';
+        r += '<td style="padding:8px 10px;text-align:right;font-weight:' + (bold ? '800' : '600') + '">' + (tgt > 0 ? fmt(tgt) : '—') + '</td>';
+        r += '</tr>';
+        return r;
+      }
+
       var html = '<table style="width:100%;border-collapse:collapse;font-size:13px">';
+      html += '<thead><tr style="background:#fff7ed;font-size:12px;color:#9a3412">';
+      html += '<th style="padding:8px 10px;text-align:left">เขต / ช่องทาง</th>';
+      html += '<th style="padding:8px 10px;text-align:right">เป้าหมาย</th>';
+      html += '</tr></thead><tbody>';
+
+      var allRegionTotal = 0;
+      _regionGroups.forEach(function(rg) {
+        var groupTotal = 0;
+        html += '<tr style="background:#f8fafc"><td colspan="2" style="padding:10px;font-weight:800;font-size:14px;color:' + rg.color + ';border-top:2px solid ' + rg.color + '">📍 ' + rg.name + '</td></tr>';
+        rg.items.forEach(function(item) {
+          var t = _sumKeyMonths(item.key);
+          groupTotal += t;
+          html += _tgtRow(item.label, t, true, false);
+        });
+        allRegionTotal += groupTotal;
+        html += _tgtRow('สรุป ' + rg.name.split(' (')[0], groupTotal, false, true);
+      });
+
+      if (_otherRegions.length > 0) {
+        html += '<tr style="background:#f8fafc"><td colspan="2" style="padding:10px;font-weight:800;font-size:14px;color:#475569;border-top:2px solid #94a3b8">📍 ต่างจังหวัด</td></tr>';
+        var otherTotal = 0;
+        _otherRegions.forEach(function(rg) {
+          var t = _sumKeyMonths(rg.key);
+          otherTotal += t;
+          html += '<tr><td style="padding:8px 10px;padding-left:28px"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:' + rg.color + ';margin-right:6px;vertical-align:middle"></span>' + rg.label + '</td>';
+          html += '<td style="padding:8px 10px;text-align:right;font-weight:600">' + (t > 0 ? fmt(t) : '—') + '</td></tr>';
+        });
+        allRegionTotal += otherTotal;
+        html += _tgtRow('สรุปต่างจังหวัด', otherTotal, false, true);
+      }
+
+      html += '<tr style="background:#fef3c7;font-weight:800;border-top:3px solid #f59e0b"><td style="padding:10px;font-size:14px">🎯 รวมทั้งหมด</td>';
+      html += '<td style="padding:10px;text-align:right;font-size:14px">' + (allRegionTotal > 0 ? fmt(allRegionTotal) : '—') + '</td></tr>';
+      html += '</tbody></table>';
+
+      html += '<div style="margin-top:16px"><table style="width:100%;border-collapse:collapse;font-size:13px">';
       html += '<thead><tr style="background:#fff7ed;font-size:12px;color:#9a3412">';
       html += '<th style="padding:8px 10px;text-align:left">ช่องทาง</th>';
       html += '<th style="padding:8px 10px;text-align:right">เป้าหมาย</th>';
@@ -1577,8 +1663,55 @@
       html += '<td style="padding:8px 10px;text-align:right">' + fmt(grandA) + '</td>';
       html += '<td style="padding:8px 10px;text-align:right;color:' + (grandT > 0 ? (gap >= 0 ? '#16a34a' : '#dc2626') : '#94a3b8') + '">' + (grandT > 0 ? (gap >= 0 ? '+' : '') + fmt(gap) : '—') + '</td>';
       html += '<td style="padding:8px 10px;text-align:right;color:' + (grandT > 0 ? (grandA >= grandT ? '#16a34a' : '#dc2626') : '#94a3b8') + '">' + (grandT > 0 ? achPct + '%' : '—') + '</td>';
-      html += '<td></td></tr></tbody></table>';
+      html += '<td></td></tr></tbody></table></div>';
       chTbl.innerHTML = html;
+    }
+
+    // ---- กราฟเส้นยอดขายรายเดือนแยกช่องทางย่อย ----
+    var yr = parseInt(_amzTargetYear) || new Date().getFullYear();
+    var allYm = (D.months || []).filter(function(ym) { return ym.indexOf(String(yr)) === 0; });
+    allYm.sort();
+    var MO_LABEL = {'01':'ม.ค.','02':'ก.พ.','03':'มี.ค.','04':'เม.ย.','05':'พ.ค.','06':'มิ.ย.','07':'ก.ค.','08':'ส.ค.','09':'ก.ย.','10':'ต.ค.','11':'พ.ย.','12':'ธ.ค.'};
+    var moLabels = allYm.map(function(ym) { return MO_LABEL[ym.split('-')[1]] || ym; });
+    var lineDatasets = [];
+    var chColors = { 'OR':'#ea580c', 'ร้านของฝาก':'#2563eb', 'ลูกค้าทั่วไป':'#16a34a', 'Black Canyon':'#7c3aed', 'Amazon':'#0891b2', 'RM':'#d97706',
+      'หนองพงนก':'#e11d48', 'อินทนิล':'#8b5cf6', 'พนักงาน':'#059669' };
+    var extraChs = {};
+    filteredChs.forEach(function(ch) {
+      var vals = allYm.map(function(ym) {
+        return (D.monthlyByCh[ch] && D.monthlyByCh[ch][ym]) ? D.monthlyByCh[ch][ym].net : 0;
+      });
+      var hasData = vals.some(function(v) { return v > 0; });
+      if (!hasData) return;
+      if (!chColors[ch]) { var ci = Object.keys(extraChs).length; chColors[ch] = palette[ci % palette.length]; }
+      lineDatasets.push({
+        label: ch,
+        data: vals,
+        borderColor: chColors[ch],
+        backgroundColor: chColors[ch] + '18',
+        borderWidth: 2.5,
+        pointRadius: 5,
+        pointBackgroundColor: chColors[ch],
+        tension: 0.3,
+        fill: false
+      });
+    });
+    if (lineDatasets.length && allYm.length) {
+      mkChart('amzChMonthlyLine', {
+        type: 'line',
+        data: { labels: moLabels, datasets: lineDatasets },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          plugins: {
+            legend: { position: 'bottom', labels: { usePointStyle: true, pointStyle: 'circle', padding: 14, font: { size: 12 } } },
+            tooltip: { callbacks: { label: function(ctx) { return ctx.dataset.label + ': ' + (ctx.parsed.y >= 1e6 ? (ctx.parsed.y / 1e6).toFixed(2) + ' M' : ctx.parsed.y >= 1e3 ? (ctx.parsed.y / 1e3).toFixed(1) + ' K' : ctx.parsed.y.toLocaleString()); } } }
+          },
+          scales: {
+            y: { beginAtZero: true, ticks: { callback: function(v) { return v >= 1e6 ? (v / 1e6).toFixed(1) + 'M' : v >= 1e3 ? (v / 1e3).toFixed(0) + 'K' : v; } } },
+            x: { ticks: { font: { size: 11 } } }
+          }
+        }
+      });
     }
   };
 
@@ -1860,6 +1993,7 @@
     activeMonths.sort(function(a,b){return MONTHS.indexOf(a)-MONTHS.indexOf(b);});
 
     var html = '';
+    var _yoyChartData = null;
 
     // ── 1. Gradient header ──
     html += '<div class="card" style="background:linear-gradient(135deg,#ea580c,#fb923c);color:#fff;padding:24px 28px;margin-bottom:18px;border-radius:14px">';
@@ -1884,6 +2018,51 @@
     html += '<div class="card"><div class="card-title">📊 Ambient vs Chill</div>';
     html += '<div style="position:relative;height:300px"><canvas id="amzPPTypeChart"></canvas></div></div>';
     html += '</div>';
+
+    // ── 3.5. Year-over-Year Comparison ──
+    var _yoyYearSet = {};
+    allMonths.forEach(function(ym) { var y = ym.split('-')[0]; if (!_yoyYearSet[y]) _yoyYearSet[y] = []; _yoyYearSet[y].push(ym); });
+    var _yoySorted = Object.keys(_yoyYearSet).sort();
+    if (_yoySorted.length >= 2) {
+      var _yCY = _yoySorted[_yoySorted.length - 1];
+      var _yPY = _yoySorted[_yoySorted.length - 2];
+      var _yBaseM;
+      if (_amzProdPeriod !== 'all' || _amzProdYear !== 'all') {
+        _yBaseM = [];
+        filteredMonths.forEach(function(ym) { var mn = ym.split('-')[1]; if (_yBaseM.indexOf(mn) === -1) _yBaseM.push(mn); });
+      } else {
+        _yBaseM = _yoyYearSet[_yCY].map(function(ym) { return ym.split('-')[1]; });
+      }
+      var _yCurMs = _yBaseM.map(function(m) { return _yCY + '-' + m; }).filter(function(ym) { return allMonths.indexOf(ym) >= 0; });
+      var _yPrvMs = _yBaseM.map(function(m) { return _yPY + '-' + m; }).filter(function(ym) { return allMonths.indexOf(ym) >= 0; });
+      if (_yCurMs.length || _yPrvMs.length) {
+        var _yMap = {};
+        var _yPM = D.prodMonthly || {};
+        var _yCPM = D.prodMonthlyByCh || {};
+        var _yAgg = function(pN, ms) {
+          var s = { n: 0, q: 0 };
+          if (!channels) { if (_yPM[pN]) ms.forEach(function(ym) { if (_yPM[pN][ym]) { s.n += _yPM[pN][ym].n || 0; s.q += _yPM[pN][ym].q || 0; } }); }
+          else { channels.forEach(function(ch) { if (_yCPM[ch] && _yCPM[ch][pN]) ms.forEach(function(ym) { if (_yCPM[ch][pN][ym]) { s.n += _yCPM[ch][pN][ym].n || 0; s.q += _yCPM[ch][pN][ym].q || 0; } }); }); }
+          return s;
+        };
+        var _yPN = {};
+        if (!channels) { Object.keys(_yPM).forEach(function(p) { _yPN[p] = 1; }); }
+        else { channels.forEach(function(ch) { if (_yCPM[ch]) Object.keys(_yCPM[ch]).forEach(function(p) { _yPN[p] = 1; }); }); }
+        Object.keys(_yPN).forEach(function(p) {
+          var c = _yAgg(p, _yCurMs), v = _yAgg(p, _yPrvMs);
+          if (c.n > 0 || v.n > 0) _yMap[p] = { p: p, cn: c.n, cq: c.q, pn: v.n, pq: v.q };
+        });
+        var _yList = Object.values(_yMap).sort(function(a, b) { return (b.cn + b.pn) - (a.cn + a.pn); });
+        var _yTC = { n: 0, q: 0 }, _yTP = { n: 0, q: 0 };
+        _yList.forEach(function(d) { _yTC.n += d.cn; _yTC.q += d.cq; _yTP.n += d.pn; _yTP.q += d.pq; });
+        var _yGN = _yTP.n > 0 ? ((_yTC.n - _yTP.n) / _yTP.n * 100) : (_yTC.n > 0 ? 100 : 0);
+        var _yGQ = _yTP.q > 0 ? ((_yTC.q - _yTP.q) / _yTP.q * 100) : (_yTC.q > 0 ? 100 : 0);
+        var _bCY = parseInt(_yCY) + 543, _bPY = parseInt(_yPY) + 543;
+        var _yPLabel = _yBaseM.map(function(m) { return MONTH_TH[parseInt(m) - 1]; }).join(', ');
+        _yoyChartData = { list: _yList, bePY: _bPY, beCY: _bCY };
+        html += window.buildYoYHTML(_yList, _bPY, _bCY, _yPLabel, 'amzYoYChart');
+      }
+    }
 
     // ── 4. Category summary cards ──
     var PP_CATS = [
@@ -2043,11 +2222,11 @@
     el.innerHTML = html;
 
     // Delayed chart init
-    setTimeout(function(){_amzPPInitCharts(prods, ambientB, chillB);},100);
+    setTimeout(function(){_amzPPInitCharts(prods, ambientB, chillB);if(_yoyChartData){if(_amzPPYoYChart){try{_amzPPYoYChart.destroy();}catch(e){}}_amzPPYoYChart=window.initYoYChart('amzYoYChart',_yoyChartData.list,_yoyChartData.bePY,_yoyChartData.beCY);}},100);
   };
 
   // ── Chart init for AMZ product performance ──
-  var _amzPPChart1 = null, _amzPPChart2 = null;
+  var _amzPPChart1 = null, _amzPPChart2 = null, _amzPPYoYChart = null;
   function _amzPPInitCharts(products, ambientB, chillB){
     if(_amzPPChart1){try{_amzPPChart1.destroy();}catch(e){}} _amzPPChart1=null;
     if(_amzPPChart2){try{_amzPPChart2.destroy();}catch(e){}} _amzPPChart2=null;
@@ -2201,7 +2380,7 @@
     var chFilter = AMZ_CH_MAP[_amzCh];
     var channels = chFilter ? AMZ_CHANNELS.filter(function(c){ return chFilter.indexOf(c) >= 0; }) : AMZ_CHANNELS;
     var allMonths = D.months || [];
-    var months = _amzOrderFilterMonths(allMonths);
+    var months = _amzGetYearMonths();
 
     // Compute KPI
     var filtNet = 0, filtQty = 0, filtBills = 0;
@@ -2222,18 +2401,28 @@
     var fmtB = function(n){if(n>=1e6)return(n/1e6).toFixed(2)+' M';if(n>=1e3)return(n/1e3).toFixed(1)+' K';return Math.round(n).toLocaleString();};
     var fmtQ = function(n){return Math.round(n).toLocaleString('th-TH');};
 
-    // Product data
-    var prods = chFilter ? [] : (D.topProdAll || []).map(function(d){return{p:d.p,n:d.n,q:d.q};});
-    if (chFilter) {
-      var prodMap = {};
+    // Product data — filtered by selected months
+    var prodMap = {};
+    if (chFilter && D.prodMonthlyByCh) {
       channels.forEach(function(ch) {
-        (D.topProdByCh[ch] || []).forEach(function(d) {
-          if (!prodMap[d.p]) prodMap[d.p] = { p: d.p, n: 0, q: 0 };
-          prodMap[d.p].n += d.n; prodMap[d.p].q += d.q;
+        var chProds = D.prodMonthlyByCh[ch];
+        if (!chProds) return;
+        Object.keys(chProds).forEach(function(pk) {
+          if (!prodMap[pk]) prodMap[pk] = { p: pk, n: 0, q: 0 };
+          months.forEach(function(ym) {
+            if (chProds[pk][ym]) { prodMap[pk].n += chProds[pk][ym].n; prodMap[pk].q += chProds[pk][ym].q; }
+          });
         });
       });
-      prods = Object.values(prodMap).sort(function(a,b){ return b.n - a.n; });
+    } else if (D.prodMonthly) {
+      Object.keys(D.prodMonthly).forEach(function(pk) {
+        if (!prodMap[pk]) prodMap[pk] = { p: pk, n: 0, q: 0 };
+        months.forEach(function(ym) {
+          if (D.prodMonthly[pk][ym]) { prodMap[pk].n += D.prodMonthly[pk][ym].n; prodMap[pk].q += D.prodMonthly[pk][ym].q; }
+        });
+      });
     }
+    var prods = Object.values(prodMap).filter(function(d){ return d.n > 0; }).sort(function(a,b){ return b.n - a.n; }).slice(0, 30);
     _amzComputeRank(prods);
     prods.forEach(function(d){ d._m = _amzBuildSkuMonthly(d.p); });
 
@@ -2420,7 +2609,11 @@
       SM_STAFF_DB.forEach(function(s) {
         if (s.dept === 'Amazon' && amzNicks.indexOf(s.nick) >= 0) team.push(s);
       });
-      team.sort(function(a, b) { return amzNicks.indexOf(a.nick) - amzNicks.indexOf(b.nick); });
+      team.sort(function(a, b) {
+        var ra = a.resigned ? 1 : 0, rb = b.resigned ? 1 : 0;
+        if (ra !== rb) return ra - rb;
+        return amzNicks.indexOf(a.nick) - amzNicks.indexOf(b.nick);
+      });
     }
     if (team.length === 0) {
       team = [
@@ -2430,23 +2623,42 @@
       ];
     }
 
+    var activeTeam = team.filter(function(s){ return !s.resigned; });
+    var resignedTeam = team.filter(function(s){ return !!s.resigned; });
+
     var html = '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:20px">';
+    var _resignedSepDone = false;
     team.forEach(function (s) {
+      if (s.resigned && !_resignedSepDone && resignedTeam.length > 0) {
+        _resignedSepDone = true;
+        html += '</div>';
+        html += '<div style="margin:28px 0 16px;display:flex;align-items:center;gap:12px"><div style="flex:1;height:1px;background:#e2e8f0"></div><span style="font-size:13px;font-weight:700;color:#94a3b8;white-space:nowrap">📋 พนักงานลาออก (' + resignedTeam.length + ')</span><div style="flex:1;height:1px;background:#e2e8f0"></div></div>';
+        html += '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:20px">';
+      }
       var zone = zoneMap[s.nick] || s.branch || '';
       var displayName = s.name.replace(/^(นาย|นางสาว|นาง)/, '');
       var isMale = s.name.indexOf('นาย') === 0;
       var imgPath = 'assets/staff/' + s.empId + '.jpg';
+      var isResigned = !!s.resigned;
+      var borderColor = isResigned ? '#cbd5e1' : '#fed7aa';
+      var shadowColor = isResigned ? 'rgba(100,116,139,0.15)' : 'rgba(234,88,12,0.15)';
+      var cardOpacity = isResigned ? 'opacity:0.7;' : '';
 
-      html += '<div class="card" style="padding:28px 24px;text-align:center">';
+      html += '<div class="card" style="padding:28px 24px;text-align:center;position:relative;overflow:hidden;' + cardOpacity + (isResigned ? 'border:1.5px dashed #cbd5e1;background:#f8fafc;' : '') + '">';
+      if (isResigned) {
+        html += '<div style="position:absolute;top:14px;right:-32px;transform:rotate(45deg);background:linear-gradient(135deg,#dc2626,#b91c1c);color:#fff;font-size:11px;font-weight:800;padding:4px 40px;box-shadow:0 2px 6px rgba(220,38,38,0.3);letter-spacing:0.5px">ลาออกแล้ว</div>';
+      }
       html += '<div style="margin-bottom:14px;display:inline-block;position:relative">';
-      html += '<img src="' + imgPath + '" style="width:100px;height:100px;border-radius:50%;object-fit:cover;border:3px solid #fed7aa;box-shadow:0 4px 12px rgba(234,88,12,0.15)" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'">';
-      html += '<div style="display:none;width:100px;height:100px;border-radius:50%;background:linear-gradient(135deg,#fed7aa,#fdba74);justify-content:center;align-items:center;font-size:36px;border:3px solid #fed7aa;box-shadow:0 4px 12px rgba(234,88,12,0.15)">' + (isMale ? '👨‍💼' : '👩‍💼') + '</div>';
-      html += '<label style="position:absolute;bottom:2px;right:2px;width:28px;height:28px;border-radius:50%;background:#ea580c;color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;box-shadow:0 2px 6px rgba(0,0,0,0.2);border:2px solid #fff" title="อัพโหลดรูป">';
-      html += '<input type="file" accept="image/*" style="display:none" onchange="window._amzUploadStaffPhoto(this,\'' + s.empId + '\')">📷</label>';
+      html += '<img src="' + imgPath + '" style="width:100px;height:100px;border-radius:50%;object-fit:cover;border:3px solid ' + borderColor + ';box-shadow:0 4px 12px ' + shadowColor + (isResigned ? ';filter:grayscale(40%)' : '') + '" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'">';
+      html += '<div style="display:none;width:100px;height:100px;border-radius:50%;background:linear-gradient(135deg,' + (isResigned ? '#e2e8f0,#cbd5e1' : '#fed7aa,#fdba74') + ');justify-content:center;align-items:center;font-size:36px;border:3px solid ' + borderColor + ';box-shadow:0 4px 12px ' + shadowColor + '">' + (isMale ? '👨‍💼' : '👩‍💼') + '</div>';
+      if (!isResigned) {
+        html += '<label style="position:absolute;bottom:2px;right:2px;width:28px;height:28px;border-radius:50%;background:#ea580c;color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;box-shadow:0 2px 6px rgba(0,0,0,0.2);border:2px solid #fff" title="อัพโหลดรูป">';
+        html += '<input type="file" accept="image/*" style="display:none" onchange="window._amzUploadStaffPhoto(this,\'' + s.empId + '\')">📷</label>';
+      }
       html += '</div>';
-      html += '<div style="font-size:17px;font-weight:800;color:#1e293b">' + displayName + '</div>';
-      html += '<div style="font-size:13px;color:#ea580c;font-weight:700;margin-top:2px">(' + s.nick + ')</div>';
-      html += '<div style="font-size:12px;color:#8b5cf6;font-weight:600;margin-top:4px">' + (s.positionTh || 'เจ้าหน้าที่ขาย') + '</div>';
+      html += '<div style="font-size:17px;font-weight:800;color:' + (isResigned ? '#94a3b8' : '#1e293b') + '">' + displayName + '</div>';
+      html += '<div style="font-size:13px;color:' + (isResigned ? '#94a3b8' : '#ea580c') + ';font-weight:700;margin-top:2px">(' + s.nick + ')</div>';
+      html += '<div style="font-size:12px;color:' + (isResigned ? '#94a3b8' : '#8b5cf6') + ';font-weight:600;margin-top:4px">' + (s.positionTh || 'เจ้าหน้าที่ขาย') + '</div>';
       html += '<div style="font-size:11px;color:#64748b;margin-top:8px;line-height:1.6;background:#f8fafc;padding:8px 12px;border-radius:8px;text-align:left">' + zone.replace(/\n/g, '<br>') + '</div>';
       html += '<div style="margin-top:12px;text-align:left;font-size:12px;color:#64748b;line-height:2">';
       if (s.phone) html += '<div>📱 <span style="color:#334155">' + s.phone + '</span></div>';

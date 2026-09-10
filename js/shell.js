@@ -57,6 +57,7 @@
       { sub: 'ol-cost',       icon: '💰', label: 'ต้นทุนขายสินค้า' },
       { sub: 'ol-prodrank',   icon: '📋', label: 'รายการขายสินค้า' },
       { sub: 'ol-shops',      icon: '🏪', label: 'ข้อมูลร้านค้า' },
+      { sub: 'ol-agent',      icon: '🤝', label: 'ตัวแทนขายสินค้า' },
       { sub: 'ol-ai',         icon: '🤖', label: 'วิเคราะห์ AI' },
       { sub: 'ol-dataupdate', icon: '🔄', label: 'อัพเดทข้อมูล', rbac: 'rbac-import' },
       { sub: 'ol-manual', icon: '📖', label: 'คู่มือการใช้งาน' }
@@ -96,7 +97,8 @@
       { sub: 'sm-jd',         icon: '📋', label: 'รายละเอียดงาน' },
       { sub: 'sm-docs',       icon: '📂', label: 'ศูนย์เอกสาร' },
       { sub: 'sm-customer',   icon: '📇', label: 'ฐานข้อมูลลูกค้า' },
-      { sub: 'sm-ai',         icon: '🤖', label: 'วิเคราะห์ AI' }
+      { sub: 'sm-ai',         icon: '🤖', label: 'วิเคราะห์ AI' },
+      { sub: 'sm-sticker',    icon: '🏷️', label: 'มอนิเตอร์สติ๊กเกอร์' }
     ]},
     { id: 'visit-plan', icon: '📍', label: 'แผนเข้าพบลูกค้า', children: [
       { sub: 'vp-dashboard', icon: '📊', label: 'ภาพรวมผู้บริหาร' },
@@ -106,10 +108,7 @@
       { sub: 'vp-today',     icon: '📋', label: 'ตารางวันนี้' },
       { sub: 'vp-ai',        icon: '🤖', label: 'AI สรุปแผน' }
     ]},
-    { id: 'supatest', icon: '🔌', label: 'ทดสอบ Supabase', children: [
-      { sub: 'supa-dash', icon: '📊', label: 'แดชบอร์ด API' }
-    ]},
-    { id: 'marketing', icon: '📣', label: 'Marketing', children: [
+    { id: 'marketing', icon: '📣', label: 'การตลาด', children: [
       { sub: 'mkt-plan',      icon: '📋', label: 'แผนการตลาด' },
       { sub: 'mkt-promo',     icon: '🎁', label: 'โปรโมชัน/แคมเปญ' },
       { sub: 'mkt-social',    icon: '📱', label: 'Social Media' },
@@ -118,7 +117,36 @@
       { sub: 'mkt-budget',    icon: '💰', label: 'งบการตลาด' },
       { sub: 'mkt-roi',       icon: '📈', label: 'วิเคราะห์ ROI' },
       { sub: 'mkt-events',    icon: '🎪', label: 'กิจกรรม/Event' },
-      { sub: 'mkt-evt-dash',  icon: '📊', label: 'Event Dashboard' }
+      { sub: 'mkt-evt-dash',  icon: '📊', label: 'Event Dashboard' },
+      { sub: 'mkt-activation', icon: '🎯', label: 'Activation' }
+    ]},
+    { id: 'bakery', icon: '🧁', label: 'วิเคราะห์เบเกอรี่', iframe: '/bakery/index.html', children: [
+      { sub: 'bk-executive',  icon: '📊', label: 'ภาพรวมผู้บริหาร', iframeHash: '#executive' },
+      { sub: 'bk-market',     icon: '📈', label: 'เทรนด์ตลาด', iframeHash: '#market' },
+      { sub: 'bk-competitor', icon: '🔍', label: 'วิเคราะห์คู่แข่ง', iframeHash: '#competitor' },
+      { sub: 'bk-product',    icon: '🛍️', label: 'เทรนด์สินค้า', iframeHash: '#product' },
+      { sub: 'bk-consumer',   icon: '👥', label: 'พฤติกรรมผู้บริโภค', iframeHash: '#consumer' },
+      { sub: 'bk-area',       icon: '📍', label: 'พื้นที่/ภูมิภาค', iframeHash: '#area' },
+      { sub: 'bk-monitor',    icon: '👁️', label: 'ติดตามคู่แข่ง', iframeHash: '#monitor' },
+      { sub: 'bk-ai',         icon: '🤖', label: 'AI วิเคราะห์', iframeHash: '#ai-insight' },
+      { sub: 'bk-alert',      icon: '🔔', label: 'ศูนย์แจ้งเตือน', iframeHash: '#alert' },
+      { sub: 'bk-qa',         icon: '❓', label: 'ถาม-ตอบ สินค้า', iframeHash: '#qa' },
+      { sub: 'bk-action',     icon: '📋', label: 'แผนปฏิบัติการ', iframeHash: '#action' },
+      { sub: 'bk-sources',    icon: '📚', label: 'แหล่งที่มาข้อมูล', iframeHash: '#sources' }
+    ]},
+    { id: 'health-bento', icon: '🍱', label: 'ข้าวกล่อง', iframe: '/health-bento/index.html', children: [
+      { sub: 'hb-overview',   icon: '📊', label: 'ภาพรวมธุรกิจ', iframeHash: '#overview' },
+      { sub: 'hb-market',     icon: '📈', label: 'ตลาด & ลูกค้า', iframeHash: '#market' },
+      { sub: 'hb-product',    icon: '🍱', label: 'เมนู & ราคา', iframeHash: '#product' },
+      { sub: 'hb-ops',        icon: '🏭', label: 'ผลิต & จัดส่ง', iframeHash: '#ops' },
+      { sub: 'hb-marketing',  icon: '📣', label: 'การตลาด', iframeHash: '#marketing' },
+      { sub: 'hb-retail',     icon: '🏪', label: 'Modern Trade', iframeHash: '#retail' },
+      { sub: 'hb-finance',    icon: '💰', label: 'การเงิน', iframeHash: '#finance' },
+      { sub: 'hb-plan',       icon: '📋', label: 'แผนดำเนินงาน', iframeHash: '#plan' },
+      { sub: 'hb-sources',    icon: '📚', label: 'แหล่งที่มาข้อมูล', iframeHash: '#sources' }
+    ]},
+    { id: 'supatest', icon: '🔌', label: 'Supabase', children: [
+      { sub: 'supa-dash', icon: '📊', label: 'แดชบอร์ด API' }
     ]},
     { id: 'admin', icon: '⚙️', label: 'แผงแอดมิน', minRole: 'admin', children: [
       { sub: 'adm-staff',      icon: '👥', label: 'พนักงาน' },
@@ -169,10 +197,13 @@
           var activeClass = '';
           var childMin = child.minRole ? ' data-min="' + child.minRole + '"' : '';
           var rbacClass = child.rbac ? ' ' + child.rbac : '';
+          var clickFn = child.iframeHash
+            ? '_navIframeSub(this,\'' + item.id + '\',\'' + child.iframeHash + '\')'
+            : 'shellNavClickSub(this,\'' + item.id + '\',\'' + child.sub.replace(/'/g, "\\'") + '\')';
           html += '<a class="nav-link' + activeClass + rbacClass + '" data-tab="' + item.id
             + '" data-sub="' + child.sub + '" href="javascript:void(0)"'
             + childMin
-            + ' onclick="shellNavClickSub(this,\'' + item.id + '\',\'' + child.sub.replace(/'/g, "\\'") + '\')">'
+            + ' onclick="' + clickFn + '">'
             + '<span class="nav-ico">' + child.icon + '</span>'
             + '<span class="nav-txt" data-i18n="sub.' + child.sub + '">' + ((typeof _t === 'function') ? _t('sub.' + child.sub, child.label) : child.label) + '</span>'
             + '</a>';
@@ -235,6 +266,47 @@
     }
   };
 
+  // ---- Nav click for iframe sub-tab children ----
+  window._navIframeSub = function (el, tabId, hash) {
+    document.querySelectorAll('#sidebarNav .nav-link').forEach(function (a) {
+      a.classList.remove('active');
+    });
+    el.classList.add('active');
+
+    var parent = MENU.find(function (m) { return m.id === tabId; });
+    var child = parent && parent.children
+      ? parent.children.find(function (c) { return c.iframeHash === hash; })
+      : null;
+    var title = document.getElementById('tbPageTitle');
+    var breadcrumb = document.getElementById('tbBreadcrumb');
+    if (title && child) title.textContent = child.label;
+    if (breadcrumb && parent) breadcrumb.textContent = parent.label;
+
+    closeSidebarDrawer();
+
+    if (typeof showTab === 'function') {
+      showTab(el, tabId);
+    }
+
+    var iframeId = tabId === 'bakery' ? 'bakery-iframe' : 'health-bento-iframe';
+    var baseSrc = parent && parent.iframe ? parent.iframe : '';
+    var iframe = document.getElementById(iframeId);
+    if (iframe) {
+      var target = baseSrc + hash;
+      if (!iframe.src.includes(baseSrc)) {
+        iframe.src = target;
+      } else {
+        try {
+          var iframeHash = iframe.contentWindow.location.hash;
+          if (iframeHash === hash) return;
+          iframe.contentWindow.location.hash = hash;
+        } catch (e) {
+          iframe.src = target;
+        }
+      }
+    }
+  };
+
   // ---- Nav click for sub-tab children ----
   window.shellNavClickSub = function (el, tabId, sub) {
     // Mark active in sidebar
@@ -276,6 +348,10 @@
         subTabs[i].click();
         return;
       }
+    }
+    // Fallback: if sub-tab not found in tab bar, call showMktSub directly (sidebar-only items)
+    if (typeof showMktSub === 'function' && tabId === 'marketing') {
+      showMktSub(null, sub);
     }
   }
 
@@ -324,6 +400,25 @@
     if (menu) menu.style.display = 'none';
   });
 
+  // ---- Deep link: #<sub-id> เปิดเมนูย่อยนั้นทันที เช่น /spbi.html#ol-live ----
+  function _linkVisible(el) {
+    for (var node = el; node && node !== document.body; node = node.parentElement) {
+      if (node.style && node.style.display === 'none') return false;
+    }
+    return true;
+  }
+
+  function _openHashTarget() {
+    var sub = (window.location.hash || '').replace(/^#/, '').trim();
+    if (!sub || !/^[\w-]+$/.test(sub)) return false;
+    var link = document.querySelector('#sidebarNav .nav-link[data-sub="' + sub + '"]');
+    if (!link || !_linkVisible(link)) return false;
+    var group = link.closest('.nav-group');
+    if (group) group.classList.add('open');
+    link.click();
+    return true;
+  }
+
   // ---- Initial load: show welcome landing (overview hidden until user navigates) ----
   window.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('.section').forEach(function (s) {
@@ -332,7 +427,12 @@
     });
     var wl = document.getElementById('welcomeLanding');
     if (wl) wl.style.display = 'block';
+
+    // รอให้ applyRBAC ทำงานก่อน แล้วค่อยเปิดเป้าหมายจาก hash (ถ้ามี)
+    setTimeout(_openHashTarget, 0);
   });
+
+  window.addEventListener('hashchange', _openHashTarget);
 
   // ---- RBAC ----
   var ROLE_LEVELS = { viewer: 0, officer: 1, sales: 1, leader: 2, manager: 3, admin: 4 };
