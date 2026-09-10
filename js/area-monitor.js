@@ -570,8 +570,12 @@
 
   // ---- Render ranking table HTML ----
   function _amCalcPerformance(r) {
-    var early = [r.m1 || 0, r.m2 || 0, r.m3 || 0].filter(function(v){ return v > 0; });
-    var late  = [r.m5 || 0, r.m6 || 0, r.m7 || 0].filter(function(v){ return v > 0; });
+    // เปรียบเทียบ 3 เดือนแรก vs 3 เดือนหลังสุดที่มีข้อมูล (dynamic)
+    var n = MONTH_NUMS.length;
+    var earlyNums = MONTH_NUMS.slice(0, Math.min(3, n));
+    var lateNums = MONTH_NUMS.slice(Math.max(0, n - 3));
+    var early = earlyNums.map(function(m){ return r['m' + m] || 0; }).filter(function(v){ return v > 0; });
+    var late  = lateNums.map(function(m){ return r['m' + m] || 0; }).filter(function(v){ return v > 0; });
     if (early.length === 0 || late.length === 0) return { label: '-', color: '#94a3b8', icon: '', pct: 0, cls: 'neutral' };
     var avgE = early.reduce(function(a,b){ return a+b; },0) / early.length;
     var avgL = late.reduce(function(a,b){ return a+b; },0) / late.length;
@@ -603,7 +607,7 @@
     html += '<th style="width:40px"></th></tr></thead><tbody>';
 
     if (rows.length === 0) {
-      var cols = showRank ? 14 : 13;
+      var cols = (showRank ? 5 : 4) + MONTH_NUMS.length + 3;
       html += '<tr><td colspan="' + cols + '" style="text-align:center;color:#94a3b8;padding:20px">เลือกเขตเพื่อแสดงข้อมูล</td></tr>';
     } else {
       rows.forEach(function (r, idx) {
@@ -616,9 +620,9 @@
         html += '<td>' + r.area + '</td>';
         html += '<td style="font-weight:600">' + r.code + '</td>';
         html += '<td style="font-size:11px;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + bName + '</td>';
-        for (var mi = 1; mi <= 7; mi++) {
+        MONTH_NUMS.forEach(function (mi) {
           html += '<td class="am-td-num">' + _amFmtBaht(r['m' + mi] || 0) + '</td>';
-        }
+        });
         html += '<td class="am-td-num" style="font-weight:700">' + _amFmtBaht(r.revenue) + '</td>';
         html += '<td class="am-td-num" style="color:' + gColor + ';font-weight:600">' + _amFmtPct(r.growth) + '</td>';
         html += '<td class="am-td-num">' + _amPerfBadge(perf) + '</td>';
@@ -642,7 +646,7 @@
       area.branches.forEach(function (b) {
         var rev = f.monthNum ? (b[String(f.monthNum)] || 0) : (b.total || 0);
         var row = { area: areaName, code: b.code || '', revenue: rev, growth: b.growthMOM };
-        for (var mi = 1; mi <= 7; mi++) row['m' + mi] = b[String(mi)] || 0;
+        MONTH_NUMS.forEach(function (mi) { row['m' + mi] = b[String(mi)] || 0; });
         rows.push(row);
       });
     });
@@ -669,7 +673,7 @@
     area.branches.forEach(function (b) {
       var rev = f.monthNum ? (b[String(f.monthNum)] || 0) : (b.total || 0);
       var row = { area: selectedArea, code: b.code || '', revenue: rev, growth: b.growthMOM };
-      for (var mi = 1; mi <= 7; mi++) row['m' + mi] = b[String(mi)] || 0;
+      MONTH_NUMS.forEach(function (mi) { row['m' + mi] = b[String(mi)] || 0; });
       rows.push(row);
     });
     rows.sort(function (a, b) { return b.revenue - a.revenue; });
@@ -691,16 +695,10 @@
           area: areaName,
           code: b.code || '',
           name: _amBranchNames[b.code] || '-',
-          m1: b['1'] || 0,
-          m2: b['2'] || 0,
-          m3: b['3'] || 0,
-          m4: b['4'] || 0,
-          m5: b['5'] || 0,
-          m6: b['6'] || 0,
-          m7: b['7'] || 0,
           total: b.total || 0,
           growth: b.growthMOM
         };
+        MONTH_NUMS.forEach(function (mi) { row['m' + mi] = b[String(mi)] || 0; });
         rows.push(row);
       });
     });
@@ -758,7 +756,7 @@
 
     html += '<tbody>';
     if (pageRows.length === 0) {
-      html += '<tr><td colspan="14" style="text-align:center;color:#94a3b8;padding:24px">ไม่พบข้อมูล</td></tr>';
+      html += '<tr><td colspan="' + (4 + MONTH_NUMS.length + 3) + '" style="text-align:center;color:#94a3b8;padding:24px">ไม่พบข้อมูล</td></tr>';
     } else {
       pageRows.forEach(function (r, idx) {
         var stripe = idx % 2 === 0 ? '' : ' class="am-row-alt"';
@@ -768,9 +766,9 @@
         html += '<td>' + r.area + '</td>';
         html += '<td style="font-weight:600">' + r.code + '</td>';
         html += '<td style="font-size:11px;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + r.name + '</td>';
-        for (var mi = 1; mi <= 7; mi++) {
+        MONTH_NUMS.forEach(function (mi) {
           html += '<td class="am-td-num">' + _amFmtBaht(r['m' + mi]) + '</td>';
-        }
+        });
         html += '<td class="am-td-num" style="font-weight:700">' + _amFmtBaht(r.total) + '</td>';
         html += '<td class="am-td-num" style="color:' + gColor + ';font-weight:600">' + _amFmtPct(r.growth) + '</td>';
         html += '<td class="am-td-num">' + _amPerfBadge(perf) + '</td>';
@@ -848,18 +846,17 @@
     var salesData = [];
     var totalSales = 0;
     var bestMonth = { label: '-', val: 0 };
-    for (var mi = 1; mi <= 7; mi++) {
+    MONTH_NUMS.forEach(function (mi) {
       var val = branch[String(mi)] || 0;
-      months.push(MONTH_LABELS[mi - 1]);
+      months.push(ALL_MONTH_LABELS[mi - 1]);
       salesData.push(val);
       totalSales += val;
-      if (val > bestMonth.val) { bestMonth = { label: MONTH_LABELS[mi - 1], val: val }; }
-    }
-    var avgMonth = months.length > 0 ? Math.round(totalSales / months.length) : 0;
-    var perf = _amCalcPerformance({
-      m1: branch['1'] || 0, m2: branch['2'] || 0, m3: branch['3'] || 0,
-      m4: branch['4'] || 0, m5: branch['5'] || 0, m6: branch['6'] || 0, m7: branch['7'] || 0
+      if (val > bestMonth.val) { bestMonth = { label: ALL_MONTH_LABELS[mi - 1], val: val }; }
     });
+    var avgMonth = months.length > 0 ? Math.round(totalSales / months.length) : 0;
+    var perfObj = {};
+    MONTH_NUMS.forEach(function (mi) { perfObj['m' + mi] = branch[String(mi)] || 0; });
+    var perf = _amCalcPerformance(perfObj);
 
     // MoM table rows
     var momRows = '';
