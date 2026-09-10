@@ -29,6 +29,12 @@
     '#A0522D', '#CD853F', '#DEB887', '#D2691E'
   ];
 
+  // ---- Channel filter helper ----
+  function _amFilterBranches(branches, channelVal) {
+    if (!channelVal) return branches;
+    return branches.filter(function (b) { return b.channel === channelVal; });
+  }
+
   // ---- Number formatting ----
   function _amFmtNum(n) {
     if (n == null || isNaN(n)) return '0';
@@ -89,6 +95,15 @@
     AREA_NAMES.forEach(function (name) {
       areaSel.innerHTML += '<option value="' + name + '">' + name + '</option>';
     });
+    // Channel dropdown
+    var channelSel = document.getElementById('amChannelFilter');
+    if (channelSel) {
+      var channels = _amData._channels || [];
+      channelSel.innerHTML = '<option value="">ทุกช่องทาง</option>';
+      channels.forEach(function (ch) {
+        channelSel.innerHTML += '<option value="' + ch + '">' + ch + '</option>';
+      });
+    }
     _amPopulateBranchDropdown();
     var top10Sel = document.getElementById('amTop10AreaSel');
     if (top10Sel) {
@@ -145,6 +160,8 @@
       areaMonitorRender();
     });
     if (monthSel) monthSel.addEventListener('change', function () { _amPage = 0; areaMonitorRender(); });
+    var channelSel = document.getElementById('amChannelFilter');
+    if (channelSel) channelSel.addEventListener('change', function () { _amPage = 0; areaMonitorRender(); });
     if (branchInput) {
       branchInput.addEventListener('input', function () {
         var val = this.value.trim();
@@ -185,14 +202,17 @@
     var areaSel = document.getElementById('amAreaFilter');
     var monthSel = document.getElementById('amMonthFilter');
     var branchSel = document.getElementById('amBranchFilter');
+    var channelSel = document.getElementById('amChannelFilter');
     var areaVal = areaSel ? areaSel.value : '';
     var monthVal = monthSel ? monthSel.value : '';
     var branchVal = branchSel ? branchSel.value : '';
+    var channelVal = channelSel ? channelSel.value : '';
 
     return {
       area: areaVal,
       month: monthVal,
       branch: branchVal,
+      channel: channelVal,
       areas: areaVal ? [areaVal] : AREA_NAMES,
       monthNum: monthVal ? parseInt(monthVal) : 0
     };
@@ -223,19 +243,24 @@
     f.areas.forEach(function (areaName) {
       var area = _amData[areaName];
       if (!area) return;
+      var filtered = _amFilterBranches(area.branches, f.channel);
 
-      // Revenue
-      if (f.monthNum) {
-        totalRevenue += (area.grandTotal[f.monthNum] || 0);
+      // Revenue — sum from filtered branches when channel is set
+      if (f.channel) {
+        filtered.forEach(function (b) {
+          if (f.monthNum) { totalRevenue += (b[String(f.monthNum)] || 0); }
+          else { totalRevenue += (b.total || 0); }
+        });
       } else {
-        totalRevenue += (area.grandTotal.total || 0);
+        if (f.monthNum) { totalRevenue += (area.grandTotal[f.monthNum] || 0); }
+        else { totalRevenue += (area.grandTotal.total || 0); }
       }
 
       // Branch count
-      totalBranches += area.branches.length;
+      totalBranches += filtered.length;
 
       // Growth average
-      area.branches.forEach(function (b) {
+      filtered.forEach(function (b) {
         if (b.growthMOM != null && !isNaN(b.growthMOM)) {
           growthSum += b.growthMOM;
           growthCount++;
@@ -243,16 +268,12 @@
       });
 
       // Net customer growth
-      if (area.customerGrowth) {
+      if (!f.channel && area.customerGrowth) {
         area.customerGrowth.forEach(function (cg) {
           if (f.monthNum) {
-            if (cg.month === 'เดือน ' + f.monthNum) {
-              netCustTotal += (cg.netGrowth || 0);
-            }
+            if (cg.month === 'เดือน ' + f.monthNum) { netCustTotal += (cg.netGrowth || 0); }
           } else {
-            if (cg.month === 'Total') {
-              netCustTotal += (cg.netGrowth || 0);
-            }
+            if (cg.month === 'Total') { netCustTotal += (cg.netGrowth || 0); }
           }
         });
       }
@@ -296,12 +317,15 @@
     AREA_NAMES.forEach(function (name, idx) {
       var area = _amData[name];
       if (!area) return;
-      labels.push(name);
-      if (f.monthNum) {
-        values.push(area.grandTotal[f.monthNum] || 0);
+      var filtered = _amFilterBranches(area.branches, f.channel);
+      var val = 0;
+      if (f.channel) {
+        filtered.forEach(function (b) { val += f.monthNum ? (b[String(f.monthNum)] || 0) : (b.total || 0); });
       } else {
-        values.push(area.grandTotal.total || 0);
+        val = f.monthNum ? (area.grandTotal[f.monthNum] || 0) : (area.grandTotal.total || 0);
       }
+      labels.push(name);
+      values.push(val);
     });
 
     // Sort descending by value
@@ -357,11 +381,17 @@
 
     var datasets = [];
 
+    function _sumByMonth(branches, m) {
+      var s = 0; branches.forEach(function (b) { s += (b[String(m)] || 0); }); return s;
+    }
+
     if (f.area) {
-      // แสดงเฉพาะเขตที่เลือก
       var area = _amData[f.area];
       if (!area) return;
-      var mData = MONTH_NUMS.map(function (m) { return area.grandTotal[m] || 0; });
+      var filtered = _amFilterBranches(area.branches, f.channel);
+      var mData = f.channel
+        ? MONTH_NUMS.map(function (m) { return _sumByMonth(filtered, m); })
+        : MONTH_NUMS.map(function (m) { return area.grandTotal[m] || 0; });
       datasets.push({
         label: f.area,
         data: mData,
@@ -373,11 +403,13 @@
         borderWidth: 2
       });
     } else {
-      // แสดงทุกเขต
       AREA_NAMES.forEach(function (name, idx) {
         var area = _amData[name];
         if (!area) return;
-        var mData = MONTH_NUMS.map(function (m) { return area.grandTotal[m] || 0; });
+        var filtered = _amFilterBranches(area.branches, f.channel);
+        var mData = f.channel
+          ? MONTH_NUMS.map(function (m) { return _sumByMonth(filtered, m); })
+          : MONTH_NUMS.map(function (m) { return area.grandTotal[m] || 0; });
         datasets.push({
           label: name,
           data: mData,
@@ -505,12 +537,15 @@
     AREA_NAMES.forEach(function (name, idx) {
       var area = _amData[name];
       if (!area) return;
-      labels.push(name);
-      if (f.monthNum) {
-        values.push(area.grandTotal[f.monthNum] || 0);
+      var filtered = _amFilterBranches(area.branches, f.channel);
+      var val = 0;
+      if (f.channel) {
+        filtered.forEach(function (b) { val += f.monthNum ? (b[String(f.monthNum)] || 0) : (b.total || 0); });
       } else {
-        values.push(area.grandTotal.total || 0);
+        val = f.monthNum ? (area.grandTotal[f.monthNum] || 0) : (area.grandTotal.total || 0);
       }
+      labels.push(name);
+      values.push(val);
     });
 
     var total = values.reduce(function (s, v) { return s + v; }, 0);
@@ -554,13 +589,8 @@
     f.areas.forEach(function (areaName) {
       var area = _amData[areaName];
       if (!area) return;
-      area.branches.forEach(function (b) {
-        var rev;
-        if (f.monthNum) {
-          rev = b[String(f.monthNum)] || 0;
-        } else {
-          rev = b.total || 0;
-        }
+      _amFilterBranches(area.branches, f.channel).forEach(function (b) {
+        var rev = f.monthNum ? (b[String(f.monthNum)] || 0) : (b.total || 0);
         rows.push({ area: areaName, code: b.code || '', revenue: rev, growth: b.growthMOM });
       });
     });
@@ -643,7 +673,7 @@
     f.areas.forEach(function (areaName) {
       var area = _amData[areaName];
       if (!area) return;
-      area.branches.forEach(function (b) {
+      _amFilterBranches(area.branches, f.channel).forEach(function (b) {
         var rev = f.monthNum ? (b[String(f.monthNum)] || 0) : (b.total || 0);
         var row = { area: areaName, code: b.code || '', revenue: rev, growth: b.growthMOM };
         MONTH_NUMS.forEach(function (mi) { row['m' + mi] = b[String(mi)] || 0; });
@@ -670,7 +700,7 @@
     if (!area) { wrap.innerHTML = ''; return; }
 
     var rows = [];
-    area.branches.forEach(function (b) {
+    _amFilterBranches(area.branches, f.channel).forEach(function (b) {
       var rev = f.monthNum ? (b[String(f.monthNum)] || 0) : (b.total || 0);
       var row = { area: selectedArea, code: b.code || '', revenue: rev, growth: b.growthMOM };
       MONTH_NUMS.forEach(function (mi) { row['m' + mi] = b[String(mi)] || 0; });
@@ -690,7 +720,7 @@
     f.areas.forEach(function (areaName) {
       var area = _amData[areaName];
       if (!area) return;
-      area.branches.forEach(function (b) {
+      _amFilterBranches(area.branches, f.channel).forEach(function (b) {
         var row = {
           area: areaName,
           code: b.code || '',
@@ -817,7 +847,7 @@
     var allBranches = 0;
     f.areas.forEach(function (areaName) {
       var area = _amData[areaName];
-      if (area) allBranches += area.branches.length;
+      if (area) allBranches += _amFilterBranches(area.branches, f.channel).length;
     });
     var totalPages = Math.ceil(allBranches / _amPageSize) || 1;
 
