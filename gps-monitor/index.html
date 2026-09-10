@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GPS Realtime Monitor — ระบบติดตามทีมงานนอกสถานที่</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0e1420; --bg2:#151d2c; --bg3:#1c2637;
+    --line:#26324a; --line2:#334159;
+    --txt:#e8edf5; --txt2:#95a3bb; --txt3:#61708c;
+    --gold:#c9a227; --gold2:#e5bb35;
+    --run:#22c55e; --stop:#f59e0b; --off:#64748b; --alert:#ef4444;
+    --sidebar:352px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    font-family:'IBM Plex Sans Thai',system-ui,sans-serif;
+    background:var(--bg); color:var(--txt);
+    display:flex; flex-direction:column; overflow:hidden;
+  }
+
+  /* ---------- Top bar ---------- */
+  header{
+    height:56px; flex:0 0 56px; background:var(--bg2);
+    border-bottom:1px solid var(--line);
+    display:flex; align-items:center; gap:18px; padding:0 18px; z-index:1200;
+  }
+  .brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:15px;letter-spacing:.2px}
+  .brand .dot{width:26px;height:26px;border-radius:7px;background:linear-gradient(135deg,var(--gold2),var(--gold));
+    display:grid;place-items:center;color:#241c00;font-size:14px}
+  .brand small{display:block;font-weight:400;font-size:11px;color:var(--txt3);letter-spacing:0}
+
+  .stats{display:flex;gap:8px;margin-left:8px}
+  .stat{
+    background:var(--bg3);border:1px solid var(--line);border-radius:9px;
+    padding:6px 13px;min-width:76px;cursor:pointer;transition:.15s;
+  }
+  .stat:hover{border-color:var(--line2)}
+  .stat.on{border-color:var(--gold);background:#251f0c}
+  .stat b{display:block;font-size:17px;line-height:1.15;font-variant-numeric:tabular-nums}
+  .stat span{font-size:11px;color:var(--txt2)}
+  .stat.run b{color:var(--run)} .stat.stop b{color:var(--stop)} .stat.off b{color:var(--off)}
+
+  .spacer{flex:1}
+  .live{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--txt2);
+    background:var(--bg3);border:1px solid var(--line);border-radius:20px;padding:5px 13px}
+  .pulse{width:7px;height:7px;border-radius:50%;background:var(--run);animation:p 1.6s infinite}
+  @keyframes p{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(34,197,94,.6)}50%{opacity:.55;box-shadow:0 0 0 5px rgba(34,197,94,0)}}
+  .clock{font-size:13px;color:var(--txt);font-variant-numeric:tabular-nums;letter-spacing:.4px}
+
+  /* ---------- Layout ---------- */
+  .wrap{flex:1;display:flex;min-height:0}
+  aside{
+    width:var(--sidebar); flex:0 0 var(--sidebar); background:var(--bg2);
+    border-right:1px solid var(--line); display:flex; flex-direction:column; min-height:0;
+  }
+  .search{padding:12px 12px 9px;border-bottom:1px solid var(--line)}
+  .search input{
+    width:100%;background:var(--bg3);border:1px solid var(--line);border-radius:9px;
+    padding:9px 12px 9px 34px;color:var(--txt);font-family:inherit;font-size:13px;outline:none;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='15' height='15' fill='none' stroke='%2361708c' stroke-width='2'%3E%3Ccircle cx='6.5' cy='6.5' r='5'/%3E%3Cpath d='M10.5 10.5L14 14'/%3E%3C/svg%3E");
+    background-repeat:no-repeat;background-position:11px center;
+  }
+  .search input:focus{border-color:var(--gold)}
+
+  .tabs{display:flex;border-bottom:1px solid var(--line);background:var(--bg2)}
+  .tab{flex:1;padding:10px 0;text-align:center;font-size:12.5px;color:var(--txt2);
+    cursor:pointer;border-bottom:2px solid transparent;transition:.15s}
+  .tab:hover{color:var(--txt)}
+  .tab.on{color:var(--gold2);border-bottom-color:var(--gold)}
+
+  .list{flex:1;overflow-y:auto;overscroll-behavior:contain}
+  .list::-webkit-scrollbar{width:8px}
+  .list::-webkit-scrollbar-thumb{background:var(--line2);border-radius:4px}
+
+  .unit{
+    display:flex;gap:11px;padding:11px 13px;border-bottom:1px solid var(--line);
+    cursor:pointer;transition:.12s;position:relative;
+  }
+  .unit:hover{background:var(--bg3)}
+  .unit.on{background:#1d2740}
+  .unit.on::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--gold)}
+  .av{
+    width:38px;height:38px;flex:0 0 38px;border-radius:10px;display:grid;place-items:center;
+    font-size:17px;background:var(--bg3);border:1px solid var(--line2);position:relative;
+  }
+  .av .sd{position:absolute;right:-2px;bottom:-2px;width:11px;height:11px;border-radius:50%;
+    border:2px solid var(--bg2)}
+  .u-body{flex:1;min-width:0}
+  .u-top{display:flex;align-items:baseline;gap:7px}
+  .u-name{font-size:13.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .u-code{font-size:10.5px;color:var(--txt3);flex:0 0 auto}
+  .u-loc{font-size:11.5px;color:var(--txt2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px}
+  .u-meta{display:flex;gap:9px;font-size:11px;color:var(--txt3);margin-top:4px;align-items:center}
+  .chip{padding:1.5px 7px;border-radius:5px;font-size:10.5px;font-weight:500}
+  .chip.run{background:rgba(34,197,94,.13);color:var(--run)}
+  .chip.stop{background:rgba(245,158,11,.13);color:var(--stop)}
+  .chip.off{background:rgba(100,116,139,.16);color:#94a3b8}
+
+  /* ---------- Event feed ---------- */
+  .feed{border-top:1px solid var(--line);background:var(--bg);max-height:190px;display:flex;flex-direction:column}
+  .feed h4{padding:9px 13px;font-size:11.5px;color:var(--txt2);font-weight:600;
+    border-bottom:1px solid var(--line);display:flex;align-items:center;gap:7px;letter-spacing:.3px}
+  .feed-list{overflow-y:auto;padding:4px 0}
+  .feed-list::-webkit-scrollbar{width:8px}
+  .feed-list::-webkit-scrollbar-thumb{background:var(--line2);border-radius:4px}
+  .ev{display:flex;gap:9px;padding:7px 13px;font-size:11.5px;line-height:1.45;align-items:flex-start}
+  .ev-i{width:19px;height:19px;flex:0 0 19px;border-radius:5px;display:grid;place-items:center;font-size:10px;margin-top:1px}
+  .ev-t{color:var(--txt3);font-size:10.5px;flex:0 0 auto;font-variant-numeric:tabular-nums}
+  .ev b{font-weight:600}
+
+  /* ---------- Map ---------- */
+  main{flex:1;position:relative;min-width:0}
+  #map{position:absolute;inset:0;background:var(--bg)}
+  .leaflet-container{font-family:inherit;background:#0b1018}
+  .leaflet-control-zoom a{background:var(--bg2)!important;color:var(--txt)!important;border-color:var(--line)!important}
+  .leaflet-control-zoom a:hover{background:var(--bg3)!important}
+  .leaflet-control-attribution{background:rgba(14,20,32,.8)!important;color:var(--txt3)!important;font-size:10px}
+  .leaflet-control-attribution a{color:var(--txt2)!important}
+
+  /* Vehicle marker */
+  .mk{position:relative;width:34px;height:34px}
+  .mk .ring{position:absolute;inset:0;border-radius:50%;border:2px solid #fff;
+    box-shadow:0 2px 10px rgba(0,0,0,.55);display:grid;place-items:center;font-size:15px;
+    transition:transform .3s}
+  .mk .arrow{position:absolute;left:50%;top:-9px;margin-left:-5px;width:0;height:0;
+    border-left:5px solid transparent;border-right:5px solid transparent;border-bottom:9px solid #fff;
+    transform-origin:5px 22px;}
+  .mk.sel .ring{box-shadow:0 0 0 4px rgba(201,162,39,.45),0 2px 12px rgba(0,0,0,.6)}
+  .mk .lbl{position:absolute;top:37px;left:50%;transform:translateX(-50%);white-space:nowrap;
+    background:rgba(14,20,32,.9);border:1px solid var(--line2);border-radius:5px;padding:1px 6px;
+    font-size:10.5px;color:var(--txt);font-weight:500}
+
+  .leaflet-popup-content-wrapper{background:var(--bg2);color:var(--txt);border-radius:11px;
+    border:1px solid var(--line2);box-shadow:0 10px 34px rgba(0,0,0,.55)}
+  .leaflet-popup-tip{background:var(--bg2);border:1px solid var(--line2)}
+  .leaflet-popup-content{margin:0;width:250px!important;font-family:inherit}
+  .pop-h{padding:11px 13px 9px;border-bottom:1px solid var(--line);display:flex;gap:9px;align-items:center}
+  .pop-h .av{width:32px;height:32px;flex:0 0 32px;font-size:15px}
+  .pop-h b{font-size:13.5px;display:block}
+  .pop-h span{font-size:11px;color:var(--txt3)}
+  .pop-b{padding:9px 13px 11px}
+  .pop-r{display:flex;justify-content:space-between;font-size:12px;padding:3.5px 0}
+  .pop-r span{color:var(--txt2)}
+  .pop-r b{font-weight:500;font-variant-numeric:tabular-nums}
+  .pop-btn{display:block;width:100%;margin-top:9px;padding:7px;border-radius:7px;border:1px solid var(--line2);
+    background:var(--bg3);color:var(--txt);font-family:inherit;font-size:12px;cursor:pointer}
+  .pop-btn:hover{border-color:var(--gold);color:var(--gold2)}
+
+  /* Floating controls */
+  .fc{position:absolute;top:12px;right:12px;z-index:900;display:flex;flex-direction:column;gap:7px;align-items:flex-end}
+  .fbtn{background:var(--bg2);border:1px solid var(--line);border-radius:9px;padding:8px 13px;
+    color:var(--txt2);font-family:inherit;font-size:12.5px;cursor:pointer;display:flex;align-items:center;gap:7px;
+    box-shadow:0 3px 12px rgba(0,0,0,.35);white-space:nowrap}
+  .fbtn:hover{border-color:var(--line2);color:var(--txt)}
+  .fbtn.on{border-color:var(--gold);color:var(--gold2);background:#251f0c}
+
+  .legend{position:absolute;left:12px;bottom:12px;z-index:900;background:rgba(21,29,44,.94);
+    border:1px solid var(--line);border-radius:10px;padding:10px 13px;font-size:11.5px;
+    box-shadow:0 3px 14px rgba(0,0,0,.4)}
+  .legend div{display:flex;align-items:center;gap:8px;padding:2.5px 0;color:var(--txt2)}
+  .legend i{width:9px;height:9px;border-radius:50%;display:inline-block}
+
+  .banner{position:absolute;top:12px;left:50%;transform:translateX(-50%);z-index:950;
+    background:rgba(201,162,39,.14);border:1px solid rgba(201,162,39,.45);color:var(--gold2);
+    padding:6px 15px;border-radius:20px;font-size:11.5px;backdrop-filter:blur(6px)}
+
+  @media(max-width:900px){
+    :root{--sidebar:100%}
+    .wrap{flex-direction:column}
+    aside{flex:0 0 46%;border-right:none;border-bottom:1px solid var(--line)}
+    .stats{display:none}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <div class="dot">◎</div>
+    <div>GPS Realtime Monitor<small>ระบบติดตามทีมงานนอกสถานที่</small></div>
+  </div>
+
+  <div class="stats">
+    <div class="stat on"      data-f="all"><b id="s-all">0</b><span>ทั้งหมด</span></div>
+    <div class="stat run"     data-f="run"><b id="s-run">0</b><span>กำลังวิ่ง</span></div>
+    <div class="stat stop"    data-f="stop"><b id="s-stop">0</b><span>จอด</span></div>
+    <div class="stat off"     data-f="off"><b id="s-off">0</b><span>ออฟไลน์</span></div>
+  </div>
+
+  <div class="spacer"></div>
+  <div class="live"><i class="pulse"></i> เชื่อมต่ออยู่ · อัปเดตทุก 3 วิ</div>
+  <div class="clock" id="clock">--:--:--</div>
+</header>
+
+<div class="wrap">
+  <aside>
+    <div class="search"><input id="q" placeholder="ค้นหาชื่อ / รหัส / ทะเบียน..."></div>
+    <div class="tabs">
+      <div class="tab on" data-t="all">ทั้งหมด</div>
+      <div class="tab" data-t="car">รถ</div>
+      <div class="tab" data-t="man">พนักงาน</div>
+    </div>
+    <div class="list" id="list"></div>
+
+    <div class="feed">
+      <h4>⚡ เหตุการณ์ล่าสุด</h4>
+      <div class="feed-list" id="feed"></div>
+    </div>
+  </aside>
+
+  <main>
+    <div id="map"></div>
+    <div class="banner">ข้อมูลจำลองสำหรับสาธิต — ยังไม่ได้ต่อกับอุปกรณ์จริง</div>
+    <div class="fc">
+      <button class="fbtn" id="b-follow">🎯 ตามหน่วยที่เลือก</button>
+      <button class="fbtn on" id="b-trail">〰️ แสดงเส้นทาง</button>
+      <button class="fbtn on" id="b-fence">⬡ พื้นที่ลูกค้า</button>
+      <button class="fbtn on" id="b-label">🏷️ ป้ายชื่อ</button>
+      <button class="fbtn" id="b-fit">⤢ ดูภาพรวม</button>
+    </div>
+    <div class="legend">
+      <div><i style="background:#22c55e"></i> กำลังวิ่ง</div>
+      <div><i style="background:#f59e0b"></i> จอด / พัก</div>
+      <div><i style="background:#64748b"></i> ออฟไลน์</div>
+    </div>
+  </main>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+/* ============================================================
+   GPS Realtime Monitor — Prototype
+   ข้อมูลทั้งหมดเป็นข้อมูลจำลอง (simulated) ที่สร้างในเบราว์เซอร์
+   ถ้าจะต่อของจริง: แทนที่ tick() ด้วย Supabase Realtime subscribe
+   ============================================================ */
+
+/* ---------- 1. เส้นทางจำลอง (waypoints รอบกรุงเทพฯ) ---------- */
+const ROUTES = {
+  silom:   [[13.7290,100.5340],[13.7250,100.5290],[13.7215,100.5245],[13.7248,100.5175],[13.7305,100.5210],[13.7340,100.5290],[13.7290,100.5340]],
+  ratchada:[[13.7690,100.5695],[13.7810,100.5740],[13.7935,100.5760],[13.8020,100.5680],[13.7900,100.5610],[13.7760,100.5620],[13.7690,100.5695]],
+  bangna:  [[13.6680,100.6050],[13.6820,100.6210],[13.6960,100.6395],[13.7080,100.6280],[13.6950,100.6110],[13.6790,100.5980],[13.6680,100.6050]],
+  rama2:   [[13.7010,100.4680],[13.6870,100.4520],[13.6720,100.4390],[13.6810,100.4600],[13.6930,100.4790],[13.7010,100.4680]],
+  ramkham: [[13.7540,100.6160],[13.7650,100.6320],[13.7780,100.6450],[13.7860,100.6270],[13.7720,100.6120],[13.7600,100.6040],[13.7540,100.6160]],
+  chaeng:  [[13.8480,100.5610],[13.8620,100.5790],[13.8760,100.5940],[13.8650,100.6090],[13.8490,100.5920],[13.8400,100.5750],[13.8480,100.5610]],
+  phahon:  [[13.8040,100.5440],[13.8210,100.5460],[13.8390,100.5480],[13.8300,100.5310],[13.8130,100.5290],[13.8040,100.5440]],
+  sathorn: [[13.7180,100.5290],[13.7120,100.5410],[13.7060,100.5540],[13.7150,100.5620],[13.7230,100.5490],[13.7180,100.5290]],
+};
+
+/* ---------- 2. หน่วยที่ติดตาม ---------- */
+const SEED = [
+  {id:'V-101', kind:'car', name:'สมชาย  วงศ์ไพศาล', code:'ทะเบียน 2กก-4471', icon:'🚚', team:'ทีมจัดส่ง A',  route:'silom',    t:0.00, spd:38},
+  {id:'V-102', kind:'car', name:'ประเสริฐ  ใจดี',    code:'ทะเบียน 5ขค-8820', icon:'🚚', team:'ทีมจัดส่ง A',  route:'ratchada', t:0.20, spd:45},
+  {id:'V-103', kind:'car', name:'วิชัย  ตั้งมั่น',    code:'ทะเบียน 1งจ-1055', icon:'🚐', team:'ทีมจัดส่ง B',  route:'bangna',   t:0.55, spd:52},
+  {id:'V-104', kind:'car', name:'อนุชา  แสงทอง',     code:'ทะเบียน 8ฉช-3390', icon:'🚚', team:'ทีมจัดส่ง B',  route:'rama2',    t:0.75, spd:0 },
+  {id:'S-201', kind:'man', name:'ธนพล  รัตนกุล',     code:'พนักงานขาย · เขต 1', icon:'🧑‍💼', team:'ฝ่ายขาย',     route:'ramkham',  t:0.35, spd:22},
+  {id:'S-202', kind:'man', name:'กัญญา  ศรีสุข',    code:'พนักงานขาย · เขต 2', icon:'👩‍💼', team:'ฝ่ายขาย',    route:'chaeng',   t:0.10, spd:28},
+  {id:'S-203', kind:'man', name:'ณัฐวุฒิ  พรมมา',   code:'ช่างบริการ · ทีม 1', icon:'🧰', team:'ฝ่ายบริการ',  route:'phahon',   t:0.60, spd:0 },
+  {id:'S-204', kind:'man', name:'ปิยะ  มณีรัตน์',    code:'ช่างบริการ · ทีม 2', icon:'🧰', team:'ฝ่ายบริการ',  route:'sathorn',  t:0.85, spd:19, offline:true},
+];
+
+/* ---------- 3. พื้นที่ลูกค้า (Geofence) ---------- */
+const FENCES = [
+  {name:'คลังสินค้าบางนา',   lat:13.6960, lng:100.6395, r:450},
+  {name:'ลูกค้า — สาขาพหลโยธิน', lat:13.8210, lng:100.5460, r:380},
+  {name:'สำนักงานใหญ่ สีลม', lat:13.7248, lng:100.5175, r:400},
+  {name:'ศูนย์กระจายสินค้า พระราม 2', lat:13.6720, lng:100.4390, r:500},
+];
+
+const SPEED_LIMIT = 65;   // กม./ชม. — เกินกว่านี้แจ้งเตือน
+
+const PLACES = ['ถ.สีลม','ถ.สาทรใต้','ถ.พระราม 4','ถ.รัชดาภิเษก','ถ.ลาดพร้าว','ถ.บางนา-ตราด','ถ.ศรีนครินทร์','ถ.พระราม 2','ถ.รามคำแหง','ถ.แจ้งวัฒนะ','ถ.พหลโยธิน','ถ.วิภาวดีรังสิต','ถ.เพชรบุรีตัดใหม่','ถ.สุขุมวิท'];
+
+/* ---------- 4. State ---------- */
+let units = SEED.map((u,i)=>({
+  ...u,
+  lat:0, lng:0, hdg:0,
+  trail:[],
+  odo: 40 + i*23.5,
+  lastSeen: Date.now(),
+  inFence: null,
+  place: PLACES[i % PLACES.length],
+}));
+let selected = null, filter = 'all', tab = 'all', query = '';
+let follow = false, showTrail = true, showFence = true, showLabel = true;
+
+/* ---------- 5. Map ---------- */
+const map = L.map('map',{zoomControl:true, attributionControl:true}).setView([13.7563,100.5518],11);
+L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{
+  attribution:'&copy; OpenStreetMap &copy; CARTO', maxZoom:19, subdomains:'abcd'
+}).addTo(map);
+
+const fenceLayer = L.layerGroup().addTo(map);
+const trailLayer = L.layerGroup().addTo(map);
+const markerLayer= L.layerGroup().addTo(map);
+
+FENCES.forEach(f=>{
+  L.circle([f.lat,f.lng],{radius:f.r,color:'#c9a227',weight:1.4,fillColor:'#c9a227',fillOpacity:.09,dashArray:'5,5'})
+   .bindTooltip(f.name,{direction:'top',className:'fence-tip'}).addTo(fenceLayer);
+});
+
+const markers = {}, trails = {};
+
+/* ---------- 6. Simulation engine ---------- */
+function lerp(a,b,t){return a+(b-a)*t}
+function posOnRoute(routeKey, t){
+  const pts = ROUTES[routeKey];
+  const total = pts.length - 1;
+  const f = (t % 1) * total;
+  const i = Math.floor(f), frac = f - i;
+  const a = pts[i], b = pts[Math.min(i+1, total)];
+  const lat = lerp(a[0],b[0],frac), lng = lerp(a[1],b[1],frac);
+  const hdg = (Math.atan2(b[1]-a[1], b[0]-a[0]) * 180/Math.PI + 360) % 360;
+  return {lat,lng,hdg};
+}
+function dist(a,b,c,d){ // metres, haversine-lite
+  const R=6371000, dLat=(c-a)*Math.PI/180, dLng=(d-b)*Math.PI/180;
+  const x=Math.sin(dLat/2)**2 + Math.cos(a*Math.PI/180)*Math.cos(c*Math.PI/180)*Math.sin(dLng/2)**2;
+  return 2*R*Math.asin(Math.sqrt(x));
+}
+// ความยาวจริงของแต่ละเส้นทาง (กม.) — ใช้แปลง กม./ชม. ให้เป็นการเดินหน้าบน route
+const ROUTE_KM = {};
+Object.entries(ROUTES).forEach(([k,pts])=>{
+  let m = 0;
+  for(let i=0;i<pts.length-1;i++) m += dist(pts[i][0],pts[i][1],pts[i+1][0],pts[i+1][1]);
+  ROUTE_KM[k] = m/1000;
+});
+
+function statusOf(u){
+  if(u.offline) return 'off';
+  return u.spd > 3 ? 'run' : 'stop';
+}
+const COLOR = {run:'#22c55e', stop:'#f59e0b', off:'#64748b'};
+const LABEL = {run:'กำลังวิ่ง', stop:'จอด', off:'ออฟไลน์'};
+
+// ตำแหน่งเริ่มต้น
+units.forEach(u=>{ Object.assign(u, posOnRoute(u.route,u.t)); u.trail=[[u.lat,u.lng]]; });
+
+function tick(){
+  const now = Date.now();
+  units.forEach(u=>{
+    if(u.offline) return;                       // ออฟไลน์ = ไม่มีพิกัดเข้ามา
+
+    // สุ่มให้จอด/ออกตัวเป็นระยะ ให้ดูสมจริง
+    if(Math.random() < 0.012) u.spd = u.spd > 3 ? 0 : 20 + Math.random()*38;
+    if(u.spd > 3) u.spd = Math.max(8, Math.min(72, u.spd + (Math.random()-0.5)*9));
+
+    const prev = {lat:u.lat, lng:u.lng};
+    // ระยะที่วิ่งได้ใน 1 tick (3 วิ) = spd กม./ชม. × 3/3600 ชม. → แปลงเป็นสัดส่วนของเส้นทาง
+    u.t += (u.spd * 3 / 3600) / ROUTE_KM[u.route];
+    Object.assign(u, posOnRoute(u.route, u.t));
+    u.odo += dist(prev.lat,prev.lng,u.lat,u.lng)/1000;
+    u.lastSeen = now;
+    u.place = PLACES[Math.floor(u.t*7 + u.id.charCodeAt(2)) % PLACES.length];
+
+    // เก็บเส้นทาง (จำกัด 160 จุด เหมือน retention จริง)
+    const last = u.trail[u.trail.length-1];
+    if(!last || dist(last[0],last[1],u.lat,u.lng) > 30){
+      u.trail.push([u.lat,u.lng]);
+      if(u.trail.length > 160) u.trail.shift();
+    }
+
+    // แจ้งเตือนความเร็วเกิน (กันแจ้งซ้ำด้วยแฟลก)
+    if(u.spd > SPEED_LIMIT && !u.speeding){ u.speeding = true; addEvent('spd', u); }
+    else if(u.spd < SPEED_LIMIT - 6) u.speeding = false;
+
+    // ตรวจเข้า-ออกพื้นที่ลูกค้า
+    const hit = FENCES.find(f => dist(u.lat,u.lng,f.lat,f.lng) < f.r);
+    if(hit && u.inFence !== hit.name){ u.inFence = hit.name; addEvent('in', u, hit.name); }
+    else if(!hit && u.inFence){ addEvent('out', u, u.inFence); u.inFence = null; }
+  });
+  render();
+}
+
+/* ---------- 7. Event feed ---------- */
+const events = [];
+function addEvent(type, u, place){
+  const cfg = {
+    in:  {i:'📍', bg:'rgba(34,197,94,.14)',  c:'#22c55e', txt:`เข้าพื้นที่ <b>${place}</b>`},
+    out: {i:'🚪', bg:'rgba(148,163,184,.14)',c:'#94a3b8', txt:`ออกจาก <b>${place}</b>`},
+    spd: {i:'⚠️', bg:'rgba(239,68,68,.14)',  c:'#ef4444', txt:`ใช้ความเร็ว <b>${u.spd.toFixed(0)} กม./ชม.</b> เกินกำหนด`},
+  }[type];
+  events.unshift({cfg, name:u.name.split('  ')[0], time:new Date()});
+  if(events.length > 40) events.pop();
+  renderFeed();
+}
+function renderFeed(){
+  document.getElementById('feed').innerHTML = events.map(e=>`
+    <div class="ev">
+      <div class="ev-i" style="background:${e.cfg.bg};color:${e.cfg.c}">${e.cfg.i}</div>
+      <div style="flex:1"><b>${e.name}</b> ${e.cfg.txt}</div>
+      <div class="ev-t">${e.time.toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'})}</div>
+    </div>`).join('') || `<div style="padding:14px;text-align:center;color:var(--txt3);font-size:11.5px">ยังไม่มีเหตุการณ์</div>`;
+}
+
+/* ---------- 8. Render ---------- */
+function visible(){
+  return units.filter(u=>{
+    if(tab !== 'all' && u.kind !== tab) return false;
+    if(filter !== 'all' && statusOf(u) !== filter) return false;
+    if(query){
+      const s = (u.name+u.code+u.id+u.team).toLowerCase();
+      if(!s.includes(query.toLowerCase())) return false;
+    }
+    return true;
+  });
+}
+
+function markerHtml(u, st){
+  return `<div class="mk ${selected===u.id?'sel':''}">
+    ${st!=='off' ? `<div class="arrow" style="transform:rotate(${u.hdg}deg)"></div>` : ''}
+    <div class="ring" style="background:${COLOR[st]}">${u.icon}</div>
+    ${showLabel ? `<div class="lbl">${u.name.split('  ')[0]}</div>` : ''}
+  </div>`;
+}
+
+function render(){
+  const vis = visible(), visIds = new Set(vis.map(u=>u.id));
+
+  // --- markers ---
+  units.forEach(u=>{
+    const st = statusOf(u);
+    if(!visIds.has(u.id)){
+      if(markers[u.id]){ markerLayer.removeLayer(markers[u.id]); delete markers[u.id]; }
+      return;
+    }
+    const icon = L.divIcon({html:markerHtml(u,st), className:'', iconSize:[34,34], iconAnchor:[17,17]});
+    if(markers[u.id]){
+      markers[u.id].setLatLng([u.lat,u.lng]).setIcon(icon);
+    }else{
+      markers[u.id] = L.marker([u.lat,u.lng],{icon, zIndexOffset: st==='run'?400:100})
+        .on('click',()=>select(u.id)).addTo(markerLayer);
+    }
+    const html = popupHtml(u, st);
+    if(markers[u.id].getPopup()) markers[u.id].setPopupContent(html);
+    else markers[u.id].bindPopup(html, {closeButton:true, autoPan:false, offset:[0,-8]});
+  });
+
+  // --- trails ---
+  trailLayer.clearLayers();
+  if(showTrail){
+    vis.forEach(u=>{
+      if(u.trail.length < 2) return;
+      const isSel = selected === u.id;
+      L.polyline(u.trail,{
+        color: isSel ? '#e5bb35' : COLOR[statusOf(u)],
+        weight: isSel ? 3.5 : 1.8,
+        opacity: isSel ? .95 : .34,
+      }).addTo(trailLayer);
+    });
+  }
+
+  // --- follow ---
+  if(follow && selected){
+    const u = units.find(x=>x.id===selected);
+    if(u) map.panTo([u.lat,u.lng],{animate:true,duration:.6});
+  }
+
+  renderList(vis);
+  renderStats();
+}
+
+function popupHtml(u, st){
+  const ago = Math.round((Date.now()-u.lastSeen)/1000);
+  return `<div class="pop-h">
+      <div class="av" style="border-color:${COLOR[st]}">${u.icon}<i class="sd" style="background:${COLOR[st]}"></i></div>
+      <div><b>${u.name}</b><span>${u.id} · ${u.team}</span></div>
+    </div>
+    <div class="pop-b">
+      <div class="pop-r"><span>สถานะ</span><b style="color:${COLOR[st]}">${LABEL[st]}</b></div>
+      <div class="pop-r"><span>ความเร็ว</span><b>${st==='off'?'—':u.spd.toFixed(0)+' กม./ชม.'}</b></div>
+      <div class="pop-r"><span>ตำแหน่ง</span><b>${u.place}</b></div>
+      <div class="pop-r"><span>พิกัด</span><b style="font-size:11px">${u.lat.toFixed(5)}, ${u.lng.toFixed(5)}</b></div>
+      <div class="pop-r"><span>ระยะทางวันนี้</span><b>${u.odo.toFixed(1)} กม.</b></div>
+      <div class="pop-r"><span>อัปเดตล่าสุด</span><b>${st==='off' ? '38 นาทีที่แล้ว' : (ago<5?'เมื่อสักครู่':ago+' วิที่แล้ว')}</b></div>
+      ${u.inFence ? `<div class="pop-r"><span>อยู่ในพื้นที่</span><b style="color:#22c55e">${u.inFence}</b></div>` : ''}
+      <button class="pop-btn" onclick="toggleFollow('${u.id}')">🎯 ติดตามหน่วยนี้</button>
+    </div>`;
+}
+
+function renderList(vis){
+  document.getElementById('list').innerHTML = vis.map(u=>{
+    const st = statusOf(u);
+    return `<div class="unit ${selected===u.id?'on':''}" data-id="${u.id}">
+      <div class="av" style="border-color:${COLOR[st]}33">${u.icon}<i class="sd" style="background:${COLOR[st]}"></i></div>
+      <div class="u-body">
+        <div class="u-top">
+          <div class="u-name">${u.name}</div>
+          <div class="u-code">${u.id}</div>
+        </div>
+        <div class="u-loc">${u.code}</div>
+        <div class="u-meta">
+          <span class="chip ${st}">${LABEL[st]}</span>
+          <span>${st==='off' ? 'ขาดสัญญาณ 38 นาที' : u.spd.toFixed(0)+' กม./ชม.'}</span>
+          <span>· ${u.place}</span>
+        </div>
+      </div>
+    </div>`;
+  }).join('') || `<div style="padding:26px;text-align:center;color:var(--txt3);font-size:12.5px">ไม่พบหน่วยที่ตรงกับเงื่อนไข</div>`;
+
+  document.querySelectorAll('.unit').forEach(el=>{
+    el.onclick = ()=> select(el.dataset.id, true);
+  });
+}
+
+function renderStats(){
+  const c = {all:units.length, run:0, stop:0, off:0};
+  units.forEach(u=> c[statusOf(u)]++ );
+  ['all','run','stop','off'].forEach(k=> document.getElementById('s-'+k).textContent = c[k]);
+}
+
+/* ---------- 9. Interaction ---------- */
+function select(id, fly){
+  selected = (selected === id) ? null : id;
+  if(selected && fly){
+    const u = units.find(x=>x.id===selected);
+    map.flyTo([u.lat,u.lng], Math.max(map.getZoom(),14), {duration:.8});
+    setTimeout(()=> markers[u.id] && markers[u.id].openPopup(), 850);
+  }
+  render();
+}
+window.toggleFollow = function(id){
+  selected = id; follow = true;
+  document.getElementById('b-follow').classList.add('on');
+  render();
+};
+
+document.querySelectorAll('.stat').forEach(el=>{
+  el.onclick = ()=>{
+    filter = el.dataset.f;
+    document.querySelectorAll('.stat').forEach(x=>x.classList.toggle('on', x===el));
+    render();
+  };
+});
+document.querySelectorAll('.tab').forEach(el=>{
+  el.onclick = ()=>{
+    tab = el.dataset.t;
+    document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('on', x===el));
+    render();
+  };
+});
+document.getElementById('q').oninput = e=>{ query = e.target.value.trim(); render(); };
+
+const toggle = (btnId, setter)=>{
+  const b = document.getElementById(btnId);
+  b.onclick = ()=>{ const on = !b.classList.contains('on'); b.classList.toggle('on',on); setter(on); render(); };
+};
+toggle('b-trail', v=> showTrail=v);
+toggle('b-label', v=> showLabel=v);
+toggle('b-fence', v=>{ showFence=v; v ? fenceLayer.addTo(map) : map.removeLayer(fenceLayer); });
+toggle('b-follow',v=> follow=v);
+document.getElementById('b-fit').onclick = ()=>{
+  const vis = visible();
+  if(vis.length) map.fitBounds(L.latLngBounds(vis.map(u=>[u.lat,u.lng])).pad(.25));
+};
+
+/* ---------- 10. Boot ---------- */
+setInterval(()=>{
+  document.getElementById('clock').textContent = new Date().toLocaleTimeString('th-TH',{hour12:false});
+},1000);
+
+render();
+renderFeed();
+setInterval(tick, 3000);   // ← จุดที่จะแทนด้วย Supabase Realtime ตอนต่อของจริง
+setTimeout(()=> document.getElementById('b-fit').click(), 400);
+</script>
+</body>
+</html>
