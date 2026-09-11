@@ -35,6 +35,7 @@
   var _MO_TH = ['','ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
 
   var _MON_IDX = {Jan:'01',Feb:'02',Mar:'03',Apr:'04',May:'05',Jun:'06',Jul:'07',Aug:'08',Sep:'09',Oct:'10',Nov:'11',Dec:'12'};
+  window._amzGetYearMonths = _amzGetYearMonths;
   function _amzGetYearMonths() {
     if (typeof AMZ_ORDER_DATA === 'undefined') return [];
     var all = AMZ_ORDER_DATA.months || [];
@@ -152,6 +153,9 @@
     _orderRendered = false;
     _amzComplaintRendered = false;
     if (_sovExploreMap) { _sovExploreMap.remove(); _sovExploreMap = null; }
+    if (typeof _mapBranchSales !== 'undefined') _mapBranchSales = {};
+    var mapKpi = document.getElementById('mapTierKPI');
+    if (mapKpi) mapKpi.removeAttribute('data-ym');
     // re-render the currently active page
     var nav = _amzFindNav(_amzBiCurrent);
     if (nav && nav.render && typeof window[nav.render] === 'function') {
