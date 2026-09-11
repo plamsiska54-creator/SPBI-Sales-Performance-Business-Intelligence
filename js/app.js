@@ -1819,33 +1819,45 @@ function renderOverview(){
   // ===== CHANNEL STATUS ALERT =====
   const btEl=document.getElementById('ovBelowTarget');
   if(btEl){
-    const chData=getChannelData(currentMonth);
-    var _btTitle=_isEN?'📊 Channel Performance Status':'📊 สถานะผลงานแต่ละช่องทาง';
-    var chs=CH_NAMES.filter(c=>(chData[c]?.t||0)>0);
+    var ytdData=getChannelData('YTD');
+    var fullYearTarget={};
+    MONTHS_12.forEach(function(mo){
+      var mData=CHANNEL_MONTHLY[mo]||{};
+      Object.keys(mData).forEach(function(k){
+        if(!fullYearTarget[k])fullYearTarget[k]=0;
+        fullYearTarget[k]+=(mData[k].t||0);
+      });
+    });
+    var _btTitle=_isEN?'📊 Channel Performance — Full Year Target vs Actual YTD':'📊 สถานะผลงานแต่ละช่องทาง — เป้าทั้งปี vs ยอดจริง YTD';
+    var chs=CH_NAMES.filter(c=>(fullYearTarget[c]||0)>0);
     if(!chs.length){btEl.innerHTML='';} else {
       btEl.innerHTML='<div class="card" style="border:1px solid #e2e8f0"><div class="card-title" style="color:#1e293b;margin-bottom:6px">'+_btTitle+'</div>'
       +'<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;font-size:11px">'
-      +'<span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:50%;background:#dc2626;display:inline-block"></span> '+(_isEN?'Below 80% = Below Target':'ต่ำกว่า 80% = ขาดเป้า')+'</span>'
-      +'<span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:50%;background:#f59e0b;display:inline-block"></span> '+(_isEN?'80–99% = Near Target':'80–99% = ใกล้ถึงเป้า')+'</span>'
-      +'<span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:50%;background:#16a34a;display:inline-block"></span> '+(_isEN?'100%+ = Target Met':'100%+ = ผ่านเป้า')+'</span>'
+      +'<span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:50%;background:#dc2626;display:inline-block"></span> '+(_isEN?'Below 50% = Critical':'ต่ำกว่า 50% = วิกฤต')+'</span>'
+      +'<span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:50%;background:#f59e0b;display:inline-block"></span> '+(_isEN?'50–74% = Behind':'50–74% = ต้องเร่ง')+'</span>'
+      +'<span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:50%;background:#16a34a;display:inline-block"></span> '+(_isEN?'75%+ = On Track':'75%+ = ตามเป้า')+'</span>'
       +'</div>'
       +'<div style="display:flex;gap:12px;flex-wrap:wrap">'+chs.map(function(c){
-        var t=chData[c]?.t||0,a=chData[c]?.a||0,ach=t?(a/t*100):0;
-        var gap=Math.abs(t-a);
+        var fy=fullYearTarget[c]||0,a=ytdData[c]?.a||0,ach=fy?(a/fy*100):0;
+        var remain=fy-a;var shortPct=fy?(remain/fy*100):0;
         var color,bg,border,badgeBg,statusText;
-        if(ach>=100){color='#16a34a';bg='#f0fdf4';border='#bbf7d0';badgeBg='#16a34a';statusText=_isEN?'Met':'ผ่านเป้า';}
-        else if(ach>=80){color='#d97706';bg='#fffbeb';border='#fde68a';badgeBg='#f59e0b';statusText=_isEN?'Near':'ใกล้ถึงเป้า';}
-        else{color='#dc2626';bg='#fef2f2';border='#fecaca';badgeBg='#dc2626';statusText=_isEN?'Short':'ขาดเป้า';}
-        var diffLabel=ach>=100?(_isEN?'Over target':'เกินเป้า'):(_isEN?'Shortfall':'ขาดเป้า');
-        var diffVal=a-t;var diffSign=diffVal>=0?'+':'';
-        return '<div style="flex:1;min-width:180px;background:'+bg+';border:1px solid '+border+';border-radius:12px;padding:16px">'
-          +'<div style="font-weight:700;font-size:14px;color:#374151;margin-bottom:4px">'+c+'</div>'
-          +'<div style="font-size:11px;color:#64748b">'+diffLabel+'</div>'
-          +'<div style="font-size:24px;font-weight:800;color:'+color+'">'+diffSign+(diffVal/1e6).toFixed(2)+' M</div>'
-          +'<div style="margin:6px 0"><span style="background:'+badgeBg+';color:#fff;font-size:11px;font-weight:700;padding:2px 8px;border-radius:10px">'+ach.toFixed(1)+'% '+statusText+'</span></div>'
-          +'<div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:8px">'
-          +'<div><div style="font-size:10px;color:#94a3b8;text-transform:uppercase;font-weight:700;letter-spacing:.5px">'+(_isEN?'Target':'เป้าหมาย')+'</div><div style="font-size:15px;font-weight:800;color:#374151">'+(t/1e6).toFixed(2)+' M</div></div>'
-          +'<div><div style="font-size:10px;color:#94a3b8;text-transform:uppercase;font-weight:700;letter-spacing:.5px">Actual</div><div style="font-size:15px;font-weight:800;color:'+color+'">'+(a/1e6).toFixed(2)+' M</div></div>'
+        if(ach>=75){color='#16a34a';bg='#f0fdf4';border='#bbf7d0';badgeBg='#16a34a';statusText=_isEN?'On Track':'ตามเป้า';}
+        else if(ach>=50){color='#d97706';bg='#fffbeb';border='#fde68a';badgeBg='#f59e0b';statusText=_isEN?'Behind':'ต้องเร่ง';}
+        else{color='#dc2626';bg='#fef2f2';border='#fecaca';badgeBg='#dc2626';statusText=_isEN?'Critical':'วิกฤต';}
+        var progressW=Math.min(ach,100);
+        return '<div style="flex:1;min-width:220px;background:'+bg+';border:1px solid '+border+';border-radius:12px;padding:16px">'
+          +'<div style="font-weight:700;font-size:14px;color:#374151;margin-bottom:8px">'+c+'</div>'
+          +'<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px">'
+          +'<div style="font-size:11px;color:#64748b">'+(_isEN?'Achieved':'ทำได้')+'</div>'
+          +'<div style="font-size:28px;font-weight:800;color:'+color+'">'+ach.toFixed(1)+'%</div>'
+          +'</div>'
+          +'<div style="background:#e2e8f0;border-radius:6px;height:8px;margin-bottom:10px;overflow:hidden"><div style="background:'+color+';height:100%;border-radius:6px;width:'+progressW+'%;transition:width .3s"></div></div>'
+          +'<div style="margin-bottom:8px"><span style="background:'+badgeBg+';color:#fff;font-size:11px;font-weight:700;padding:2px 10px;border-radius:10px">'+statusText+'</span>'
+          +'<span style="font-size:11px;color:#64748b;margin-left:8px">'+(_isEN?'Short':'ขาดอีก')+' '+shortPct.toFixed(1)+'%</span></div>'
+          +'<div style="display:flex;gap:16px;flex-wrap:wrap">'
+          +'<div><div style="font-size:10px;color:#94a3b8;text-transform:uppercase;font-weight:700;letter-spacing:.5px">'+(_isEN?'Full Year Target':'เป้าทั้งปี')+'</div><div style="font-size:15px;font-weight:800;color:#374151">'+(fy/1e6).toFixed(2)+' M</div></div>'
+          +'<div><div style="font-size:10px;color:#94a3b8;text-transform:uppercase;font-weight:700;letter-spacing:.5px">'+(_isEN?'Actual YTD':'ยอดจริง YTD')+'</div><div style="font-size:15px;font-weight:800;color:'+color+'">'+(a/1e6).toFixed(2)+' M</div></div>'
+          +'<div><div style="font-size:10px;color:#94a3b8;text-transform:uppercase;font-weight:700;letter-spacing:.5px">'+(_isEN?'Remaining':'ยอดที่เหลือ')+'</div><div style="font-size:15px;font-weight:800;color:#64748b">'+(remain/1e6).toFixed(2)+' M</div></div>'
           +'</div>'
           +'</div>';
       }).join('')+'</div></div>';
