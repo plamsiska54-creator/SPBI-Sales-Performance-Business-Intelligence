@@ -23,7 +23,7 @@ var Auth = (function () {
     'sales.manager@wanwanach.com':   { name: 'ผู้จัดการ', role: 'manager', email: 'sales.manager@wanwanach.com', allowedMenus: null },
     'secretary@wanwanach.com':       { name: 'เลขากรรมการบริหาร', role: 'manager', email: 'secretary@wanwanach.com', allowedMenus: null },
     'sale.analysis@wanwanach.com':   { name: 'แอดมิน', role: 'admin', email: 'sale.analysis@wanwanach.com', allowedMenus: null },
-    'moderntrade.support@wanwanach.com': { name: 'ซัพพอตเซลล์', role: 'officer', email: 'moderntrade.support@wanwanach.com', allowedMenus: null },
+    'moderntrade.support@wanwanach.com': { name: 'ซัพพอตเซลล์', role: 'officer', email: 'moderntrade.support@wanwanach.com', allowedMenus: ['overview','mt','booth','online','amazon','ordering','sm-expense','visit-plan','marketing','bakery','health-bento'] },
     'online.sale@wanwanach.com':     { name: 'เซลล์', role: 'sales', email: 'online.sale@wanwanach.com', allowedMenus: ['overview','sm-expense','online'] },
     'sales.amz.souvenir@wanwanach.com': { name: 'เซลล์ พี่ซี', role: 'sales', email: 'sales.amz.souvenir@wanwanach.com', allowedMenus: ['overview','sm-expense','amazon'] },
     'booth.sales@wanwanach.com':     { name: 'เซลล์', role: 'sales', email: 'booth.sales@wanwanach.com', allowedMenus: ['overview','sm-expense','amazon'] },
