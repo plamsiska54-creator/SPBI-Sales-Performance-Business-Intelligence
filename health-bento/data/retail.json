@@ -1,0 +1,965 @@
+{
+  "lastUpdated": "2026-08-19T18:10:00+07:00",
+  "note": "จำนวนสาขาและกฎการวางขายที่ทำเครื่องหมาย \"ยืนยันแล้ว\" ดึงจากแหล่งอ้างอิงสาธารณะ 5 แหล่งด้านล่าง — ส่วน GP ค่าแรกเข้า เครดิตเทอม ราคาบนชั้น และยอดขายต่อสาขา เป็นช่วงอ้างอิงตลาดที่ต้องยืนยันกับฝ่ายจัดซื้อของแต่ละห้างก่อนใช้เจรจาจริง",
+  "sources": [
+    {
+      "id": "S1",
+      "label": "Tops (Thai supermarket) — Wikipedia",
+      "url": "https://en.wikipedia.org/wiki/Tops_(Thai_supermarket)",
+      "confirms": "Tops เป็นซูเปอร์มาร์เก็ตที่ใหญ่ที่สุดในไทย · 235 สาขา (ตัวเลขในบทความ) · ก่อตั้ง 2539 · Tops Daily ขนาด 100-200 ตร.ม. · แปลง FamilyMart ~200 สาขาเป็น Tops Daily ในปี 2566"
+    },
+    {
+      "id": "S2",
+      "label": "Tops ทุ่ม 1,600 ล้าน ขยายสู่ 1,000 สาขา — Marketing Oops",
+      "url": "https://www.marketingoops.com/news/tops-28th-anniversary/",
+      "confirms": "แยกจำนวนสาขาตามรูปแบบ: Tops Daily 511 · Tops 141 · Tops Food Hall 20 · Wine Cellar 3 (รวม 702 สาขา 46 จังหวัด) · เป้า 1,000 สาขาในปี 2570 · ลงทุน 1,600 ล้านบาท · สินค้ากว่า 50,000 SKU · ลูกค้าเพิ่ม 11%"
+    },
+    {
+      "id": "S3",
+      "label": "Hypermarket คืออะไร — PN Store Retailer",
+      "url": "https://pnstoretailer.com/hypermarket/",
+      "confirms": "ประวัติและเจ้าของกิจการไฮเปอร์มาร์เก็ต: CP ซื้อ Tesco Lotus มูลค่า 338,445 ล้านบาท (5 พ.ย. 2563) · Big C เปิดปี 2537 — บทความนี้ไม่มีจำนวนสาขาปัจจุบัน"
+    },
+    {
+      "id": "S4",
+      "label": "Top Supermarket Chains in Thailand — Asia Pro Distribution",
+      "url": "https://asiapro-distribution.com/top-10-supermarket-chains-in-thailand-for-distribution/",
+      "confirms": "จำนวนสาขา: Lotus's 2,000+ · Big C 140+ · Gourmet Market 35+ · Villa Market 30+ · Foodland 16 · Makro 140+ · 7-Eleven 14,000+ · กฎ 7-Eleven: สินค้าต้องต่ำกว่า 45 บาท และหมุนเวียนอย่างน้อย 2 ชิ้น/สาขา/สัปดาห์ · มาร์จิ้นค้าปลีกทั้งตลาด 20-50% แล้วแต่ช่องทาง"
+    },
+    {
+      "id": "S5",
+      "label": "ร้านสะดวกซื้อสายพันธุ์ทุนใหญ่โตแรง-แข่งดุ — ไทยรัฐ",
+      "url": "https://www.thairath.co.th/money/economics/thailand_econ/2776204",
+      "confirms": "7-Eleven 14,545 สาขา (เพิ่ม 707 สาขาในปี 2566) · แผนขยายต่อปี: 7-Eleven 700 · Mini Big C 200-300 · CJ More 250 · Lotus's Go Fresh 120-150 · Tops Daily 8-10 · โมเดิร์นเทรดรวมกว่า 20,000 สาขา (ร้านสะดวกซื้อกว่า 90%) · ค้าปลีกมูลค่า 2.8 ล้านล้านบาท = 15.7% ของ GDP ปี 2566 โต 5-5.5%/ปี"
+    },
+    {
+      "id": "S6",
+      "label": "ซีพี แอ็กซ์ตร้า ผลประกอบการปี 2567 — CP Axtra / Wealthplus Today",
+      "url": "https://www.wealthplustoday.com/2025/02/18/cpaxt-7/",
+      "confirms": "รายได้รวมปี 2567 = 512,042 ลบ. · ค้าส่ง (Makro) 273,491 ลบ. · ค้าปลีก (Lotus's) 215,370 ลบ. · กำไรสุทธิ 10,837 ลบ. (+23.5%) · สาขา Q2/2567: Lotus's 2,520 (ไทย 2,451) · Makro 170 · Lotus's แยกฟอร์แมตปี 2566: ไฮเปอร์ 226 · ซูเปอร์ 178 · มินิ 2,050"
+    },
+    {
+      "id": "S7",
+      "label": "เซ็นทรัล รีเทล ปี 2567 รายได้ 262,804 ลบ. — Marketing Oops",
+      "url": "https://www.marketingoops.com/pr-news/central-retail-core-profit/",
+      "confirms": "รายได้รวมปี 2567 = 262,804 ลบ. (+6%) · Core Profit 8,870 ลบ. (+9%) · รายได้หลักมาจากกลุ่มอาหาร 40% · งบลงทุนปี 2568 ราว 19,000 ลบ."
+    }
+  ],
+  "marketContext": {
+    "retailValueTrillionBaht": 2.8,
+    "gdpSharePct": 15.7,
+    "growthPctPerYear": "5-5.5",
+    "modernTradeBranches": 20000,
+    "cvsSharePct": 90,
+    "retailMarginRangePct": "20-50",
+    "note": "ค้าปลีกโมเดิร์นเทรดไทยมูลค่า 2.8 ล้านล้านบาท (15.7% ของ GDP ปี 2566) มีสาขารวมกว่า 20,000 แห่ง ซึ่งกว่า 90% เป็นร้านสะดวกซื้อ — แปลว่า \"จำนวนสาขา\" ส่วนใหญ่ของประเทศอยู่ในช่องทางที่เพดานราคาต่ำที่สุด",
+    "sources": [
+      "S4",
+      "S5"
+    ]
+  },
+  "ourCost": {
+    "cogsPerBox": 84,
+    "deliveryToDcPerBox": 6,
+    "note": "ต้นทุนผลิต 84 บาท/กล่อง (วัตถุดิบ 58 + บรรจุภัณฑ์ 11 + ค่าแรงครัว 15) และค่าขนเข้าศูนย์กระจายสินค้าเฉลี่ย 6 บาท/กล่อง"
+  },
+  "formats": [
+    {
+      "id": "premium",
+      "name": "ซูเปอร์พรีเมียม"
+    },
+    {
+      "id": "super",
+      "name": "ซูเปอร์มาร์เก็ต"
+    },
+    {
+      "id": "hyper",
+      "name": "ไฮเปอร์มาร์เก็ต"
+    },
+    {
+      "id": "cvs",
+      "name": "ร้านสะดวกซื้อ"
+    },
+    {
+      "id": "wholesale",
+      "name": "ค้าส่ง / B2B"
+    }
+  ],
+  "chains": [
+    {
+      "id": "gourmet",
+      "name": "Gourmet Market",
+      "group": "The Mall Group",
+      "format": "premium",
+      "branches": 35,
+      "branchesVerified": true,
+      "branchesSources": [
+        "S4"
+      ],
+      "branchesNote": "35+ สาขา — ช่องทางค้าปลีกที่พรีเมียมที่สุดในไทย ลูกค้ารายได้สูงสุดในกรุงเทพฯ และชาวต่างชาติ",
+      "listingNote": "ต้องมีงานออกแบบแพ็กเกจและการจัดหน้าชั้นระดับพรีเมียม (S4)",
+      "startBranches": 6,
+      "customer": {
+        "healthIndex": 82,
+        "profile": "คนเมืองรายได้สูง ทำงานย่านใจกลางเมือง และลูกค้าต่างชาติ",
+        "ageRange": "28-45 ปี",
+        "income": "50,000 บาท/เดือนขึ้นไป",
+        "basketSize": 1250,
+        "note": "ยอมจ่ายแพงถ้าฉลากบอกสารอาหารครบและวัตถุดิบพรีเมียม เป็นห้างที่ทดสอบเมนูราคาสูงได้ดีที่สุด",
+        "basketSizeNote": "ยอดตะกร้ารายห้างไม่มีเปิดเผย — ใช้ยอดขายต่อสาขาต่อวันจากงบการเงินแทน (ถ้ามี)",
+        "healthIndexStatus": "proxy"
+      },
+      "terms": {
+        "gpPct": 32,
+        "listingFeePerSku": 45000,
+        "dcFeePct": 1.5,
+        "creditDays": 45,
+        "deliverTo": "DC",
+        "leadWeeks": 10,
+        "docs": [
+          "อย.",
+          "GMP",
+          "ผลตรวจแล็บจุลินทรีย์",
+          "ประกันภัยสินค้า",
+          "ฉลากโภชนาการ"
+        ]
+      },
+      "shelf": {
+        "hasChilledRte": true,
+        "priceMin": 129,
+        "priceMax": 259,
+        "rsp": 189,
+        "facings": 3,
+        "competitors": [
+          "แบรนด์คลีนเดลิเวอรี (ยังไม่ยืนยันบนชั้น)",
+          "แบรนด์กลุ่มฟิตเนส (ยังไม่ยืนยันบนชั้น)",
+          "แบรนด์นำเข้า",
+          "House brand ของห้าง"
+        ]
+      },
+      "potential": {
+        "boxesPerStorePerDay": 18,
+        "wastePct": 10,
+        "boxesPerStorePerDayDerived": null
+      },
+      "storeRevenuePerDay": null
+    },
+    {
+      "id": "villa",
+      "name": "Villa Market",
+      "group": "Villa Market JP",
+      "format": "premium",
+      "branches": 30,
+      "branchesVerified": true,
+      "branchesSources": [
+        "S4"
+      ],
+      "branchesNote": "30+ สาขา เน้นกรุงเทพฯ ภูเก็ต พัทยา — จับกลุ่มชาวต่างชาติที่พำนักในไทย",
+      "listingNote": "ขึ้นทะเบียนผู้ขายง่ายกว่าเครือใหญ่ และติดต่อฝ่ายจัดซื้อได้ตรงที่สำนักงานกรุงเทพฯ (S4)",
+      "startBranches": 6,
+      "customer": {
+        "healthIndex": 85,
+        "profile": "ชาวต่างชาติที่พำนักในไทยและคนไทยกลุ่มพรีเมียมที่ซื้อของสุขภาพเป็นประจำ",
+        "ageRange": "30-55 ปี",
+        "income": "60,000 บาท/เดือนขึ้นไป",
+        "basketSize": 1400,
+        "note": "สัดส่วนลูกค้าใส่ใจสุขภาพสูงสุดในกลุ่ม เหมาะกับเมนูคีโต/มังสวิรัติ/กลูเตนฟรี",
+        "basketSizeNote": "ยอดตะกร้ารายห้างไม่มีเปิดเผย — ใช้ยอดขายต่อสาขาต่อวันจากงบการเงินแทน (ถ้ามี)",
+        "healthIndexStatus": "proxy"
+      },
+      "terms": {
+        "gpPct": 30,
+        "listingFeePerSku": 35000,
+        "dcFeePct": 1,
+        "creditDays": 45,
+        "deliverTo": "DC",
+        "leadWeeks": 8,
+        "docs": [
+          "อย.",
+          "GMP",
+          "ผลตรวจแล็บจุลินทรีย์",
+          "ฉลากภาษาอังกฤษ"
+        ]
+      },
+      "shelf": {
+        "hasChilledRte": true,
+        "priceMin": 135,
+        "priceMax": 279,
+        "rsp": 185,
+        "facings": 3,
+        "competitors": [
+          "แบรนด์คลีนเดลิเวอรี (ยังไม่ยืนยันบนชั้น)",
+          "แบรนด์นำเข้า",
+          "แบรนด์กลุ่มฟิตเนส (ยังไม่ยืนยันบนชั้น)"
+        ]
+      },
+      "potential": {
+        "boxesPerStorePerDay": 14,
+        "wastePct": 10,
+        "boxesPerStorePerDayDerived": null
+      },
+      "storeRevenuePerDay": null
+    },
+    {
+      "id": "topsfoodhall",
+      "name": "Tops Food Hall",
+      "group": "Central Retail (CFG)",
+      "format": "premium",
+      "branches": 20,
+      "branchesVerified": true,
+      "branchesSources": [
+        "S2"
+      ],
+      "branchesNote": "20 สาขา (รูปแบบพรีเมียมของ Tops) — เครือ Tops รวมทุกรูปแบบ 702 สาขาใน 46 จังหวัด และตั้งเป้า 1,000 สาขาในปี 2570",
+      "listingNote": "เครือมีสินค้ากว่า 50,000 SKU และแบรนด์นำเข้ากว่า 210 แบรนด์จาก 80 ประเทศ — การแข่งขันบนชั้นสูง (S2)",
+      "startBranches": 6,
+      "customer": {
+        "healthIndex": 78,
+        "profile": "ครอบครัวรายได้ปานกลาง-สูงในเมือง และพนักงานออฟฟิศย่านธุรกิจ",
+        "ageRange": "25-45 ปี",
+        "income": "40,000 บาท/เดือนขึ้นไป",
+        "basketSize": 980,
+        "note": "มีมุมอาหารพร้อมทานชัดเจน และมีระบบสมาชิก The 1 ที่ช่วยทำโปรโมชันเจาะกลุ่มสุขภาพได้",
+        "basketSizeNote": "ยอดตะกร้ารายห้างไม่มีเปิดเผย — ใช้ยอดขายต่อสาขาต่อวันจากงบการเงินแทน (ถ้ามี)",
+        "healthIndexStatus": "proxy"
+      },
+      "terms": {
+        "gpPct": 30,
+        "listingFeePerSku": 50000,
+        "dcFeePct": 2,
+        "creditDays": 60,
+        "deliverTo": "DC",
+        "leadWeeks": 12,
+        "docs": [
+          "อย.",
+          "GMP/HACCP",
+          "ผลตรวจแล็บจุลินทรีย์",
+          "ประกันภัยสินค้า",
+          "ระบบบาร์โค้ด GS1"
+        ]
+      },
+      "shelf": {
+        "hasChilledRte": true,
+        "priceMin": 119,
+        "priceMax": 229,
+        "rsp": 179,
+        "facings": 4,
+        "competitors": [
+          "แบรนด์คลีนเดลิเวอรี (ยังไม่ยืนยันบนชั้น)",
+          "CP อาหารพร้อมทาน",
+          "S&P Delisia",
+          "House brand ของห้าง"
+        ]
+      },
+      "potential": {
+        "boxesPerStorePerDay": 16,
+        "wastePct": 9,
+        "boxesPerStorePerDayDerived": null
+      },
+      "storeRevenuePerDay": null
+    },
+    {
+      "id": "tops",
+      "name": "Tops (ซูเปอร์มาร์เก็ตทั่วไป)",
+      "group": "Central Retail (CFG)",
+      "format": "super",
+      "branches": 141,
+      "branchesVerified": true,
+      "branchesSources": [
+        "S2",
+        "S1"
+      ],
+      "branchesNote": "141 สาขาในรูปแบบ Tops ซูเปอร์มาร์เก็ต (S2) — Wikipedia ระบุ 235 สาขาสำหรับเครือในภาพรวม (S1) ส่วน Tops Daily อีก 511 สาขาเป็นร้านขนาดเล็ก 100-200 ตร.ม. ที่ยังไม่เหมาะกับข้าวกล่องราคา 165 บาท",
+      "listingNote": "Tops Daily ขยายเพียง 8-10 สาขา/ปี ขณะที่แฟรนไชส์จะเพิ่มจาก 30% เป็น 45% (S5, S2)",
+      "startBranches": 20,
+      "customer": {
+        "healthIndex": 62,
+        "profile": "ครอบครัวในเมืองและชานเมือง ซื้อของสดประจำสัปดาห์",
+        "ageRange": "28-50 ปี",
+        "income": "25,000-50,000 บาท/เดือน",
+        "basketSize": 720,
+        "note": "ปริมาณลูกค้ามาก แต่อ่อนไหวเรื่องราคา — ควรใช้เมนูคลีนไทยราคา 149-169 บาท",
+        "basketSizeNote": "ยอดตะกร้ารายห้างไม่มีเปิดเผย — ใช้ยอดขายต่อสาขาต่อวันจากงบการเงินแทน (ถ้ามี)",
+        "healthIndexStatus": "proxy"
+      },
+      "terms": {
+        "gpPct": 28,
+        "listingFeePerSku": 50000,
+        "dcFeePct": 2,
+        "creditDays": 60,
+        "deliverTo": "DC",
+        "leadWeeks": 12,
+        "docs": [
+          "อย.",
+          "GMP/HACCP",
+          "ผลตรวจแล็บจุลินทรีย์",
+          "ประกันภัยสินค้า",
+          "ระบบบาร์โค้ด GS1"
+        ]
+      },
+      "shelf": {
+        "hasChilledRte": true,
+        "priceMin": 99,
+        "priceMax": 199,
+        "rsp": 165,
+        "facings": 3,
+        "competitors": [
+          "CP อาหารพร้อมทาน",
+          "S&P Delisia",
+          "แบรนด์คลีนเดลิเวอรี (ยังไม่ยืนยันบนชั้น)",
+          "House brand ของห้าง"
+        ]
+      },
+      "potential": {
+        "boxesPerStorePerDay": 10,
+        "wastePct": 9,
+        "boxesPerStorePerDayDerived": 9.9,
+        "derivedFrom": "งบการเงิน S7"
+      },
+      "storeRevenuePerDay": 410264,
+      "storeRevenueSource": "S7"
+    },
+    {
+      "id": "topsdaily",
+      "name": "Tops Daily",
+      "group": "Central Retail (CFG)",
+      "format": "cvs",
+      "branches": 511,
+      "branchesVerified": true,
+      "branchesSources": ["S2", "S5"],
+      "branchesNote": "511 สาขา (S2) ขนาดเล็ก 100-200 ตร.ม. เน้นชุมชนและหมู่บ้าน · แปลงจาก FamilyMart ~200 สาขาในปี 2566 (S1) · ขยายเพิ่ม 8-10 สาขา/ปี (S5)",
+      "listingNote": "ใช้ DC เดียวกับ Tops Market/Food Hall (Central Food Retail) แต่พื้นที่ชั้นวางจำกัดมาก เหมาะกับสินค้าขนาดเล็ก grab-and-go",
+      "startBranches": 30,
+      "customer": {
+        "healthIndex": 42,
+        "profile": "คนในชุมชน/หมู่บ้าน ซื้อของสดและอาหารพร้อมทานใกล้บ้าน",
+        "ageRange": "22-50 ปี",
+        "income": "15,000-35,000 บาท/เดือน",
+        "basketSize": 180,
+        "note": "พื้นที่ร้านเล็ก (100-200 ตร.ม.) ลูกค้าซื้อเร็ว ตัดสินใจด้วยราคาและความสะดวก — เหมาะกับเมนูขนาดเล็กราคาไม่เกิน 89 บาท",
+        "basketSizeNote": "ยอดตะกร้ารายห้างไม่มีเปิดเผย — ใช้ยอดขายต่อสาขาต่อวันจากงบการเงินแทน (ถ้ามี)",
+        "healthIndexStatus": "proxy"
+      },
+      "terms": {
+        "gpPct": 30,
+        "listingFeePerSku": 50000,
+        "dcFeePct": 2,
+        "creditDays": 60,
+        "deliverTo": "DC",
+        "leadWeeks": 12,
+        "docs": [
+          "อย.",
+          "GMP/HACCP",
+          "ผลตรวจแล็บจุลินทรีย์",
+          "ประกันภัยสินค้า",
+          "ระบบบาร์โค้ด GS1"
+        ]
+      },
+      "shelf": {
+        "hasChilledRte": true,
+        "priceMin": 39,
+        "priceMax": 129,
+        "rsp": 79,
+        "facings": 1,
+        "competitors": [
+          "CP อาหารพร้อมทาน",
+          "S&P Delisia",
+          "House brand ของห้าง",
+          "สินค้าเบเกอรี่ท้องถิ่น"
+        ]
+      },
+      "potential": {
+        "boxesPerStorePerDay": 4,
+        "wastePct": 12,
+        "boxesPerStorePerDayDerived": null
+      },
+      "storeRevenuePerDay": null
+    },
+    {
+      "id": "foodland",
+      "name": "Foodland",
+      "group": "Foodland Supermarket",
+      "format": "super",
+      "branches": 16,
+      "branchesVerified": true,
+      "branchesSources": [
+        "S4"
+      ],
+      "branchesNote": "16 สาขา กิจการครอบครัวไทย-อเมริกัน ก่อตั้งปี 2512 หลายสาขาเปิด 24 ชั่วโมง",
+      "listingNote": "ขนาดเล็กและเจ้าของบริหารเอง จึงเจรจาได้ยืดหยุ่นกว่าเครือใหญ่",
+      "startBranches": 6,
+      "customer": {
+        "healthIndex": 66,
+        "profile": "คนทำงานกลางคืน ชาวต่างชาติ และคนที่อยู่คอนโดใกล้สาขา",
+        "ageRange": "25-50 ปี",
+        "income": "30,000-60,000 บาท/เดือน",
+        "basketSize": 640,
+        "note": "เปิด 24 ชม. ทำให้ขายได้ทั้งมื้อเช้าและมื้อดึก เจรจาง่ายกว่าห้างเครือใหญ่",
+        "basketSizeNote": "ยอดตะกร้ารายห้างไม่มีเปิดเผย — ใช้ยอดขายต่อสาขาต่อวันจากงบการเงินแทน (ถ้ามี)",
+        "healthIndexStatus": "proxy"
+      },
+      "terms": {
+        "gpPct": 27,
+        "listingFeePerSku": 20000,
+        "dcFeePct": 0,
+        "creditDays": 30,
+        "deliverTo": "direct",
+        "leadWeeks": 6,
+        "docs": [
+          "อย.",
+          "GMP",
+          "ผลตรวจแล็บจุลินทรีย์"
+        ]
+      },
+      "shelf": {
+        "hasChilledRte": true,
+        "priceMin": 105,
+        "priceMax": 219,
+        "rsp": 169,
+        "facings": 2,
+        "competitors": [
+          "Took Lae Dee (ของห้าง)",
+          "แบรนด์คลีนเดลิเวอรี (ยังไม่ยืนยันบนชั้น)",
+          "CP อาหารพร้อมทาน"
+        ]
+      },
+      "potential": {
+        "boxesPerStorePerDay": 12,
+        "wastePct": 8,
+        "boxesPerStorePerDayDerived": null
+      },
+      "storeRevenuePerDay": null
+    },
+    {
+      "id": "bigc",
+      "name": "Big C (ไฮเปอร์ + Foodplace)",
+      "group": "BJC",
+      "format": "hyper",
+      "branches": 140,
+      "branchesVerified": true,
+      "branchesSources": [
+        "S4",
+        "S5"
+      ],
+      "branchesNote": "ไฮเปอร์มาร์เก็ต 140+ สาขา (S4) · Mini Big C ขยาย 200-300 สาขา/ปี และร้านราคาประหยัดของเครือมีแผนขยายจาก 1,000 เป็น 6,000 สาขา (S5)",
+      "listingNote": "ควรเข้าเฉพาะสาขา Foodplace ในเมือง ไม่ควรปูทั้งเครือ",
+      "startBranches": 12,
+      "customer": {
+        "healthIndex": 48,
+        "profile": "ครอบครัวรายได้ปานกลาง ซื้อของครั้งละมาก",
+        "ageRange": "30-55 ปี",
+        "income": "20,000-40,000 บาท/เดือน",
+        "basketSize": 850,
+        "note": "กลุ่มสุขภาพยังเล็ก ควรเข้าเฉพาะสาขา Foodplace ในเมืองก่อน ไม่ควรปูทั้งเครือ",
+        "basketSizeNote": "ยอดตะกร้ารายห้างไม่มีเปิดเผย — ใช้ยอดขายต่อสาขาต่อวันจากงบการเงินแทน (ถ้ามี)",
+        "healthIndexStatus": "proxy"
+      },
+      "terms": {
+        "gpPct": 30,
+        "listingFeePerSku": 60000,
+        "dcFeePct": 2.5,
+        "creditDays": 60,
+        "deliverTo": "DC",
+        "leadWeeks": 12,
+        "docs": [
+          "อย.",
+          "GMP/HACCP",
+          "ผลตรวจแล็บจุลินทรีย์",
+          "ประกันภัยสินค้า",
+          "ระบบบาร์โค้ด GS1",
+          "EDI"
+        ]
+      },
+      "shelf": {
+        "hasChilledRte": true,
+        "priceMin": 89,
+        "priceMax": 179,
+        "rsp": 159,
+        "facings": 2,
+        "competitors": [
+          "CP อาหารพร้อมทาน",
+          "House brand ของห้าง",
+          "แบรนด์คลีนเดลิเวอรี (ยังไม่ยืนยันบนชั้น)"
+        ]
+      },
+      "potential": {
+        "boxesPerStorePerDay": 9,
+        "wastePct": 10,
+        "boxesPerStorePerDayDerived": null
+      },
+      "storeRevenuePerDay": null
+    },
+    {
+      "id": "lotuss",
+      "name": "Lotus's (ทุกรูปแบบ)",
+      "group": "CP Axtra",
+      "format": "hyper",
+      "branches": 2000,
+      "branchesVerified": true,
+      "branchesSources": [
+        "S4",
+        "S5",
+        "S3"
+      ],
+      "branchesNote": "2,000+ สาขารวมทุกรูปแบบ (ไฮเปอร์ ซูเปอร์ และ Go Fresh) (S4) · Go Fresh ขยาย 120-150 สาขา/ปี (S5) · CP ซื้อกิจการจาก Tesco มูลค่า 338,445 ล้านบาท ในปี 2563 (S3)",
+      "listingNote": "เครือข่ายกว้างสุดแต่ราคาเป็นตัวตัดสิน — สินค้าพรีเมียมเข้าได้ยากถ้าไม่มีปริมาณรองรับ (S4)",
+      "startBranches": 15,
+      "customer": {
+        "healthIndex": 45,
+        "profile": "ครอบครัวทั่วไปทั้งในเมืองและต่างจังหวัด",
+        "ageRange": "30-55 ปี",
+        "income": "18,000-40,000 บาท/เดือน",
+        "basketSize": 780,
+        "note": "เครือข่ายกว้างที่สุด แต่ราคาเป็นตัวตัดสิน — เหมาะเมื่อกำลังผลิตเกิน 1,000 กล่อง/วันแล้ว",
+        "basketSizeNote": "ยอดตะกร้ารายห้างไม่มีเปิดเผย — ใช้ยอดขายต่อสาขาต่อวันจากงบการเงินแทน (ถ้ามี)",
+        "healthIndexStatus": "proxy"
+      },
+      "terms": {
+        "gpPct": 30,
+        "listingFeePerSku": 60000,
+        "dcFeePct": 2.5,
+        "creditDays": 60,
+        "deliverTo": "DC",
+        "leadWeeks": 14,
+        "docs": [
+          "อย.",
+          "GMP/HACCP",
+          "ผลตรวจแล็บจุลินทรีย์",
+          "ประกันภัยสินค้า",
+          "ระบบบาร์โค้ด GS1",
+          "EDI",
+          "ตรวจโรงงานโดยทีมห้าง"
+        ]
+      },
+      "shelf": {
+        "hasChilledRte": true,
+        "priceMin": 85,
+        "priceMax": 175,
+        "rsp": 155,
+        "facings": 2,
+        "competitors": [
+          "CP อาหารพร้อมทาน",
+          "House brand ของห้าง"
+        ]
+      },
+      "potential": {
+        "boxesPerStorePerDay": 8,
+        "wastePct": 11,
+        "boxesPerStorePerDayDerived": 4.5,
+        "derivedFrom": "งบการเงิน S6"
+      },
+      "storeRevenuePerDay": 234149,
+      "storeRevenueSource": "S6"
+    },
+    {
+      "id": "makro",
+      "name": "Makro",
+      "group": "CP Axtra",
+      "format": "wholesale",
+      "branches": 140,
+      "branchesVerified": true,
+      "branchesSources": [
+        "S4",
+        "S5"
+      ],
+      "branchesNote": "140+ สาขาค้าส่งแบบ cash-and-carry ลูกค้าเป็นร้านอาหาร โรงแรม และผู้ซื้อสถาบัน (S4) · Buddy Mart ในเครือตั้งเป้า 2,000 สาขา (S5)",
+      "listingNote": "ขายเป็นแพ็กใหญ่สำหรับผู้ประกอบการ ไม่ใช่ค้าปลีกผู้บริโภค (S4)",
+      "startBranches": 8,
+      "customer": {
+        "healthIndex": 35,
+        "profile": "ผู้ประกอบการร้านอาหาร โรงอาหารโรงงาน สำนักงาน และผู้ซื้อยกแพ็ก",
+        "ageRange": "30-60 ปี",
+        "income": "ซื้อในนามกิจการ",
+        "basketSize": 3200,
+        "note": "ไม่ใช่ลูกค้าปลีก แต่เป็นทางเข้าตลาดองค์กร/แคทเทอริงแบบขายยกแพ็ก 6-10 กล่อง",
+        "basketSizeNote": "ยอดตะกร้ารายห้างไม่มีเปิดเผย — ใช้ยอดขายต่อสาขาต่อวันจากงบการเงินแทน (ถ้ามี)",
+        "healthIndexStatus": "proxy"
+      },
+      "terms": {
+        "gpPct": 12,
+        "listingFeePerSku": 25000,
+        "dcFeePct": 1,
+        "creditDays": 45,
+        "deliverTo": "DC",
+        "leadWeeks": 8,
+        "docs": [
+          "อย.",
+          "GMP",
+          "ผลตรวจแล็บจุลินทรีย์",
+          "ฉลากขายยกแพ็ก"
+        ]
+      },
+      "shelf": {
+        "hasChilledRte": true,
+        "priceMin": 79,
+        "priceMax": 159,
+        "rsp": 145,
+        "facings": 2,
+        "competitors": [
+          "CP ยกแพ็ก",
+          "House brand aro / Savepak",
+          "ผู้ผลิตท้องถิ่น"
+        ]
+      },
+      "potential": {
+        "boxesPerStorePerDay": 20,
+        "wastePct": 6,
+        "boxesPerStorePerDayDerived": 18.2,
+        "derivedFrom": "งบการเงิน S6"
+      },
+      "storeRevenuePerDay": 4407591,
+      "storeRevenueSource": "S6"
+    },
+    {
+      "id": "sevenmore",
+      "name": "7-Eleven",
+      "group": "CP All",
+      "format": "cvs",
+      "branches": 14545,
+      "branchesVerified": true,
+      "branchesSources": [
+        "S5",
+        "S4"
+      ],
+      "branchesNote": "14,545 สาขา (ปี 2566) เพิ่มขึ้น 707 สาขาในปีเดียว และมีแผนขยายราว 700 สาขา/ปี (S5)",
+      "listingNote": "เงื่อนไขวางขายที่ระบุชัด: สินค้าต้องราคาต่ำกว่า 45 บาท และหมุนเวียนอย่างน้อย 2 ชิ้น/สาขา/สัปดาห์ (S4) — ข้าวกล่อง 139-165 บาทของเราไม่เข้าเกณฑ์นี้",
+      "startBranches": 150,
+      "customer": {
+        "healthIndex": 40,
+        "profile": "คนเดินทาง นักเรียน นักศึกษา และพนักงานที่ซื้อมื้อด่วน",
+        "ageRange": "18-40 ปี",
+        "income": "15,000-35,000 บาท/เดือน",
+        "basketSize": 95,
+        "note": "ปริมาณมหาศาลแต่เพดานราคาต่ำ (แหล่งอ้างอิงระบุเกณฑ์สินค้าใหม่ต้องต่ำกว่า 45 บาท) และต้องผลิตวันละหลายพันกล่อง",
+        "basketSizeNote": "ยอดตะกร้ารายห้างไม่มีเปิดเผย — ใช้ยอดขายต่อสาขาต่อวันจากงบการเงินแทน (ถ้ามี)",
+        "healthIndexStatus": "proxy"
+      },
+      "terms": {
+        "gpPct": 35,
+        "listingFeePerSku": 150000,
+        "dcFeePct": 3,
+        "creditDays": 60,
+        "deliverTo": "DC",
+        "leadWeeks": 20,
+        "docs": [
+          "อย.",
+          "GMP/HACCP",
+          "ISO 22000",
+          "ตรวจโรงงานโดยทีมห้าง",
+          "ระบบบาร์โค้ด GS1",
+          "EDI",
+          "กำลังผลิตสำรอง"
+        ]
+      },
+      "shelf": {
+        "hasChilledRte": true,
+        "priceMin": 39,
+        "priceMax": 99,
+        "rsp": 139,
+        "facings": 1,
+        "competitors": [
+          "CP Easy Snack / Kitchen Joy",
+          "Ezygo",
+          "House brand ของห้าง"
+        ]
+      },
+      "potential": {
+        "boxesPerStorePerDay": 6,
+        "wastePct": 12,
+        "boxesPerStorePerDayDerived": null
+      },
+      "storeRevenuePerDay": null
+    },
+    {
+      "id": "cjmore",
+      "name": "CJ More",
+      "group": "CJ Express",
+      "format": "cvs",
+      "branches": 1000,
+      "branchesVerified": false,
+      "branchesSources": [
+        "S5"
+      ],
+      "branchesNote": "แหล่งอ้างอิงยืนยันเฉพาะ \"แผนขยาย 250 สาขา/ปี\" (S5) ส่วนจำนวนสาขารวม 1,000 เป็นตัวเลขประมาณการที่ยังไม่ได้ยืนยัน",
+      "listingNote": "เน้นชุมชนต่างจังหวัดและแข่งด้วยราคา",
+      "startBranches": 60,
+      "customer": {
+        "healthIndex": 30,
+        "profile": "ลูกค้าชุมชนต่างจังหวัดที่เน้นราคาถูก",
+        "ageRange": "25-55 ปี",
+        "income": "12,000-30,000 บาท/เดือน",
+        "basketSize": 130,
+        "note": "กลุ่มสุขภาพน้อยและราคาเป็นตัวตัดสิน — ยังไม่ควรเข้าในแผน 3 ปีแรก",
+        "basketSizeNote": "ยอดตะกร้ารายห้างไม่มีเปิดเผย — ใช้ยอดขายต่อสาขาต่อวันจากงบการเงินแทน (ถ้ามี)",
+        "healthIndexStatus": "proxy"
+      },
+      "terms": {
+        "gpPct": 32,
+        "listingFeePerSku": 40000,
+        "dcFeePct": 2,
+        "creditDays": 45,
+        "deliverTo": "DC",
+        "leadWeeks": 10,
+        "docs": [
+          "อย.",
+          "GMP",
+          "ผลตรวจแล็บจุลินทรีย์",
+          "ระบบบาร์โค้ด GS1"
+        ]
+      },
+      "shelf": {
+        "hasChilledRte": false,
+        "priceMin": 35,
+        "priceMax": 89,
+        "rsp": 129,
+        "facings": 1,
+        "competitors": [
+          "สินค้าท้องถิ่น",
+          "House brand ของห้าง"
+        ]
+      },
+      "potential": {
+        "boxesPerStorePerDay": 5,
+        "wastePct": 12,
+        "boxesPerStorePerDayDerived": null
+      },
+      "storeRevenuePerDay": null
+    }
+  ],
+  "shelfCompetitors": [
+    {
+      "brand": "CP อาหารพร้อมทาน",
+      "type": "รายใหญ่",
+      "priceRange": "45-99",
+      "avgPrice": 72,
+      "chains": [
+        "tops",
+        "topsfoodhall",
+        "bigc",
+        "lotuss",
+        "sevenmore",
+        "makro"
+      ],
+      "strength": "ต้นทุนต่ำ กระจายสินค้าทุกห้าง",
+      "weakness": "ภาพลักษณ์ไม่ใช่อาหารคลีนพรีเมียม",
+      "evidence": "พบจริงในตลาด (ยังไม่ยืนยันราคาหน้าชั้น)"
+    },
+    {
+      "brand": "แบรนด์คลีนเดลิเวอรี (ยังไม่ยืนยันบนชั้น)",
+      "type": "แบรนด์คลีน",
+      "priceRange": "119-219",
+      "avgPrice": 165,
+      "chains": [
+        "gourmet",
+        "villa",
+        "topsfoodhall",
+        "tops",
+        "foodland",
+        "bigc"
+      ],
+      "strength": "จุดขายด้านสุขภาพชัด",
+      "weakness": "ยังไม่ยืนยันว่ามีวางขายในห้างจริง",
+      "evidence": "สมมติฐาน — ยังไม่ได้เดินสำรวจหน้าชั้น"
+    },
+    {
+      "brand": "แบรนด์กลุ่มฟิตเนส (ยังไม่ยืนยันบนชั้น)",
+      "type": "แบรนด์ฟิตเนส",
+      "priceRange": "189-249",
+      "avgPrice": 215,
+      "chains": [
+        "gourmet",
+        "villa"
+      ],
+      "strength": "จับกลุ่มออกกำลังกายชัดเจน",
+      "weakness": "กลุ่มลูกค้าแคบ",
+      "evidence": "สมมติฐาน — ยังไม่ได้เดินสำรวจหน้าชั้น"
+    },
+    {
+      "brand": "S&P Delisia",
+      "type": "เชนร้านอาหาร",
+      "priceRange": "89-149",
+      "avgPrice": 119,
+      "chains": [
+        "tops",
+        "topsfoodhall"
+      ],
+      "strength": "แบรนด์คุ้นเคย รสชาติเสถียร",
+      "weakness": "ไม่ได้ชูจุดขายสุขภาพ",
+      "evidence": "สมมติฐาน — ยังไม่ได้เดินสำรวจหน้าชั้น"
+    },
+    {
+      "brand": "House brand ของห้าง",
+      "type": "แบรนด์ห้าง",
+      "priceRange": "59-129",
+      "avgPrice": 89,
+      "chains": [
+        "tops",
+        "topsfoodhall",
+        "bigc",
+        "lotuss",
+        "sevenmore",
+        "makro",
+        "gourmet",
+        "cjmore"
+      ],
+      "strength": "ห้างดันเอง ได้พื้นที่ชั้นดีที่สุด",
+      "weakness": "คุณภาพกลาง ๆ ไม่มีเรื่องราวแบรนด์",
+      "evidence": "พบจริงในตลาด (ยังไม่ยืนยันราคาหน้าชั้น)"
+    },
+    {
+      "brand": "Ezygo",
+      "type": "อาหารสะดวกซื้อ",
+      "priceRange": "39-79",
+      "avgPrice": 59,
+      "chains": [
+        "sevenmore"
+      ],
+      "strength": "ราคาถูกสุด ปริมาณมาก",
+      "weakness": "ไม่ใช่ตลาดสุขภาพ",
+      "evidence": "พบจริงในตลาด (ยังไม่ยืนยันราคาหน้าชั้น)"
+    },
+    {
+      "brand": "แบรนด์นำเข้า",
+      "type": "สินค้านำเข้า",
+      "priceRange": "159-299",
+      "avgPrice": 219,
+      "chains": [
+        "gourmet",
+        "villa"
+      ],
+      "strength": "ภาพลักษณ์พรีเมียม",
+      "weakness": "ราคาสูงและอายุสินค้าสั้นกว่าเมื่อถึงชั้น",
+      "evidence": "สมมติฐาน — ยังไม่ได้เดินสำรวจหน้าชั้น"
+    },
+    {
+      "brand": "POLPA (เดลิเวอรี)",
+      "type": "แบรนด์คลีนราคาจริง",
+      "priceRange": "119+",
+      "avgPrice": 119,
+      "chains": [],
+      "strength": "ระบุโภชนาการทุกเมนู",
+      "weakness": "ยังไม่พบว่าวางขายในห้าง",
+      "evidence": "ราคายืนยันแล้ว (M1) แต่เป็นช่องทางเดลิเวอรี"
+    },
+    {
+      "brand": "Fit2Go (เดลิเวอรี)",
+      "type": "แบรนด์โปรตีนสูงราคาจริง",
+      "priceRange": "99-149",
+      "avgPrice": 124,
+      "chains": [],
+      "strength": "โปรตีน 25-40 กรัม/กล่อง",
+      "weakness": "ยังไม่พบว่าวางขายในห้าง",
+      "evidence": "ราคายืนยันแล้ว (M2) แต่เป็นช่องทางเดลิเวอรี"
+    }
+  ],
+  "entryRules": [
+    {
+      "rule": "อย่าเข้าห้างก่อนกำลังผลิตพร้อม",
+      "detail": "ห้างสั่งเติมสินค้าทุกวันและปรับสินค้าขาดชั้นเป็นคะแนนผู้ขาย — ควรมีกำลังผลิตเหลือไม่น้อยกว่า 20% ก่อนเซ็นสัญญา"
+    },
+    {
+      "rule": "เริ่มจากพรีเมียมไม่กี่สาขา",
+      "detail": "Gourmet Market (35+ สาขา) Villa Market (30+) และ Tops Food Hall (20) เป็นช่องทางที่กลุ่มลูกค้าตรงที่สุด เริ่มเพียง 15-18 สาขาแรกก็พอทดสอบยอดขายจริงก่อนขยาย"
+    },
+    {
+      "rule": "คิดค่าแรกเข้าเป็นต้นทุนจม",
+      "detail": "ค่าแรกเข้าต่อ SKU 20,000-150,000 บาท เป็นเงินที่ไม่ได้คืนถ้าสินค้าถูกถอดออกจากชั้น — จำกัดจำนวน SKU ที่ยื่นเข้า 3-4 รายการแรก"
+    },
+    {
+      "rule": "เครดิตเทอมกินเงินสด",
+      "detail": "ห้างจ่ายเงินหลังส่งของ 30-60 วัน ขณะที่เราจ่ายวัตถุดิบทุกสัปดาห์ — ต้องมีเงินทุนหมุนเวียนเพิ่มตามยอดที่ส่งเข้าห้าง"
+    },
+    {
+      "rule": "ของเสียคือกำไรที่หายไป",
+      "detail": "อาหารพร้อมทานอายุสั้น ถ้าของเสียเกิน 12% กำไรส่วนเกินจะหายเกือบทั้งหมด — ต้องเริ่มจากจำนวนน้อยแล้วค่อยเพิ่มตามยอดขายจริง"
+    },
+    {
+      "rule": "ร้านสะดวกซื้อมีเพดานราคาที่เราเข้าไม่ได้",
+      "detail": "7-Eleven กำหนดสินค้าใหม่ต้องราคาต่ำกว่า 45 บาทและหมุนเวียนอย่างน้อย 2 ชิ้น/สาขา/สัปดาห์ — ข้าวกล่องคลีนของเราอยู่นอกเกณฑ์นี้ตั้งแต่ต้น"
+    }
+  ],
+  "chainFinancials": {
+    "note": "ยอดขายต่อสาขาต่อวัน = รายได้ทั้งปีตามงบการเงิน ÷ จำนวนสาขา ÷ 365 — เป็นตัวเลขที่ตรวจสอบย้อนกลับได้ ไม่ใช่สมมติฐาน · ใช้แทน \"ยอดตะกร้า\" ที่ห้างไม่เปิดเผยรายเครือ",
+    "rows": [
+      {
+        "chainId": "makro",
+        "revenueMB2567": 273491,
+        "stores": 170,
+        "scope": "ค้าส่ง Makro ทั้งเครือ 9 ประเทศ",
+        "source": "S6",
+        "revenuePerStorePerDay": 4407591
+      },
+      {
+        "chainId": "lotuss",
+        "revenueMB2567": 215370,
+        "stores": 2520,
+        "scope": "ค้าปลีก Lotus's ทุกฟอร์แมต (ไทย 2,451 + มาเลเซีย 69)",
+        "source": "S6",
+        "revenuePerStorePerDay": 234149
+      },
+      {
+        "chainId": "tops",
+        "revenueMB2567": 105122,
+        "stores": 702,
+        "scope": "ประมาณจากกลุ่มอาหารของ CRC (40% ของ 262,804 ลบ.) ÷ สาขา Tops ทุกฟอร์แมต 702 — รวมกิจการอาหารต่างประเทศ จึงสูงกว่าค่าจริงของไทย",
+        "source": "S7",
+        "revenuePerStorePerDay": 410264
+      }
+    ]
+  },
+  "healthIndexChecklist": {
+    "note": "ไม่มีหน่วยงานไหนเผยแพร่ดัชนีนี้รายห้าง — เปลี่ยนวิธี: ให้ทีมเดินสำรวจ 5 ข้อนี้ต่อสาขา (นับได้ ถ่ายรูปได้) แล้วระบบจะคำนวณคะแนน 0-100 แทนการเดา",
+    "items": [
+      {
+        "key": "organicShelfMeters",
+        "label": "ความยาวชั้นสินค้าออร์แกนิก/สุขภาพ (เมตร)",
+        "weightPct": 25,
+        "howTo": "วัดด้วยการนับช่องชั้น 1 ช่อง ≈ 1 เมตร"
+      },
+      {
+        "key": "rteHealthSkuCount",
+        "label": "จำนวน SKU อาหารพร้อมทานที่ชูสุขภาพบนชั้นแช่เย็น",
+        "weightPct": 25,
+        "howTo": "นับกล่องที่ระบุแคลอรี/คลีน/คีโตบนฉลาก"
+      },
+      {
+        "key": "proteinDrinkFacings",
+        "label": "ช่องวางเครื่องดื่มโปรตีน/นมไขมันต่ำ",
+        "weightPct": 15,
+        "howTo": "นับช่องหน้าชั้นในตู้แช่เครื่องดื่ม"
+      },
+      {
+        "key": "sugarFreeSignage",
+        "label": "มีป้าย/โซนสินค้าน้ำตาลน้อย-คลีนชัดเจน",
+        "weightPct": 15,
+        "howTo": "มี = 1 ไม่มี = 0"
+      },
+      {
+        "key": "premiumFreshRatio",
+        "label": "สัดส่วนพื้นที่ของสดพรีเมียม/นำเข้า ต่อของสดทั้งหมด",
+        "weightPct": 20,
+        "howTo": "ประมาณเป็น % จากการเดินสำรวจ"
+      }
+    ],
+    "status": "ยังไม่ได้เก็บ — ค่า healthIndex ที่แสดงอยู่ตอนนี้เป็นค่าประมาณของทีม (proxy) จะถูกแทนที่เมื่อกรอกเช็กลิสต์"
+  },
+  "derivation": {
+    "note": "แทนการเดายอดขายต่อสาขา ด้วยการคำนวณจากยอดขายจริงของร้าน × สัดส่วนหมวดอาหารพร้อมทาน × ส่วนแบ่งที่เราคาดว่าจะได้ ÷ ราคาบนชั้น",
+    "formula": "กล่อง/สาขา/วัน = ยอดขายร้าน/วัน × สัดส่วนหมวด RTE × ส่วนแบ่งของเรา ÷ ราคาบนชั้น",
+    "categorySharePctByFormat": {
+      "premium": 2.5,
+      "super": 2,
+      "hyper": 1.5,
+      "wholesale": 0.3,
+      "cvs": 3
+    },
+    "ourShareOfCategoryPct": 20,
+    "assumptionNote": "สัดส่วนหมวด RTE และส่วนแบ่งของเรา ยังเป็นสมมติฐาน (ห้างไม่เปิดเผยยอดรายหมวด) — แต่ตัวตั้งคือยอดขายจริงจากงบการเงิน ทำให้ผลลัพธ์อยู่ในระดับที่เป็นไปได้จริง",
+    "startBranchesRule": {
+      "text": "สาขาที่ควรเริ่ม = (กำลังผลิตที่กันไว้ให้ช่องทางห้าง) ÷ (กล่อง/สาขา/วัน)",
+      "kitchenCapacityPerDay": 800,
+      "retailQuotaPct": 30,
+      "note": "กันกำลังผลิตให้ห้างไม่เกิน 30% ของครัว (240 กล่อง/วัน) เพื่อไม่ให้กระทบช่องทางขายตรงที่กำไรดีกว่า"
+    }
+  }
+}

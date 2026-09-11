@@ -1,0 +1,93 @@
+{
+  "lastUpdated": "2026-08-19T19:00:00+07:00",
+  "note": "ผลสำรวจราคาตลาดจริงจากรายการรวมร้านอาหารคลีนเดลิเวอรีที่เผยแพร่สาธารณะ (สิงหาคม 2569) — เป็นราคาที่ประกาศขายจริง ไม่ใช่ราคาสมมติ · ส่วนยอดขายต่อสาขาต่อวันยังต้องเก็บจากการเดินสำรวจหน้าชั้นเอง (ดูหัวข้อ storeSurveyTemplate)",
+  "sources": [
+    {
+      "id": "M1",
+      "label": "10 ร้านข้าวกล่องสุขภาพสายคลีน — Wongnai",
+      "url": "https://www.wongnai.com/listings/clean-food-delivery",
+      "confirms": "ราคาประกาศขายของ 10 แบรนด์: Under360 65+ · South-Eat 69+ · Jones' Salad 69+ · Brunch Bowl 70+ · TipTop 80+ · STAYLEAN 85+ · DJPoom 100+ · Clean Food BKK 100+ · POLPA 119+ · Fit Food Always 2,500/แพ็กเกจ"
+    },
+    {
+      "id": "M2",
+      "label": "5 ร้านอาหารคลีนเดลิเวอรี่ โปรตีนสูง — Goodcal",
+      "url": "https://www.goodcalgoodday.com/post/healthfood-bkk-delivery",
+      "confirms": "Power Food 69-79 · Calแกง 88 · Health Me Please 95-295 · Homie Clean Food 69-129 · Fit2Go 99-149 (โปรตีน 25-40 กรัม/กล่อง)"
+    },
+    {
+      "id": "M3",
+      "label": "แนวโน้มอุตสาหกรรมอาหารพร้อมทาน 2567-2569 — Krungsri Research",
+      "url": "https://www.krungsri.com/th/research/industry/industry-outlook/food-beverage/ready-to-eat-food/io/io-ready-to-eat-food-2024-2026",
+      "confirms": "ปริมาณจำหน่ายอาหารพร้อมทานในประเทศปี 2567-2569 โตเฉลี่ย 3.0-4.0% ต่อปี · ปี 2569-2571 โต 2.3-3.3% ต่อปี · แรงหนุนจากสินค้าเพื่อสุขภาพและการขยายสาขาร้านสะดวกซื้อ"
+    },
+    {
+      "id": "M4",
+      "label": "ยุคเร่งรีบดันอาหารพร้อมทานโต SMEs ครองตลาด 548 โรงงาน — Post Today",
+      "url": "https://www.posttoday.com/smart-sme/733611",
+      "confirms": "ตลาดอาหารพร้อมรับประทานในไทยคาดมีมูลค่า 35,949 ล้านบาทในปี 2568 เติบโตเฉลี่ย 11.0% ต่อปีในระยะ 5 ปี · ผู้ผลิตส่วนใหญ่เป็น SME กว่า 548 โรงงาน"
+    },
+    {
+      "id": "M5",
+      "label": "เปิดร้านในห้างสรรพสินค้า: ค่าเช่า ค่า GP และเงื่อนไขที่ SME ต้องรู้ — SME Leader",
+      "url": "https://smeleader.com/เปิดร้านในห้าง-ค่า-gp-ค่าเช่า/",
+      "confirms": "ค่า GP ของห้างสรรพสินค้า/ไฮเปอร์มาร์เก็ตอยู่ราว 35-40% · ผู้ขายต้องเป็นนิติบุคคล ทุนจดทะเบียน 500,000-1,000,000 บาท และมีงบการเงินย้อนหลัง 1-2 ปี"
+    }
+  ],
+  "marketSizeReal": {
+    "rteValueMB2568": 35949,
+    "rteGrowthPctPerYear": 11.0,
+    "volumeGrowthPct2567to2569": "3.0-4.0",
+    "volumeGrowthPct2569to2571": "2.3-3.3",
+    "smeFactories": 548,
+    "sources": ["M3", "M4"]
+  },
+  "priceSurvey": {
+    "surveyedAt": "2569-08-19",
+    "method": "รวบรวมราคาที่แบรนด์ประกาศขายจากรายการเผยแพร่สาธารณะ 2 แหล่ง (ยังไม่ได้โทรสอบถามรายแบรนด์)",
+    "brands": [
+      { "brand": "Under360", "priceMin": 65, "priceMax": 65, "style": "หมุนเวียนรายสัปดาห์", "claim": "ไม่เกิน 360 kcal/กล่อง", "source": "M1" },
+      { "brand": "South-Eat", "priceMin": 69, "priceMax": 69, "style": "อาหารใต้คลีน", "claim": "รสจัดเหมือนอาหารปกติ", "source": "M1" },
+      { "brand": "Jones' Salad", "priceMin": 69, "priceMax": 69, "style": "สลัด/ญี่ปุ่น", "claim": "วัตถุดิบสด", "source": "M1" },
+      { "brand": "Power Food", "priceMin": 69, "priceMax": 79, "style": "โปรตีนสูง", "claim": "เน้นโปรตีน", "source": "M2" },
+      { "brand": "Homie Clean Food", "priceMin": 69, "priceMax": 129, "style": "ข้าวกล่องคลีน", "claim": "โปรตีนสูง", "source": "M2" },
+      { "brand": "Brunch Bowl", "priceMin": 70, "priceMax": 70, "style": "ข้าวกล่อง/สลัด", "claim": "มีตัวเลือกไรซ์เบอร์รี", "source": "M1" },
+      { "brand": "TipTop Clean Food", "priceMin": 80, "priceMax": 80, "style": "20-30 เมนู", "claim": "ไม่ใส่ผงชูรส ไม่เค็ม", "source": "M1" },
+      { "brand": "STAYLEAN.food", "priceMin": 85, "priceMax": 85, "style": "ไรซ์โบว์ล", "claim": "นับแคลอรี ไม่ใช้น้ำมัน", "source": "M1" },
+      { "brand": "Calแกง", "priceMin": 88, "priceMax": 88, "style": "แกงไทยคลีน", "claim": "คุมแคลอรี", "source": "M2" },
+      { "brand": "Fit2Go", "priceMin": 99, "priceMax": 149, "style": "โปรตีนสูง", "claim": "โปรตีน 25-40 กรัม/กล่อง", "source": "M2" },
+      { "brand": "DJPoom Menu", "priceMin": 100, "priceMax": 100, "style": "คลีน/สลัด/ข้าวกล่อง", "claim": "โปรตีน 2 ส่วน : คาร์บ 1 : ผัก 1", "source": "M1" },
+      { "brand": "Clean Food BKK", "priceMin": 100, "priceMax": 100, "style": "ข้าวกล่องคลีน", "claim": "ไม่ใส่ผงชูรส สดใหม่", "source": "M1" },
+      { "brand": "Health Me Please", "priceMin": 95, "priceMax": 295, "style": "อาหารสุขภาพหลากหลาย", "claim": "ช่วงราคากว้างสุดในกลุ่ม", "source": "M2" },
+      { "brand": "POLPA", "priceMin": 119, "priceMax": 119, "style": "ฟิวชันตะวันตก/เอเชีย/ไทย", "claim": "ระบุโภชนาการทุกเมนู", "source": "M1" }
+    ],
+    "packageBenchmark": {
+      "example": "อาหารคลีน 10 กล่อง 599 บาท ส่งฟรีในกรุงเทพฯ",
+      "pricePerBox": 60,
+      "note": "แพ็กเกจราคาถูกที่สุดที่พบ = 60 บาท/กล่อง ซึ่งต่ำกว่าต้นทุนผลิตของแผนเรา (84 บาท/กล่อง)",
+      "source": "M1"
+    }
+  },
+  "planVsMarket": {
+    "planAvgPrice": 165,
+    "planPriceMin": 120,
+    "planPriceMax": 250,
+    "note": "ราคาตามแผนสูงกว่าราคากลางที่สำรวจได้อย่างมีนัยสำคัญ — ต้องมีจุดขายที่จับต้องได้ (ระบุสารอาหารครบ วัตถุดิบพรีเมียม บริการองค์กร) หรือปรับราคาลง มิฉะนั้นยอดขายจะไม่ถึงเป้า"
+  },
+  "storeSurveyTemplate": {
+    "instruction": "ให้ทีมเซลล์เดินสำรวจชั้นอาหารพร้อมทานแช่เย็นของแต่ละห้าง แล้วกรอกตัวเลขจริงลงในรายการ storeSurveyResults ด้านล่าง (แก้ไฟล์นี้แล้วกดปุ่มรีเฟรชบนหน้าเว็บ ตัวเลขจะอัปเดตทันที)",
+    "fields": [
+      { "key": "chainId", "label": "รหัสห้าง (gourmet / villa / topsfoodhall / tops / foodland / bigc / lotuss / makro / sevenmore / cjmore)" },
+      { "key": "branch", "label": "ชื่อสาขาที่สำรวจ" },
+      { "key": "surveyDate", "label": "วันที่สำรวจ (พ.ศ.)" },
+      { "key": "shelfBrands", "label": "แบรนด์ที่เจอบนชั้น (คั่นด้วยจุลภาค)" },
+      { "key": "priceMin", "label": "ราคาต่ำสุดบนชั้น (บาท)" },
+      { "key": "priceMax", "label": "ราคาสูงสุดบนชั้น (บาท)" },
+      { "key": "facingsTotal", "label": "จำนวนช่องหน้าชั้นของหมวดนี้ทั้งหมด" },
+      { "key": "boxesOnShelfMorning", "label": "จำนวนกล่องบนชั้นรอบเช้า" },
+      { "key": "boxesOnShelfEvening", "label": "จำนวนกล่องบนชั้นรอบเย็น (ใช้คำนวณยอดขายต่อวัน)" },
+      { "key": "note", "label": "หมายเหตุ เช่น ตำแหน่งชั้น ระดับสายตา อุณหภูมิตู้" }
+    ],
+    "howToEstimateSales": "ยอดขายต่อสาขาต่อวัน ≈ (กล่องบนชั้นรอบเช้า − กล่องบนชั้นรอบเย็น) + จำนวนที่พนักงานเติมระหว่างวัน — ควรสำรวจซ้ำ 3 วันแล้วใช้ค่าเฉลี่ย"
+  },
+  "storeSurveyResults": []
+}

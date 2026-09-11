@@ -1,0 +1,55 @@
+{
+  "lastUpdated": "2026-08-19T16:40:00+07:00",
+  "note": "เมนูตั้งต้น 18 รายการ (ผสมไทย + สากล) หมุนเวียน 3 สัปดาห์ ราคาและต้นทุนเป็นประมาณการ",
+  "menu": [
+    { "code": "TH-01", "name": "ข้าวกล้องอกไก่ผัดกะเพรา", "menu": "thaiclean", "kcal": 480, "protein": 38, "carb": 52, "fat": 12, "sodium": 620, "price": 145, "foodCost": 52, "popularity": 92 },
+    { "code": "TH-02", "name": "ข้าวไรซ์เบอร์รีแกงเขียวหวานไก่", "menu": "thaiclean", "kcal": 520, "protein": 34, "carb": 58, "fat": 16, "sodium": 680, "price": 149, "foodCost": 55, "popularity": 84 },
+    { "code": "TH-03", "name": "ข้าวกล้องหมูสับผัดพริกไทยดำ", "menu": "thaiclean", "kcal": 540, "protein": 33, "carb": 56, "fat": 18, "sodium": 700, "price": 145, "foodCost": 53, "popularity": 78 },
+    { "code": "TH-04", "name": "ต้มยำกุ้งกับข้าวกล้อง", "menu": "thaiclean", "kcal": 430, "protein": 32, "carb": 48, "fat": 10, "sodium": 740, "price": 165, "foodCost": 68, "popularity": 81 },
+    { "code": "BW-01", "name": "สลัดอกไก่ย่างน้ำสลัดงา", "menu": "bowl", "kcal": 380, "protein": 36, "carb": 24, "fat": 14, "sodium": 480, "price": 155, "foodCost": 58, "popularity": 88 },
+    { "code": "BW-02", "name": "ไรซ์โบว์ลแซลมอนเทอริยากิ", "menu": "bowl", "kcal": 520, "protein": 34, "carb": 54, "fat": 18, "sodium": 560, "price": 235, "foodCost": 98, "popularity": 90 },
+    { "code": "BW-03", "name": "โพเก้โบว์ลทูน่าอะโวคาโด", "menu": "bowl", "kcal": 460, "protein": 32, "carb": 46, "fat": 16, "sodium": 520, "price": 215, "foodCost": 88, "popularity": 76 },
+    { "code": "BW-04", "name": "บุดด้าโบว์ลควินัวไก่ย่าง", "menu": "bowl", "kcal": 440, "protein": 30, "carb": 44, "fat": 14, "sodium": 460, "price": 185, "foodCost": 72, "popularity": 72 },
+    { "code": "KT-01", "name": "สเต๊กหมูสันในผักย่าง (คีโต)", "menu": "keto", "kcal": 420, "protein": 42, "carb": 12, "fat": 22, "sodium": 520, "price": 195, "foodCost": 76, "popularity": 80 },
+    { "code": "KT-02", "name": "ไข่ตุ๋นกุ้งกับดอกกะหล่ำบด", "menu": "keto", "kcal": 360, "protein": 34, "carb": 10, "fat": 20, "sodium": 500, "price": 185, "foodCost": 72, "popularity": 68 },
+    { "code": "KT-03", "name": "อกไก่ครีมชีสผักโขม", "menu": "keto", "kcal": 440, "protein": 44, "carb": 11, "fat": 24, "sodium": 540, "price": 189, "foodCost": 74, "popularity": 74 },
+    { "code": "PR-01", "name": "อกไก่ย่าง 200g + ข้าวกล้อง + บรอกโคลี", "menu": "protein", "kcal": 560, "protein": 52, "carb": 58, "fat": 10, "sodium": 480, "price": 175, "foodCost": 66, "popularity": 94 },
+    { "code": "PR-02", "name": "เนื้อวัวสไลด์ผัดพริกหยวก + มันหวาน", "menu": "protein", "kcal": 600, "protein": 48, "carb": 54, "fat": 20, "sodium": 560, "price": 225, "foodCost": 94, "popularity": 82 },
+    { "code": "PR-03", "name": "ปลาแซลมอนย่าง + ข้าวกล้อง + ถั่วแขก", "menu": "protein", "kcal": 580, "protein": 46, "carb": 52, "fat": 22, "sodium": 500, "price": 245, "foodCost": 104, "popularity": 86 },
+    { "code": "VG-01", "name": "ข้าวกล้องเต้าหู้ผัดเห็ดสามอย่าง", "menu": "vegan", "kcal": 420, "protein": 22, "carb": 58, "fat": 12, "sodium": 520, "price": 135, "foodCost": 44, "popularity": 64 },
+    { "code": "VG-02", "name": "แกงส้มผักรวมเจกับข้าวไรซ์เบอร์รี", "menu": "vegan", "kcal": 380, "protein": 18, "carb": 62, "fat": 8, "sodium": 640, "price": 129, "foodCost": 41, "popularity": 58 },
+    { "code": "MD-01", "name": "เมนูโซเดียมต่ำ: ปลานิลนึ่งซีอิ๊วอ่อน", "menu": "medical", "kcal": 360, "protein": 34, "carb": 42, "fat": 8, "sodium": 320, "price": 175, "foodCost": 64, "popularity": 62 },
+    { "code": "MD-02", "name": "เมนูเบาหวาน: ข้าวกล้องไก่ต้มขมิ้น", "menu": "medical", "kcal": 390, "protein": 32, "carb": 40, "fat": 10, "sodium": 380, "price": 179, "foodCost": 66, "popularity": 60 }
+  ],
+  "priceTiers": [
+    { "tier": "Everyday", "range": "120-149 บาท", "avg": 139, "menuTypes": "คลีนไทย, มังสวิรัติ", "targetSharePct": 34, "grossMarginPct": 46 },
+    { "tier": "Signature", "range": "150-199 บาท", "avg": 175, "menuTypes": "สลัด/โบว์ล, โปรตีนสูง, คีโต", "targetSharePct": 48, "grossMarginPct": 50 },
+    { "tier": "Premium", "range": "200-250 บาท", "avg": 228, "menuTypes": "แซลมอน, เนื้อวัว, เมนูเฉพาะโรค", "targetSharePct": 18, "grossMarginPct": 53 }
+  ],
+  "packages": [
+    { "name": "ทดลอง 3 มื้อ", "boxes": 3, "pricePerBox": 165, "total": 495, "discountPct": 0, "note": "สำหรับลูกค้าใหม่" },
+    { "name": "5 มื้อ / สัปดาห์", "boxes": 5, "pricePerBox": 155, "total": 775, "discountPct": 6, "note": "แพ็กเกจขายดีที่สุด" },
+    { "name": "10 มื้อ / 2 สัปดาห์", "boxes": 10, "pricePerBox": 149, "total": 1490, "discountPct": 10, "note": "ล็อกลูกค้าได้ 2 สัปดาห์" },
+    { "name": "20 มื้อ / เดือน", "boxes": 20, "pricePerBox": 142, "total": 2840, "discountPct": 14, "note": "สมาชิกรายเดือน ตัดเงินอัตโนมัติ" },
+    { "name": "40 มื้อ / เดือน (2 มื้อ/วัน)", "boxes": 40, "pricePerBox": 136, "total": 5440, "discountPct": 18, "note": "กลุ่มควบคุมน้ำหนักจริงจัง" },
+    { "name": "องค์กร 50 กล่องขึ้นไป", "boxes": 50, "pricePerBox": 128, "total": 6400, "discountPct": 22, "note": "ราคาสัญญารายไตรมาส" }
+  ],
+  "unitEconomics": {
+    "avgPrice": 165,
+    "items": [
+      { "label": "วัตถุดิบอาหาร", "value": 58, "type": "cogs" },
+      { "label": "บรรจุภัณฑ์ (กล่อง+ฉลาก+ช้อน)", "value": 11, "type": "cogs" },
+      { "label": "ค่าแรงครัวส่วนผันแปร", "value": 15, "type": "cogs" },
+      { "label": "ค่าจัดส่งสุทธิ (หลังหักที่ลูกค้าจ่าย)", "value": 16, "type": "variable" },
+      { "label": "ค่าธรรมเนียมแพลตฟอร์ม/ชำระเงิน", "value": 10, "type": "variable" }
+    ],
+    "contributionPerBox": 55,
+    "notes": "ต้นทุนคงที่ (ค่าเช่าครัว เงินเดือนประจำ สาธารณูปโภค การตลาดพื้นฐาน) อยู่ที่ 520,000 บาท/เดือน ในปีที่ 1"
+  },
+  "costByMenuType": {
+    "labels": ["คลีนไทย", "สลัด/โบว์ล", "คีโต", "โปรตีนสูง", "มังสวิรัติ/เจ", "ผู้สูงอายุ/ผู้ป่วย"],
+    "avgPrice": [151, 198, 190, 215, 132, 177],
+    "avgFoodCost": [57, 79, 74, 88, 43, 65],
+    "grossMarginPct": [48.3, 46.5, 47.4, 44.2, 51.5, 49.2]
+  }
+}

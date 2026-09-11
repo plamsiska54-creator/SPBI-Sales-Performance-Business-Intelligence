@@ -1,0 +1,409 @@
+{
+  "categories": [
+    { "key": "thai", "label": "อาหารไทย" },
+    { "key": "international", "label": "อาหารสากล" },
+    { "key": "clean", "label": "คลีนฟู้ด" },
+    { "key": "keto", "label": "คีโต/โลว์คาร์บ" },
+    { "key": "vegan", "label": "มังสวิรัติ/วีแกน" }
+  ],
+  "items": [
+    {
+      "id": "m001",
+      "name": "ข้าวกล้องอกไก่ย่างสมุนไพร",
+      "nameEn": "Grilled Herb Chicken Brown Rice",
+      "category": "clean",
+      "price": 139,
+      "cost": 81,
+      "margin": 41.7,
+      "nutrition": { "calories": 420, "protein": 35, "fat": 12, "carb": 45, "fiber": 6, "sodium": 380 },
+      "ingredients": [
+        { "name": "อกไก่", "amount": "150g", "unitCost": 22 },
+        { "name": "ข้าวกล้องหอมมะลิ", "amount": "150g", "unitCost": 7 },
+        { "name": "บร็อคโคลี", "amount": "80g", "unitCost": 8 },
+        { "name": "มะเขือเทศราชินี", "amount": "50g", "unitCost": 4 },
+        { "name": "น้ำสลัดสมุนไพร", "amount": "30ml", "unitCost": 5 }
+      ],
+      "allergens": [],
+      "status": "active",
+      "popularity": 92,
+      "description": "อกไก่หมักสมุนไพรย่างจนหอม เสิร์ฟบนข้าวกล้องหอมมะลิ คู่กับบร็อคโคลีนึ่งและมะเขือเทศราชินี ราดน้ำสลัดสมุนไพรสูตรพิเศษ"
+    },
+    {
+      "id": "m002",
+      "name": "ข้าวผัดไข่ผักรวม",
+      "nameEn": "Veggie Egg Fried Rice",
+      "category": "thai",
+      "price": 120,
+      "cost": 61,
+      "margin": 49.2,
+      "nutrition": { "calories": 380, "protein": 14, "fat": 10, "carb": 58, "fiber": 3, "sodium": 420 },
+      "ingredients": [
+        { "name": "ข้าวหอมมะลิ", "amount": "200g", "unitCost": 8 },
+        { "name": "ไข่ไก่", "amount": "2 ฟอง", "unitCost": 8 },
+        { "name": "แครอท", "amount": "40g", "unitCost": 3 },
+        { "name": "ถั่วลันเตา", "amount": "30g", "unitCost": 4 },
+        { "name": "ซอสปรุงรสโซเดียมต่ำ", "amount": "15ml", "unitCost": 3 }
+      ],
+      "allergens": ["ไข่"],
+      "status": "active",
+      "popularity": 78,
+      "description": "ข้าวผัดสูตรใช้น้ำมันมะกอก ผัดกับไข่ไก่และผักรวมสด ปรุงรสด้วยซอสโซเดียมต่ำ อร่อยแบบสุขภาพดี"
+    },
+    {
+      "id": "m003",
+      "name": "แกงจืดเต้าหู้ผักพร้อมข้าวกล้อง",
+      "nameEn": "Clear Tofu Vegetable Soup with Brown Rice",
+      "category": "thai",
+      "price": 125,
+      "cost": 63,
+      "margin": 49.6,
+      "nutrition": { "calories": 340, "protein": 16, "fat": 8, "carb": 48, "fiber": 5, "sodium": 350 },
+      "ingredients": [
+        { "name": "เต้าหู้ไข่", "amount": "120g", "unitCost": 6 },
+        { "name": "ข้าวกล้องหอมมะลิ", "amount": "150g", "unitCost": 7 },
+        { "name": "ฟักทอง", "amount": "80g", "unitCost": 4 },
+        { "name": "ผักกาดขาว", "amount": "60g", "unitCost": 3 },
+        { "name": "เห็ดหอมสด", "amount": "30g", "unitCost": 5 },
+        { "name": "สาหร่ายวากาเมะ", "amount": "5g", "unitCost": 3 }
+      ],
+      "allergens": ["ถั่วเหลือง"],
+      "status": "active",
+      "popularity": 65,
+      "description": "แกงจืดน้ำใสหอมกลิ่นเห็ดหอม เต้าหู้ไข่นุ่มลิ้น ฟักทอง ผักกาดขาว สาหร่าย เสิร์ฟพร้อมข้าวกล้อง อ่อนโยนต่อกระเพาะ"
+    },
+    {
+      "id": "m004",
+      "name": "สลัดปลาทูน่า",
+      "nameEn": "Tuna Salad Bowl",
+      "category": "clean",
+      "price": 149,
+      "cost": 80,
+      "margin": 46.3,
+      "nutrition": { "calories": 320, "protein": 28, "fat": 14, "carb": 18, "fiber": 4, "sodium": 410 },
+      "ingredients": [
+        { "name": "ทูน่าในน้ำแร่", "amount": "120g", "unitCost": 20 },
+        { "name": "ผักสลัดรวม", "amount": "100g", "unitCost": 12 },
+        { "name": "ไข่ต้ม", "amount": "1 ฟอง", "unitCost": 4 },
+        { "name": "มะเขือเทศราชินี", "amount": "60g", "unitCost": 4 },
+        { "name": "น้ำสลัดมะนาว", "amount": "30ml", "unitCost": 5 }
+      ],
+      "allergens": ["ปลา", "ไข่"],
+      "status": "active",
+      "popularity": 75,
+      "description": "ทูน่าคุณภาพเกรดพรีเมียมบนเตียงผักสลัดรวมสด ไข่ต้มหั่นครึ่ง มะเขือเทศราชินี ราดน้ำสลัดมะนาวสูตรไขมันต่ำ"
+    },
+    {
+      "id": "m005",
+      "name": "ต้มยำไก่ข้าวกล้อง",
+      "nameEn": "Tom Yum Chicken Brown Rice",
+      "category": "thai",
+      "price": 135,
+      "cost": 75,
+      "margin": 44.4,
+      "nutrition": { "calories": 370, "protein": 26, "fat": 8, "carb": 48, "fiber": 3, "sodium": 450 },
+      "ingredients": [
+        { "name": "อกไก่", "amount": "120g", "unitCost": 18 },
+        { "name": "ข้าวกล้องหอมมะลิ", "amount": "150g", "unitCost": 7 },
+        { "name": "เห็ดฟาง", "amount": "50g", "unitCost": 6 },
+        { "name": "ข่า/ตะไคร้/ใบมะกรูด", "amount": "20g", "unitCost": 4 },
+        { "name": "น้ำพริกเผา", "amount": "15g", "unitCost": 3 },
+        { "name": "มะนาว", "amount": "1 ลูก", "unitCost": 2 }
+      ],
+      "allergens": [],
+      "status": "active",
+      "popularity": 88,
+      "description": "ต้มยำน้ำใสรสเข้มข้นจากสมุนไพรไทยแท้ อกไก่นุ่มชิ้นโต เห็ดฟาง เสิร์ฟพร้อมข้าวกล้อง ซดน้ำซุปร้อนๆ หอมฟุ้ง"
+    },
+    {
+      "id": "m006",
+      "name": "ผัดกะเพราไก่สับ (ไม่ใส่น้ำตาล)",
+      "nameEn": "Sugar-Free Holy Basil Minced Chicken",
+      "category": "thai",
+      "price": 129,
+      "cost": 73,
+      "margin": 43.4,
+      "nutrition": { "calories": 450, "protein": 30, "fat": 16, "carb": 46, "fiber": 2, "sodium": 520 },
+      "ingredients": [
+        { "name": "ไก่สับ", "amount": "150g", "unitCost": 18 },
+        { "name": "ข้าวกล้องหอมมะลิ", "amount": "150g", "unitCost": 7 },
+        { "name": "ใบกะเพราสด", "amount": "15g", "unitCost": 3 },
+        { "name": "พริก/กระเทียม", "amount": "20g", "unitCost": 3 },
+        { "name": "ไข่ดาว", "amount": "1 ฟอง", "unitCost": 4 },
+        { "name": "ซอสหอยนางรม", "amount": "15ml", "unitCost": 3 }
+      ],
+      "allergens": ["ไข่"],
+      "status": "active",
+      "popularity": 95,
+      "description": "เมนูยอดนิยมตลอดกาล ผัดกะเพราไก่สับกลิ่นกะเพราหอมฉุย สูตรไม่เติมน้ำตาล พร้อมไข่ดาวและข้าวกล้อง"
+    },
+    {
+      "id": "m007",
+      "name": "โบว์ลแซลมอนย่าง",
+      "nameEn": "Grilled Salmon Bowl",
+      "category": "international",
+      "price": 229,
+      "cost": 138,
+      "margin": 39.7,
+      "nutrition": { "calories": 520, "protein": 32, "fat": 22, "carb": 50, "fiber": 5, "sodium": 480 },
+      "ingredients": [
+        { "name": "แซลมอนนอร์เวย์", "amount": "150g", "unitCost": 65 },
+        { "name": "ข้าวญี่ปุ่น", "amount": "150g", "unitCost": 10 },
+        { "name": "อะโวคาโด", "amount": "50g", "unitCost": 15 },
+        { "name": "เอดามาเมะ", "amount": "40g", "unitCost": 6 },
+        { "name": "สาหร่ายโนริ", "amount": "5g", "unitCost": 3 },
+        { "name": "ซอสเทอริยากิ", "amount": "20ml", "unitCost": 4 }
+      ],
+      "allergens": ["ปลา", "ถั่วเหลือง"],
+      "status": "active",
+      "popularity": 82,
+      "description": "แซลมอนนอร์เวย์ย่างชิ้นหนา เสิร์ฟบนข้าวญี่ปุ่นร้อน คู่อะโวคาโดสไลซ์ เอดามาเมะ สาหร่ายโนริ ราดซอสเทอริยากิ"
+    },
+    {
+      "id": "m008",
+      "name": "แรปไก่ซีซาร์",
+      "nameEn": "Chicken Caesar Wrap",
+      "category": "international",
+      "price": 169,
+      "cost": 84,
+      "margin": 50.3,
+      "nutrition": { "calories": 430, "protein": 28, "fat": 16, "carb": 42, "fiber": 3, "sodium": 520 },
+      "ingredients": [
+        { "name": "อกไก่ย่าง", "amount": "120g", "unitCost": 18 },
+        { "name": "แป้งตอร์ทิลลาโฮลวีท", "amount": "1 แผ่น", "unitCost": 8 },
+        { "name": "ผักกาดโรเมน", "amount": "60g", "unitCost": 6 },
+        { "name": "พาร์เมซานชีส", "amount": "15g", "unitCost": 10 },
+        { "name": "ซอสซีซาร์ไขมันต่ำ", "amount": "25ml", "unitCost": 7 }
+      ],
+      "allergens": ["กลูเตน", "นม"],
+      "status": "active",
+      "popularity": 70,
+      "description": "อกไก่ย่างสไลซ์ห่อในแป้งตอร์ทิลลาโฮลวีท กับผักกาดโรเมนกรอบ พาร์เมซานชีส ซอสซีซาร์สูตรไขมันต่ำ"
+    },
+    {
+      "id": "m009",
+      "name": "โพเก้โบว์ล",
+      "nameEn": "Poke Bowl",
+      "category": "international",
+      "price": 199,
+      "cost": 119,
+      "margin": 40.2,
+      "nutrition": { "calories": 480, "protein": 30, "fat": 18, "carb": 52, "fiber": 4, "sodium": 460 },
+      "ingredients": [
+        { "name": "ปลาทูน่าสด (sashimi grade)", "amount": "120g", "unitCost": 45 },
+        { "name": "ข้าวญี่ปุ่น", "amount": "150g", "unitCost": 10 },
+        { "name": "อะโวคาโด", "amount": "50g", "unitCost": 15 },
+        { "name": "แตงกวาญี่ปุ่น", "amount": "40g", "unitCost": 3 },
+        { "name": "เอดามาเมะ", "amount": "40g", "unitCost": 6 },
+        { "name": "ซอสโพเนซุ", "amount": "20ml", "unitCost": 5 }
+      ],
+      "allergens": ["ปลา", "ถั่วเหลือง"],
+      "status": "active",
+      "popularity": 76,
+      "description": "ทูน่าสดเกรดซาชิมิหั่นลูกเต๋า หมักซอสโพเนซุ บนข้าวญี่ปุ่น ท็อปอะโวคาโด เอดามาเมะ แตงกวาซอย"
+    },
+    {
+      "id": "m010",
+      "name": "เมดิเตอร์เรเนียนควินัวบอกซ์",
+      "nameEn": "Mediterranean Quinoa Box",
+      "category": "international",
+      "price": 189,
+      "cost": 100,
+      "margin": 47.1,
+      "nutrition": { "calories": 440, "protein": 26, "fat": 18, "carb": 44, "fiber": 6, "sodium": 490 },
+      "ingredients": [
+        { "name": "ควินัว", "amount": "120g", "unitCost": 18 },
+        { "name": "อกไก่ย่าง", "amount": "100g", "unitCost": 15 },
+        { "name": "มะเขือเทศราชินี", "amount": "60g", "unitCost": 6 },
+        { "name": "มะกอกดำ", "amount": "30g", "unitCost": 8 },
+        { "name": "เฟต้าชีส", "amount": "30g", "unitCost": 12 },
+        { "name": "น้ำสลัดมะนาว-ออลิฟ", "amount": "25ml", "unitCost": 6 }
+      ],
+      "allergens": ["นม"],
+      "status": "active",
+      "popularity": 68,
+      "description": "ควินัวสุก ท็อปอกไก่ย่างสไลซ์ มะเขือเทศราชินี มะกอกดำ เฟต้าชีส ราดน้ำสลัดมะนาว-ออลิฟออยล์สไตล์เมดิเตอร์เรเนียน"
+    },
+    {
+      "id": "m011",
+      "name": "สเต็กไก่กับผักย่าง (ไม่มีข้าว)",
+      "nameEn": "Grilled Chicken Steak with Roasted Vegetables",
+      "category": "keto",
+      "price": 159,
+      "cost": 91,
+      "margin": 42.8,
+      "nutrition": { "calories": 340, "protein": 38, "fat": 16, "carb": 12, "fiber": 5, "sodium": 360 },
+      "ingredients": [
+        { "name": "อกไก่ (สเต็ก)", "amount": "200g", "unitCost": 30 },
+        { "name": "บร็อคโคลี", "amount": "80g", "unitCost": 8 },
+        { "name": "พริกหวาน 3 สี", "amount": "60g", "unitCost": 6 },
+        { "name": "เห็ดออรินจิ", "amount": "50g", "unitCost": 7 },
+        { "name": "น้ำมันมะกอก", "amount": "10ml", "unitCost": 5 }
+      ],
+      "allergens": [],
+      "status": "active",
+      "popularity": 80,
+      "description": "อกไก่ทำเป็นสเต็กหนา ย่างจนผิวกรอบ เสิร์ฟกับผักย่างรวม (บร็อคโคลี พริกหวาน เห็ดออรินจิ) ไม่มีข้าว เหมาะสำหรับคีโต"
+    },
+    {
+      "id": "m012",
+      "name": "สลัดอกไก่อะโวคาโด",
+      "nameEn": "Chicken Avocado Salad",
+      "category": "keto",
+      "price": 179,
+      "cost": 104,
+      "margin": 41.9,
+      "nutrition": { "calories": 420, "protein": 30, "fat": 28, "carb": 12, "fiber": 7, "sodium": 340 },
+      "ingredients": [
+        { "name": "อกไก่ย่าง", "amount": "120g", "unitCost": 18 },
+        { "name": "อะโวคาโด", "amount": "80g", "unitCost": 24 },
+        { "name": "ผักสลัดรวม", "amount": "80g", "unitCost": 10 },
+        { "name": "ไข่ต้ม", "amount": "1 ฟอง", "unitCost": 4 },
+        { "name": "ถั่ววอลนัท", "amount": "15g", "unitCost": 8 },
+        { "name": "น้ำสลัดงา", "amount": "25ml", "unitCost": 5 }
+      ],
+      "allergens": ["ไข่", "ถั่วเปลือกแข็ง"],
+      "status": "active",
+      "popularity": 73,
+      "description": "สลัดไขมันดีจากอะโวคาโดครึ่งลูก อกไก่ย่างสไลซ์ ไข่ต้ม ถั่ววอลนัท บนผักสลัดรวมสด ราดน้ำสลัดงาคั่ว"
+    },
+    {
+      "id": "m013",
+      "name": "ข้าวกล้องปลาซาบะเทอริยากิ",
+      "nameEn": "Teriyaki Saba Brown Rice",
+      "category": "clean",
+      "price": 159,
+      "cost": 82,
+      "margin": 48.4,
+      "nutrition": { "calories": 460, "protein": 26, "fat": 18, "carb": 50, "fiber": 4, "sodium": 440 },
+      "ingredients": [
+        { "name": "ปลาซาบะ", "amount": "130g", "unitCost": 28 },
+        { "name": "ข้าวกล้องหอมมะลิ", "amount": "150g", "unitCost": 7 },
+        { "name": "ผักโขมลวก", "amount": "60g", "unitCost": 5 },
+        { "name": "แครอทหั่นเส้น", "amount": "40g", "unitCost": 3 },
+        { "name": "ซอสเทอริยากิ", "amount": "20ml", "unitCost": 4 }
+      ],
+      "allergens": ["ปลา", "ถั่วเหลือง"],
+      "status": "active",
+      "popularity": 71,
+      "description": "ปลาซาบะย่างราดซอสเทอริยากิหวานน้อย เสิร์ฟบนข้าวกล้อง คู่ผักโขมลวกและแครอทเส้น โอเมก้า 3 สูง"
+    },
+    {
+      "id": "m014",
+      "name": "ไก่อบสมุนไพรกับมันหวาน",
+      "nameEn": "Herb Roasted Chicken with Sweet Potato",
+      "category": "clean",
+      "price": 149,
+      "cost": 77,
+      "margin": 48.3,
+      "nutrition": { "calories": 430, "protein": 28, "fat": 14, "carb": 50, "fiber": 5, "sodium": 370 },
+      "ingredients": [
+        { "name": "สะโพกไก่ไม่ติดหนัง", "amount": "150g", "unitCost": 20 },
+        { "name": "มันหวานญี่ปุ่น", "amount": "100g", "unitCost": 8 },
+        { "name": "บร็อคโคลี", "amount": "60g", "unitCost": 7 },
+        { "name": "แครอท", "amount": "40g", "unitCost": 3 },
+        { "name": "โรสแมรี/ไธม์สด", "amount": "5g", "unitCost": 4 }
+      ],
+      "allergens": [],
+      "status": "active",
+      "popularity": 77,
+      "description": "สะโพกไก่หมักโรสแมรีและไธม์ อบจนหอมเหลืองกรอบ คู่มันหวานญี่ปุ่นอบเนื้อเนียนหวานธรรมชาติ และบร็อคโคลีนึ่ง"
+    },
+    {
+      "id": "m015",
+      "name": "ข้าวกล้องผัดผักใบเขียว",
+      "nameEn": "Stir-Fried Greens Brown Rice",
+      "category": "vegan",
+      "price": 125,
+      "cost": 64,
+      "margin": 48.8,
+      "nutrition": { "calories": 350, "protein": 14, "fat": 8, "carb": 56, "fiber": 6, "sodium": 400 },
+      "ingredients": [
+        { "name": "ข้าวกล้องหอมมะลิ", "amount": "180g", "unitCost": 8 },
+        { "name": "คะน้า", "amount": "60g", "unitCost": 4 },
+        { "name": "ผักบุ้ง", "amount": "60g", "unitCost": 4 },
+        { "name": "เต้าหู้แข็ง", "amount": "80g", "unitCost": 5 },
+        { "name": "เห็ดหอมสด", "amount": "30g", "unitCost": 5 },
+        { "name": "ซอสถั่วเหลืองโซเดียมต่ำ", "amount": "15ml", "unitCost": 3 }
+      ],
+      "allergens": ["ถั่วเหลือง"],
+      "status": "active",
+      "popularity": 62,
+      "description": "ผัดคะน้าและผักบุ้งกรอบ เต้าหู้แข็งทอดน้ำมันน้อย เห็ดหอม ปรุงรสด้วยซอสถั่วเหลืองโซเดียมต่ำ เสิร์ฟกับข้าวกล้อง"
+    },
+    {
+      "id": "m016",
+      "name": "เทมเป้ผัดพริกไทยดำ",
+      "nameEn": "Black Pepper Tempeh Stir-Fry",
+      "category": "vegan",
+      "price": 135,
+      "cost": 70,
+      "margin": 48.1,
+      "nutrition": { "calories": 390, "protein": 20, "fat": 12, "carb": 52, "fiber": 5, "sodium": 380 },
+      "ingredients": [
+        { "name": "เทมเป้", "amount": "120g", "unitCost": 14 },
+        { "name": "ข้าวกล้องหอมมะลิ", "amount": "150g", "unitCost": 7 },
+        { "name": "พริกหวาน", "amount": "50g", "unitCost": 5 },
+        { "name": "หอมใหญ่", "amount": "30g", "unitCost": 2 },
+        { "name": "พริกไทยดำบด", "amount": "5g", "unitCost": 3 },
+        { "name": "ซอสเห็ดนางฟ้า", "amount": "15ml", "unitCost": 4 }
+      ],
+      "allergens": ["ถั่วเหลือง"],
+      "status": "active",
+      "popularity": 58,
+      "description": "เทมเป้หั่นแว่นทอดกรอบนอกนุ่มใน ผัดกับพริกหวานและหอมใหญ่ในซอสพริกไทยดำ เสิร์ฟพร้อมข้าวกล้อง โปรตีนพืชสูง"
+    },
+    {
+      "id": "m017",
+      "name": "สลัดควินัวถั่วลูกไก่",
+      "nameEn": "Quinoa Chickpea Salad",
+      "category": "vegan",
+      "price": 155,
+      "cost": 78,
+      "margin": 49.7,
+      "nutrition": { "calories": 380, "protein": 16, "fat": 12, "carb": 52, "fiber": 8, "sodium": 320 },
+      "ingredients": [
+        { "name": "ควินัว", "amount": "100g", "unitCost": 15 },
+        { "name": "ถั่วลูกไก่ต้ม", "amount": "80g", "unitCost": 6 },
+        { "name": "มะเขือเทศราชินี", "amount": "60g", "unitCost": 6 },
+        { "name": "แตงกวา", "amount": "50g", "unitCost": 3 },
+        { "name": "ผักสลัดรวม", "amount": "60g", "unitCost": 8 },
+        { "name": "น้ำสลัดมะนาว", "amount": "25ml", "unitCost": 5 }
+      ],
+      "allergens": [],
+      "status": "active",
+      "popularity": 55,
+      "description": "ควินัวสุกผสมถั่วลูกไก่ มะเขือเทศราชินี แตงกวา บนเตียงผักสลัดรวม ราดน้ำสลัดมะนาวสดใส ไฟเบอร์สูง อิ่มนาน"
+    },
+    {
+      "id": "m018",
+      "name": "แกงเขียวหวานเต้าหู้ข้าวกล้อง",
+      "nameEn": "Green Curry Tofu Brown Rice",
+      "category": "vegan",
+      "price": 139,
+      "cost": 68,
+      "margin": 51.1,
+      "nutrition": { "calories": 410, "protein": 15, "fat": 16, "carb": 52, "fiber": 4, "sodium": 430 },
+      "ingredients": [
+        { "name": "เต้าหู้แข็ง", "amount": "120g", "unitCost": 6 },
+        { "name": "ข้าวกล้องหอมมะลิ", "amount": "150g", "unitCost": 7 },
+        { "name": "กะทิ (ไขมันต่ำ)", "amount": "80ml", "unitCost": 8 },
+        { "name": "มะเขือพวง", "amount": "40g", "unitCost": 4 },
+        { "name": "ใบโหระพาสด", "amount": "10g", "unitCost": 3 },
+        { "name": "พริกแกงเขียวหวาน", "amount": "25g", "unitCost": 5 }
+      ],
+      "allergens": ["ถั่วเหลือง"],
+      "status": "active",
+      "popularity": 67,
+      "description": "แกงเขียวหวานกะทิไขมันต่ำ เต้าหู้แข็ง มะเขือพวง ใบโหระพาหอมกรุ่น รสจัดจ้านแบบไทยแท้ เสิร์ฟพร้อมข้าวกล้อง"
+    }
+  ],
+  "weeklyPlan": {
+    "mon": ["m001", "m005", "m010"],
+    "tue": ["m002", "m006", "m011"],
+    "wed": ["m003", "m007", "m012"],
+    "thu": ["m004", "m008", "m013"],
+    "fri": ["m001", "m009", "m014"],
+    "sat": ["m005", "m010", "m015"],
+    "sun": ["m006", "m011", "m016"]
+  }
+}

@@ -1,5 +1,4 @@
 node_modules/
-Data/
 !data/
 !data/area_monitoring.json
 !data/branch_names.json
@@ -12,3 +11,9 @@ auto_git_push.ps1
 temp_*
 ai-dev-team-wanwanach-ai-team-main/
 *.mp4
+
+# ไฟล์ใหญ่เกิน 100MB (GitHub ไม่รับ)
+รายงานขนส่งออนไลน์ 11-02-67.xlsx
+รายงานแจ้งปัญหา Amazon ประจำปี 2568.xlsx
+รายงานแจ้งปัญหา Online ประจำปี 2568.xlsx
+รวมnew2.xlsx

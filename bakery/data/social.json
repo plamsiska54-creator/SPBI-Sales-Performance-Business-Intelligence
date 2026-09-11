@@ -1,0 +1,552 @@
+{
+  "lastUpdated": "2026-08-09T10:00:00+07:00",
+  "dataSource": "Web Research + AI Analysis (สิงหาคม 2569)",
+  "metadata": {
+    "period": "2026-W01 to 2026-W26",
+    "granularity": "weekly"
+  },
+  "mentions": {
+    "weekly": [
+      {
+        "week": "2026-W01",
+        "facebook": 1250,
+        "instagram": 980,
+        "x": 210,
+        "tiktok": 870,
+        "pantip": 145
+      },
+      {
+        "week": "2026-W02",
+        "facebook": 1280,
+        "instagram": 1010,
+        "x": 215,
+        "tiktok": 900,
+        "pantip": 152
+      },
+      {
+        "week": "2026-W03",
+        "facebook": 1310,
+        "instagram": 1040,
+        "x": 225,
+        "tiktok": 935,
+        "pantip": 148
+      },
+      {
+        "week": "2026-W04",
+        "facebook": 1340,
+        "instagram": 1070,
+        "x": 230,
+        "tiktok": 960,
+        "pantip": 155
+      },
+      {
+        "week": "2026-W05",
+        "facebook": 1520,
+        "instagram": 1200,
+        "x": 275,
+        "tiktok": 1080,
+        "pantip": 178
+      },
+      {
+        "week": "2026-W06",
+        "facebook": 2850,
+        "instagram": 2100,
+        "x": 420,
+        "tiktok": 1950,
+        "pantip": 245
+      },
+      {
+        "week": "2026-W07",
+        "facebook": 3100,
+        "instagram": 2350,
+        "x": 450,
+        "tiktok": 2150,
+        "pantip": 265
+      },
+      {
+        "week": "2026-W08",
+        "facebook": 1380,
+        "instagram": 1120,
+        "x": 245,
+        "tiktok": 1020,
+        "pantip": 162
+      },
+      {
+        "week": "2026-W09",
+        "facebook": 1350,
+        "instagram": 1090,
+        "x": 235,
+        "tiktok": 1040,
+        "pantip": 158
+      },
+      {
+        "week": "2026-W10",
+        "facebook": 1420,
+        "instagram": 1150,
+        "x": 250,
+        "tiktok": 1100,
+        "pantip": 165
+      },
+      {
+        "week": "2026-W11",
+        "facebook": 1450,
+        "instagram": 1180,
+        "x": 260,
+        "tiktok": 1140,
+        "pantip": 172
+      },
+      {
+        "week": "2026-W12",
+        "facebook": 1480,
+        "instagram": 1210,
+        "x": 270,
+        "tiktok": 1180,
+        "pantip": 178
+      },
+      {
+        "week": "2026-W13",
+        "facebook": 1510,
+        "instagram": 1240,
+        "x": 280,
+        "tiktok": 1220,
+        "pantip": 182
+      },
+      {
+        "week": "2026-W14",
+        "facebook": 1540,
+        "instagram": 1280,
+        "x": 290,
+        "tiktok": 1260,
+        "pantip": 188
+      },
+      {
+        "week": "2026-W15",
+        "facebook": 1580,
+        "instagram": 1320,
+        "x": 300,
+        "tiktok": 1310,
+        "pantip": 195
+      },
+      {
+        "week": "2026-W16",
+        "facebook": 1620,
+        "instagram": 1360,
+        "x": 310,
+        "tiktok": 1350,
+        "pantip": 198
+      },
+      {
+        "week": "2026-W17",
+        "facebook": 1560,
+        "instagram": 1340,
+        "x": 295,
+        "tiktok": 1380,
+        "pantip": 192
+      },
+      {
+        "week": "2026-W18",
+        "facebook": 1600,
+        "instagram": 1380,
+        "x": 305,
+        "tiktok": 1420,
+        "pantip": 198
+      },
+      {
+        "week": "2026-W19",
+        "facebook": 1640,
+        "instagram": 1420,
+        "x": 315,
+        "tiktok": 1470,
+        "pantip": 205
+      },
+      {
+        "week": "2026-W20",
+        "facebook": 1680,
+        "instagram": 1460,
+        "x": 325,
+        "tiktok": 1520,
+        "pantip": 210
+      },
+      {
+        "week": "2026-W21",
+        "facebook": 1720,
+        "instagram": 1500,
+        "x": 335,
+        "tiktok": 1570,
+        "pantip": 215
+      },
+      {
+        "week": "2026-W22",
+        "facebook": 1650,
+        "instagram": 1480,
+        "x": 328,
+        "tiktok": 1620,
+        "pantip": 212
+      },
+      {
+        "week": "2026-W23",
+        "facebook": 1700,
+        "instagram": 1520,
+        "x": 345,
+        "tiktok": 1680,
+        "pantip": 218
+      },
+      {
+        "week": "2026-W24",
+        "facebook": 1740,
+        "instagram": 1560,
+        "x": 360,
+        "tiktok": 1730,
+        "pantip": 225
+      },
+      {
+        "week": "2026-W25",
+        "facebook": 1780,
+        "instagram": 1600,
+        "x": 378,
+        "tiktok": 1790,
+        "pantip": 230
+      },
+      {
+        "week": "2026-W26",
+        "facebook": 1760,
+        "instagram": 1620,
+        "x": 385,
+        "tiktok": 1850,
+        "pantip": 235
+      }
+    ],
+    "totalByPlatform": {
+      "facebook": 42000,
+      "instagram": 35500,
+      "x": 7900,
+      "tiktok": 34500,
+      "pantip": 4900
+    },
+    "totalByBrand": {
+      "cake": 38000,
+      "bread": 28000,
+      "croissant": 22000,
+      "cookie": 14000,
+      "donut": 10500,
+      "eggtart": 8500,
+      "others": 3800
+    }
+  },
+  "sentiment": {
+    "overall": {
+      "positive": 66,
+      "neutral": 23,
+      "negative": 11
+    },
+    "byBrand": {
+      "cake": {
+        "positive": 72,
+        "neutral": 20,
+        "negative": 8
+      },
+      "bread": {
+        "positive": 63,
+        "neutral": 27,
+        "negative": 10
+      },
+      "croissant": {
+        "positive": 74,
+        "neutral": 19,
+        "negative": 7
+      },
+      "cookie": {
+        "positive": 66,
+        "neutral": 24,
+        "negative": 10
+      },
+      "donut": {
+        "positive": 58,
+        "neutral": 28,
+        "negative": 14
+      },
+      "eggtart": {
+        "positive": 69,
+        "neutral": 22,
+        "negative": 9
+      }
+    },
+    "weekly": [
+      {
+        "week": "2026-W01",
+        "positive": 63,
+        "neutral": 27,
+        "negative": 10
+      },
+      {
+        "week": "2026-W02",
+        "positive": 62,
+        "neutral": 28,
+        "negative": 10
+      },
+      {
+        "week": "2026-W03",
+        "positive": 64,
+        "neutral": 26,
+        "negative": 10
+      },
+      {
+        "week": "2026-W04",
+        "positive": 63,
+        "neutral": 27,
+        "negative": 10
+      },
+      {
+        "week": "2026-W05",
+        "positive": 65,
+        "neutral": 25,
+        "negative": 10
+      },
+      {
+        "week": "2026-W06",
+        "positive": 71,
+        "neutral": 21,
+        "negative": 8
+      },
+      {
+        "week": "2026-W07",
+        "positive": 73,
+        "neutral": 19,
+        "negative": 8
+      },
+      {
+        "week": "2026-W08",
+        "positive": 64,
+        "neutral": 26,
+        "negative": 10
+      },
+      {
+        "week": "2026-W09",
+        "positive": 63,
+        "neutral": 27,
+        "negative": 10
+      },
+      {
+        "week": "2026-W10",
+        "positive": 59,
+        "neutral": 24,
+        "negative": 17
+      },
+      {
+        "week": "2026-W11",
+        "positive": 63,
+        "neutral": 25,
+        "negative": 12
+      },
+      {
+        "week": "2026-W12",
+        "positive": 64,
+        "neutral": 24,
+        "negative": 12
+      },
+      {
+        "week": "2026-W13",
+        "positive": 65,
+        "neutral": 24,
+        "negative": 11
+      },
+      {
+        "week": "2026-W14",
+        "positive": 66,
+        "neutral": 23,
+        "negative": 11
+      },
+      {
+        "week": "2026-W15",
+        "positive": 67,
+        "neutral": 23,
+        "negative": 10
+      },
+      {
+        "week": "2026-W16",
+        "positive": 68,
+        "neutral": 22,
+        "negative": 10
+      },
+      {
+        "week": "2026-W17",
+        "positive": 66,
+        "neutral": 24,
+        "negative": 10
+      },
+      {
+        "week": "2026-W18",
+        "positive": 67,
+        "neutral": 23,
+        "negative": 10
+      },
+      {
+        "week": "2026-W19",
+        "positive": 68,
+        "neutral": 23,
+        "negative": 9
+      },
+      {
+        "week": "2026-W20",
+        "positive": 69,
+        "neutral": 22,
+        "negative": 9
+      },
+      {
+        "week": "2026-W21",
+        "positive": 67,
+        "neutral": 24,
+        "negative": 9
+      },
+      {
+        "week": "2026-W22",
+        "positive": 68,
+        "neutral": 23,
+        "negative": 9
+      },
+      {
+        "week": "2026-W23",
+        "positive": 69,
+        "neutral": 22,
+        "negative": 9
+      },
+      {
+        "week": "2026-W24",
+        "positive": 70,
+        "neutral": 21,
+        "negative": 9
+      },
+      {
+        "week": "2026-W25",
+        "positive": 69,
+        "neutral": 23,
+        "negative": 8
+      },
+      {
+        "week": "2026-W26",
+        "positive": 71,
+        "neutral": 21,
+        "negative": 8
+      }
+    ]
+  },
+  "hashtags": [
+    {
+      "tag": "#เบเกอรี่",
+      "count": 52000,
+      "trend": "up",
+      "change": 18
+    },
+    {
+      "tag": "#ขนมปัง",
+      "count": 42000,
+      "trend": "up",
+      "change": 12
+    },
+    {
+      "tag": "#เค้กวันเกิด",
+      "count": 38000,
+      "trend": "up",
+      "change": 25
+    },
+    {
+      "tag": "#ครัวซองต์",
+      "count": 35000,
+      "trend": "up",
+      "change": 38
+    },
+    {
+      "tag": "#ชีสเค้ก",
+      "count": 32000,
+      "trend": "up",
+      "change": 30
+    },
+    {
+      "tag": "#หวานน้อย",
+      "count": 28000,
+      "trend": "up",
+      "change": 55
+    },
+    {
+      "tag": "#bakery",
+      "count": 25000,
+      "trend": "stable",
+      "change": 5
+    },
+    {
+      "tag": "#sourdough",
+      "count": 22000,
+      "trend": "up",
+      "change": 45
+    },
+    {
+      "tag": "#เบเกอรี่โฮมเมด",
+      "count": 20000,
+      "trend": "up",
+      "change": 42
+    },
+    {
+      "tag": "#croissant",
+      "count": 18500,
+      "trend": "up",
+      "change": 35
+    },
+    {
+      "tag": "#คุกกี้",
+      "count": 18000,
+      "trend": "up",
+      "change": 15
+    },
+    {
+      "tag": "#bakerylover",
+      "count": 16000,
+      "trend": "up",
+      "change": 20
+    },
+    {
+      "tag": "#ขนมปังสุขภาพ",
+      "count": 14500,
+      "trend": "up",
+      "change": 35
+    },
+    {
+      "tag": "#โดนัท",
+      "count": 12000,
+      "trend": "stable",
+      "change": 2
+    },
+    {
+      "tag": "#plantbased",
+      "count": 8500,
+      "trend": "up",
+      "change": 48
+    }
+  ],
+  "platforms": {
+    "facebook": {
+      "totalMentions": 42000,
+      "avgEngagement": 320,
+      "topContent": "รีวิวร้านเบเกอรี่ + โปรโมชั่นเค้กวันเกิด + กลุ่มสั่งขนมออนไลน์"
+    },
+    "instagram": {
+      "totalMentions": 35500,
+      "avgEngagement": 720,
+      "topContent": "รูปเค้กแต่งหน้า + Story รีวิวครัวซองต์ร้านดัง + Reels สอนทำเบเกอรี่"
+    },
+    "x": {
+      "totalMentions": 7900,
+      "avgEngagement": 58,
+      "topContent": "รีวิวสั้น + แนะนำร้านเบเกอรี่ใหม่ + ถกเรื่องราคาขนมปัง"
+    },
+    "tiktok": {
+      "totalMentions": 34500,
+      "avgEngagement": 1150,
+      "topContent": "วิดีโอสอนทำขนมปัง + ชาเลนจ์เบเกอรี่ + รีวิวครัวซองต์ไวรัล + ASMR ทำขนม"
+    },
+    "pantip": {
+      "totalMentions": 4900,
+      "avgEngagement": 42,
+      "topContent": "กระทู้รีวิวร้าน + เปรียบเทียบเค้กวันเกิด + สูตรทำขนมปังเองที่บ้าน + รีวิว sourdough"
+    }
+  }
+}

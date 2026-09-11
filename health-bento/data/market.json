@@ -1,0 +1,98 @@
+{
+  "lastUpdated": "2026-08-19T16:40:00+07:00",
+  "note": "ตัวเลขขนาดตลาดเป็นการประมาณการเพื่อวางแผน · รายชื่อคู่แข่งและราคาเปลี่ยนเป็นแบรนด์จริงที่สำรวจราคาได้แล้ว (ดูหน้า \"สำรวจราคาตลาดจริง\")",
+  "competitorSources": [
+    { "id": "M1", "label": "10 ร้านข้าวกล่องสุขภาพสายคลีน — Wongnai", "url": "https://www.wongnai.com/listings/clean-food-delivery" },
+    { "id": "M2", "label": "5 ร้านอาหารคลีนเดลิเวอรี่ โปรตีนสูง — Goodcal", "url": "https://www.goodcalgoodday.com/post/healthfood-bkk-delivery" }
+  ],
+  "marketSize": {
+    "tam": { "label": "ตลาดอาหารสุขภาพพร้อมทานในไทย (TAM)", "valueMB": 42000, "growthPct": 11.5 },
+    "sam": { "label": "ข้าวกล่อง/มื้ออาหารคลีนส่งถึงที่ในเขตกรุงเทพฯ-ปริมณฑล (SAM)", "valueMB": 6800, "growthPct": 14.2 },
+    "som": { "label": "ส่วนที่ Health Bento ตั้งเป้าใน 3 ปี (SOM)", "valueMB": 64, "growthPct": 0.94 }
+  },
+  "growthByYear": {
+    "labels": ["2567", "2568", "2569", "2570 (คาด)", "2571 (คาด)"],
+    "marketMB": [4900, 5600, 6800, 7900, 9100],
+    "growthPct": [12.1, 14.3, 21.4, 16.2, 15.2]
+  },
+  "drivers": [
+    { "name": "คนไทยกังวลเรื่องสุขภาพมากขึ้นหลังโควิด", "impact": "สูง", "tone": "positive" },
+    { "name": "ประชากรวัยทำงานในเมืองไม่มีเวลาทำอาหาร", "impact": "สูง", "tone": "positive" },
+    { "name": "สังคมผู้สูงอายุ ต้องการอาหารควบคุมโซเดียม/น้ำตาล", "impact": "กลาง", "tone": "positive" },
+    { "name": "เดลิเวอรีครอบคลุมพื้นที่มากขึ้น ต้นทุนส่งถูกลง", "impact": "กลาง", "tone": "positive" },
+    { "name": "ค่าครองชีพสูง ลูกค้าอ่อนไหวต่อราคาต่อกล่อง", "impact": "กลาง", "tone": "negative" },
+    { "name": "คู่แข่งรายเล็กเข้าตลาดง่าย ทำให้แข่งด้านราคา", "impact": "สูง", "tone": "negative" }
+  ],
+  "seasonality": {
+    "labels": ["ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.ค.", "มิ.ย.", "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.", "ธ.ค."],
+    "indexPct": [118, 106, 104, 88, 98, 102, 104, 106, 104, 110, 108, 92],
+    "note": "ม.ค. สูงสุดจากกระแสตั้งเป้าลดน้ำหนักต้นปี / เม.ย. และ ธ.ค. ต่ำจากวันหยุดยาว"
+  },
+  "segments": [
+    { "id": "office", "name": "พนักงานออฟฟิศ", "sizePct": 38, "avgOrderValue": 175, "ordersPerMonth": 12, "growthPct": 15.4 },
+    { "id": "fitness", "name": "คนออกกำลังกาย", "sizePct": 24, "avgOrderValue": 195, "ordersPerMonth": 18, "growthPct": 18.6 },
+    { "id": "diet", "name": "ควบคุมน้ำหนัก", "sizePct": 20, "avgOrderValue": 185, "ordersPerMonth": 20, "growthPct": 16.8 },
+    { "id": "medical", "name": "ผู้ป่วย/ผู้สูงอายุ", "sizePct": 9, "avgOrderValue": 210, "ordersPerMonth": 24, "growthPct": 12.2 },
+    { "id": "corporate", "name": "องค์กร", "sizePct": 9, "avgOrderValue": 6400, "ordersPerMonth": 8, "growthPct": 21.5 }
+  ],
+  "personas": [
+    {
+      "emoji": "💼",
+      "name": "คุณเบล — พนักงานออฟฟิศ อโศก",
+      "profile": "หญิง 29 ปี รายได้ 35,000 บาท/เดือน ทำงานอาคารสำนักงานย่านอโศก",
+      "needs": ["มื้อเที่ยงไม่ต้องต่อคิว", "ควบคุมแคลอรีไม่เกิน 500 kcal", "สั่งล่วงหน้าทั้งสัปดาห์ได้"],
+      "pains": ["ข้าวกล่องทั่วไปมันและเค็มเกิน", "สั่งเดลิเวอรีค่าส่งแพงทุกวัน"],
+      "channel": "LINE OA แพ็กเกจ 5 มื้อ/สัปดาห์",
+      "willingnessToPay": "150-180 บาท/กล่อง"
+    },
+    {
+      "emoji": "🏋️",
+      "name": "คุณต้น — เทรนเนอร์ฟิตเนส",
+      "profile": "ชาย 33 ปี รายได้ 60,000 บาท/เดือน ออกกำลังกาย 6 วัน/สัปดาห์",
+      "needs": ["โปรตีนไม่น้อยกว่า 40 กรัม/กล่อง", "ระบุกรัมสารอาหารชัดเจน", "รับของที่ฟิตเนสได้"],
+      "pains": ["ต้องชั่งอาหารเองทุกมื้อ", "เมนูโปรตีนสูงในตลาดจำเจ"],
+      "channel": "จุดรับที่ฟิตเนส + สมาชิกรายเดือน",
+      "willingnessToPay": "190-250 บาท/กล่อง"
+    },
+    {
+      "emoji": "⚖️",
+      "name": "คุณหมิว — ควบคุมน้ำหนักจริงจัง",
+      "profile": "หญิง 35 ปี รายได้ 45,000 บาท/เดือน ตั้งเป้าลด 8 กก. ใน 4 เดือน",
+      "needs": ["แผนอาหารต่อเนื่อง 30 วัน", "คุมแคลอรี 1,200-1,400 kcal/วัน", "มีผู้ให้คำแนะนำ"],
+      "pains": ["ทำอาหารเองไม่ต่อเนื่อง", "ไม่รู้ว่ากินพอดีหรือไม่"],
+      "channel": "แพ็กเกจ 30 วัน (2 มื้อ/วัน)",
+      "willingnessToPay": "160-200 บาท/กล่อง"
+    },
+    {
+      "emoji": "🏢",
+      "name": "ฝ่าย HR บริษัทกลาง",
+      "profile": "บริษัทพนักงาน 250 คน ย่านรัชดา จัดสวัสดิการอาหารกลางวัน 2 วัน/สัปดาห์",
+      "needs": ["ใบเสนอราคา/ใบกำกับภาษีถูกต้อง", "ส่งตรงเวลา 11:30 ทุกครั้ง", "เมนูหมุนเวียนไม่ซ้ำ"],
+      "pains": ["ผู้ให้บริการเดิมส่งช้าและคุณภาพไม่คงที่"],
+      "channel": "สัญญารายไตรมาส (แคทเทอริง)",
+      "willingnessToPay": "120-145 บาท/กล่อง (ล็อตใหญ่)"
+    }
+  ],
+  "competitors": [
+    { "id": "under360", "name": "Under360", "positioning": "คุมแคลอรีไม่เกิน 360 kcal ราคาประหยัด", "pricePerBox": 65, "priceRange": "65+", "menuCount": null, "sharePct": null, "channels": ["เดลิเวอรี"], "strength": "ราคาเริ่มต้นถูกสุดในกลุ่มที่คุมแคลอรี", "weakness": "ตัวเลือกเมนูจำกัดและกำไรต่อกล่องบาง", "priceVerified": true, "source": "M1" },
+    { "id": "jonessalad", "name": "Jones' Salad", "positioning": "สลัด/อาหารญี่ปุ่น แบรนด์เป็นที่รู้จัก", "pricePerBox": 69, "priceRange": "69+", "menuCount": null, "sharePct": null, "channels": ["เดลิเวอรี", "หน้าร้าน"], "strength": "แบรนด์แข็งและสื่อสารเก่ง", "weakness": "เน้นสลัดมากกว่าอาหารจานหลัก", "priceVerified": true, "source": "M1" },
+    { "id": "staylean", "name": "STAYLEAN.food", "positioning": "ไรซ์โบว์ลนับแคลอรี ไม่ใช้น้ำมัน", "pricePerBox": 85, "priceRange": "85+", "menuCount": null, "sharePct": null, "channels": ["เดลิเวอรี"], "strength": "จุดขายชัดเรื่องวิธีปรุง", "weakness": "ราคายังต่ำทำให้กำไรบาง", "priceVerified": true, "source": "M1" },
+    { "id": "polpa", "name": "POLPA", "positioning": "ฟิวชันตะวันตก/เอเชีย/ไทย ระบุโภชนาการทุกเมนู", "pricePerBox": 119, "priceRange": "119+", "menuCount": null, "sharePct": null, "channels": ["เดลิเวอรี"], "strength": "ระบุโภชนาการครบ — ชนกับจุดขายของเราตรง ๆ", "weakness": "ราคาสูงกว่าค่ากลางตลาด", "priceVerified": true, "source": "M1" },
+    { "id": "fit2go", "name": "Fit2Go", "positioning": "โปรตีนสูง 25-40 กรัม/กล่อง", "pricePerBox": 124, "priceRange": "99-149", "menuCount": null, "sharePct": null, "channels": ["เดลิเวอรี"], "strength": "ระบุกรัมโปรตีนชัดเจน จับกลุ่มออกกำลังกาย", "weakness": "ช่วงราคากว้าง สื่อสารความคุ้มค่ายาก", "priceVerified": true, "source": "M2" },
+    { "id": "healthmeplease", "name": "Health Me Please", "positioning": "อาหารสุขภาพหลากหลาย ช่วงราคากว้างสุด", "pricePerBox": 195, "priceRange": "95-295", "menuCount": null, "sharePct": null, "channels": ["เดลิเวอรี"], "strength": "ครอบคลุมทั้งกลุ่มประหยัดและพรีเมียม", "weakness": "ตำแหน่งแบรนด์ไม่ชัด", "priceVerified": true, "source": "M2" },
+    { "id": "healthbento", "name": "Health Bento (เรา)", "positioning": "คลีนไทย+สากล ระบุสารอาหารครบ รับงานองค์กรได้", "pricePerBox": 165, "priceRange": "120-250", "menuCount": 18, "sharePct": null, "channels": ["LINE", "แอปเดลิเวอรี", "องค์กร", "ฟิตเนส", "ตู้แช่"], "strength": "ครัวกลาง GMP + ครบทุกช่องทาง + ระบุสารอาหาร", "weakness": "แบรนด์ใหม่ และราคาสูงกว่าค่ากลางตลาด 85%", "priceVerified": false, "source": "แผนธุรกิจ" }
+  ],
+  "competitorFeatures": {
+    "note": "เทียบเฉพาะสิ่งที่ยืนยันได้จากข้อมูลที่แบรนด์ประกาศเอง — ความสามารถอื่น (รับงานองค์กร ส่งต่างจังหวัด ฯลฯ) ยังไม่ได้ตรวจสอบรายแบรนด์",
+    "features": ["ระบุแคลอรี/โภชนาการที่ประกาศ", "ราคาเริ่มต้นไม่เกิน 100 บาท", "ราคาแตะระดับพรีเมียม (150+)"],
+    "matrix": {
+      "under360": [1, 1, 0],
+      "jonessalad": [0, 1, 0],
+      "staylean": [1, 1, 0],
+      "polpa": [1, 0, 0],
+      "fit2go": [1, 1, 0],
+      "healthmeplease": [0, 1, 1],
+      "healthbento": [1, 0, 1]
+    }
+  }
+}

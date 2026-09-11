@@ -1,0 +1,93 @@
+{
+  "lastUpdated": "2026-08-19T16:40:00+07:00",
+  "note": "แผนการตลาดปีที่ 1 — งบรวม 1.32 ล้านบาท (ประมาณ 6.3% ของยอดขาย)",
+  "channels": [
+    {
+      "id": "line",
+      "name": "LINE OA / เว็บไซต์",
+      "sharePct": 32,
+      "feePct": 3,
+      "cac": 145,
+      "repeatRatePct": 58,
+      "aov": 775,
+      "role": "ช่องทางหลักที่ทำกำไรดีที่สุด — ต้องดันสัดส่วนให้ถึง 40% ในปีที่ 2",
+      "monthlyBudget": 32000
+    },
+    {
+      "id": "delivery",
+      "name": "แอปเดลิเวอรี (Grab / LINE MAN / Robinhood)",
+      "sharePct": 26,
+      "feePct": 28,
+      "cac": 60,
+      "repeatRatePct": 24,
+      "aov": 285,
+      "role": "ใช้หาลูกค้าใหม่และสร้างการมองเห็น แต่กำไรต่อกล่องต่ำ",
+      "monthlyBudget": 28000
+    },
+    {
+      "id": "corporate",
+      "name": "องค์กร / แคทเทอริง",
+      "sharePct": 22,
+      "feePct": 0,
+      "cac": 2800,
+      "repeatRatePct": 76,
+      "aov": 6400,
+      "role": "ยอดต่อครั้งสูง ต้นทุนส่งต่อกล่องต่ำ — ใช้เซลล์เข้าพบ HR โดยตรง",
+      "monthlyBudget": 22000
+    },
+    {
+      "id": "fitness",
+      "name": "ฟิตเนส / คลินิก",
+      "sharePct": 12,
+      "feePct": 10,
+      "cac": 180,
+      "repeatRatePct": 52,
+      "aov": 2840,
+      "role": "พาร์ตเนอร์แบ่งรายได้ 10% แลกกับจุดรับสินค้าและการแนะนำลูกค้า",
+      "monthlyBudget": 18000
+    },
+    {
+      "id": "store",
+      "name": "หน้าร้าน / ตู้แช่",
+      "sharePct": 8,
+      "feePct": 15,
+      "cac": 40,
+      "repeatRatePct": 31,
+      "aov": 165,
+      "role": "ตู้แช่ในอาคารสำนักงาน 5 จุด — ทดสอบก่อนขยาย",
+      "monthlyBudget": 10000
+    }
+  ],
+  "budgetY1": {
+    "labels": ["โฆษณา Facebook/IG", "TikTok + คลิปรีวิว", "อินฟลูเอนเซอร์สายสุขภาพ", "LINE Ads + ระบบ CRM", "ทีมขายองค์กร", "ป้าย/สื่อในอาคาร", "ชิมฟรี/ตัวอย่างสินค้า"],
+    "amount": [312000, 216000, 240000, 156000, 216000, 96000, 84000],
+    "totalBudget": 1320000
+  },
+  "campaigns": [
+    { "name": "เปิดตัว: ทดลอง 3 มื้อ 399 บาท", "period": "ต.ค. - พ.ย. 69", "channel": "LINE + เดลิเวอรี", "budget": 220000, "targetNewCustomers": 700, "expectedRoas": 2.1, "status": "todo" },
+    { "name": "แนะนำเพื่อน รับส่วนลด 100 บาท", "period": "พ.ย. 69 เป็นต้นไป", "channel": "LINE OA", "budget": 120000, "targetNewCustomers": 480, "expectedRoas": 3.4, "status": "todo" },
+    { "name": "New Year New Body (แพ็กเกจ 30 วัน)", "period": "ม.ค. 70", "channel": "ทุกช่องทาง", "budget": 260000, "targetNewCustomers": 620, "expectedRoas": 2.8, "status": "todo" },
+    { "name": "สวัสดิการอาหารกลางวันองค์กร", "period": "ธ.ค. 69 - มี.ค. 70", "channel": "ทีมขายองค์กร", "budget": 180000, "targetNewCustomers": 14, "expectedRoas": 4.6, "status": "todo" },
+    { "name": "พาร์ตเนอร์ฟิตเนส 8 สาขา", "period": "ก.พ. - เม.ย. 70", "channel": "ฟิตเนส/คลินิก", "budget": 150000, "targetNewCustomers": 380, "expectedRoas": 2.9, "status": "todo" },
+    { "name": "รีวิวจากอินฟลูเอนเซอร์สายสุขภาพ 12 คน", "period": "ตลอดปี", "channel": "TikTok / IG", "budget": 240000, "targetNewCustomers": 900, "expectedRoas": 1.9, "status": "todo" }
+  ],
+  "subscriptions": [
+    { "name": "Weekly 5", "boxesPerMonth": 20, "pricePerMonth": 2840, "marginPct": 41, "churnPctPerMonth": 12, "targetMembersY1": 620 },
+    { "name": "Weekly 5 + อาหารเช้า", "boxesPerMonth": 40, "pricePerMonth": 5440, "marginPct": 38, "churnPctPerMonth": 14, "targetMembersY1": 180 },
+    { "name": "โปรแกรมลดน้ำหนัก 30 วัน", "boxesPerMonth": 60, "pricePerMonth": 7680, "marginPct": 36, "churnPctPerMonth": 22, "targetMembersY1": 120 },
+    { "name": "องค์กรรายไตรมาส", "boxesPerMonth": 400, "pricePerMonth": 51200, "marginPct": 33, "churnPctPerMonth": 6, "targetMembersY1": 14 }
+  ],
+  "funnel": {
+    "labels": ["คนเห็นโฆษณา", "เข้าดูเมนู", "เพิ่มเพื่อน LINE", "สั่งครั้งแรก", "สั่งซ้ำ", "สมัครสมาชิก"],
+    "values": [420000, 62000, 14800, 3200, 1344, 620]
+  },
+  "customerEconomics": {
+    "blendedCac": 310,
+    "avgLifetimeMonths": 6.5,
+    "avgBoxesPerMonth": 12,
+    "ltv": 4290,
+    "ltvToCac": 13.8,
+    "paybackOrders": 6,
+    "note": "LTV คำนวณจากกำไรส่วนเกิน 55 บาท/กล่อง × 12 กล่อง/เดือน × 6.5 เดือน"
+  }
+}

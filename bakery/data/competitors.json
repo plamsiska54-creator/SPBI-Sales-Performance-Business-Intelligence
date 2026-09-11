@@ -1,0 +1,594 @@
+{
+  "lastUpdated": "2026-08-09T10:00:00+07:00",
+  "dataSource": "Web Research + AI Analysis (สิงหาคม 2569)",
+  "metadata": {
+    "period": "2026-W01 to 2026-W26",
+    "granularity": "weekly"
+  },
+  "brands": [
+    {
+      "id": "wanwanach",
+      "name": "วรรณวนัช",
+      "logo": "🧁",
+      "color": "#7b2ff7",
+      "description": "เบเกอรีโฮมเมดคุณภาพ เน้นวัตถุดิบพรีเมียม กำลังเติบโตอย่างต่อเนื่อง",
+      "products": 18,
+      "avgPrice": 75,
+      "priceRange": {
+        "min": 35,
+        "max": 195
+      },
+      "marketShare": 10,
+      "ratings": {
+        "overall": 4.1,
+        "taste": 4.3,
+        "value": 4.2,
+        "packaging": 3.9,
+        "freshness": 4.4,
+        "delivery": 3.7
+      },
+      "reviewCount": 3420,
+      "sentiment": {
+        "positive": 69,
+        "neutral": 21,
+        "negative": 10
+      },
+      "platforms": {
+        "shopee": {
+          "products": 12,
+          "avgRating": 4.3,
+          "totalSold": 18500
+        },
+        "lazada": {
+          "products": 8,
+          "avgRating": 4.1,
+          "totalSold": 9200
+        },
+        "amazon": {
+          "products": 3,
+          "avgRating": 4.0,
+          "totalSold": 1400
+        }
+      },
+      "marketing": {
+        "strategy": "เน้นออนไลน์ + รีวิวจาก Influencer + สั่งทำเค้กวันเกิด",
+        "channels": [
+          "Facebook",
+          "Instagram",
+          "TikTok",
+          "LINE"
+        ]
+      },
+      "weeklySales": [
+        423500,
+        418200,
+        445800,
+        432600,
+        467300,
+        548200,
+        562400,
+        478900,
+        489200,
+        502300,
+        518600,
+        498400,
+        512800,
+        534200,
+        556700,
+        548300,
+        562100,
+        578400,
+        589600,
+        601200,
+        612500,
+        598300,
+        623400,
+        645800,
+        667200,
+        689500
+      ]
+    },
+    {
+      "id": "snp",
+      "name": "S&P",
+      "logo": "🎂",
+      "color": "#c0392b",
+      "description": "เครือร้านเบเกอรีและภัตตาคารชั้นนำ มากกว่า 470 สาขา ดำเนินธุรกิจมากว่า 50 ปี ผู้นำตลาดเบเกอรี่ไทย",
+      "products": 85,
+      "avgPrice": 95,
+      "priceRange": {
+        "min": 30,
+        "max": 450
+      },
+      "marketShare": 28.5,
+      "ratings": {
+        "overall": 4.3,
+        "taste": 4.4,
+        "value": 3.9,
+        "packaging": 4.4,
+        "freshness": 4.2,
+        "delivery": 4.3
+      },
+      "reviewCount": 42500,
+      "sentiment": {
+        "positive": 73,
+        "neutral": 20,
+        "negative": 7
+      },
+      "platforms": {
+        "shopee": {
+          "products": 52,
+          "avgRating": 4.5,
+          "totalSold": 185000
+        },
+        "lazada": {
+          "products": 38,
+          "avgRating": 4.3,
+          "totalSold": 112000
+        },
+        "amazon": {
+          "products": 10,
+          "avgRating": 4.2,
+          "totalSold": 8200
+        }
+      },
+      "marketing": {
+        "strategy": "โฆษณาทีวี + แบรนด์แอมบาสเดอร์ + 470+ สาขาทั่วประเทศ + Delivery Platform + Gift Set เทศกาล",
+        "channels": [
+          "TV",
+          "Facebook",
+          "Instagram",
+          "LINE",
+          "YouTube"
+        ]
+      },
+      "weeklySales": [
+        2452300,
+        2389400,
+        2521800,
+        2498500,
+        2545200,
+        2856800,
+        2912400,
+        2523100,
+        2487400,
+        2556900,
+        2612300,
+        2534600,
+        2491200,
+        2578500,
+        2645700,
+        2602300,
+        2569400,
+        2623600,
+        2588900,
+        2656200,
+        2701400,
+        2667300,
+        2634500,
+        2712800,
+        2745600,
+        2778200
+      ]
+    },
+    {
+      "id": "afteryou",
+      "name": "After You",
+      "logo": "🍫",
+      "color": "#e67e22",
+      "description": "ร้านเบเกอรีพรีเมียม ชื่อดัง 174 สาขา รายได้กว่า 1,126 ล้านบาท เน้นเมนูคาเฟ่และขนมหวาน",
+      "products": 42,
+      "avgPrice": 185,
+      "priceRange": {
+        "min": 65,
+        "max": 690
+      },
+      "marketShare": 8,
+      "ratings": {
+        "overall": 4.5,
+        "taste": 4.7,
+        "value": 3.4,
+        "packaging": 4.6,
+        "freshness": 4.6,
+        "delivery": 3.9
+      },
+      "reviewCount": 48200,
+      "sentiment": {
+        "positive": 78,
+        "neutral": 15,
+        "negative": 7
+      },
+      "platforms": {
+        "shopee": {
+          "products": 25,
+          "avgRating": 4.7,
+          "totalSold": 108000
+        },
+        "lazada": {
+          "products": 18,
+          "avgRating": 4.5,
+          "totalSold": 62000
+        },
+        "amazon": {
+          "products": 5,
+          "avgRating": 4.4,
+          "totalSold": 4200
+        }
+      },
+      "marketing": {
+        "strategy": "Social Media Viral + Limited Edition เมนูตามเทศกาล + คิวยาวสร้างกระแส + Kakigori & Shibuya Toast",
+        "channels": [
+          "Instagram",
+          "TikTok",
+          "Facebook",
+          "X",
+          "YouTube"
+        ]
+      },
+      "weeklySales": [
+        898500,
+        942100,
+        867800,
+        915400,
+        989200,
+        1256300,
+        1323500,
+        1012600,
+        978900,
+        1025300,
+        1067800,
+        998200,
+        956700,
+        1023400,
+        1089600,
+        1112300,
+        1045200,
+        1078900,
+        1102100,
+        1134600,
+        1098200,
+        1167300,
+        1123800,
+        1145100,
+        1189400,
+        1212700
+      ]
+    },
+    {
+      "id": "farmhouse",
+      "name": "ฟาร์มเฮ้าส์",
+      "logo": "🍞",
+      "color": "#27ae60",
+      "description": "แบรนด์ขนมปังอันดับ 1 ของไทย ภายใต้ เพรซิเดนท์ เบเกอรี่ รายได้กว่า 8,000 ล้านบาท กระจายสินค้าทั่วประเทศ",
+      "products": 120,
+      "avgPrice": 35,
+      "priceRange": {
+        "min": 12,
+        "max": 89
+      },
+      "marketShare": 20.5,
+      "ratings": {
+        "overall": 3.9,
+        "taste": 3.5,
+        "value": 4.5,
+        "packaging": 3.5,
+        "freshness": 3.8,
+        "delivery": 4.4
+      },
+      "reviewCount": 22800,
+      "sentiment": {
+        "positive": 62,
+        "neutral": 28,
+        "negative": 10
+      },
+      "platforms": {
+        "shopee": {
+          "products": 45,
+          "avgRating": 4.1,
+          "totalSold": 245000
+        },
+        "lazada": {
+          "products": 35,
+          "avgRating": 3.9,
+          "totalSold": 168000
+        },
+        "amazon": {
+          "products": 8,
+          "avgRating": 3.8,
+          "totalSold": 5600
+        }
+      },
+      "marketing": {
+        "strategy": "ครองชั้นวางร้านสะดวกซื้อ 7-Eleven/Lotus's/Big C + ราคาเข้าถึงง่าย + โปรโมชั่นหน้าร้าน + Modern Trade ทั่วประเทศ",
+        "channels": [
+          "TV",
+          "Facebook",
+          "LINE",
+          "โปรโมชั่นร้านสะดวกซื้อ"
+        ]
+      },
+      "weeklySales": [
+        3012400,
+        3035800,
+        3048200,
+        3021500,
+        3067300,
+        3223400,
+        3215200,
+        3078600,
+        3056300,
+        3089400,
+        3112500,
+        3085700,
+        3042800,
+        3068200,
+        3134600,
+        3145800,
+        3078300,
+        3102500,
+        3118700,
+        3095400,
+        3156200,
+        3123600,
+        3145100,
+        3167800,
+        3189300,
+        3202500
+      ]
+    },
+    {
+      "id": "yamazaki",
+      "name": "ยามาซากิ",
+      "logo": "🥐",
+      "color": "#2980b9",
+      "description": "เบเกอรี่สไตล์ญี่ปุ่น หลายแบรนด์ย่อย กระจายตามห้างสรรพสินค้าและสถานีรถไฟฟ้า",
+      "products": 65,
+      "avgPrice": 55,
+      "priceRange": {
+        "min": 25,
+        "max": 250
+      },
+      "marketShare": 18,
+      "ratings": {
+        "overall": 4.1,
+        "taste": 4.2,
+        "value": 4.0,
+        "packaging": 4.1,
+        "freshness": 4.3,
+        "delivery": 3.9
+      },
+      "reviewCount": 15600,
+      "sentiment": {
+        "positive": 68,
+        "neutral": 23,
+        "negative": 9
+      },
+      "platforms": {
+        "shopee": {
+          "products": 28,
+          "avgRating": 4.3,
+          "totalSold": 72000
+        },
+        "lazada": {
+          "products": 20,
+          "avgRating": 4.1,
+          "totalSold": 48000
+        },
+        "amazon": {
+          "products": 6,
+          "avgRating": 4.0,
+          "totalSold": 3800
+        }
+      },
+      "marketing": {
+        "strategy": "คุณภาพสไตล์ญี่ปุ่น + สาขาในห้าง/สถานีรถไฟฟ้า + หลายแบรนด์ย่อย (Yamazaki, Saint Etoile, Flavor Field) + โปรโมชั่นซื้อ 2 ลด",
+        "channels": [
+          "Facebook",
+          "LINE",
+          "Instagram",
+          "ป้ายหน้าร้านในห้าง"
+        ]
+      },
+      "weeklySales": [
+        1112300,
+        1089500,
+        1134200,
+        1121800,
+        1145600,
+        1289400,
+        1278200,
+        1156300,
+        1142100,
+        1168500,
+        1181200,
+        1159800,
+        1123400,
+        1148600,
+        1192300,
+        1201500,
+        1165200,
+        1183400,
+        1198600,
+        1212300,
+        1195100,
+        1223500,
+        1206200,
+        1234700,
+        1248300,
+        1262100
+      ]
+    },
+    {
+      "id": "lepain",
+      "name": "เลอแปง",
+      "logo": "🥖",
+      "color": "#8e44ad",
+      "description": "เบเกอรีอาร์ติซาน สไตล์ฝรั่งเศส วัตถุดิบนำเข้า เน้นกลุ่มพรีเมียม ซาวร์โดว์และครัวซองต์คุณภาพสูง",
+      "products": 22,
+      "avgPrice": 165,
+      "priceRange": {
+        "min": 65,
+        "max": 650
+      },
+      "marketShare": 5,
+      "ratings": {
+        "overall": 4.3,
+        "taste": 4.6,
+        "value": 3.3,
+        "packaging": 4.4,
+        "freshness": 4.6,
+        "delivery": 3.5
+      },
+      "reviewCount": 4200,
+      "sentiment": {
+        "positive": 73,
+        "neutral": 18,
+        "negative": 9
+      },
+      "platforms": {
+        "shopee": {
+          "products": 10,
+          "avgRating": 4.5,
+          "totalSold": 12500
+        },
+        "lazada": {
+          "products": 7,
+          "avgRating": 4.3,
+          "totalSold": 7800
+        },
+        "amazon": {
+          "products": 4,
+          "avgRating": 4.2,
+          "totalSold": 3200
+        }
+      },
+      "marketing": {
+        "strategy": "เน้นกลุ่มพรีเมียม + Blogger รีวิว + Workshop สอนทำขนม",
+        "channels": [
+          "Instagram",
+          "Facebook",
+          "Blog",
+          "ร้านกาแฟพรีเมียม"
+        ]
+      },
+      "weeklySales": [
+        312400,
+        325600,
+        318200,
+        334500,
+        342100,
+        412300,
+        425800,
+        356200,
+        348700,
+        362400,
+        375600,
+        358900,
+        345200,
+        368500,
+        382100,
+        395400,
+        378600,
+        389200,
+        402300,
+        412500,
+        398700,
+        415300,
+        428600,
+        435200,
+        448700,
+        462100
+      ]
+    }
+  ],
+  "priceComparison": [
+    {
+      "product": "เค้กช็อกโกแลต (slice)",
+      "prices": {
+        "wanwanach": 85,
+        "snp": 120,
+        "afteryou": 195,
+        "farmhouse": 59,
+        "yamazaki": 85,
+        "lepain": 225
+      }
+    },
+    {
+      "product": "ครัวซองต์เนย",
+      "prices": {
+        "wanwanach": 55,
+        "snp": 65,
+        "afteryou": 95,
+        "farmhouse": 29,
+        "yamazaki": 45,
+        "lepain": 115
+      }
+    },
+    {
+      "product": "ขนมปังโฮลวีท (loaf)",
+      "prices": {
+        "wanwanach": 65,
+        "snp": 75,
+        "afteryou": null,
+        "farmhouse": 35,
+        "yamazaki": 49,
+        "lepain": 95
+      }
+    },
+    {
+      "product": "คุกกี้เนยสด (box)",
+      "prices": {
+        "wanwanach": 120,
+        "snp": 155,
+        "afteryou": 220,
+        "farmhouse": 69,
+        "yamazaki": 89,
+        "lepain": 285
+      }
+    },
+    {
+      "product": "โดนัทคลาสสิก",
+      "prices": {
+        "wanwanach": 35,
+        "snp": 45,
+        "afteryou": 75,
+        "farmhouse": 22,
+        "yamazaki": 35,
+        "lepain": null
+      }
+    },
+    {
+      "product": "ทาร์ตไข่",
+      "prices": {
+        "wanwanach": 45,
+        "snp": 55,
+        "afteryou": 85,
+        "farmhouse": 29,
+        "yamazaki": 39,
+        "lepain": 95
+      }
+    },
+    {
+      "product": "เอแคลร์",
+      "prices": {
+        "wanwanach": 55,
+        "snp": 65,
+        "afteryou": 95,
+        "farmhouse": null,
+        "yamazaki": 52,
+        "lepain": 110
+      }
+    },
+    {
+      "product": "ชีสเค้ก (slice)",
+      "prices": {
+        "wanwanach": 95,
+        "snp": 145,
+        "afteryou": 215,
+        "farmhouse": null,
+        "yamazaki": 95,
+        "lepain": 255
+      }
+    }
+  ]
+}

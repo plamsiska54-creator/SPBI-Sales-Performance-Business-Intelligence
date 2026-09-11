@@ -1,0 +1,63 @@
+{
+  "lastUpdated": "2026-08-19T16:40:00+07:00",
+  "note": "แผนการผลิตและจัดส่ง — ครัวกลาง 1 แห่ง เปิดเพิ่มครัวที่ 2 ในปีที่ 3",
+  "kitchen": {
+    "location": "ครัวกลางเช่า ย่านพระราม 9 (พื้นที่ 180 ตร.ม.)",
+    "standard": "ยื่นขอ อย. และวางระบบ GMP ก่อนเปิดขาย",
+    "capacityPerDay": 800,
+    "capacityPerShift": 400,
+    "shiftsPerDay": 2,
+    "staffCount": 14,
+    "utilizationTargetPct": 78,
+    "cookingWindow": "02:00 - 08:00 (ส่งรอบเช้า) และ 12:00 - 16:00 (เตรียมรอบถัดไป)"
+  },
+  "capacityRamp": {
+    "labels": ["ต.ค. 69", "พ.ย. 69", "ธ.ค. 69", "ม.ค. 70", "ก.พ. 70", "มี.ค. 70", "เม.ย. 70", "พ.ค. 70", "มิ.ย. 70", "ก.ค. 70", "ส.ค. 70", "ก.ย. 70"],
+    "capacity": [500, 500, 600, 600, 700, 700, 700, 800, 800, 800, 800, 800],
+    "actual": [220, 260, 300, 330, 360, 390, 410, 440, 470, 510, 560, 620]
+  },
+  "stations": [
+    { "name": "รับ-ตรวจวัตถุดิบ", "staff": 2, "capacityBoxes": 900, "note": "ชั่งน้ำหนัก ตรวจอุณหภูมิ บันทึก lot" },
+    { "name": "เตรียมวัตถุดิบ (Prep)", "staff": 4, "capacityBoxes": 850, "note": "ล้าง หั่น ชั่งพอร์ชันตามสูตร" },
+    { "name": "ปรุง (Hot line)", "staff": 4, "capacityBoxes": 800, "note": "คอขวดของสาย — กำหนดกำลังผลิตรวม" },
+    { "name": "บรรจุ + ชั่ง + ปิดผนึก", "staff": 3, "capacityBoxes": 900, "note": "ติดฉลากแคลอรีและวันหมดอายุ" },
+    { "name": "ห้องเย็น + จัดรอบส่ง", "staff": 1, "capacityBoxes": 1000, "note": "แช่ที่ 1-4°C แยกตามโซนจัดส่ง" }
+  ],
+  "suppliers": [
+    { "name": "ฟาร์มไก่สดภาคกลาง", "items": "อกไก่ สะโพกไก่", "sharePct": 26, "leadTimeDays": 1, "paymentTerm": "เครดิต 15 วัน", "riskLevel": "medium", "priceLock": "ล็อกราคารายไตรมาส" },
+    { "name": "ผู้ค้าปลาและอาหารทะเล (ตลาดไท)", "items": "แซลมอน ปลานิล กุ้ง", "sharePct": 22, "leadTimeDays": 1, "paymentTerm": "เงินสด", "riskLevel": "high", "priceLock": "ราคาตลาดรายวัน" },
+    { "name": "สหกรณ์ผักปลอดภัย นครปฐม", "items": "ผักสลัด ผักสด สมุนไพร", "sharePct": 18, "leadTimeDays": 1, "paymentTerm": "เครดิต 7 วัน", "riskLevel": "medium", "priceLock": "ล็อกราคารายเดือน" },
+    { "name": "โรงสีข้าวกล้อง/ไรซ์เบอร์รี", "items": "ข้าวกล้อง ไรซ์เบอร์รี ควินัว", "sharePct": 12, "leadTimeDays": 3, "paymentTerm": "เครดิต 30 วัน", "riskLevel": "low", "priceLock": "สัญญา 6 เดือน" },
+    { "name": "ผู้ผลิตบรรจุภัณฑ์ย่อยสลายได้", "items": "กล่องชานอ้อย ฉลาก ช้อนไม้", "sharePct": 14, "leadTimeDays": 7, "paymentTerm": "เครดิต 30 วัน", "riskLevel": "low", "priceLock": "สัญญา 12 เดือน" },
+    { "name": "ผู้จำหน่ายเครื่องปรุงและน้ำมัน", "items": "เครื่องปรุงโซเดียมต่ำ น้ำมันรำข้าว", "sharePct": 8, "leadTimeDays": 3, "paymentTerm": "เครดิต 15 วัน", "riskLevel": "low", "priceLock": "ล็อกราคารายไตรมาส" }
+  ],
+  "ingredientCostTrend": {
+    "labels": ["ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.ค.", "มิ.ย.", "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.", "ธ.ค."],
+    "chicken": [72, 74, 76, 80, 78, 75, 74, 73, 72, 71, 70, 72],
+    "salmon": [420, 430, 445, 460, 455, 440, 435, 430, 425, 420, 418, 430],
+    "vegetable": [38, 40, 44, 52, 48, 42, 40, 39, 38, 37, 36, 39],
+    "unit": "บาท/กก."
+  },
+  "deliveryZones": [
+    { "zone": "กรุงเทพฯ ชั้นใน", "id": "bkk_in", "sharePct": 44, "avgCostPerBox": 12, "slaMinutes": 45, "onTimePct": 96, "method": "รถห้องเย็นของบริษัท" },
+    { "zone": "กรุงเทพฯ ชั้นนอก", "id": "bkk_out", "sharePct": 23, "avgCostPerBox": 18, "slaMinutes": 70, "onTimePct": 93, "method": "รถห้องเย็น + ไรเดอร์พาร์ตเนอร์" },
+    { "zone": "นนทบุรี / ปทุมธานี", "id": "nonthaburi", "sharePct": 16, "avgCostPerBox": 22, "slaMinutes": 85, "onTimePct": 90, "method": "ไรเดอร์พาร์ตเนอร์" },
+    { "zone": "สมุทรปราการ", "id": "samutprakan", "sharePct": 11, "avgCostPerBox": 24, "slaMinutes": 90, "onTimePct": 89, "method": "ไรเดอร์พาร์ตเนอร์" },
+    { "zone": "ต่างจังหวัด (ส่งข้ามคืน)", "id": "upcountry", "sharePct": 6, "avgCostPerBox": 42, "slaMinutes": 1440, "onTimePct": 84, "method": "ขนส่งแช่เย็นข้ามคืน" }
+  ],
+  "deliveryKpi": {
+    "onTimeTargetPct": 95,
+    "damageTargetPct": 0.5,
+    "avgCostPerBox": 16,
+    "coldChainCheckpoints": 4,
+    "returnRatePct": 0.8
+  },
+  "qualityControl": [
+    { "point": "รับวัตถุดิบ", "check": "อุณหภูมิ ≤ 4°C, ตรวจสภาพและวันหมดอายุ", "frequency": "ทุกรอบส่งของ" },
+    { "point": "ระหว่างปรุง", "check": "อุณหภูมิใจกลางอาหาร ≥ 75°C", "frequency": "ทุกล็อตการผลิต" },
+    { "point": "ก่อนบรรจุ", "check": "ชั่งน้ำหนักพอร์ชัน ±5%", "frequency": "สุ่ม 10 กล่อง/ล็อต" },
+    { "point": "ห้องเย็น", "check": "อุณหภูมิ 1-4°C บันทึกทุก 2 ชั่วโมง", "frequency": "ทุกวัน" },
+    { "point": "ส่งมอบ", "check": "อุณหภูมิกล่อง ≤ 8°C เมื่อถึงลูกค้า", "frequency": "สุ่มรายวัน" },
+    { "point": "ตรวจทางห้องปฏิบัติการ", "check": "จุลินทรีย์ก่อโรค (ส่งแล็บภายนอก)", "frequency": "เดือนละครั้ง" }
+  ]
+}
